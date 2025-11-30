@@ -1,0 +1,418 @@
+
+#accueil .coleur-de-fond {
+    background-image: url(../images/elephant-ci2.jpg) ;
+    background-repeat: no-repeat ;
+    background-attachment: relative ;
+    background-position: center ;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+#accueil .coleur-de-fond {
+    background-color: rgba(13, 73, 112, 0.6);
+    color: white;
+  }
+
+.couleur-mises-en-salle{
+    background-color: #008080;
+    color: white;
+}
+.couleur-corrections{
+    background-color: #dd3044;
+    color: white;
+}
+.couleur-etats-editions{
+    background-color: #8d3c53;
+    color: white;
+}
+.couleur-evaluation-acteur{
+    background-color: #f08080;
+    color: white;
+}
+.couleur-gestion-admis{
+    background-color: #e09861;
+    color: white;
+}
+
+.couleur-administration{
+    /*background-color: #3299a8;*/
+    background-color: #3248a8;
+    /*background-color: #fbdfa0;*/
+    color: white;
+}
+.couleur-parametres-configurations{
+    background-color: #344771;
+    color: white;
+}
+
+.couleur-situation-geographique{
+    background-color: #3ea166;
+    color: white;
+}
+
+.couleur-convocations{
+    background-color: #FD6A02;
+    color: white;
+}
+
+.couleur-gestion-abscence-admis{
+    background-color: #3a89a8;
+    color: white;
+}
+
+.couleur-gestion-etude-dossier{
+    background-color: #750c8f;
+    color: white;
+}
+
+.fond-orange{
+    background-color: #FD6A02;
+    color: white;
+}
+
+.text-orange{
+    color: #FD6A02;
+}
+
+#app-mises-en-salle{
+    background-color: #5b8585;
+    color: white;
+}
+#app-corrections{
+    background-color: #a83c49;
+    color: white;
+}
+#app-etats-editions{
+    background-color: #92626f;
+    color: white;
+}
+#app-parametres-configurations{
+    background-color: #6f7b96;
+    color: white;
+}
+
+#app-situation-geographique{
+    background-color: #3ea166a9;
+    color: white;
+}
+
+#app-situation-geographique{
+    background-color: #3ea166a9;
+    color: white;
+}
+
+#app-situation-geographique{
+    background-color: #3ea166a9;
+    color: white;
+}
+
+#app-gestion-abscence-admis{
+    background-color: #3a89a8cc;
+    color: white;
+}
+
+#app-gestion-etude-dossier{
+    background-color: #750c8fd0;
+    color: white;
+}
+
+#app-gestion-admis{
+    background-color: #aa8365;
+    color: white;
+}
+#app-convocations{
+    background-color: #db925e;
+    color: white;
+}
+
+#app-administration{
+    background-color: #515e99;
+    color: white;
+}
+#app-evaluation-acteur{
+    background-color: #f08080;
+    color: white;
+}
+
+figure img{
+    width: 2.1875rem;
+}
+
+
+#accueil a{
+    text-decoration: none;
+}
+#accueil a:hover{
+    color: rgb(240, 26, 26);
+}
+
+#accueil a .form-card {
+    padding: 1.875rem;
+    border: 0.0625rem solid white;
+    margin-bottom: 0.625rem;
+    margin-right: 0.625rem;
+    margin-left: 0.625rem;
+    border-radius: 0.625rem;
+    transition: 1s;
+    -webkit-box-shadow: 0px 0px 30px 0px rgba(33, 77, 115, 0.15);
+    -moz-box-shadow: 0px 0px 30px 0px rgba(33, 77, 115, 0.15);
+    -o-box-shadow: 0px 0px 30px 0px rgba(33, 77, 115, 0.15);
+    box-shadow: 0px 0px 30px 0px rgba(33, 77, 115, 0.15);
+    width: 20.625rem;
+    height: 11.625rem;
+    /*opacity: 0.5;*/
+  }
+
+  @media (max-width: 1139.98px) {
+#accueil a .form-card {
+        margin-bottom: 0.625rem;
+        margin-left: 0.625rem;
+        margin-right: 0.625rem;
+        margin-top: 0.625rem;
+        width: 14.625rem;
+        height: 9.625rem;
+        font-family: "open_sansregular";
+        font-size: 0.8125rem;
+    }
+}
+.form-card span{
+    font-family: "open_sansregular";
+    font-size: 0.8125rem;
+    font-style:normal;
+}
+
+.form-card-module {
+    padding: 1.875rem;
+    border: 0.0625rem solid white;
+    margin-bottom: 0.625rem;
+    margin-right: 0.625rem;
+    margin-left: 0.625rem;
+    border-radius: 0.625rem;
+    transition: 1s;
+    -webkit-box-shadow: 0px 0px 30px 0px rgba(33, 77, 115, 0.15);
+    -moz-box-shadow: 0px 0px 30px 0px rgba(33, 77, 115, 0.15);
+    -o-box-shadow: 0px 0px 30px 0px rgba(33, 77, 115, 0.15);
+    box-shadow: 0px 0px 30px 0px rgba(33, 77, 115, 0.15);
+    width: 20.625rem;
+    height: 11.625rem;
+    opacity: 0.5;
+    font-family: "open_sansregular";
+    background-color: rgb(114, 123, 126);
+  }
+
+  @media (max-width: 1139.98px) {
+.form-card-module {
+        margin-bottom: 0.625rem;
+        margin-left: 0.625rem;
+        margin-right: 0.625rem;
+        margin-top: 0.625rem;
+        width: 13.625rem;
+        height: 8.625rem;
+        font-family: "open_sansregular";
+        font-size: 0.8125rem;
+        background-color: rgb(114, 123, 126);
+    }
+}
+
+footer figure.footer img {
+    width: 3.125rem;
+}
+
+footer p.titre-footer {
+    font-family: "open_sanssemibold";
+    margin-bottom: 0.3125rem !important;
+    margin-top: 0.1875rem;
+    letter-spacing: -0.00625rem;
+    font-size: 0.875rem;
+    line-height: 1.0625rem;
+  }
+
+footer p.titre-footer span {
+    font-family: "open_sansregular";
+    font-size: 0.8125rem;
+    color: #3c3c3c;
+    font-style: italic;
+}
+
+footer ul {
+    font-family: "open_sansregular";
+    font-size: 0.8125rem;
+    color: #3c3c3c;
+}
+.titre-version {
+    margin-top: 0rem;
+    font-family: "open_sansregular";
+    font-size: 0.8125rem;
+    color: #9b4040;
+    margin-bottom: 0rem;
+    font-style: italic;
+}
+.supprimer-marge{
+    margin-top: 0rem;
+    margin-bottom: 0rem;
+}
+
+ul {
+    list-style: none; /* Remove HTML bullets */
+    padding: 0;
+    margin: 0;
+}
+.disable-links {
+    pointer-events: none;
+}
+
+.font-stats-fp{
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size:small
+}
+.font-stats-fp-btn{
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size:small
+}
+
+/* Pour les steps du WorkFlow */
+
+.show-grid [class^=col-] {
+    padding-top: 5px;
+    padding-bottom: 2px;
+    border: 1px solid #ddd;
+    border: 1px solid rgba(86,61,124,.2);
+    list-style: none;
+
+    }
+
+    .glyphicon {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    font-size: 35px;
+    }
+
+    .inactive {
+        color: #ccc;
+        background-color: #fafafa;
+    }
+
+    .active{
+        background-color: #6495ed;
+        color: white;
+    }
+
+    fieldset{
+        border: 1px solid #6495ed;
+        margin-bottom: 30px;
+        padding: 20px;
+    }
+    legend{
+        font-size: 18px;
+        color: #6495ed
+    }
+
+    #footer{
+        /* position: fixed; */
+        position: relative;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        bottom: 0;
+        width: 100%;
+        height: 110px;   /* Height of the footer */
+        background: rgba(255, 255, 255, 0.527);
+}
+
+/* Début - Pour le select 2 */
+.form-control {
+    border-radius: 0;
+    box-shadow: none;
+    border-color: #d2d6de
+}
+
+.select2-hidden-accessible {
+    border: 0 !important;
+    clip: rect(0 0 0 0) !important;
+    height: 1px !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    position: absolute !important;
+    width: 1px !important
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s
+}
+
+.select2-container--default .select2-selection--single,
+.select2-selection .select2-selection--single {
+    border: 1px solid #d2d6de;
+    border-radius: 0;
+    padding: 6px 12px;
+    height: 34px
+}
+
+.select2-container--default .select2-selection--single {
+    background-color: #fff;
+    border: 1px solid #aaa;
+    border-radius: 4px
+}
+
+.select2-container .select2-selection--single {
+    box-sizing: border-box;
+    cursor: pointer;
+    display: block;
+    height: 28px;
+    user-select: none;
+    -webkit-user-select: none
+}
+
+.select2-container .select2-selection--single .select2-selection__rendered {
+    padding-right: 10px
+}
+
+.select2-container .select2-selection--single .select2-selection__rendered {
+    padding-left: 0;
+    padding-right: 0;
+    height: auto;
+    margin-top: -3px
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #444;
+    line-height: 28px
+}
+
+.select2-container--default .select2-selection--single,
+.select2-selection .select2-selection--single {
+    border: 1px solid #d2d6de;
+    border-radius: 0 !important;
+    padding: 6px 12px;
+    height: 40px !important
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 26px;
+    position: absolute;
+    top: 6px !important;
+    right: 1px;
+    width: 20px
+}
+/* Fin - Pour le select 2 */
+
+
+
+
+
