@@ -28,13 +28,15 @@
                     {{--<div class="row h-100" style="background: rgba(251, 255, 251, 0.5)">--}}
                     <div class="row d-flex-column justify-content-between align-items-center">
                         <div class="marge-gauche-20">
-                            <p class="">
-                                    <img class="logo" src="{{asset('images/armoirie_ci_fond_transparent.png')}}" alt="" width="120px">
-                            </p>
+                            <<div style="text-align: center; padding: 20px;">
+                                <img class="logo" src="{{asset('images/armoirie_ci_fond_transparent.png')}}" 
+                                    alt="Description de l'image" 
+                                    style="width: 50%; max-width: 400px; height: auto; display: block; margin: 0 auto;">
+                            </div>
                             <hr>
                             <p class="marge-gauche-20">
-                                <h5 class=""><span class="text-white small">{{__('general.welcome1')}}</span></h5>
-                                <h3 class="col-md-12"><strong class="text-orange small">{{__('general.welcome2')}}</strong> <div class="text-italique"> {{__('general.welcome3')}} </div></h3>
+                                <h5 class="col-md-12"><span class="text-white small">{{__('DSESF ')}}</span></h5>
+                                <h3 class="col-md-12"><strong class="text-orange small">{{__('Direction de la Strategie, des Etudes et Statistiques Fiscales de la DGI')}}</strong> <div class="text-italique"> {{__('Suivi et Exécution des Tâches')}} </div></h3>
                             </p>
                         </div>
                     </div>
@@ -59,7 +61,7 @@
                                         <p class="text-center ">
                                                 {{--<img class="logo" src="{{asset('img/Edr2.jpg')}}" alt="" width="350px">--}}
                                                 {{-- <img class="logo" src="{{asset('images/logo-MFP.png')}}" alt="" width="180px"> --}}
-                                                <img class="logo" src="{{asset('images/new-logo-fp.jpeg')}}" alt="" width="180px">
+                                                <img class="logo" src="{{asset('images/DGI.png')}}" alt="" width="180px">
                                         </p>
 
                                        {{--

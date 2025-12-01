@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CourrierController;
 use App\Http\Controllers\AffectationController;
-
+use App\Http\Controllers\UserController;
 
 
 Route::get('/', function () {
@@ -42,3 +42,8 @@ Route::resource('affectations', AffectationController::class)->only([
 // Route personnalisée si vous avez besoin d'une action spécifique (comme marquer comme traité rapidement)
 Route::put('/affectations/{affectation}/update-status', [AffectationController::class, 'updateStatus'])->name('affectations.update_status');
 
+// Fichier : routes/web.php
+
+
+// Cette seule ligne gère toutes les routes (index, create, store, show, edit, update, destroy)
+Route::resource('users', UserController::class);
