@@ -16,15 +16,9 @@ class AffectationController extends Controller
     public function index(Courrier $courrier)
     {
         // Récupère toutes les affectations liées à ce courrier
-        //$affectations = $courrier->affectations()->with('user')->get();
+        $affectations = $courrier->affectations()->with('user')->get();
 
-        //return view('affectations.index', compact('courrier', 'affectations'));
-
-// Récupérez les données nécessaires (exemple)
-      $courrier = Courrier::all();
-
-    return view('Affectations.index')->with('courrier', $courrier);
-
+        return view('Affectations.index', compact('courrier', 'affectations'));
     }
 
     /**
@@ -56,7 +50,6 @@ class AffectationController extends Controller
             'commentaires' => $request->commentaires,
             // 'created_at' et 'updated_at' sont gérés automatiquement par Laravel
         ]);
-
         // Redirection vers une page de confirmation ou vers le courrier
         return redirect()->route('courriers.show', $courrier->id)
                          ->with('success', 'Le courrier a été affecté avec succès.');

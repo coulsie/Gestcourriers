@@ -43,7 +43,6 @@ Route::get('/affectation/create', function () {
 Route::get('/courriers/{id}/affecter', [CourrierAffectationController::class, 'create'])->name('courriers.affectation.create');
 Route::post('/courriers/{id}/affecter', [CourrierAffectationController::class, 'store'])->name('courriers.affectation.store');
 
- Route::resource('affectations', AffectationController::class)->only([
-        'index', 'create', 'store'
-    ]);
-    
+
+Route::get('/affectations', [AffectationController::class, 'index'])->name('affectations.index');
+Route::get('/affectations/create', [AffectationController::class, 'create'])->name('affectations.create');

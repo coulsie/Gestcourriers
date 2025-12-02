@@ -6,9 +6,9 @@
         <div class="col-md-10 mx-auto">
             <div class="card">
                 <div class="card-header">
-                    @isset($courrier)
+
                     Affectations pour le courrier n°: <strong>{{ $courrier->id }}</strong>
-                    @endisset
+
                     <div class="float-right">
                         {{-- Bouton pour retourner à la vue détaillée du courrier --}}
                          <a href="{{ route('courriers.show', $courrier->id) }}" class="btn btn-secondary btn-sm">

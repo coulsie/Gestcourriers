@@ -94,10 +94,10 @@
 
             <hr>
 
-            <button type="submit" class="btn btn-primary">Créer l'Affectation</button>
+            <button type="submit" class="btn btn-success">Créer l'Affectation</button>
 
             {{-- Ici, si vous avez un bouton retour, assurez-vous qu'il ne cause pas l'erreur d'URL --}}
-            <a href="{{ url()->previous() }}" class="btn btn-secondary">Annuler</a>
+            <a href="{{ url()->previous() }}" class="btn btn-danger">Annuler</a>
 
         </form>
     </div>
