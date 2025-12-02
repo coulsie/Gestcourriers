@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="card-header">
                     {{ __('Détails du Courrier') }} #{{ $courrier->reference }}
-                    
+
                     <a href="{{ route('courriers.index') }}" class="btn btn-secondary btn-sm float-end">
                         {{ __('Retour à la liste') }}
                     </a>
@@ -22,8 +22,10 @@
                             <p><strong>{{ __('Référence') }}:</strong> {{ $courrier->reference }}</p>
                             <p><strong>{{ __('Type') }}:</strong> {{ $courrier->type }}</p>
                             <p><strong>{{ __('Objet') }}:</strong> {{ $courrier->objet }}</p>
-                            <p><strong>{{ __('Date du Courrier') }}:</strong> {{ $courrier->date_courrier->format('d/m/Y') }}</p>
-                            <p><strong>{{ __('Statut') }}:</strong> 
+                            <p><strong>{{ $courrier->date_attribut?->format('d/m/Y') ?? 'Date non définie' }}
+
+
+                            <p><strong>{{ __('Statut') }}:</strong>
                                 <span class="badge {{ $courrier->statut == 'completed' ? 'bg-success' : ($courrier->statut == 'pending' ? 'bg-warning text-dark' : 'bg-info') }}">
                                     {{ ucfirst($courrier->statut) }}
                                 </span>
@@ -68,14 +70,14 @@
 
                     <div class="row mt-4">
                         <div class="col-md-12">
-                            <a href="{{ route('courriers.edit', $courrier->id) }}" class="btn btn-warning">
+                            <a href="@route('courriers.edit', ['courrier' => $courrier->id])">
                                 {{ __('Modifier le Courrier') }}
                             </a>
                         </div>
                     </div>
                 </div>
                 <div class="card-footer text-muted">
-                    Créé le: {{ $courrier->created_at->format('d/m/Y H:i') }} | Dernière mise à jour: {{ $courrier->updated_at->format('d/m/Y H:i') }}
+                    {{ $courrier->date_envoi?->format('d/m/Y') ?? '' }}
                 </div>
             </div>
         </div>

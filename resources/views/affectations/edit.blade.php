@@ -6,84 +6,70 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    {{ __('Modifier l\'Affectation') }} #{{ $affectation->id }}
+                    Modification de l'Affectation n°: <strong>{{ $affectation->id }}</strong>
                 </div>
 
                 <div class="card-body">
-                    <!-- Gestion des erreurs de validation -->
-                    @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
+                    {{-- Le formulaire utilise PATCH/PUT pour la mise à jour --}}
+                    <form action="{{ route('courriers.affectations.update', [$courrier, $affectation]) }}" method="POST">
+                        @csrf
+                        @method('PATCH') {{-- Utilise la méthode HTTP PATCH pour la mise à jour --}}
 
-                    <!-- L'action pointe vers la route 'affectations.update' et utilise la méthode HTTP PUT -->
-                    <form method="POST" action="{{ route('affectations.update', $affectation->id) }}">
-                        @csrf 
-                        @method('PUT') 
-
-                        <div class="row">
-                            <!-- Champ Utilisateur Affecté -->
-                            <div class="col-md-6 mb-3">
-                                <label for="user_id" class="form-label">{{ __('Assigner à l\'utilisateur') }} <span class="text-danger">*</span></label>
-                                <select id="user_id" class="form-control @error('user_id') is-invalid @enderror" name="user_id" required>
-                                    <option value="">Sélectionner un utilisateur</option>
-                                    @foreach ($users as $id => $name)
-                                        <!-- Utilisation de old() avec fallback vers $affectation->user_id -->
-                                        <option value="{{ $id }}" {{ old('user_id', $affectation->user_id) == $id ? 'selected' : '' }}>{{ $name }}</option>
+                        {{-- Champ de sélection de l'utilisateur --}}
+                        <div class="form-group row">
+                            <label for="user_id" class="col-md-4 col-form-label text-md-right">Affecté à</label>
+                            <div class="col-md-6">
+                                <select id="user_id" name="user_id" class="form-control @error('user_id') is-invalid @enderror" required>
+                                    @foreach($users as $user)
+                                        <option value="{{ $user->id }}"
+                                            {{ old('user_id', $affectation->user_id) == $user->id ? 'selected' : '' }}>
+                                            {{ $user->name }}
+                                        </option>
                                     @endforeach
                                 </select>
-                                @error('user_id') <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span> @enderror
+                                @error('user_id')
+                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+                                @enderror
                             </div>
+                        </div>
 
-                            <!-- Champ Statut -->
-                            <div class="col-md-6 mb-3">
-                                <label for="statut" class="form-label">{{ __('Statut') }} <span class="text-danger">*</span></label>
-                                <select id="statut" class="form-control @error('statut') is-invalid @enderror" name="statut" required>
-                                    <option value="pending" {{ old('statut', $affectation->statut) == 'pending' ? 'selected' : '' }}>En attente</option>
-                                    <option value="in_progress" {{ old('statut', $affectation->statut) == 'in_progress' ? 'selected' : '' }}>En cours</option>
-                                    <option value="completed" {{ old('statut', $affectation->statut) == 'completed' ? 'selected' : '' }}>Terminé</option>
-                                    <option value="rejected" {{ old('statut', $affectation->statut) == 'rejected' ? 'selected' : '' }}>Rejeté</option>
+                        {{-- Champ de sélection du statut --}}
+                        <div class="form-group row">
+                            <label for="statut" class="col-md-4 col-form-label text-md-right">Statut</label>
+                            <div class="col-md-6">
+                                <select id="statut" name="statut" class="form-control @error('statut') is-invalid @enderror" required>
+                                    @foreach(['affecté', 'traité', 'en_attente', 'archivé'] as $statutOption)
+                                        <option value="{{ $statutOption }}"
+                                            {{ old('statut', $affectation->statut) == $statutOption ? 'selected' : '' }}>
+                                            {{ ucfirst($statutOption) }}
+                                        </option>
+                                    @endforeach
                                 </select>
-                                @error('statut') <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span> @enderror
-                            </div>
-                        </div>
-                        
-                        <!-- Champ Date de Traitement (Optionnel, peut être rempli si statut est Completed) -->
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="date_traitement" class="form-label">{{ __('Date de Traitement (Fin)') }}</label>
-                                @php
-                                    // Formate la date existante pour le champ input type="date"
-                                    $treatmentDate = optional($affectation->date_traitement)->format('Y-m-d\TH:i');
-                                @endphp
-                                <input id="date_traitement" type="datetime-local" class="form-control @error('date_traitement') is-invalid @enderror" name="date_traitement" value="{{ old('date_traitement', $treatmentDate) }}">
-                                @error('date_traitement') <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span> @enderror
+                                @error('statut')
+                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+                                @enderror
                             </div>
                         </div>
 
-
-                        <!-- Champ Commentaires -->
-                        <div class="row">
-                            <div class="col-md-12 mb-3">
-                                <label for="commentaires" class="form-label">{{ __('Commentaires') }}</label>
-                                <textarea id="commentaires" class="form-control @error('commentaires') is-invalid @enderror" name="commentaires" rows="3">{{ old('commentaires', $affectation->commentaires) }}</textarea>
-                                @error('commentaires') <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span> @enderror
+                        {{-- Champ commentaires --}}
+                        <div class="form-group row">
+                            <label for="commentaires" class="col-md-4 col-form-label text-md-right">Commentaires</label>
+                            <div class="col-md-6">
+                                <textarea id="commentaires" name="commentaires" rows="4" class="form-control @error('commentaires') is-invalid @enderror">{{ old('commentaires', $affectation->commentaires) }}</textarea>
+                                @error('commentaires')
+                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+                                @enderror
                             </div>
                         </div>
 
-                        <div class="form-group row mt-4">
-                            <div class="col-md-12">
+                        {{-- Boutons d'action --}}
+                        <div class="form-group row mb-0">
+                            <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
-                                    {{ __('Mettre à jour l\'Affectation') }}
+                                    Mettre à Jour l'Affectation
                                 </button>
-                                <!-- Utilise l'objet $courrier passé depuis le contrôleur pour le lien de retour -->
-                                <a href="{{ route('courriers.show', $courrier->id) }}" class="btn btn-secondary">
-                                    {{ __('Annuler') }}
+                                <a href="{{ route('courriers.affectations.show', [$courrier, $affectation]) }}" class="btn btn-secondary">
+                                    Annuler
                                 </a>
                             </div>
                         </div>

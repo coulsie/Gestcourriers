@@ -6,46 +6,46 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    {{ __('Détails de l\'Affectation') }} #{{ $affectation->id }}
-                    
-                    <a href="{{ route('courriers.show', $affectation->courrier_id) }}" class="btn btn-secondary btn-sm float-end">
-                        {{ __('Retour au Courrier') }}
-                    </a>
+                    Détails de l'Affectation n°: <strong>{{ $affectation->id }}</strong>
+                    <div class="float-right">
+                        <a href="{{ route('courriers.affectations.index', $courrier) }}" class="btn btn-secondary btn-sm">
+                            Retour aux Affectations
+                        </a>
+                    </div>
                 </div>
 
                 <div class="card-body">
-                    <p><strong>{{ __('Courrier Référence') }}:</strong> {{ $affectation->courrier->reference ?? 'N/A' }}</p>
-                    <p><strong>{{ __('Assigné à') }}:</strong> {{ $affectation->user->name ?? 'Utilisateur Inconnu' }}</p>
-                    
-                    <p><strong>{{ __('Statut') }}:</strong> 
-                        <span class="badge 
-                            @if($affectation->statut == 'completed') bg-success 
-                            @elseif($affectation->statut == 'pending') bg-warning text-dark 
-                            @else bg-info @endif">
-                            {{ ucfirst($affectation->statut) }}
-                        </span>
+                    <h5 class="card-title">Courrier Associé : {{ $courrier->objet ?? 'N/A' }}</h5>
+                    <hr>
+
+                    <dl class="row">
+                        <dt class="col-sm-4">Affecté à :</dt>
+                        {{-- Supposant une relation 'user' dans le modèle Affectation --}}
+                        <dd class="col-sm-8">{{ $affectation->user->name ?? 'Utilisateur supprimé' }}</dd>
+
+                        <dt class="col-sm-4">Statut :</dt>
+                        <dd class="col-sm-8">
+                            <span class="badge
+                                @if($affectation->statut == 'affecté') badge-info
+                                @elseif($affectation->statut == 'traité') badge-success
+                                @else badge-secondary
+                                @endif">
+                                {{ $affectation->statut }}
+                            </span>
+                        </dd>
+
+                        <dt class="col-sm-4">Date d'Affectation :</dt>
+                        <dd class="col-sm-8">{{ $affectation->date_affectation ? $affectation->date_affectation->format('d/m/Y H:i') : 'N/A' }}</dd>
+
+                        <dt class="col-sm-4">Date de Traitement :</dt>
+                        <dd class="col-sm-8">{{ $affectation->date_traitement ? $affectation->date_traitement->format('d/m/Y H:i') : 'Pas encore traité' }}</dd>
+                    </dl>
+
+                    <h6>Commentaires :</h6>
+                    <p class="alert alert-light">
+                        {{ $affectation->commentaires ?? 'Aucun commentaire.' }}
                     </p>
 
-                    <p><strong>{{ __('Date d\'Affectation') }}:</strong> {{ $affectation->date_affectation->format('d/m/Y H:i') }}</p>
-                    <p><strong>{{ __('Date de Traitement') }}:</strong> 
-                        @if ($affectation->date_traitement)
-                            {{ $affectation->date_traitement->format('d/m/Y H:i') }}
-                        @else
-                            Pas encore traité
-                        @endif
-                    </p>
-
-                    <div class="mt-4">
-                        <h5>{{ __('Commentaires') }}</h5>
-                        <p>{{ $affectation->commentaires ?? 'Aucun commentaire.' }}</p>
-                    </div>
-
-                    <div class="mt-4">
-                        <!-- Bouton pour aller vers la page d'édition -->
-                        <a href="{{ route('affectations.edit', $affectation->id) }}" class="btn btn-warning">
-                            {{ __('Modifier l\'Affectation') }}
-                        </a>
-                    </div>
                 </div>
             </div>
         </div>

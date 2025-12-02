@@ -39,8 +39,7 @@ class Affectation extends Model
     protected $casts = [
         'date_affectation' => 'datetime',
         'date_traitement' => 'datetime',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
+
     ];
 
     // --- Relations Eloquent ---
@@ -66,3 +65,4 @@ class Affectation extends Model
         return $this->belongsTo(User::class);
     }
 }
+

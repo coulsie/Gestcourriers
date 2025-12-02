@@ -6,70 +6,66 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    {{ __('Nouvelle Affectation pour le Courrier') }} #{{ $courrier->reference }}
+                    Affecter le Courrier n°: <strong>{{ $courrier->id }}</strong>
                 </div>
 
                 <div class="card-body">
-                    <!-- Gestion des erreurs de validation -->
-                    @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
+                    {{-- L'action du formulaire utilise la route nommée 'courriers.affectations.store'
+                         et passe l'objet $courrier pour le Route Model Binding --}}
+                    <form action="{{ route('courriers.affectations.store', $courrier) }}" method="POST">
+                        @csrf
+
+                        {{-- Section d'information sur le courrier --}}
+                        <div class="form-group row">
+                            <label class="col-md-4 col-form-label text-md-right">Objet du Courrier</label>
+                            <div class="col-md-6">
+                                <p class="form-control-static">{{ $courrier->objet ?? 'N/A' }}</p>
+                            </div>
                         </div>
-                    @endif
 
-                    <!-- L'action pointe vers la route 'courriers.affectations.store' -->
-                    <form method="POST" action="{{ route('courriers.affectations.store', $courrier->id) }}">
-                        @csrf 
-
-                        <div class="row">
-                            <!-- Champ Utilisateur Affecté -->
-                            <div class="col-md-6 mb-3">
-                                <label for="user_id" class="form-label">{{ __('Assigner à l\'utilisateur') }} <span class="text-danger">*</span></label>
-                                <select id="user_id" class="form-control @error('user_id') is-invalid @enderror" name="user_id" required>
-                                    <option value="">Sélectionner un utilisateur</option>
-                                    @foreach ($users as $id => $name)
-                                        <!-- Pré-sélectionne l'ancien choix ou l'utilisateur actuellement assigné si vous le souhaitez -->
-                                        <option value="{{ $id }}" {{ old('user_id') == $id ? 'selected' : '' }}>{{ $name }}</option>
+                        {{-- Champ de sélection de l'utilisateur --}}
+                        <div class="form-group row">
+                            <label for="user_id" class="col-md-4 col-form-label text-md-right">Affecter à</label>
+                            <div class="col-md-6">
+                                <select id="user_id" name="user_id" class="form-control @error('user_id') is-invalid @enderror" required>
+                                    <option value="">Sélectionnez un utilisateur...</option>
+                                    @foreach($users as $user)
+                                        <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
+                                            {{ $user->name }} ({{ $user->email }})
+                                        </option>
                                     @endforeach
                                 </select>
-                                @error('user_id') <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span> @enderror
-                            </div>
 
-                            <!-- Champ Statut -->
-                            <div class="col-md-6 mb-3">
-                                <label for="statut" class="form-label">{{ __('Statut') }} <span class="text-danger">*</span></label>
-                                <select id="statut" class="form-control @error('statut') is-invalid @enderror" name="statut" required>
-                                    <option value="pending" {{ old('statut') == 'pending' ? 'selected' : '' }}>En attente</option>
-                                    <option value="in_progress" {{ old('statut') == 'in_progress' ? 'selected' : '' }}>En cours</option>
-                                    <option value="completed" {{ old('statut') == 'completed' ? 'selected' : '' }}>Terminé</option>
-                                    <option value="rejected" {{ old('statut') == 'rejected' ? 'selected' : '' }}>Rejeté</option>
-                                </select>
-                                @error('statut') <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span> @enderror
+                                @error('user_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
                         </div>
 
-                        <!-- Champ Commentaires -->
-                        <div class="row">
-                            <div class="col-md-12 mb-3">
-                                <label for="commentaires" class="form-label">{{ __('Commentaires') }}</label>
-                                <textarea id="commentaires" class="form-control @error('commentaires') is-invalid @enderror" name="commentaires" rows="3">{{ old('commentaires') }}</textarea>
-                                @error('commentaires') <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span> @enderror
+                        {{-- Champ commentaires --}}
+                        <div class="form-group row">
+                            <label for="commentaires" class="col-md-4 col-form-label text-md-right">Commentaires (Optionnel)</label>
+                            <div class="col-md-6">
+                                <textarea id="commentaires" name="commentaires" rows="4" class="form-control @error('commentaires') is-invalid @enderror">{{ old('commentaires') }}</textarea>
+
+                                @error('commentaires')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
                         </div>
-                        
-                        <!-- Note: date_affectation et date_traitement sont gérés par le contrôleur -->
 
-                        <div class="form-group row mt-4">
-                            <div class="col-md-12">
+                        {{-- Boutons d'action --}}
+                        <div class="form-group row mb-0">
+                            <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
-                                    {{ __('Enregistrer l\'Affectation') }}
+                                    Confirmer l'Affectation
                                 </button>
                                 <a href="{{ route('courriers.show', $courrier->id) }}" class="btn btn-secondary">
-                                    {{ __('Annuler') }}
+                                    Annuler
                                 </a>
                             </div>
                         </div>

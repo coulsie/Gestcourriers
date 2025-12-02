@@ -1,94 +1,64 @@
 <?php
 
+
 namespace App\Http\Controllers;
 
 use App\Models\Courrier;
-use App\Models\Affectation;
-use App\Models\User;
+use App\Models\Affectation; // Importez votre modèle Affectation
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth; // Pour accéder à l'utilisateur connecté
 
 class AffectationController extends Controller
 {
     /**
-     * Affiche l'historique des affectations pour un courrier spécifique.
-     *
-     * @param  \App\Models\Courrier  $courrier
-     * @return \Illuminate\Http\Response
+     * Affiche la liste des affectations pour un courrier spécifique.
      */
     public function index(Courrier $courrier)
     {
-        // Charge les affectations avec les détails de l'utilisateur associé
-        $affectations = $courrier->affectations()->with('user')->get();
-        
-        return view('affectations.index', compact('courrier', 'affectations'));
+        // Récupère toutes les affectations liées à ce courrier
+        //$affectations = $courrier->affectations()->with('user')->get();
+
+        //return view('affectations.index', compact('courrier', 'affectations'));
+
+// Récupérez les données nécessaires (exemple)
+      $courrier = Courrier::all();
+
+    return view('Affectations.index')->with('courrier', $courrier);
+
     }
 
     /**
      * Affiche le formulaire pour créer une nouvelle affectation.
-     *
-     * @param  \App\Models\Courrier  $courrier
-     * @return \Illuminate\Http\Response
      */
     public function create(Courrier $courrier)
     {
-        $users = User::pluck('name', 'id');
-        return view('affectations.create', compact('courrier', 'users'));
+        // Vous pouvez passer la liste des utilisateurs disponibles à affecter à la vue
+        $users = \App\Models\User::all();
+        return view('Affectations.create', compact('courrier', 'users'));
     }
 
     /**
-     * Enregistre une nouvelle affectation dans la base de données.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Courrier  $courrier
-     * @return \Illuminate\Http\Response
+     * Stocke une nouvelle affectation dans la base de données.
      */
     public function store(Request $request, Courrier $courrier)
     {
-        $validatedData = $request->validate([
+        $request->validate([
             'user_id' => 'required|exists:users,id',
-            'statut' => 'required|string|max:50',
-            'commentaires' => 'nullable|string',
+            'commentaires' => 'nullable|string|max:500',
+            // 'statut' peut être défini par défaut dans le contrôleur ou dans le modèle
         ]);
 
-        // Crée une nouvelle affectation
+        // Crée une nouvelle affectation en utilisant la relation du modèle Courrier
         $affectation = $courrier->affectations()->create([
-            'user_id' => $validatedData['user_id'],
-            'statut' => $validatedData['statut'],
-            'commentaires' => $validatedData['commentaires'],
-            'date_affectation' => Carbon::now(),
-            // date_traitement reste null pour l'instant
+            'user_id' => $request->user_id,
+            'statut' => 'affecté', // Statut initial
+            'date_affectation' => now(),
+            'commentaires' => $request->commentaires,
+            // 'created_at' et 'updated_at' sont gérés automatiquement par Laravel
         ]);
 
-        // Optionnel: Mettez à jour le statut principal du courrier dans la table courriers si vous le souhaitez
-        $courrier->update(['statut' => $validatedData['statut'], 'assigne_a' => $validatedData['user_id']]);
-
+        // Redirection vers une page de confirmation ou vers le courrier
         return redirect()->route('courriers.show', $courrier->id)
-                         ->with('success', 'Courrier affecté avec succès.');
-    }
-    
-    /**
-     * Met à jour le statut d'une affectation spécifique (par exemple, marquer comme terminé).
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Affectation  $affectation
-     * @return \Illuminate\Http\Response
-     */
-    public function updateStatus(Request $request, Affectation $affectation)
-    {
-        $validatedData = $request->validate([
-            'statut' => 'required|string|max:50',
-        ]);
-        
-        $affectation->update([
-            'statut' => $validatedData['statut'],
-            'date_traitement' => Carbon::now(),
-        ]);
-
-        // Optionnel: Mettez à jour le statut principal du courrier
-        $affectation->courrier->update(['statut' => $validatedData['statut']]);
-
-        return redirect()->back()->with('success', 'Statut de traitement mis à jour.');
+                         ->with('success', 'Le courrier a été affecté avec succès.');
     }
 }

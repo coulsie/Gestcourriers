@@ -20,7 +20,7 @@
                     @endif
 
                     <form method="POST" action="{{ route('courriers.store') }}">
-                        @csrf 
+                        @csrf
 
                         <!-- Section 1: Détails Principaux -->
                         <div class="row">
@@ -29,7 +29,7 @@
                                 <input id="reference" type="text" class="form-control @error('reference') is-invalid @enderror" name="reference" value="{{ old('reference') }}" required autofocus>
                                 @error('reference') <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span> @enderror
                             </div>
-                            
+
                             <div class="col-md-4 mb-3">
                                 <label for="type" class="form-label">{{ __('Type') }} <span class="text-danger">*</span></label>
                                 <select id="type" class="form-control @error('type') is-invalid @enderror" name="type" required>
@@ -118,7 +118,7 @@
                                 @error('chemin_fichier') <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span> @enderror
                             </div>
                         </div>
-                        
+
                         <!-- Note: created_at et updated_at sont gérés automatiquement par Laravel -->
 
                         <div class="form-group row mt-4">

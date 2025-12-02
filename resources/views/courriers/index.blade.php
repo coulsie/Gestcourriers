@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="card-header">
                     {{ __('Liste des Courriers') }}
-                    <a href="{{ route('courriers.create') }}" class="btn btn-primary float-end">
+                    <a href="{{ route('courriers.create') }}" class="btn btn-success float-end">
                         {{ __('Nouveau Courrier') }}
                     </a>
                 </div>
@@ -57,6 +57,9 @@
                                         <a href="{{ route('courriers.edit', $courrier->id) }}" class="btn btn-warning btn-sm" title="Modifier">
                                             <i class="fa fa-edit"></i> Modifier
                                         </a>
+                                        <a href="{{ route('courriers.affectation.create', $courrier->id) }}" class="btn btn-success btn-sm" title="Affecter">
+                                            <i class="fa fa-edit"></i> Affecter
+                                        </a>
                                         <form action="{{ route('courriers.destroy', $courrier->id) }}" method="POST" style="display: inline;">
                                             @csrf
                                             @method('DELETE')
@@ -70,7 +73,7 @@
                             </tbody>
                         </table>
                     </div>
-                    
+
                     {{-- Si vous utilisez la pagination dans le contrôleur, ajoutez ceci : --}}
                     {{-- <div class="mt-3">
                         {{ $courriers->links() }}
