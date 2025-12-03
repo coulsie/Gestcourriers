@@ -162,12 +162,12 @@
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
 
-           
+
 
         </ul>
         <!-- End of Sidebar -->
 
-        <!-- Content Wrapper --> 
+        <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
 
             <!-- Main Content -->
@@ -352,7 +352,7 @@
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="">
+                                <a class="dropdown-item" href="{{ route('profile.edit') }}">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profil
                                 </a>
@@ -388,7 +388,7 @@
 
             </div>
             <!-- End of Main Content -->
-            
+
             <!-- Footer -->
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
@@ -425,7 +425,7 @@
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Annuler</button>
                     <a class="btn btn-primary" href="{{ route('logout') }}" onclick="event.preventDefault();
-                      document.getElementById('logout-form').submit();">     
+                      document.getElementById('logout-form').submit();">
                         Déconnexion
                     </a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

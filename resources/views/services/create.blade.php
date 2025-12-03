@@ -74,8 +74,8 @@
                         </div>
 
                         {{-- Boutons d'action --}}
-                        <button type="submit" class="btn btn-primary">Enregistrer le service</button>
-                        <a href="{{ route('services.index') }}" class="btn btn-secondary">Annuler</a>
+                        <button type="submit" class="btn btn-success">Enregistrer le service</button>
+                        <a href="{{ route('services.index') }}" class="btn btn-danger">Annuler</a>
                     </form>
                 </div>
             </div>

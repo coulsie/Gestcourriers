@@ -8,7 +8,7 @@
                 <div class="card-header">
                     Liste des Agents
                     {{-- Bouton pour créer un nouvel agent --}}
-                    <a href="{{ route('agents.create') }}" class="btn btn-primary btn-sm float-end">
+                    <a href="{{ route('agents.create') }}" class="btn btn-success btn-sm float-end">
                         Ajouter un agent
                     </a>
                 </div>

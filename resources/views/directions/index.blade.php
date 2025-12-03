@@ -8,7 +8,7 @@
                 <div class="card-header">
                     Liste des Directions
                     {{-- Bouton pour créer une nouvelle direction --}}
-                    <a href="{{ route('directions.create') }}" class="btn btn-primary btn-sm float-end">
+                    <a href="{{ route('directions.create') }}" class="btn btn-success btn-sm float-end">
                         Ajouter une direction
                     </a>
                 </div>

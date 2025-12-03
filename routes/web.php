@@ -10,6 +10,7 @@ use App\Models\Courrier;
 use App\Http\Controllers\DirectionController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\AgentController;
+use App\Http\Controllers\ProfileController;
 
 
 Route::get('/', function () {
@@ -61,3 +62,15 @@ Route::resource('services', ServiceController::class);
 
 
 Route::resource('agents', AgentController::class);
+
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+});
+
+

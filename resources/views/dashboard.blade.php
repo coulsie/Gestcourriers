@@ -4,11 +4,11 @@
 @section('content')
 <div class="container-fluid">
 
-                    
+
                    {{-- Bande d'annonces défilantes --}}
                     <div class="annonces-ticker mb-4">
                         <div class="annonces-wrapper">
-                            
+
                              {{-- @foreach($recentAnnonces as $annonce)
                              @php
                                  // Définir la couleur selon le type
@@ -19,8 +19,8 @@
                                       'avertissement' => 'bg-warning text-dark',
                                       default => 'bg-secondary',
                                     };
-                            @endphp 
-                           
+                            @endphp
+
                         <div class="annonce-card">
                     <strong>{{ Str::limit('le titre', 50) }}</strong> :
                             {{ Str::limit('le contenu', 100) }}
@@ -33,8 +33,8 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Tableau de bord</h1>
-                        {{-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a> --}}
+                        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
                     </div>
 
                     <!-- Content Row -->
@@ -95,7 +95,7 @@
                         </div>
 
                         <!-- Earnings (Monthly) Card Example -->
-                        {{-- <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card border-left-info shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
@@ -121,7 +121,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div> --}}
+                        </div>
 
                         <!-- Annonces -->
                         <div class="col-xl-3 col-md-6 mb-4">
@@ -225,13 +225,13 @@
 
                         <!-- Content Column -->
                         <div class="col-lg-6 mb-4">
-						
+
                         </div>
 
                         <div class="col-lg-6 mb-4">
-						
+
                         </div>
-						
+
 
                     </div>
 

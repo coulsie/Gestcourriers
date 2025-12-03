@@ -8,7 +8,7 @@
                 <div class="card-header">
                     Liste des Services
                     {{-- Bouton pour créer un nouveau service --}}
-                    <a href="{{ route('services.create') }}" class="btn btn-primary btn-sm float-end">
+                    <a href="{{ route('services.create') }}" class="btn btn-success btn-sm float-end">
                         Ajouter un service
                     </a>
                 </div>

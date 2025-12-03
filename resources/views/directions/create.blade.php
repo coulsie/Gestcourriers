@@ -57,8 +57,8 @@
                         </div>
 
                         {{-- Boutons d'action --}}
-                        <button type="submit" class="btn btn-primary">Enregistrer la direction</button>
-                        <a href="{{ route('directions.index') }}" class="btn btn-secondary">Annuler</a>
+                        <button type="submit" class="btn btn-success">Enregistrer la direction</button>
+                        <a href="{{ route('directions.index') }}" class="btn btn-danger">Annuler</a>
                     </form>
                 </div>
             </div>

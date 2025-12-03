@@ -161,8 +161,8 @@
                         </div>
 
                         {{-- Boutons d'action --}}
-                        <button type="submit" class="btn btn-primary mt-3">Enregistrer l'agent</button>
-                        <a href="{{ route('agents.index') }}" class="btn btn-secondary mt-3">Annuler</a>
+                        <button type="submit" class="btn btn-success mt-3">Enregistrer l'agent</button>
+                        <a href="{{ route('agents.index') }}" class="btn btn-danger mt-3">Annuler</a>
                     </form>
                 </div>
             </div>
