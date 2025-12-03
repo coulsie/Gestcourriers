@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>ARELOKA - Tableau de bord</title>
+    <title>e-COURRIER - Tableau de bord</title>
 
     <!-- Custom fonts for this template-->
     <script src="{{ asset('template/vendor/jquery/jquery.min.js') }}"></script>
@@ -37,7 +37,7 @@
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">ARELOKA</div>
+                <div class="sidebar-brand-text mx-3">e-COURRIER</div>
             </a>
 
             <!-- Divider -->
@@ -60,16 +60,16 @@
 
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseMembres"
-                    aria-expanded="true" aria-controls="collapseMembres">
+                <a class="nav-link collapsed" href="{{ route('courriers.index') }}" data-toggle="collapse" data-target="#collapseCourriers"
+                    aria-expanded="true" aria-controls="collapseCourriers">
                     <i class="fas fa-fw fa-cog"></i>
-                    <span>Membres</span>
+                    <span>Courriers</span>
                 </a>
-                <div id="collapseMembres" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div id="collapseCourriers" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        {{-- <h6 class="collapse-header">Listes Des Membres:</h6> --}}
-                        <a class="collapse-item" href="">Listes Des Membres</a>
-                        <a class="collapse-item" href="">Ajouter un membre</a>
+                        {{-- <h6 class="collapse-header">Listes Des Courriers:</h6> --}}
+                        <a class="collapse-item" href="{{ route('courriers.index') }}">Listes des courriers</a>
+                        <a class="collapse-item" href="{{ route('courriers.create') }}">Ajouter un courrier</a>
                         {{-- <a class="collapse-item" href="cards.html">Cards</a> --}}
                     </div>
                 </div>
