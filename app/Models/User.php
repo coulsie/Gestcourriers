@@ -51,5 +51,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Affectation::class);
     }
-
+    public function agent()
+    {
+        // Logique de la méthode ou définition de la relation (par exemple, hasOne, belongsTo, etc.)
+        return $this->hasOne(Agent::class); // Exemple de relation
+    }
 }

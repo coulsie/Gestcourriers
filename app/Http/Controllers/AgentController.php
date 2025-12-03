@@ -119,4 +119,9 @@ class AgentController extends Controller
         // ces champs seront mis à NULL grâce à onDelete('set null') dans les migrations.
         return redirect()->route('agents.index')->with('success', 'L\'agent a été supprimé.');
     }
+
+        public function agent()
+    {
+        return $this->belongsTo(Agent::class); // Ou toute autre relation appropriée
+    }
 }

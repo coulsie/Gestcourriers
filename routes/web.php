@@ -9,6 +9,7 @@ use App\Http\Controllers\CourrierAffectationController;
 use App\Models\Courrier;
 use App\Http\Controllers\DirectionController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\AgentController;
 
 
 Route::get('/', function () {
@@ -57,3 +58,6 @@ Route::resource('directions', DirectionController::class);
 // ... autres routes ...
 
 Route::resource('services', ServiceController::class);
+
+
+Route::resource('agents', AgentController::class);
