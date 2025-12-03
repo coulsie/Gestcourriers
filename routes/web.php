@@ -7,6 +7,8 @@ use App\Http\Controllers\AffectationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CourrierAffectationController;
 use App\Models\Courrier;
+use App\Http\Controllers\DirectionController;
+use App\Http\Controllers\ServiceController;
 
 
 Route::get('/', function () {
@@ -46,3 +48,12 @@ Route::post('/courriers/{id}/affecter', [CourrierAffectationController::class, '
 
 Route::get('/affectations', [AffectationController::class, 'index'])->name('affectations.index');
 Route::get('/affectations/create', [AffectationController::class, 'create'])->name('affectations.create');
+
+
+
+Route::resource('directions', DirectionController::class);
+
+
+// ... autres routes ...
+
+Route::resource('services', ServiceController::class);

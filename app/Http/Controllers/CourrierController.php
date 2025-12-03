@@ -108,4 +108,8 @@ class CourrierController extends Controller
         return redirect()->route('courriers.index')
                          ->with('success', 'Courrier supprimé avec succès.');
     }
+    public function affecter(Courrier $courrier)
+    {
+        return view('courriers.affecter', compact('courrier'));
+    }
 }
