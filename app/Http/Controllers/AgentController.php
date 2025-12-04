@@ -45,7 +45,7 @@ class AgentController extends Controller
             'matricule' => 'required|string|unique:agents|max:255',
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'hire_date' => 'required|date',
+            'Date_Prise_de_service' => 'required|date',
             'phone_number' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:255',
             'service_id' => 'required|exists:services,id', // Doit exister dans la table services

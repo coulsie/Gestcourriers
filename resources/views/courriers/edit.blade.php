@@ -22,7 +22,7 @@
                     <!-- Formulaire de modification -->
                     <!-- L'action pointe vers la route 'courriers.update' et utilise la méthode HTTP PUT/PATCH -->
                     <form method="POST" action="{{ route('courriers.update', $courrier->id) }}">
-                        @csrf 
+                        @csrf
                         @method('PUT') <!-- Important: Laravel a besoin de cette directive pour simuler une requête PUT -->
 
                         <!-- Section 1: Détails Principaux -->
@@ -33,7 +33,7 @@
                                 <input id="reference" type="text" class="form-control @error('reference') is-invalid @enderror" name="reference" value="{{ old('reference', $courrier->reference) }}" required autofocus>
                                 @error('reference') <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span> @enderror
                             </div>
-                            
+
                             <div class="col-md-4 mb-3">
                                 <label for="type" class="form-label">{{ __('Type') }} <span class="text-danger">*</span></label>
                                 <select id="type" class="form-control @error('type') is-invalid @enderror" name="type" required>
@@ -127,10 +127,10 @@
 
                         <div class="form-group row mt-4">
                             <div class="col-md-12">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-success">
                                     {{ __('Mettre à jour le Courrier') }}
                                 </button>
-                                <a href="{{ route('courriers.index') }}" class="btn btn-secondary">
+                                <a href="{{ route('courriers.index') }}" class="btn btn-danger">
                                     {{ __('Annuler') }}
                                 </a>
                             </div>

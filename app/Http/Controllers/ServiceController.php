@@ -52,6 +52,7 @@ class ServiceController extends Controller
         // Création de l'enregistrement dans la base de données
         Service::create($validatedData);
 
+
         // Redirection vers l'index avec un message de succès
         return redirect()->route('services.index')->with('success', 'Le service a été créé avec succès.');
     }
@@ -109,4 +110,5 @@ class ServiceController extends Controller
         // cette suppression échouera s'il y a encore des agents dans ce service.
         return redirect()->route('services.index')->with('success', 'Le service a été supprimé.');
     }
-}
+        
+    }

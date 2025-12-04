@@ -18,16 +18,16 @@ return new class extends Migration
             $table->string('matricule')->unique(); // Numéro matricule unique de l'agent
             $table->string('first_name');
             $table->string('last_name');
-            $table->enum('status', ['Agent', 'Chef de service', 'Sous-directeur','Directeur'])->default('Agent'); // Define the enum column
+            $table->enum('status', ['Agent','Chef de service','Sous-directeur','Directeur','Conseiller Technique','Conseiller Spécial'])->default('Agent'); // Define the enum column
             $table->enum('sexe', ['Male', 'Female'])->nullable(); // Adjust 'name' if needed for column order
             $table->date('date_of_birth')->nullable();
-            $table->string('Place of birth');
+            $table->string('Place of birth')->nullable();
             $table->string('Photo');
             $table->string('email')->unique();
             $table->string('phone_number')->nullable();
             $table->string('address')->nullable();
             $table->string('Emploi')->nullable(); // Poste ou fonction de l'agent
-            $table->string('Grade')->nullable(); 
+            $table->string('Grade')->nullable();
             $table->date('Date_Prise_de_service');
             $table->string('Personne_a_prevenir')->nullable();
             $table->string('Contact_personne_a_prevenir')->nullable();
@@ -50,7 +50,7 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
-  
+
     /**
      * Reverse the migrations.
      */

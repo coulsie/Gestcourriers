@@ -110,6 +110,6 @@ class CourrierController extends Controller
     }
     public function affecter(Courrier $courrier)
     {
-        return view('courriers.affecter', compact('courrier'));
+        return view('courriers.affectation.index', compact('courrier'));
     }
 }

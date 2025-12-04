@@ -11,6 +11,13 @@ use App\Http\Controllers\DirectionController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\AgentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PresenceController;
+use App\Http\Controllers\AbsenceController;
+use App\Http\Controllers\TypeAbsenceController;
+
+// ... autres routes
+
+
 
 
 Route::get('/', function () {
@@ -73,4 +80,11 @@ Route::middleware(['auth'])->group(function () {
 
 });
 
+route::resource('affectations', AffectationController::class);
 
+
+Route::resource('presences', PresenceController::class);
+
+Route::resource('absences', AbsenceController::class);
+
+Route::resource('typeabsences', TypeAbsenceController::class);

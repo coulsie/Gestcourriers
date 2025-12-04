@@ -7,6 +7,7 @@ use App\Models\Direction;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use App\Models\User;
 
 class DirectionController extends Controller
 {
@@ -73,6 +74,7 @@ class DirectionController extends Controller
 
         return view('directions.edit', compact('direction', 'agents'));
     }
+
 
     /**
      * Met à jour la direction spécifiée dans la base de données.

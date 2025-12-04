@@ -11,7 +11,7 @@
 
                     <div class="float-right">
                         {{-- Bouton pour retourner à la vue détaillée du courrier --}}
-                         <a href="{{ route('courriers.show', ['courrier' => $courrier->id]) }}">Voir le courrier</a>
+                         <a href="{{ route('courriers.show', ['id' => $courrier->id]) }}">Voir le courrier</a>
 
                         {{-- Bouton pour affecter à nouveau --}}
                         <a href="{{ route('courriers.affectations.create', $courrier->id) }}" class="btn btn-primary btn-sm">
