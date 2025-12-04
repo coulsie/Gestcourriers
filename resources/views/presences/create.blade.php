@@ -21,7 +21,7 @@
                                 {{-- Supposons que vous passez une variable $agents depuis le contrôleur --}}
                                 @foreach($agents as $agent)
                                     <option value="{{ $agent->id }}" {{ old('agent_id') == $agent->id ? 'selected' : '' }}>
-                                        {{ $agent->name }} {{ $agent->first_name}}
+                                        {{ $agent->name }} {{ $agent->first_name}} {{ $agent->last_name}}
 
                                     </option>
                                 @endforeach
