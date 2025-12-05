@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TypeAbsence extends Model
 {
@@ -67,4 +68,14 @@ class TypeAbsence extends Model
     ];
 
     // Note: Les champs 'created_at' et 'updated_at' sont gérés automatiquement par $timestamps = true (qui est la valeur par défaut).
+   public function absences(): HasMany
+    {
+        return $this->hasMany(Absence::class);
+    }
+
+    public function presences(): HasMany
+    {
+        return $this->hasMany(Presence::class);
+    }
+
 }

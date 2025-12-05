@@ -55,6 +55,7 @@ Route::get('/courriers/{id}/affecter', [CourrierAffectationController::class, 'c
 Route::post('/courriers/{id}/affecter', [CourrierAffectationController::class, 'store'])->name('courriers.affectation.store');
 
 
+
 Route::get('/affectations', [AffectationController::class, 'index'])->name('affectations.index');
 Route::get('/affectations/create', [AffectationController::class, 'create'])->name('affectations.create');
 
@@ -88,3 +89,7 @@ Route::resource('presences', PresenceController::class);
 Route::resource('absences', AbsenceController::class);
 
 Route::resource('typeabsences', TypeAbsenceController::class);
+
+Route::get('/courriers/affectation', [CourrierAffectationController::class, 'index'])->name('courriers.affectation.index');
+Route::post('/courriers/affectation', [CourrierAffectationController::class, 'store'])->name('courriers.affectation.store');
+

@@ -63,4 +63,12 @@ class Agent extends Model
         // L'agent est le responsable (head_id) de plusieurs services
         return $this->hasMany(Service::class, 'head_id');
     }
+     public function absences(): HasMany
+    {
+        return $this->hasMany(Absence::class);
+    }
+     public function presences(): HasMany
+    {
+        return $this->hasMany(Presence::class);
+    }
 }

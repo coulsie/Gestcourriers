@@ -70,6 +70,7 @@
                         {{-- <h6 class="collapse-header">Listes Des Courriers:</h6> --}}
                         <a class="collapse-item" href="{{ route('courriers.index') }}">Listes des courriers</a>
                         <a class="collapse-item" href="{{ route('courriers.create') }}">Ajouter un courrier</a>
+                        <a class="collapse-item" href="{{ route('affectations.index') }}">Liste des affectations</a>
                         {{-- <a class="collapse-item" href="cards.html">Cards</a> --}}
                     </div>
                 </div>
@@ -81,13 +82,14 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePaiements"
                     aria-expanded="true" aria-controls="collapsePaiements">
                     <i class="fas fa-fw fa-cog"></i>
-                    <span>Paiements</span>
+                    <span>Présences</span>
                 </a>
                 <div id="collapsePaiements" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         {{-- <h6 class="collapse-header">Cotisations mensuelles</h6> --}}
-                        <a class="collapse-item" href="">Cotisations mensuelles</a>
-                        <a class="collapse-item" href="">Cotisations exceptionnelles</a>
+                        <a class="collapse-item" href="{{ route('presences.index') }}">Enrégistrement de pointages</a>
+                        <a class="collapse-item" href="{{ route('absences.index') }}">Congés et Permissions</a>
+                        <a class="collapse-item" href="{{ route('typeabsences.index') }}">Parametrage Absence</a>
                         <!-- <a class="collapse-item" href="">Dons</a> -->
                     </div>
                 </div>

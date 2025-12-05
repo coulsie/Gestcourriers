@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Affectation;
+use App\Models\Agent;
+use App\Models\user;
 
 
 class User extends Authenticatable
@@ -55,5 +58,9 @@ class User extends Authenticatable
     {
         // Logique de la méthode ou définition de la relation (par exemple, hasOne, belongsTo, etc.)
         return $this->hasOne(Agent::class); // Exemple de relation
+    }
+    public function affectation()
+    {
+        return $this->belongsTo(Affectation::class, 'agent_id');
     }
 }

@@ -14,7 +14,8 @@ class TypeAbsenceController extends Controller
     {
         $typesAbsence = TypeAbsence::all();
         // Charge la vue resources/views/typeabsences/index.blade.php
-        return view('typeabsences.index', compact('typesAbsence'));
+       // return view('typeabsences.index', compact('typesAbsence'));
+        return view('typeabsences.index', ['type_Absences' => $typesAbsence]);
     }
 
     /**
@@ -51,8 +52,13 @@ class TypeAbsenceController extends Controller
      */
     public function show(TypeAbsence $typeAbsence)
     {
-        return view('typeabsences.show', compact('typeAbsence'));
+        $type_Absences = ['maladie', 'conge', 'autre'];
+
+        return view('typeabsences.show', compact('typeAbsence', 'type_Absences'));
+
     }
+
+
 
     /**
      * Affiche le formulaire d'édition du type d'absence spécifié.
@@ -88,4 +94,7 @@ class TypeAbsenceController extends Controller
 
         return redirect()->route('typeabsences.index')->with('success', 'Type d\'absence supprimé avec succès !');
     }
+
+
+
 }

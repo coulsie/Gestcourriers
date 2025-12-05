@@ -5,6 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Courrier;
+use App\Models\User;
+use App\Models\Agent;
+
 
 class Affectation extends Model
 {
@@ -64,5 +68,11 @@ class Affectation extends Model
         // Assurez-vous que votre modèle User est importé et existe
         return $this->belongsTo(User::class);
     }
+    public function agent() // Changez le nom de la méthode de user() à agent() si vous le souhaitez
+{
+    // Assurez-vous que la clé étrangère utilisée est maintenant 'agent_id'
+        return $this->belongsTo(User::class, 'agent_id');
+
+}
 }
 

@@ -6,6 +6,9 @@ use App\Models\Presence;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use App\Models\Agent;
+use App\Models\Absence;
+use App\Models\TypeAbsence;
 
 class AbsenceController extends Controller
 {
@@ -17,7 +20,12 @@ class AbsenceController extends Controller
         // Récupère uniquement les enregistrements où le statut est 'Absent'
         $absences = Presence::where('Statut', 'Absent')->latest()->paginate(10);
 
-        return view('absences.index', compact('absences'));
+        return view('Absences.index', compact('absences'));
+
+        //$absences = Absence::with(['agent', 'typeAbsence'])->get();
+
+        //return view('absences.index', compact('absences'));
+
     }
 
     /**
@@ -25,8 +33,15 @@ class AbsenceController extends Controller
      */
     public function create(): View
     {
+
+        //$agents = Agent::all(['id', 'first_name', 'last_name']);
         // Le statut sera implicitement "Absent" lors du stockage
-        return view('absences.create');
+       // return view('Absences.create', compact('agents'));
+        $agents = Agent::all(['id', 'first_name', 'last_name']);
+        // Récupérer les types d'absences depuis la table type_absences
+        $type_absences = \App\Models\TypeAbsence::all(['id', 'nom_type']);
+
+        return view('Absences.create', compact('agents', 'type_absences'));
     }
 
     /**

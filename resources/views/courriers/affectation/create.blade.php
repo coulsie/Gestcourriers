@@ -17,7 +17,7 @@
                 {{-- $courriers doit être passé depuis le contrôleur create() --}}
                 <fieldset class="border p-3">
                     <legend class="w-auto  text-info"> <b>Information générale du courrier associé</b> </legend>
-                    <p class=""> 
+                    <p class="">
                         <span>Référence : </span>
                         <span> <b>{{ $courrier->reference }}</b> </span>
                         <br>
@@ -35,8 +35,8 @@
                     </p>
                 </fieldset>
 
-               
-                
+
+
                 {{-- <select name="courrier_id" id="courrier_id" class="form-control @error('courrier_id') is-invalid @enderror" required>
                     <option value="">-- Sélectionnez un courrier --</option>
 
@@ -56,24 +56,30 @@
                 @enderror
             </div>
 
-             <fieldset class="border p-3">   
+             <fieldset class="border p-3">
                 <legend class="w-auto text-success"> <b> Affectation </b>   </legend>
                 {{-- 2. Sélection de l'Utilisateur destinataire (Obligatoire) --}}
-                <div class="form-group">
-                    <label for="user_id">Affecté à (Utilisateur) :</label>
-                    {{-- $users doit être passé depuis le contrôleur create() --}}
-                    <select name="user_id" id="user_id" class="form-control @error('user_id') is-invalid @enderror" required>
-                        <option value="">-- Sélectionnez un utilisateur --</option>
-                        @foreach($users as $user)
-                            <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
-                                {{ $user->name }} ({{ $user->email }})
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('user_id')
-                        <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-                    @enderror
-                </div>
+                {{-- Champ Agent (Utilisateur) --}}
+                        <div class="mb-3">
+                            <label for="agent_id" class="form-label">Agent</label>
+                            {{-- Le nom du champ POST doit être 'agent_id' --}}
+                            <select name="agent_id" id="agent_id" class="form-control @error('agent_id') is-invalid @enderror" required>
+                                <option value="">Sélectionnez un agent</option>
+                                {{-- Supposons que vous passez une variable $agents depuis le contrôleur --}}
+                                @foreach($agents as $agent)
+                                    <option value="{{ $agent->id }}" {{ old('agent_id') == $agent->id ? 'selected' : '' }}>
+                                        {{ $agent->name }} {{ $agent->first_name}} {{ $agent->last_name}}
+
+                                    </option>
+                                @endforeach
+
+                            </select>
+                            @error('agent_id')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
 
                 {{-- 3. Statut Initial --}}
                 <div class="form-group">
@@ -118,7 +124,7 @@
 
             </fieldset>
 
-            
+
 
             <hr>
 

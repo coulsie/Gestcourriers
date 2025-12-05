@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB; // Utilisé pour DB::raw() si nécessaire
+use App\Models\Agent;
 
 class CourrierAffectationController extends Controller
 {
@@ -20,9 +21,10 @@ class CourrierAffectationController extends Controller
     public function create($id)
     {
         $courrier = Courrier::findOrFail($id);
-        $users = User::all(['id', 'name']);
+        $agents = Agent::all(['id', 'first_name', 'last_name']);
 
-        return view('courriers.affectation.create', compact('courrier', 'users'));
+
+        return view('courriers.affectation.create', compact('courrier', 'agents'));
     }
 
     /**
