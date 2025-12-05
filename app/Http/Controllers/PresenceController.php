@@ -40,10 +40,10 @@ class PresenceController extends Controller
     {
         // Validation des données entrantes
         $validatedData = $request->validate([
-            'AgentID'      => 'required|exists:agents,id',
-            'HeureArrivee' => 'required|date',
-            'HeureDepart'  => 'nullable|date|after:HeureArrivee',
-            'Statut'       => 'required|string|max:50',
+            'Agent_ID'      => 'required|exists:agents,id',
+            'Heure_Arrivee' => 'required|date',
+            'Heure_Depart'  => 'nullable|date|after:Heure_Arrivee',
+            'Status'       => 'required|string|max:50',
             'Notes'        => 'nullable|string',
         ]);
 

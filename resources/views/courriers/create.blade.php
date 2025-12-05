@@ -123,10 +123,10 @@
 
                         <div class="form-group row mt-4">
                             <div class="col-md-12">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-success">
                                     {{ __('Enregistrer le Courrier') }}
                                 </button>
-                                <a href="{{ route('courriers.index') }}" class="btn btn-secondary">
+                                <a href="{{ route('courriers.index') }}" class="btn btn-danger">
                                     {{ __('Annuler') }}
                                 </a>
                             </div>
