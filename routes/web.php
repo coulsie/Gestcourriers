@@ -93,3 +93,5 @@ Route::resource('typeabsences', TypeAbsenceController::class);
 Route::get('/courriers/affectation', [CourrierAffectationController::class, 'index'])->name('courriers.affectation.index');
 Route::post('/courriers/affectation', [CourrierAffectationController::class, 'store'])->name('courriers.affectation.store');
 
+Route::resource('courriers.affectation', CourrierAffectationController::class)->except(['index', 'create', 'store', 'show', 'destroy']);
+// Nous nous concentrons ici uniquement sur 'edit' et 'update'

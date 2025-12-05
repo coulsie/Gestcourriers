@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB; // Utilisé pour DB::raw() si nécessaire
 use App\Models\Agent;
+use Illuminate\View\View;
 
 class CourrierAffectationController extends Controller
 {
@@ -95,5 +96,37 @@ class CourrierAffectationController extends Controller
 
         return back()->with('success', 'Le traitement du courrier a été enregistré.');
     }
-}
+    public function edit(string $id): View
+    {
+        // Récupérer l'affectation avec les relations nécessaires
+        $affectation = Affectation::with(['agent', 'courrier'])->findOrFail($id);
+        $courrier = $affectation->courrier;
 
+        // Passe les variables '$affectation' et '$courrier' à la vue.
+        return view('Affectations.edit', compact('affectation', 'courrier'));
+
+    }
+    public function update(Request $request, string $id)
+    {
+        $request->validate([
+            'statut' => 'required|in:affecte,en_cours,traite,cloture',
+            'commentaires' => 'nullable|string|max:500',
+        ]);
+
+        $affectation = Affectation::findOrFail($id);
+
+        // Mettre à jour les champs de l'affectation
+        $affectation->statut = $request->statut;
+        $affectation->commentaires = $request->commentaires;
+
+        // Mettre à jour la date de traitement si le statut est 'traite'
+        if ($request->statut === 'traite' && is_null($affectation->date_traitement)) {
+            $affectation->date_traitement = now();
+        }
+
+        $affectation->save();
+
+        return redirect()->route('courriers.affectation.show', [$affectation->courrier_id, $affectation->id])
+                         ->with('success', 'Affectation mise à jour avec succès.');
+    }
+}

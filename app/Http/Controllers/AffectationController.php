@@ -99,17 +99,14 @@ class AffectationController extends Controller
      public function show(string $id): View
     {
         // 1. Récupérer le courrier (findOrFail lèvera une 404 si non trouvé)
-        $courrier = Courrier::findOrFail($id);
+       
+        $affectation = Affectation::with(['agent', 'courrier'])->findOrFail($id);
 
-        // 2. Récupérer l'affectation (find retournera null si non trouvé)
-        // Note: Si $affectation doit être liée au $courrier, la requête doit être adaptée.
-        // En supposant qu'elles partagent le même ID pour l'instant :
+        // Passe la variable '$affectation' (au singulier) à la vue.
+        return view('Affectations.show', compact('affectation'));
 
-        $affectation = Affectation::find($id);
-        $affectation = Affectation::where('courrier_id', $courrier->id)->first();
-        // 3. Renvoyer les DEUX variables à la vue
-        // Utilisez compact pour simplifier le passage de plusieurs variables
-        return view('Affectations.show', compact('courrier', 'affectation'));
+
+
     }
 
     /**

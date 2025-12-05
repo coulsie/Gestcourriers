@@ -1,74 +1,75 @@
-@extends('layouts.app')
+@extends('layouts.app') {{-- Assurez-vous que votre layout principal se nomme bien 'layouts.app' --}}
 
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">
-                    Modification de l'Affectation n°: <strong>{{ $affectation->id }}</strong>
-                </div>
+                <div class="card-header">Édition de l'affectation du courrier</div>
 
                 <div class="card-body">
-                    {{-- Le formulaire utilise PATCH/PUT pour la mise à jour --}}
-                    <form action="{{ route('courriers.affectations.update', [$courrier, $affectation]) }}" method="POST">
+                    {{--
+                        Le formulaire pointe vers une route 'update' que vous devez définir dans routes/web.php
+                        Assurez-vous de remplacer 'affectations.update' par le nom correct de votre route si nécessaire.
+                    --}}
+                    <form method="POST" action="{{ route('affectations.update', $courrier->id) }}">
                         @csrf
-                        @method('PATCH') {{-- Utilise la méthode HTTP PATCH pour la mise à jour --}}
+                        @method('PUT') {{-- Utilise la méthode HTTP PUT pour la mise à jour --}}
 
-                        {{-- Champ de sélection de l'utilisateur --}}
+                        {{-- Section d'affichage des détails du courrier (lecture seule) --}}
                         <div class="form-group row">
-                            <label for="user_id" class="col-md-4 col-form-label text-md-right">Affecté à</label>
+                            <label for="objet" class="col-md-4 col-form-label text-md-right">Objet du courrier</label>
                             <div class="col-md-6">
-                                <select id="user_id" name="user_id" class="form-control @error('user_id') is-invalid @enderror" required>
-                                    @foreach($users as $user)
-                                        <option value="{{ $user->id }}"
-                                            {{ old('user_id', $affectation->user_id) == $user->id ? 'selected' : '' }}>
-                                            {{ $user->name }}
+                                <input id="objet" type="text" class="form-control" value="{{ $courrier->objet }}" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="expediteur" class="col-md-4 col-form-label text-md-right">Expéditeur</label>
+                            <div class="col-md-6">
+                                <input id="expediteur" type="text" class="form-control" value="{{ $courrier->expediteur }}" readonly>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        {{-- Section d'affectation : Ligne 14 du fichier original --}}
+                        <div class="form-group row">
+                            <label for="agent_id" class="col-md-4 col-form-label text-md-right">Affecter à l'agent</label>
+
+                            <div class="col-md-6">
+                                {{--
+                                    Ceci est la ligne critique où vous sélectionnez un agent.
+                                    Le nom 'agent_id' sera envoyé au contrôleur.
+                                --}}
+                                <select id="agent_id" name="agent_id" class="form-control @error('agent_id') is-invalid @enderror" required>
+                                    <option value="">-- Sélectionnez un agent --</option>
+
+                                    @foreach($agents as $agent)
+                                        <option value="{{ $agent->id }}"
+                                            {{-- Cette condition vérifie si cet agent est déjà affecté au courrier actuel --}}
+                                            @if($courrier->agent_id == $agent->id) selected @endif
+                                        >
+                                            {{ $agent->nom_complet }} {{-- Remplacez par le nom de colonne approprié (ex: nom, prenom) --}}
                                         </option>
                                     @endforeach
                                 </select>
-                                @error('user_id')
-                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+
+                                @error('agent_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
                                 @enderror
                             </div>
                         </div>
 
-                        {{-- Champ de sélection du statut --}}
-                        <div class="form-group row">
-                            <label for="statut" class="col-md-4 col-form-label text-md-right">Statut</label>
-                            <div class="col-md-6">
-                                <select id="statut" name="statut" class="form-control @error('statut') is-invalid @enderror" required>
-                                    @foreach(['affecté', 'traité', 'en_attente', 'archivé'] as $statutOption)
-                                        <option value="{{ $statutOption }}"
-                                            {{ old('statut', $affectation->statut) == $statutOption ? 'selected' : '' }}>
-                                            {{ ucfirst($statutOption) }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('statut')
-                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        {{-- Champ commentaires --}}
-                        <div class="form-group row">
-                            <label for="commentaires" class="col-md-4 col-form-label text-md-right">Commentaires</label>
-                            <div class="col-md-6">
-                                <textarea id="commentaires" name="commentaires" rows="4" class="form-control @error('commentaires') is-invalid @enderror">{{ old('commentaires', $affectation->commentaires) }}</textarea>
-                                @error('commentaires')
-                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        {{-- Boutons d'action --}}
+                        {{-- Bouton de soumission --}}
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
-                                    Mettre à Jour l'Affectation
+                                    Mettre à jour l'affectation
                                 </button>
-                                <a href="{{ route('courriers.affectations.show', [$courrier, $affectation]) }}" class="btn btn-secondary">
+                                <a href="{{ route('affectations.index') }}" class="btn btn-secondary">
                                     Annuler
                                 </a>
                             </div>

@@ -8,7 +8,7 @@
                 <div class="card-header">
                     Détails de l'Affectation n°: <strong>{{ $affectation->id }}</strong>
                     <div class="float-right">
-                        <a href="{{ route('courriers.affectations.index', $courrier) }}" class="btn btn-secondary btn-sm">
+                        <a href="{{ route('affectations.index', $affectation->courrier) }}" class="btn btn-success btn-sm">
                             Retour aux Affectations
                         </a>
                     </div>

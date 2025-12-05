@@ -54,7 +54,7 @@
                                     <td>
                                         {{-- Actions Buttons --}}
                                         <a href="{{ route('affectations.show', $affectation->id) }}" class="btn btn-info btn-sm">Voir</a>
-                                        <a href="{{ route('affectations.edit', $affectation->id) }}" class="btn btn-warning btn-sm">Éditer</a>
+                                        <a href="{{ route('affectations.edit', $affectation->id) }}" class="btn btn-warning btn-sm">Modifier</a>
 
                                         {{-- Delete Form (use a form for POST/DELETE request) --}}
                                         <form action="{{ route('affectations.destroy', $affectation->id) }}" method="POST" style="display:inline;">
