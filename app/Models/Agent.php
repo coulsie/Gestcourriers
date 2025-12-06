@@ -70,5 +70,10 @@ class Agent extends Model
      public function presences(): HasMany
     {
         return $this->hasMany(Presence::class);
+
+    }
+     public function affectations()
+    {
+        return $this->hasMany(Affectation::class);
     }
 }

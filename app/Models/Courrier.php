@@ -48,9 +48,9 @@ class Courrier extends Model
 
     // Vous pouvez ajouter ici des relations, des accesseurs, ou d'autres méthodes personnalisées.
 
-    public function affectations(): HasMany
+    public function affectations()
     {
-        return $this->hasMany(Affectation::class)->latest();
+        return $this->hasMany(Affectation::class);
     }
     public function currentAffectation()
     {

@@ -58,6 +58,14 @@ Route::post('/courriers/{id}/affecter', [CourrierAffectationController::class, '
 
 Route::get('/affectations', [AffectationController::class, 'index'])->name('affectations.index');
 Route::get('/affectations/create', [AffectationController::class, 'create'])->name('affectations.create');
+Route::post('/affectations', [AffectationController::class, 'store'])->name('affectations.store');
+
+
+Route::resource('affectations', AffectationController::class);
+
+// Add a route for the custom status update method
+Route::put('/affectations/{affectation}/status', [AffectationController::class, 'updateStatus'])->name('affectations.updateStatus');
+
 
 
 

@@ -1,162 +1,124 @@
 <?php
-
 namespace App\Http\Controllers;
-use Illuminate\View\View;
-use Illuminate\Http\Request;
-use App\Models\Affectation;
-use App\Models\Courrier;
-use App\Models\User; // Modèle utilisé pour les agents
-use App\Models\Agent;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\DB;
 
+use App\Models\Affectation;
+use App\Models\Agent;
+use App\Models\Courrier;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 class AffectationController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        // Récupère toutes les affectations avec leurs relations (courrier et agent)
-        $affectations = Affectation::with(['courrier', 'agent'])->latest()->get();
-
-        return view('Affectations.index', compact('affectations'));
+        $affectations = Affectation::with(['courrier', 'agent'])->get();
+        return view('affectations.index', compact('affectations'));
     }
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create()
     {
-        // Récupère les courriers non encore traités ou clôturés
-        $courriers = Courrier::where('statut', '!=', 'traite')
-                             ->where('statut', '!=', 'cloture')
-                             ->get();
-
-        // Récupère les utilisateurs qui agissent comme agents
-        $agents = User::where('role', 'agent')->orWhere('role', 'superviseur')->get();
-
-        return view('Affectations.create', compact('courriers', 'agents'));
+        $courriers = Courrier::all();
+        $agents = Agent::all();
+        return view('affectations.create', compact('courriers', 'agents'));
     }
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        // Validation des données entrantes
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'courrier_id' => 'required|exists:courriers,id',
-            'agent_id' => 'required|exists:users,id',
-            'statut' => 'required|in:affecte,en_cours,traite',
-            'commentaires' => 'nullable|string|max:500',
+            'agent_id' => 'required|exists:agents,id',
+            'statut' => 'required|string|max:255',
+            'commentaires' => 'nullable|string',
+            // date_affectation will use default
         ]);
 
-        // Utilisation d'une transaction pour garantir la cohérence des données
-        DB::beginTransaction();
-
-        try {
-            // Création de l'affectation
-            $affectation = Affectation::create([
-                'courrier_id' => $request->courrier_id,
-                'agent_id' => $request->agent_id,
-                'statut' => $request->statut,
-                'commentaires' => $request->commentaires,
-                'date_affectation' => now(), // Définit la date d'affectation au moment de la création
-                // date_traitement, created_at, updated_at sont gérés automatiquement
-            ]);
-
-            // Optionnel: Mettre à jour le statut du courrier parent
-            $courrier = Courrier::findOrFail($request->courrier_id);
-            $courrier->statut = $request->statut; // Par exemple 'affecte'
-            $courrier->save();
-
-            DB::commit();
-
-            return redirect()->route('affectations.index')->with('success', 'Affectation créée avec succès.');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->back()->with('error', 'Erreur lors de la création de l\'affectation: ' . $e->getMessage());
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
         }
+
+        Affectation::create($request->all());
+
+        return redirect()->route('affectations.index')->with('success', 'Affectation created successfully.');
     }
 
     /**
      * Display the specified resource.
-     *
-     * @param  \App\Models\Affectation  $affectation
-     * @return \Illuminate\Http\Response
      */
-     public function show(string $id): View
+    public function show(Affectation $affectation)
     {
-        // 1. Récupérer le courrier (findOrFail lèvera une 404 si non trouvé)
-       
-        $affectation = Affectation::with(['agent', 'courrier'])->findOrFail($id);
+        $affectation->load(['courrier', 'agent']);
+        return view('affectations.show', compact('affectation'));
+    }
 
-        // Passe la variable '$affectation' (au singulier) à la vue.
-        return view('Affectations.show', compact('affectation'));
-
-
-
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Affectation $affectation)
+    {
+        $courriers = Courrier::all();
+        $agents = Agent::all();
+        return view('affectations.edit', compact('affectation', 'courriers', 'agents'));
     }
 
     /**
      * Update the specified resource in storage.
-     * Utilisé principalement pour mettre à jour le statut et la date de traitement
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Affectation  $affectation
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Affectation $affectation)
     {
-        $request->validate([
-            'statut' => 'required|in:affecte,en_cours,traite,cloture',
-            'commentaires' => 'nullable|string|max:500',
+        $validator = Validator::make($request->all(), [
+            'courrier_id' => 'required|exists:courriers,id',
+            'agent_id' => 'required|exists:agents,id',
+            'statut' => 'required|string|max:255',
+            'commentaires' => 'nullable|string',
+            'date_traitement' => 'nullable|date',
         ]);
 
-        $data = $request->only(['statut', 'commentaires']);
-
-        // Si le statut est mis à 'traite' ou 'cloture', définir la date de traitement
-        if (in_array($request->statut, ['traite', 'cloture']) && is_null($affectation->date_traitement)) {
-            $data['date_traitement'] = now();
-        } elseif (!in_array($request->statut, ['traite', 'cloture'])) {
-            $data['date_traitement'] = null; // Réinitialiser si le statut change
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $affectation->update($data);
+        $affectation->update($request->all());
 
-        // Optionnel: Mettre à jour le statut du courrier parent
-        $affectation->courrier->update(['statut' => $request->statut]);
-
-        return redirect()->route('affectations.show', $affectation->id)->with('success', 'Affectation mise à jour avec succès.');
+        return redirect()->route('affectations.index')->with('success', 'Affectation updated successfully.');
     }
 
-    // Vous pouvez ajouter ici la méthode edit() pour afficher le formulaire d'édition
-    // et destroy() pour la suppression si nécessaire.
-    public function edit(Affectation $affectation)
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Affectation $affectation)
     {
-        // 1. Récupérer tous les agents actifs pour la liste déroulante (select)
-        // Vous pouvez ajouter des conditions (ex: Agent::where('actif', 1)->get()) si nécessaire
-        $agents = Agent::all();
+        $affectation->delete();
 
-        // 2. Récupérer tous les courriers pertinents pour la liste déroulante
-        // Peut-être seulement les courriers non encore affectés, selon votre logique métier
-        $courriers = Courrier::all();
-        // Exemple alternatif : $courriers = Courrier::whereNull('affectation_id')->get();
-
-
-        // 3. Charger l'affectation actuelle et passer toutes les données à la vue
-        return view('Affectations.edit', compact('affectation', 'agents', 'courriers'));
+        return redirect()->route('affectations.index')->with('success', 'Affectation deleted successfully.');
     }
 
+    /**
+     * Custom method to update only the status.
+     */
+    public function updateStatus(Request $request, Affectation $affectation)
+    {
+        $request->validate([
+            'statut' => 'required|string|max:255',
+        ]);
+
+        $affectation->statut = $request->statut;
+        if ($request->statut == 'completed' && !$affectation->date_traitement) {
+            $affectation->date_traitement = Carbon::now();
+        }
+        $affectation->save();
+
+        return redirect()->back()->with('success', 'Affectation status updated.');
+    }
 }
+
+
