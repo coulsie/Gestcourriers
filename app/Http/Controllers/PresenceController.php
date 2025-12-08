@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Presence;
-use Illuminate\Http\Request;
-use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
 use App\Models\Agent;
+use App\Models\Presence;
+use Illuminate\View\View;
+use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 
 class PresenceController extends Controller
 {
