@@ -14,7 +14,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PresenceController;
 use App\Http\Controllers\AbsenceController;
 use App\Http\Controllers\TypeAbsenceController;
-
+use App\Http\Controllers\EtatAgentsController;
+use App\Http\Controllers\EtatAgentsController1;
 // ... autres routes
 
 
@@ -103,3 +104,9 @@ Route::post('/courriers/affectation', [CourrierAffectationController::class, 'st
 
 Route::resource('courriers.affectation', CourrierAffectationController::class)->except(['index', 'create', 'store', 'show', 'destroy']);
 // Nous nous concentrons ici uniquement sur 'edit' et 'update'
+
+Route::get('/etats.agents_par_service', [EtatAgentsController::class, 'index'])->name('etats.agents_par_service');
+
+
+// Utilisez cette route pour gérer à la fois l'affichage initial et la recherche POST/GET
+Route::get('/etats.agents_par_service_recherche', [EtatAgentsController::class, 'Recherche'])->name('etats.agents_par_service_recherche');

@@ -90,6 +90,9 @@
                         <a class="collapse-item" href="{{ route('presences.index') }}">Enrégistrement de pointages</a>
                         <a class="collapse-item" href="{{ route('absences.index') }}">Congés et Permissions</a>
                         <a class="collapse-item" href="{{ route('typeabsences.index') }}">Parametrage Absence</a>
+                        <a class="collapse-item" href="{{ route('etats.agents_par_service') }}">Liste des Agents par Service</a>
+                        <a class="collapse-item" href="{{ route('etats.agents_par_service_recherche') }}">Recherche des Agents par Service</a>
+
                         <!-- <a class="collapse-item" href="">Dons</a> -->
                     </div>
                 </div>
