@@ -1,181 +1,145 @@
-@extends('layouts.app') {{-- Assurez-vous que ce layout existe --}}
+@extends('layouts.app')
 
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-10">
             <div class="card">
-                <div class="card-header">Modifier l'agent : {{ $agent->first_name }} {{ $agent->last_name }}</div>
+                <div class="card-header">Modifier les informations de l'agent : {{ $agent->first_name }} {{ $agent->last_name }}</div>
 
                 <div class="card-body">
-                    {{-- Formulaire de mise à jour --}}
-                    <form method="POST" action="{{ route('agents.update', $agent->id) }}" enctype="multipart/form-data">
+                    <!-- Le formulaire utilise la route 'agents.update' et la méthode PUT -->
+                    <form action="{{ route('agents.update', $agent->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
 
-                        {{-- Section Informations Personnelles --}}
-                        <fieldset class="mb-4">
-                            <legend>Informations Personnelles</legend>
-                            <div class="row">
-                                <!-- Matricule -->
-                                <div class="col-md-4 mb-3">
-                                    <label for="matricule" class="form-label">Matricule</label>
-                                    <input type="text" class="form-control" id="matricule" name="matricule" value="{{ old('matricule', $agent->matricule) }}" required>
-                                    @error('matricule')<div class="text-danger">{{ $message }}</div>@enderror
-                                </div>
-                                <!-- Nom -->
-                                <div class="col-md-4 mb-3">
-                                    <label for="last_name" class="form-label">Nom de famille</label>
-                                    <input type="text" class="form-control" id="last_name" name="last_name" value="{{ old('last_name', $agent->last_name) }}" required>
-                                    @error('last_name')<div class="text-danger">{{ $message }}</div>@enderror
-                                </div>
-                                <!-- Prénom -->
-                                <div class="col-md-4 mb-3">
-                                    <label for="first_name" class="form-label">Prénom(s)</label>
-                                    <input type="text" class="form-control" id="first_name" name="first_name" value="{{ old('first_name', $agent->first_name) }}" required>
-                                    @error('first_name')<div class="text-danger">{{ $message }}</div>@enderror
-                                </div>
-                                <!-- Sexe -->
-                                <div class="col-md-3 mb-3">
-                                    <label for="sexe" class="form-label">Sexe</label>
-                                    <select class="form-select" id="sexe" name="sexe" required>
-                                        <option value="M" {{ old('sexe', $agent->sexe) == 'M' ? 'selected' : '' }}>Masculin</option>
-                                        <option value="F" {{ old('sexe', $agent->sexe) == 'F' ? 'selected' : '' }}>Féminin</option>
-                                    </select>
-                                    @error('sexe')<div class="text-danger">{{ $message }}</div>@enderror
-                                </div>
-                                <!-- Date de naissance -->
-                                <div class="col-md-4 mb-3">
-                                    <label for="date_of_birth" class="form-label">Date de naissance</label>
-                                    <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" value="{{ old('date_of_birth', $agent->date_of_birth) }}">
-                                    @error('date_of_birth')<div class="text-danger">{{ $message }}</div>@enderror
-                                </div>
-                                <!-- Lieu de naissance (Place of birth) -->
-                                <div class="col-md-5 mb-3">
-                                    <label for="Place of birth" class="form-label">Lieu de naissance</label>
-                                    <input type="text" class="form-control" id="Place of birth" name="Place of birth" value="{{ old('Place of birth', $agent->Place_of_birth) }}">
-                                    @error('Place of birth')<div class="text-danger">{{ $message }}</div>@enderror
-                                </div>
+                        {{-- Section 1: Informations Générales --}}
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="first_name">Prénom <span class="text-danger">*</span></label>
+                                <input type="text" name="first_name" id="first_name" class="form-control @error('first_name') is-invalid @enderror" value="{{ old('first_name', $agent->first_name) }}" required>
+                                @error('first_name') <span class="invalid-feedback">{{ $message }}</span> @enderror
                             </div>
-                        </fieldset>
-
-                        {{-- Section Contact et Adresse --}}
-                        <fieldset class="mb-4">
-                            <legend>Contact et Adresse</legend>
-                            <div class="row">
-                                <!-- Email -->
-                                <div class="col-md-4 mb-3">
-                                    <label for="email" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="email" name="email" value="{{ old('email', $agent->email) }}">
-                                    @error('email')<div class="text-danger">{{ $message }}</div>@enderror
-                                </div>
-                                <!-- Téléphone -->
-                                <div class="col-md-4 mb-3">
-                                    <label for="phone_number" class="form-label">Téléphone</label>
-                                    <input type="text" class="form-control" id="phone_number" name="phone_number" value="{{ old('phone_number', $agent->phone_number) }}">
-                                    @error('phone_number')<div class="text-danger">{{ $message }}</div>@enderror
-                                </div>
-                                <!-- Adresse -->
-                                <div class="col-md-4 mb-3">
-                                    <label for="address" class="form-label">Adresse Physique</label>
-                                    <input type="text" class="form-control" id="address" name="address" value="{{ old('address', $agent->address) }}">
-                                    @error('address')<div class="text-danger">{{ $message }}</div>@enderror
-                                </div>
+                            <div class="form-group col-md-4">
+                                <label for="last_name">Nom <span class="text-danger">*</span></label>
+                                <input type="text" name="last_name" id="last_name" class="form-control @error('last_name') is-invalid @enderror" value="{{ old('last_name', $agent->last_name) }}" required>
+                                @error('last_name') <span class="invalid-feedback">{{ $message }}</span> @enderror
                             </div>
-                        </fieldset>
-
-                        {{-- Section Professionnelle --}}
-                        <fieldset class="mb-4">
-                            <legend>Informations Professionnelles</legend>
-                            <div class="row">
-                                <!-- Emploi -->
-                                <div class="col-md-4 mb-3">
-                                    <label for="Emploi" class="form-label">Emploi</label>
-                                    <input type="text" class="form-control" id="Emploi" name="Emploi" value="{{ old('Emploi', $agent->Emploi) }}">
-                                    @error('Emploi')<div class="text-danger">{{ $message }}</div>@enderror
-                                </div>
-                                <!-- Grade -->
-                                <div class="col-md-4 mb-3">
-                                    <label for="Grade" class="form-label">Grade</label>
-                                    <input type="text" class="form-control" id="Grade" name="Grade" value="{{ old('Grade', $agent->Grade) }}">
-                                    @error('Grade')<div class="text-danger">{{ $message }}</div>@enderror
-                                </div>
-                                <!-- Date Prise de Service -->
-                                <div class="col-md-4 mb-3">
-                                    <label for="Date_Prise_de_service" class="form-label">Date Prise de Service</label>
-                                    <input type="date" class="form-control" id="Date_Prise_de_service" name="Date_Prise_de_service" value="{{ old('Date_Prise_de_service', $agent->Date_Prise_de_service) }}">
-                                    @error('Date_Prise_de_service')<div class="text-danger">{{ $message }}</div>@enderror
-                                </div>
-                                <!-- Status -->
-                                <div class="col-md-4 mb-3">
-                                    <label for="status" class="form-label">Statut</label>
-                                    <select class="form-select" id="status" name="status" required>
-                                        <option value="Actif" {{ old('status', $agent->status) == 'Actif' ? 'selected' : '' }}>Actif</option>
-                                        <option value="Inactif" {{ old('status', $agent->status) == 'Inactif' ? 'selected' : '' }}>Inactif</option>
-                                        {{-- Ajoutez d'autres statuts si nécessaire --}}
-                                    </select>
-                                    @error('status')<div class="text-danger">{{ $message }}</div>@enderror
-                                </div>
-                                <!-- Service ID -->
-                                <div class="col-md-4 mb-3">
-                                    <label for="service_id" class="form-label">Service (ID)</label>
-                                    {{-- Idéalement, utilisez un select dynamique pour lister les services existants --}}
-                                    <input type="number" class="form-control" id="service_id" name="service_id" value="{{ old('service_id', $agent->service_id) }}">
-                                    @error('service_id')<div class="text-danger">{{ $message }}</div>@enderror
-                                </div>
+                            <div class="form-group col-md-4">
+                                <label for="matricule">Matricule <span class="text-danger">*</span></label>
+                                <input type="text" name="matricule" id="matricule" class="form-control @error('matricule') is-invalid @enderror" value="{{ old('matricule', $agent->matricule) }}" required>
+                                @error('matricule') <span class="invalid-feedback">{{ $message }}</span> @enderror
                             </div>
-                        </fieldset>
-
-                        {{-- Section Contact d'Urgence --}}
-                        <fieldset class="mb-4">
-                            <legend>Contact d'Urgence</legend>
-                            <div class="row">
-                                <!-- Personne a prévenir -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="Personne_a_prevenir" class="form-label">Personne à prévenir</label>
-                                    <input type="text" class="form-control" id="Personne_a_prevenir" name="Personne_a_prevenir" value="{{ old('Personne_a_prevenir', $agent->Personne_a_prevenir) }}">
-                                    @error('Personne_a_prevenir')<div class="text-danger">{{ $message }}</div>@enderror
-                                </div>
-                                <!-- Contact personne a prévenir -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="Contact_personne_a_prevenir" class="form-label">Contact d'urgence</label>
-                                    <input type="text" class="form-control" id="Contact_personne_a_prevenir" name="Contact_personne_a_prevenir" value="{{ old('Contact_personne_a_prevenir', $agent->Contact_personne_a_prevenir) }}">
-                                    @error('Contact_personne_a_prevenir')<div class="text-danger">{{ $message }}</div>@enderror
-                                </div>
-                            </div>
-                        </fieldset>
-
-                        {{-- Section Photo et User ID (si applicable) --}}
-                        <fieldset class="mb-4">
-                            <legend>Autres</legend>
-                            <div class="row">
-                                <!-- Photo -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="photo" class="form-label">Photo de profil</label>
-                                    <input type="file" class="form-control" id="photo" name="photo">
-                                    @error('photo')<div class="text-danger">{{ $message }}</div>@enderror
-
-                                    @if($agent->photo)
-                                        <p class="mt-2">Photo actuelle: <a href="{{ asset('storage/' . $agent->photo) }}" target="_blank">Voir l'image</a></p>
-                                    @endif
-                                </div>
-                                <!-- User ID (souvent caché ou géré automatiquement) -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="user_id" class="form-label">ID Utilisateur (lié)</label>
-                                    <input type="number" class="form-control" id="user_id" name="user_id" value="{{ old('user_id', $agent->user_id) }}" readonly>
-                                </div>
-                            </div>
-                        </fieldset>
-
-                        {{-- Boutons d'action --}}
-                        <div class="d-flex justify-content-between mt-4">
-                            <button type="submit" class="btn btn-success">
-                                Mettre à jour l'agent
-                            </button>
-                            <a href="{{ route('agents.index') }}" class="btn btn-danger">
-                                Annuler
-                            </a>
                         </div>
+
+                        {{-- Section 2: Contact et Statut --}}
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="email">E-mail Personnel</label>
+                                <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email', $agent->email) }}">
+                                @error('email') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="email_professionnel">E-mail Professionnel</label>
+                                <input type="email" name="email_professionnel" id="email_professionnel" class="form-control @error('email_professionnel') is-invalid @enderror" value="{{ old('email_professionnel', $agent->email_professionnel) }}">
+                                @error('email_professionnel') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="status">Statut <span class="text-danger">*</span></label>
+                                <select name="status" id="status" class="form-control @error('status') is-invalid @enderror" required>
+                                    {{-- Assurez-vous que ces options correspondent à votre ENUM dans la DB --}}
+                                    <option value="Agent" {{ old('status', $agent->status) == 'Agent' ? 'selected' : '' }}>Agent</option>
+                                    <option value="Chef de service" {{ old('status', $agent->status) == 'Chef de service' ? 'selected' : '' }}>Chef de service</option>
+                                    <option value="Sous-directeur" {{ old('status', $agent->status) == 'Sous-directeur' ? 'selected' : '' }}>Sous-directeur</option>
+                                    <option value="Directeur" {{ old('status', $agent->status) == 'Directeur' ? 'selected' : '' }}>Directeur</option>
+                                </select>
+                                @error('status') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
+
+                        {{-- Section 3: Physique et Service --}}
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                                <label for="sexe">Sexe</label>
+                                <select name="sexe" id="sexe" class="form-control @error('sexe') is-invalid @enderror">
+                                    <option value="">Choisir...</option>
+                                    <option value="Male" {{ old('sexe', $agent->sexe) == 'Male' ? 'selected' : '' }}>Male</option>
+                                    <option value="Female" {{ old('sexe', $agent->sexe) == 'Female' ? 'selected' : '' }}>Female</option>
+                                </select>
+                                @error('sexe') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                            </div>
+                             <div class="form-group col-md-3">
+                                <label for="date_of_birth">Date de Naissance</label>
+                                <input type="date" name="date_of_birth" id="date_of_birth" class="form-control @error('date_of_birth') is-invalid @enderror" value="{{ old('date_of_birth', optional($agent->date_of_birth)->format('Y-m-d')) }}">
+                                @error('date_of_birth') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="Place of birth">Lieu de Naissance</label>
+                                <input type="text" name="Place of birth" id="Place of birth" class="form-control @error('Place of birth') is-invalid @enderror" value="{{ old('Place of birth', $agent->{'Place of birth'}) }}">
+                                @error('Place of birth') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                            </div>
+                             <div class="form-group col-md-3">
+                                <label for="service_id">Service <span class="text-danger">*</span></label>
+                                <select name="service_id" id="service_id" class="form-control @error('service_id') is-invalid @enderror" required>
+                                    <option value="">Sélectionner un service</option>
+                                    {{-- Supposons que vous passez une variable $services depuis le contrôleur --}}
+                                    @foreach($services as $service)
+                                        <option value="{{ $service->id }}" {{ old('service_id', $agent->service_id) == $service->id ? 'selected' : '' }}>
+                                            {{ $service->name }} {{ $service->code }} {{ $service->description }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('service_id') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
+
+                        {{-- Section 4: Emploi et Contact d'Urgence --}}
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="Emploi">Emploi</label>
+                                <input type="text" name="Emploi" id="Emploi" class="form-control @error('Emploi') is-invalid @enderror" value="{{ old('Emploi', $agent->Emploi) }}">
+                                @error('Emploi') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="Grade">Grade</label>
+                                <input type="text" name="Grade" id="Grade" class="form-control @error('Grade') is-invalid @enderror" value="{{ old('Grade', $agent->Grade) }}">
+                                @error('Grade') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="Date_Prise_de_service">Date Prise de Service</label>
+                                <input type="date" name="Date_Prise_de_service" id="Date_Prise_de_service" class="form-control @error('Date_Prise_de_service') is-invalid @enderror" value="{{ old('Date_Prise_de_service', optional($agent->Date_Prise_de_service)->format('Y-m-d')) }}">
+                                @error('Date_Prise_de_service') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                             <div class="form-group col-md-6">
+                                <label for="Personne_a_prevenir">Personne à prévenir (Urgence)</label>
+                                <input type="text" name="Personne_a_prevenir" id="Personne_a_prevenir" class="form-control @error('Personne_a_prevenir') is-invalid @enderror" value="{{ old('Personne_a_prevenir', $agent->Personne_a_prevenir) }}">
+                                @error('Personne_a_prevenir') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="Contact_personne_a_prevenir">Contact Personne à prévenir</label>
+                                <input type="text" name="Contact_personne_a_prevenir" id="Contact_personne_a_prevenir" class="form-control @error('Contact_personne_a_prevenir') is-invalid @enderror" value="{{ old('Contact_personne_a_prevenir', $agent->Contact_personne_a_prevenir) }}">
+                                @error('Contact_personne_a_prevenir') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
+
+                        {{-- Section 5: Photo et Autres --}}
+                        <div class="form-group">
+                            <label for="photo">Photo de profil</label>
+                            <input type="file" name="photo" id="photo" class="form-control-file @error('photo') is-invalid @enderror">
+                            @error('photo') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                            @if($agent->photo)
+                                <p class="mt-2">Photo actuelle: <a href="{{ asset($agent->photo) }}" target="_blank">Voir l'image</a></p>
+                            @endif
+                        </div>
+
+                        {{-- Champs cachés si nécessaire, par exemple pour user_id si lié à un compte utilisateur --}}
+                        {{-- <input type="hidden" name="user_id" value="{{ old('user_id', $agent->user_id) }}"> --}}
+
+                        <button type="submit" class="btn btn-success">Mettre à jour l'agent</button>
+                        <a href="{{ route('agents.index') }}" class="btn btn-danger">Annuler</a>
                     </form>
                 </div>
             </div>

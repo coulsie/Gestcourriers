@@ -26,6 +26,7 @@ class Agent extends Model
         'address',
         'service_id', // Clé étrangère vers le service d'affectation
         'user_id',    // Clé étrangère optionnelle vers le compte utilisateur pour l'authentification
+        'email_professionnel', // Nouvelle colonne pour l'email professionnel
     ];
 
     /**
@@ -78,5 +79,5 @@ class Agent extends Model
     {
         return $this->hasMany(Affectation::class);
     }
-  
+
 }

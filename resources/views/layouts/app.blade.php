@@ -72,6 +72,7 @@
                         <a class="collapse-item" href="{{ route('courriers.create') }}">Ajouter un courrier</a>
                         <a class="collapse-item" href="{{ route('courriers.RechercheAffichage') }}">Recherche avancée</a>
                         <a class="collapse-item" href="{{ route('affectations.index') }}">Liste des affectations</a>
+
                         >
                         {{-- <a class="collapse-item" href="cards.html">Cards</a> --}}
                     </div>
@@ -89,11 +90,12 @@
                 <div id="collapsePaiements" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         {{-- <h6 class="collapse-header">Cotisations mensuelles</h6> --}}
-                        <a class="collapse-item" href="{{ route('presences.index') }}">Enrégistrement de pointages</a>
+                        <a class="collapse-item" href="{{ route('agents.index') }}">Ressources Humaines</a>
+                        <a class="collapse-item" href="{{ route('presences.index') }}">Enrégistrement Pointages</a>
                         <a class="collapse-item" href="{{ route('absences.index') }}">Congés et Permissions</a>
                         <a class="collapse-item" href="{{ route('typeabsences.index') }}">Parametrage Absence</a>
-                        <a class="collapse-item" href="{{ route('etats.agents_par_service') }}">Liste des Agents par Service</a>
-                        <a class="collapse-item" href="{{ route('etats.agents_par_service_recherche') }}">Recherche des Agents par Service</a>
+                        <a class="collapse-item" href="{{ route('etats.agents_par_service') }}">Agents par Service</a>
+                        <a class="collapse-item" href="{{ route('etats.agents_par_service_recherche') }}">Recherche Agents</a>
 
                         <!-- <a class="collapse-item" href="">Dons</a> -->
                     </div>
