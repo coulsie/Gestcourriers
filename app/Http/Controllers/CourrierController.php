@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Courrier;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
+
 
 class CourrierController extends Controller
 {
@@ -112,4 +114,44 @@ class CourrierController extends Controller
     {
         return view('courriers.affectation.index', compact('courrier'));
     }
+
+ public function RechercheAffichage(Request $request): View
+    {
+        $query = Courrier::query();
+
+        // Appliquer les filtres si des paramètres de recherche sont présents
+        if ($request->filled('search_term')) {
+            $searchTerm = $request->input('search_term');
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('reference', 'LIKE', "%{$searchTerm}%")
+                  ->orWhere('objet', 'LIKE', "%{$searchTerm}%")
+                  ->orWhere('expediteur_nom', 'LIKE', "%{$searchTerm}%")
+                  ->orWhere('destinataire_nom', 'LIKE', "%{$searchTerm}%");
+            });
+        }
+
+        if ($request->filled('statut')) {
+            $query->where('statut', $request->input('statut'));
+        }
+
+        if ($request->filled('date_debut')) {
+            $query->where('date_courrier', '>=', $request->input('date_debut'));
+        }
+
+        if ($request->filled('date_fin')) {
+            $query->where('date_courrier', '<=', $request->input('date_fin'));
+        }
+
+        // Récupérer les courriers avec pagination optionnelle (ici on prend 10 par page)
+        $courriers = $query->orderBy('date_courrier', 'desc')->paginate(10);
+
+        // Passer les résultats et les anciennes valeurs de recherche à la vue
+        return view('courriers.index', [
+            'courriers' => $courriers,
+            'request' => $request->all(), // Utile pour garder les filtres dans le formulaire
+        ]);
+    }
+
+
+
 }

@@ -70,7 +70,9 @@
                         {{-- <h6 class="collapse-header">Listes Des Courriers:</h6> --}}
                         <a class="collapse-item" href="{{ route('courriers.index') }}">Listes des courriers</a>
                         <a class="collapse-item" href="{{ route('courriers.create') }}">Ajouter un courrier</a>
+                        <a class="collapse-item" href="{{ route('courriers.RechercheAffichage') }}">Recherche avancée</a>
                         <a class="collapse-item" href="{{ route('affectations.index') }}">Liste des affectations</a>
+                        >
                         {{-- <a class="collapse-item" href="cards.html">Cards</a> --}}
                     </div>
                 </div>

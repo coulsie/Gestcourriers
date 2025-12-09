@@ -110,3 +110,5 @@ Route::get('/etats.agents_par_service', [EtatAgentsController::class, 'index'])-
 
 // Utilisez cette route pour gérer à la fois l'affichage initial et la recherche POST/GET
 Route::get('/etats.agents_par_service_recherche', [EtatAgentsController::class, 'Recherche'])->name('etats.agents_par_service_recherche');
+
+Route::get('/courriers/RechercheAffichage', [CourrierController::class, 'RechercheAffichage'])->name('courriers.RechercheAffichage');
