@@ -146,7 +146,7 @@ class CourrierController extends Controller
         $courriers = $query->orderBy('date_courrier', 'desc')->paginate(10);
 
         // Passer les résultats et les anciennes valeurs de recherche à la vue
-        return view('courriers.index', [
+        return view('courriers.RechercheAffichage', [
             'courriers' => $courriers,
             'request' => $request->all(), // Utile pour garder les filtres dans le formulaire
         ]);

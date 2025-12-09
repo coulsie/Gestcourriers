@@ -1,59 +1,66 @@
-{{-- resources/views/type_absences/create.blade.php --}}
+@extends('layouts.app')
 
-@extends('layouts.app') {{-- Assuming a main layout file --}}
+@section('title', "Créer un Type d'Absence")
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">Create New Absence Type</div>
+    <h1>Créer un nouveau Type d'Absence</h1>
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('typeabsences.store') }}">
-                        @csrf
+    <div class="card">
+        <div class="card-header">
+            Formulaire de création
+        </div>
+        <div class="card-body">
 
-                        {{-- Nom Type Field --}}
-                        <div class="mb-3">
-                            <label for="nom_type" class="form-label">Name of Type</label>
-                            <input type="text" class="form-control @error('nom_type') is-invalid @enderror" id="nom_type" name="nom_type" value="{{ old('nom_type') }}" required>
-                            @error('nom_type')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+            {{-- Assurez-vous que la route 'type_absences.store' est définie dans web.php --}}
+            <form action="{{ route('typeabsences.store') }}" method="POST">
+                @csrf
 
-                        {{-- Code Field --}}
-                        <div class="mb-3">
-                            <label for="code" class="form-label">Code (e.g., SICK, VAC)</label>
-                            <input type="text" class="form-control @error('code') is-invalid @enderror" id="code" name="code" value="{{ old('code') }}" required>
-                            @error('code')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        {{-- Description Field --}}
-                        <div class="mb-3">
-                            <label for="description" class="form-label">Description</label>
-                            <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="3">{{ old('description') }}</textarea>
-                            @error('description')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        {{-- Est Paye Checkbox --}}
-                        <div class="mb-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="est_paye" name="est_paye" value="1" {{ old('est_paye') ? 'checked' : '' }}>
-                            <label class="form-check-label" for="est_paye">Is this a paid absence?</label>
-                        </div>
-
-                        <div class="mb-3">
-                            <button type="submit" class="btn btn-success">Create Type</button>
-                            <a href="{{ route('typeabsences.index') }}" class="btn btn-danger">Cancel</a>
-                        </div>
-                    </form>
+                {{-- Champ nom_type (ENUM) --}}
+                <div class="mb-3">
+                    <label for="nom_type" class="form-label">Nom du Type d'Absence</label>
+                    <select name="nom_type" id="nom_type" class="form-select @error('nom_type') is-invalid @enderror" required>
+                        <option value="Congé" {{ old('nom_type') == 'Congé' ? 'selected' : '' }}>Congé</option>
+                        <option value="Repos Maladie" {{ old('nom_type') == 'Repos Maladie' ? 'selected' : '' }}>Repos Maladie</option>
+                        <option value="Mission" {{ old('nom_type') == 'Mission' ? 'selected' : '' }}>Mission</option>
+                        <option value="Permission" {{ old('nom_type') == 'Permission' ? 'selected' : '' }}>Permission</option>
+                        <option value="Autres" {{ old('nom_type') == 'Autres' ? 'selected' : '' }}>Autres</option>
+                    </select>
+                    @error('nom_type')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
-            </div>
+
+                {{-- Champ code (VARCHAR) --}}
+                <div class="mb-3">
+                    <label for="code" class="form-label">Code (Optionnel)</label>
+                    <input type="text" name="code" id="code" class="form-control @error('code') is-invalid @enderror" value="{{ old('code') }}" maxlength="10">
+                    @error('code')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                {{-- Champ description (TEXT) --}}
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description (Optionnel)</label>
+                    <textarea name="description" id="description" rows="3" class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
+                    @error('description')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                {{-- Champ est_paye (TINYINT / Checkbox) --}}
+                <div class="mb-3 form-check">
+                    <input type="checkbox" name="est_paye" id="est_paye" class="form-check-input @error('est_paye') is-invalid @enderror" value="1" {{ old('est_paye', 0) ? 'checked' : '' }}>
+                    <label class="form-check-label" for="est_paye">Absence payée ?</label>
+                    @error('est_paye')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <button type="submit" class="btn btn-success">Enregistrer le type d'absence</button>
+                <a href="{{ route('typeabsences.index') }}" class="btn btn-danger">Annuler</a>
+
+            </form>
         </div>
     </div>
-</div>
 @endsection

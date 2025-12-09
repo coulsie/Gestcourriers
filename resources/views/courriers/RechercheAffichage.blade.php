@@ -10,7 +10,7 @@
             Formulaire de Recherche Avancée
         </div>
         <div class="card-body">
-            <form action="{{ route('courriers.index') }}" method="GET" class="row g-3">
+            <form action="{{ route('courriers.RechercheAffichage') }}" method="GET" class="row g-3">
                 <div class="col-md-4">
                     <label for="search_term" class="form-label">Référence, Objet, Expéditeur ou Destinataire</label>
                     <input type="text" name="search_term" id="search_term" class="form-control" value="{{ request('search_term') }}" placeholder="Mot clé de recherche...">
@@ -38,7 +38,7 @@
                 </div>
 
                 <div class="col-md-1 align-self-end">
-                    <button type="submit" class="btn btn-primary w-100">Rechercher</button>
+                    <button type="submit" class="btn btn-success w-100">Rechercher</button>
                 </div>
             </form>
         </div>

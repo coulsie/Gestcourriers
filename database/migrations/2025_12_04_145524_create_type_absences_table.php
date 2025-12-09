@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('type_absences', function (Blueprint $table) {
 
             $table->id(); // Colonne TypeAbsenceID (auto-incrément)
-            $table->enum('nom_type', ['Congé','Maladie','Mission','Autres'])->default('Congé'); // Define the enum column
+            $table->enum('nom_type', ['Congé','Repos Maladie','Mission','Permission','Autres'])->default('Congé'); // Define the enum column
             $table->string('code', 10)->nullable(); // Colonne Code
             $table->text('description')->nullable(); // Colonne Description
             $table->boolean('est_paye')->default(false); // Colonne EstPaye

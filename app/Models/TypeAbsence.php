@@ -11,64 +11,54 @@ class TypeAbsence extends Model
     use HasFactory;
 
     /**
-     * Le nom de la table associée au modèle.
-     * Par défaut, Laravel suppose 'type_absences'.
-     * Cette ligne est donc facultative si vous respectez la convention.
+     * The table associated with the model.
      *
      * @var string
      */
     protected $table = 'type_absences';
 
     /**
-     * Le nom de la clé primaire personnalisée de la table.
-     * Par défaut, Laravel suppose 'id'. Nous devons le spécifier ici.
-     *
-     * @var string
-     */
-    protected $primaryKey = 'TypeAbsenceID';
-
-    /**
-     * Indique si les IDs sont auto-incrémentés.
-     * Par défaut à true.
-     *
-     * @var bool
-     */
-    public $incrementing = true;
-
-    /**
-     * Le type de données de la clé primaire.
-     * Par défaut à 'int'.
-     *
-     * @var string
-     */
-    protected $keyType = 'int';
-
-    /**
-     * Les attributs qui sont massivement assignables (mass assignable).
-     * Ceci est crucial pour utiliser des méthodes comme TypeAbsence::create($data)
-     * dans votre contrôleur sans erreur d'assignation de masse.
+     * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'NomType',
-        'Code',
-        'Description',
-        'EstPaye',
+        'nom_type',
+        'code',
+        'description',
+        'est_paye',
     ];
 
     /**
-     * Les attributs qui devraient être castés en types natifs.
-     * La colonne 'EstPaye' doit être traitée comme un booléen en PHP.
+     * The attributes that should be cast to native types.
      *
      * @var array
      */
     protected $casts = [
-        'EstPaye' => 'boolean',
+        // Casts the tinyint(1) field to a PHP boolean true/false
+        'est_paye' => 'boolean',
+        // Optional: Laravel handles timestamps by default, but you can explicitly cast if needed
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
-    // Note: Les champs 'created_at' et 'updated_at' sont gérés automatiquement par $timestamps = true (qui est la valeur par défaut).
-   public function absences(): HasMany
+    // Optional: Define a constant for the enum values for better code consistency
+    public const TYPE_CONGE = 'Congé';
+    public const TYPE_MALADIE = 'Repos Maladie';
+    public const TYPE_MISSION = 'Mission';
+    public const TYPE_PERMIS = 'Permis';
+
+    public static function getTypes()
+    {
+        return [
+            self::TYPE_CONGE,
+            self::TYPE_MALADIE,
+            self::TYPE_MISSION,
+            self::TYPE_PERMIS,
+        ];
+    }
+
+    public function absences(): HasMany
     {
         return $this->hasMany(Absence::class);
     }
@@ -77,5 +67,6 @@ class TypeAbsence extends Model
     {
         return $this->hasMany(Presence::class);
     }
+
 
 }
