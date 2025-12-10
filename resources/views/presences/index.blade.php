@@ -8,7 +8,7 @@
 <div class="bg-white shadow-lg rounded-lg p-6">
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-xl font-semibold text-gray-800">Enregistrements de Pointage</h2>
-        
+
         <a href="{{ route('presences.create') }}" class="btn btn-success btn-sm float-end">
             Nouveau Pointage
         </a>
