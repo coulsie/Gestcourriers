@@ -16,6 +16,7 @@ use App\Http\Controllers\AbsenceController;
 use App\Http\Controllers\TypeAbsenceController;
 use App\Http\Controllers\EtatAgentsController;
 use App\Http\Controllers\EtatAgentsController1;
+use App\Http\Controllers\NotificationTacheController;
 // ... autres routes
 
 
@@ -114,3 +115,8 @@ Route::get('/etats.agents_par_service_recherche', [EtatAgentsController::class, 
 Route::get('/courriers.RechercheAffichage', [CourrierController::class, 'RechercheAffichage'])->name('courriers.RechercheAffichage');
 
 Route::resource('typeabsences', TypeAbsenceController::class);
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::resource('notifications_taches', NotificationTacheController::class);
+});
