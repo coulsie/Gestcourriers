@@ -16,14 +16,26 @@ class NotificationTacheController extends Controller
      */
     public function index()
     {
-        // Récupère uniquement les tâches non complétées ou non annulées pour l'agent actuel
-        $taches = NotificationTache::where('id_agent', Auth::id())
-                                   ->whereNotIn('statut', ['Complétée', 'Annulée'])
-                                   ->orderBy('priorite', 'desc')
-                                   ->orderBy('date_echeance', 'asc')
-                                   ->get();
-                                   // Utilisez paginate() au lieu de get() si vous avez beaucoup de données
+         // 1. Récupère l'ID de l'utilisateur actuellement connecté
+        $currentAgentId = Auth::id();
 
+        // 2. Construit la requête Eloquent
+        $taches = NotificationTache::
+            // WHERE id_agent = ID de l'agent connecté
+            where('id_agent', $currentAgentId)
+            // WHERE statut NOT IN ('Complétée', 'Annulée') pour n'afficher que les tâches actives
+            ->whereNotIn('statut', ['Complétée', 'Annulée'])
+            // Triage principal : Priorité descendante (Urgent en premier)
+            ->orderBy('priorite', 'desc')
+            // Triage secondaire : Date d'échéance ascendante (les plus proches en premier)
+            ->orderBy('date_echeance', 'asc')
+            // Exécute la requête et récupère les résultats
+            ->get();
+
+        // Si vous avez beaucoup de tâches, utilisez paginate(15) au lieu de get() :
+        // ->paginate(15);
+
+        // 3. Passe les données à la vue Blade 'notifications_taches.index'
         return view('notifications_taches.index', compact('taches'));
     }
 
