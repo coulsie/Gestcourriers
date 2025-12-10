@@ -38,6 +38,7 @@ class CourrierController extends Controller
      */
     public function store(Request $request)
     {
+        
         // Valider les données de la requête
         $validatedData = $request->validate([
             'reference' => 'required|unique:courriers|max:255',

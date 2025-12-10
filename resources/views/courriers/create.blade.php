@@ -96,12 +96,13 @@
                         <!-- Section 3: Statut et Assignation -->
                         <div class="row mt-3">
                             <div class="col-md-4 mb-3">
-                                <label for="statut" class="form-label">{{ __('Statut') }}</label>
+                                <label for="statut" class="form-label">{{ __('statut') }}</label>
                                 <select id="statut" class="form-control @error('statut') is-invalid @enderror" name="statut">
-                                    <option value="pending" {{ old('statut') == 'pending' ? 'selected' : '' }}>En attente</option>
-                                    <option value="in_progress" {{ old('statut') == 'in_progress' ? 'selected' : '' }}>En cours</option>
-                                    <option value="completed" {{ old('statut') == 'completed' ? 'selected' : '' }}>Terminé</option>
+                                    <option value="pending" {{ old('statut') == 'pending' ? 'selected' : '' }}>reçu</option>
+                                    <option value="in_progress" {{ old('statut') == 'in_progress' ? 'selected' : '' }}>en_traitement</option>
+                                    <option value="completed" {{ old('statut') == 'completed' ? 'selected' : '' }}>traité</option>
                                     <option value="archived" {{ old('statut') == 'archived' ? 'selected' : '' }}>Archivé</option>
+                                     <option value="archived" {{ old('statut') == 'archived' ? 'selected' : '' }}>envoyé</option>
                                 </select>
                                 @error('statut') <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span> @enderror
                             </div>

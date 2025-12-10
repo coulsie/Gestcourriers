@@ -60,7 +60,7 @@ class Courrier extends Model
     public const STATUT_EN_TRAITEMENT = 'en_traitement';
     public const STATUT_TRAITE = 'traité';
     public const STATUT_ARCHIVE = 'archivé';
-    public const STATUT_URGENT = 'urgent';
+    public const STATUT_ENVOYE = 'envoyé';
 
     // --- Relations Eloquent ---
 
