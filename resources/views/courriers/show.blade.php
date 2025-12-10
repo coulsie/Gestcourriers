@@ -56,15 +56,26 @@
                         <div class="col-md-12">
                             <h5 class="text-primary">{{ __('Fichier Joint') }}</h5>
                             <hr>
-                            @if ($courrier->chemin_fichier)
-                                <a href="{{ Storage::url($courrier->chemin_fichier) }}" target="_blank" class="btn btn-outline-primary">
-                                    Voir le fichier
-                                </a>
-                                {{-- Si le chemin est juste une URL, utilisez ceci à la place: --}}
-                                {{-- <a href="{{ $courrier->chemin_fichier }}" target="_blank" class="btn btn-outline-primary">Voir le fichier</a> --}}
-                            @else
-                                <p>Aucun fichier joint.</p>
-                            @endif
+                    
+                            {{-- Supposons que vous ayez une variable $courrier disponible dans votre vue --}}
+
+                                @if($courrier->chemin_fichier)
+                                    <div class="mt-3">
+                                        <p>Document associé :</p>
+
+                                        <!-- Bouton pour visualiser/ouvrir dans un nouvel onglet -->
+                                        <a href="{{ asset($courrier->chemin_fichier) }}" target="_blank" class="btn btn-info">
+                                            <i class="fas fa-eye"></i> Visualiser le document
+                                        </a>
+
+                                        <!-- Bouton pour forcer le téléchargement -->
+                                        <a href="{{ asset($courrier->chemin_fichier) }}" download class="btn btn-success ml-2">
+                                            <i class="fas fa-download"></i> Télécharger le fichier
+                                        </a>
+                                    </div>
+                                @else
+                                    <p class="text-muted">Aucun fichier n'est associé à ce courrier.</p>
+                                @endif
                         </div>
                     </div>
 

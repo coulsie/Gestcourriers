@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Courrier extends Model
 {
-    use HasFactory;
+   use HasFactory;
 
     /**
      * The table associated with the model.
@@ -20,7 +21,7 @@ class Courrier extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var array
      */
     protected $fillable = [
         'reference',
@@ -43,10 +44,38 @@ class Courrier extends Model
      * @var array
      */
     protected $casts = [
-        'date_courrier' => 'date',
+        'date_courrier' => 'date', // Cast en objet Date PHP (sans heure)
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
-    // Vous pouvez ajouter ici des relations, des accesseurs, ou d'autres méthodes personnalisées.
+    // --- Constantes pour le champ 'type' ENUM ---
+    public const TYPE_INCOMING = 'Incoming';
+    public const TYPE_OUTGOING = 'Outgoing';
+    public const TYPE_INFORMATION = 'Information';
+    public const TYPE_OTHER = 'Other';
+
+    // --- Constantes pour le champ 'statut' ENUM ---
+    public const STATUT_RECU = 'reçu';
+    public const STATUT_EN_TRAITEMENT = 'en_traitement';
+    public const STATUT_TRAITE = 'traité';
+    public const STATUT_ARCHIVE = 'archivé';
+    public const STATUT_URGENT = 'urgent';
+
+    // --- Relations Eloquent ---
+
+    /**
+     * Get the agent assigned to this courrier.
+     */
+    public function assigneA(): BelongsTo
+    {
+        // Suppose que le modèle Agent existe (ou User, selon votre structure)
+        return $this->belongsTo(Agent::class, 'assigne_a');
+    }
+
+    /**
+     * Get the affectations for the courrier.
+     */
 
     public function affectations()
     {

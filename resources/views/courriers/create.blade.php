@@ -112,10 +112,15 @@
                                 @error('assigne_a') <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span> @enderror
                             </div>
 
-                             <div class="col-md-4 mb-3">
-                                <label for="chemin_fichier" class="form-label">{{ __('Chemin du fichier (URL/Path)') }}</label>
-                                <input id="chemin_fichier" type="text" class="form-control @error('chemin_fichier') is-invalid @enderror" name="chemin_fichier" value="{{ old('chemin_fichier') }}">
-                                @error('chemin_fichier') <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span> @enderror
+                            <div class="col-md-4 mb-3">
+                                <label for="chemin_fichier">Sélectionner le fichier</label>
+
+                                <!-- This input type creates the "Choose File" button -->
+                                <input type="file" name="chemin_fichier" id="chemin_fichier" class="form-control-file @error('chemin_fichier') is-invalid @enderror">
+
+                                @error('chemin_fichier')
+                                    <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
 
