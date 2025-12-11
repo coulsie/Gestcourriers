@@ -18,7 +18,7 @@ class Presence extends Model
 
     // Les attributs qui peuvent être assignés en masse (Mass Assignment)
     protected $fillable = [
-        'AgentID',
+        'Agent_id',
         'HeureArrivee',
         'HeureDepart',
         'Statut',
@@ -28,8 +28,9 @@ class Presence extends Model
     // Les types de données pour la conversion automatique (casting)
     // Important pour que les dates soient manipulées comme des objets Carbon
     protected $casts = [
-        'HeureArrivee' => 'datetime',
-        'HeureDepart'  => 'datetime',
+        'HeureArrivee',
+        'HeureDepart',
+        'Statut'       => 'string',
     ];
 
     // --- Relations Eloquent ---

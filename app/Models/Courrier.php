@@ -67,12 +67,7 @@ class Courrier extends Model
     /**
      * Get the agent assigned to this courrier.
      */
-    public function assigneA(): BelongsTo
-    {
-        // Suppose que le modèle Agent existe (ou User, selon votre structure)
-        return $this->belongsTo(Agent::class, 'assigne_a');
-    }
-
+   
     /**
      * Get the affectations for the courrier.
      */

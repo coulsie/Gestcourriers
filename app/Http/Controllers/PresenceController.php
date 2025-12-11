@@ -7,6 +7,7 @@ use App\Models\Presence;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Validation\Rule;
 
 class PresenceController extends Controller
 {
@@ -27,9 +28,9 @@ class PresenceController extends Controller
      */
     public function create(): View
     {
-    // Récupère les agents pour le menu déroulant
-    $agents = Agent::all(['id', 'first_name', 'last_name']); // Assurez-vous que Agent a les colonnes 'id', 'first_name' et 'last_name'
 
+    // Récupère les agents pour le menu déroulant
+    $agents = Agent::all(); // Assurez-vous que Agent a les colonnes 'id', 'first_name' et 'last_name'
     return view('presences.create', compact('agents'));
 
     }
@@ -37,22 +38,47 @@ class PresenceController extends Controller
     /**
      * Stocke une nouvelle ressource (présence) dans la base de données.
      */
-    public function store(Request $request): RedirectResponse
+ public function store(Request $request): RedirectResponse
     {
-        // Validation des données entrantes
+        // 1. Validate the incoming request data
         $validatedData = $request->validate([
-            'Agent_ID'      => 'required|exists:agents,id',
-            'Heure_Arrivee' => 'required|date',
-            'Heure_Depart'  => 'nullable|date|after:Heure_Arrivee',
-            'Status'       => 'required|string|max:50',
-            'Notes'        => 'nullable|string',
+            // 'agent_id' must be present, a number, and exist in the 'agents' table
+            'agent_id' => 'required|integer|exists:agents,id',
+
+            // 'heure_arrivee' is required and must be a valid date/time string
+            'heure_arrivee' => 'required|date',
+
+            // 'heure_depart' is optional (nullable in DB) and must be a valid date/time if provided
+            'heure_depart' => 'nullable|date|after:heure_arrivee',
+
+            // 'statut' must be one of the defined enum values
+            'statut' => [
+                'required',
+                Rule::in(['Absent', 'Présent', 'En Retard']),
+            ],
+
+            // 'notes' is optional (text field)
+            'notes' => 'nullable|string|max:1000',
         ]);
 
-        // Création de l'enregistrement dans la base de données
-        Presence::create($validatedData);
+        // 2. Create the Presence record using the validated data
+        // This relies on the $fillable property being set in the Presence model.
+        try {
+            $presence = Presence::create($validatedData);
 
-        // Redirection avec un message de succès
-        return redirect()->route('presences.index')->with('success', 'Présence enregistrée avec succès.');
+            // 3. Redirect the user after successful creation
+            return redirect()
+                ->route('presences.index') // Use the name of your index route
+                ->with('success', 'La présence a été enregistrée avec succès.');
+
+        } catch (\Exception $e) {
+            // Optional: Log the error or return a more specific message if needed
+            \Log::error('Presence creation failed: ' . $e->getMessage());
+
+            return back()
+                ->withInput()
+                ->with('error', 'Une erreur est survenue lors de l\'enregistrement de la présence.');
+        }
     }
 
     /**
@@ -78,7 +104,7 @@ class PresenceController extends Controller
     {
         // Validation des données entrantes pour la mise à jour
         $validatedData = $request->validate([
-            'AgentID'      => 'required|exists:agents,id',
+            'Agent_id'      => 'required|exists:agents,id',
             'HeureArrivee' => 'required|date',
             'HeureDepart'  => 'nullable|date|after:HeureArrivee',
             'Statut'       => 'required|string|max:50',

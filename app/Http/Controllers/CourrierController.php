@@ -43,12 +43,20 @@ class CourrierController extends Controller
             'reference' => 'required|unique:courriers|max:255',
             'type' => 'required',
             'objet' => 'required',
+            'description' => 'nullable|string',
+            'date_courrier' => 'nullable|date',
+            'expediteur_nom' => 'required|string|max:255',
+            'expediteur_contact' => 'nullable|string|max:255',
+            'destinataire_nom' => 'required|string|max:255',
+            'destinataire_contact' => 'nullable|string|max:255',
+            'assigne_a' => 'nullable|string|max:255',
+            'chemin_fichier' => 'nullable|string|max:255',
+
             // ... Ajoutez d'autres règles de validation ici
         ]);
 
-        Courrier::create($request->all());
-        return redirect()->route('courriers.index')
-                         ->with('success', 'Courrier créé avec succès.');
+        $courrier = Courrier::create($validatedData);
+        return redirect()->route('courriers.index')->with('success', 'Courrier créé avec succès.');
     }
 
     /**
