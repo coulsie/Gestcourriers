@@ -39,19 +39,14 @@ class CourrierController extends Controller
     public function store(Request $request)
     {
 
-        $validator = Validator::make($request->all(), [
+        $validatedData = $request->validate([
             'reference' => 'required|unique:courriers|max:255',
             'type' => 'required',
             'objet' => 'required',
-            // date_affectation will use default
+            // ... Ajoutez d'autres règles de validation ici
         ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-
-        $datas = $request->all();
-        Courrier::create($datas);
+        Courrier::create($request->all());
         return redirect()->route('courriers.index')
                          ->with('success', 'Courrier créé avec succès.');
     }
