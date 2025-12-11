@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Détails Présence #{{ $presence->PresenceID }}</title>
+    <title>Détails Présence #{{ $presence->id }}</title>
     <!-- Inclure Tailwind CSS CDN -->
     <link href="cdn.jsdelivr.net" rel="stylesheet">
 </head>
@@ -11,7 +11,7 @@
 
 <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-semibold text-gray-800">Détails de la Présence #{{ $presence->PresenceID }}</h1>
+        <h1 class="text-2xl font-semibold text-gray-800">Détails de la Présence #{{ $presence->id }}</h1>
         <a href="{{ route('presences.index') }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
             Retour à la liste
         </a>
@@ -24,7 +24,7 @@
                 <dt class="text-sm font-medium text-gray-500">Agent</dt>
                 <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                     <!-- Affiche le nom de l'agent si la relation agent() est définie -->
-                    {{ $presence->agent->name ?? 'ID Agent: ' . $presence->AgentID }}
+                    {{ $presence->agent->name ?? 'ID Agent: ' . $presence->agent_id }}
                 </dd>
             </div>
 
@@ -83,7 +83,7 @@
     </div>
 
     <div class="mt-6 flex justify-end">
-        <a href="{{ route('presences.edit', $presence->PresenceID) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        <a href="{{ route('presences.edit', $presence->id) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
             Modifier la présence
         </a>
     </div>

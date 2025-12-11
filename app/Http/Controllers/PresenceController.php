@@ -43,13 +43,16 @@ class PresenceController extends Controller
         // 1. Validate the incoming request data
         $validatedData = $request->validate([
             // 'agent_id' must be present, a number, and exist in the 'agents' table
-            'AgentID' => 'required|integer|exists:agents,id',
+            // 'AgentID' => 'required|integer|exists:agents,id', //ce champs n'est pas bien nommé. Faire attention au nom des champs
+            'agent_id' => 'required|integer|exists:agents,id',
 
             // 'heure_arrivee' is required and must be a valid date/time string
-            'heurearrivee' => 'required|date',
+            // 'heurearrivee' => 'required|date',//ce champs n'est pas bien nommé. Faire attention au nom des champs
+            'heure_arrivee' => 'required|date',
 
             // 'heure_depart' is optional (nullable in DB) and must be a valid date/time if provided
-            'heuredepart' => 'nullable|date|after:heure_arrivee',
+            // 'heuredepart' => 'nullable|date|after:heure_arrivee',//ce champs n'est pas bien nommé. Faire attention au nom des champs
+            'heure_depart' => 'nullable|date|after:heure_arrivee',
 
             // 'statut' must be one of the defined enum values
             'statut' => ['required',Rule::in(['Absent', 'Présent', 'En Retard']),],
@@ -61,6 +64,7 @@ class PresenceController extends Controller
         // 2. Create the Presence record using the validated data
         // This relies on the $fillable property being set in the Presence model.
             $datas = $request->all();
+            // dd($datas);
             // $presence = Presence::create($validatedData);
             $presence = Presence::create($datas);
            return redirect()->route('presences.index')->with('success', 'Présence créée avec succès.');
@@ -90,11 +94,26 @@ class PresenceController extends Controller
     {
         // Validation des données entrantes pour la mise à jour
         $validatedData = $request->validate([
-            'Agent_id'      => 'required|exists:agents,id',
-            'HeureArrivee' => 'required|date',
-            'HeureDepart'  => 'nullable|date|after:HeureArrivee',
-            'Statut'       => 'required|string|max:50',
-            'Notes'        => 'nullable|string',
+            // 'Agent_id'      => 'required|exists:agents,id',
+            // 'HeureArrivee' => 'required|date',
+            // 'HeureDepart'  => 'nullable|date|after:HeureArrivee',
+            // 'Statut'       => 'required|string|max:50',
+            // 'Notes'        => 'nullable|string',
+            'agent_id' => 'required|integer|exists:agents,id',
+
+            // 'heure_arrivee' is required and must be a valid date/time string
+            // 'heurearrivee' => 'required|date',//ce champs n'est pas bien nommé. Faire attention au nom des champs
+            'heure_arrivee' => 'required|date',
+
+            // 'heure_depart' is optional (nullable in DB) and must be a valid date/time if provided
+            // 'heuredepart' => 'nullable|date|after:heure_arrivee',//ce champs n'est pas bien nommé. Faire attention au nom des champs
+            'heure_depart' => 'nullable|date|after:heure_arrivee',
+
+            // 'statut' must be one of the defined enum values
+            'statut' => ['required',Rule::in(['Absent', 'Présent', 'En Retard']),],
+
+            // 'notes' is optional (text field)
+            'notes' => 'nullable|string|max:1000',
         ]);
 
         // Mise à jour de l'enregistrement

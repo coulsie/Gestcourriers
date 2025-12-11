@@ -14,23 +14,33 @@ class Presence extends Model
     protected $table = 'presences';
 
     // Optionnel: Spécifie le nom de la clé primaire si ce n'est pas 'id'
-    protected $primaryKey = 'PresenceID';
+    // protected $primaryKey = 'PresenceID';
+    protected $primaryKey = 'id';
 
     // Les attributs qui peuvent être assignés en masse (Mass Assignment)
     protected $fillable = [
-        'Agent_id',
-        'HeureArrivee',
-        'HeureDepart',
-        'Statut',
-        'Notes',
+        // 'Agent_id', //Bien nommer ce champ, ce champ doit être identique au libelle dans la base et dans le formaulaire
+        'agent_id',
+        // 'HeureArrivee',//Bien nommer ce champ, ce champ doit être identique au libelle dans la base et dans le formaulaire
+        'heure_arrivee',
+        // 'HeureDepart',//Bien nommer ce champ, ce champ doit être identique au libelle dans la base et dans le formaulaire
+        'heure_depart',
+        // 'Statut',//Bien nommer ce champ, ce champ doit être identique au libelle dans la base et dans le formaulaire
+        'statut',
+        // 'Notes',//Bien nommer ce champ, ce champ doit être identique au libelle dans la base et dans le formaulaire
+        'notes',
     ];
 
     // Les types de données pour la conversion automatique (casting)
     // Important pour que les dates soient manipulées comme des objets Carbon
     protected $casts = [
-        'HeureArrivee',
-        'HeureDepart',
-        'Statut'       => 'string',
+        'heure_arrivee',
+        'heure_depart',
+        'statut'       => 'string',
+    ];
+    protected $dates = [
+        'heure_arrivee',
+        'heure_depart',
     ];
 
     // --- Relations Eloquent ---
@@ -41,7 +51,7 @@ class Presence extends Model
     public function agent(): BelongsTo
     {
         // Assurez-vous que le modèle App\Models\Agent existe
-        return $this->belongsTo(Agent::class, 'AgentID', 'id');
+        return $this->belongsTo(Agent::class, 'id', 'id');
     }
 
     // --- Scopes Locaux (Utile pour filtrer facilement les absences) ---
@@ -52,7 +62,7 @@ class Presence extends Model
      */
     public function scopeAbsences($query)
     {
-        return $query->where('Statut', 'Absent');
+        return $query->where('statut', 'Absent');
     }
 
     /**
@@ -61,7 +71,7 @@ class Presence extends Model
      */
     public function scopePresentes($query)
     {
-        return $query->where('Statut', 'Présent');
+        return $query->where('statut', 'Présent');
     }
 }
 
