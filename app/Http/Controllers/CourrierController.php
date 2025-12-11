@@ -55,7 +55,8 @@ class CourrierController extends Controller
             // ... Ajoutez d'autres règles de validation ici
         ]);
 
-        $courrier = Courrier::create($validatedData);
+        // $courrier = Courrier::create($validatedData);
+        $courrier = Courrier::create($request->all());//Laissez all() ici
         return redirect()->route('courriers.index')->with('success', 'Courrier créé avec succès.');
     }
 

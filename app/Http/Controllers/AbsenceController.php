@@ -59,13 +59,17 @@ class AbsenceController extends Controller
         ]);
 
         // Fixe le statut à 'Absent' manuellement avant la création
-        $validatedData['Statut'] = 'Absent';
-        $validatedData['HeureArrivee'] = null;
-        $validatedData['HeureDepart'] = null;
+        $datas = $request->all();
+        // $validatedData['Statut'] = 'Absent';
+        $datas['Statut'] = 'Absent';
+        // $validatedData['HeureArrivee'] = null;
+        $datas['HeureArrivee'] = null;
+        // $validatedData['HeureDepart'] = null;
+        $datas['HeureDepart'] = null;
 
 
         // Création de l'enregistrement
-        Presence::create($validatedData);
+        Presence::create($datas);
 
         return redirect()->route('absences.index')
                          ->with('success', 'Absence enregistrée avec succès.');

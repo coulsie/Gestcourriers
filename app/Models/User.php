@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Affectation;
 use App\Models\Agent;
-use App\Models\user;
+use App\Models\ser;
 
 
 class User extends Authenticatable
