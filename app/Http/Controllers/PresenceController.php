@@ -52,10 +52,7 @@ class PresenceController extends Controller
             'heure_depart' => 'nullable|date|after:heure_arrivee',
 
             // 'statut' must be one of the defined enum values
-            'statut' => [
-                'required',
-                Rule::in(['Absent', 'Présent', 'En Retard']),
-            ],
+            'statut' => ['required',Rule::in(['Absent', 'Présent', 'En Retard']),],
 
             // 'notes' is optional (text field)
             'notes' => 'nullable|string|max:1000',
@@ -63,22 +60,10 @@ class PresenceController extends Controller
 
         // 2. Create the Presence record using the validated data
         // This relies on the $fillable property being set in the Presence model.
-        try {
+
             $presence = Presence::create($validatedData);
+           return redirect()->route('presences.index')->with('success', 'Présence créée avec succès.');
 
-            // 3. Redirect the user after successful creation
-            return redirect()
-                ->route('presences.index') // Use the name of your index route
-                ->with('success', 'La présence a été enregistrée avec succès.');
-
-        } catch (\Exception $e) {
-            // Optional: Log the error or return a more specific message if needed
-            \Log::error('Presence creation failed: ' . $e->getMessage());
-
-            return back()
-                ->withInput()
-                ->with('error', 'Une erreur est survenue lors de l\'enregistrement de la présence.');
-        }
     }
 
     /**

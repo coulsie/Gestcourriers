@@ -70,7 +70,7 @@ class AgentController extends Controller
 
         // 2. Gestion du téléchargement de la photo (si présente)
         if ($request->hasFile('photo')) {
-            $path = $request->file('photo')->store('public/agents_photos');
+            $path = $request->file('photo')->store('public/storage/agents_photos');
             // Stocke uniquement le chemin relatif pour la DB
             $validatedData['photo'] = Storage::url($path);
         }
