@@ -98,11 +98,16 @@
                             <div class="col-md-4 mb-3">
                                 <label for="statut" class="form-label">{{ __('statut') }}</label>
                                 <select id="statut" class="form-control @error('statut') is-invalid @enderror" name="statut">
-                                    <option value="pending" {{ old('statut') == 'pending' ? 'selected' : '' }}>reçu</option>
+                                    {{-- <option value="pending" {{ old('statut') == 'pending' ? 'selected' : '' }}>reçu</option>
                                     <option value="in_progress" {{ old('statut') == 'in_progress' ? 'selected' : '' }}>en_traitement</option>
                                     <option value="completed" {{ old('statut') == 'completed' ? 'selected' : '' }}>traité</option>
                                     <option value="archived" {{ old('statut') == 'archived' ? 'selected' : '' }}>Archivé</option>
-                                     <option value="archived" {{ old('statut') == 'archived' ? 'selected' : '' }}>envoyé</option>
+                                     <option value="archived" {{ old('statut') == 'archived' ? 'selected' : '' }}>envoyé</option> --}}
+                                      <option value="reçu" {{ old('statut') == 'reçu' ? 'selected' : '' }}>Reçu</option>
+                                    <option value="en_traitement" {{ old('statut') == 'en_traitement' ? 'selected' : '' }}>En traitement</option>
+                                    <option value="traité" {{ old('statut') == 'traité' ? 'selected' : '' }}>Traité</option>
+                                    <option value="archivé" {{ old('statut') == 'archivé' ? 'selected' : '' }}>Archivé</option>
+                                     <option value="envoyé" {{ old('statut') == 'envoyé' ? 'selected' : '' }}>Envoyé</option>
                                 </select>
                                 @error('statut') <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span> @enderror
                             </div>
