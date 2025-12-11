@@ -20,7 +20,7 @@ class PresenceController extends Controller
 
         return view('presences.index', compact('presences'));
     }
-    
+
 
     /**
      * Affiche le formulaire de création d'une nouvelle ressource (présence).

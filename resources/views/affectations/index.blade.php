@@ -8,7 +8,7 @@
                 <div class="card-header">
                     Liste des Affectations
                     {{-- Assuming you have a route to create a new affectation --}}
-                    <a href="{{ route('affectation.create') }}" class="btn btn-success btn-sm float-right">Nouvelle Affectation</a>
+                    <a href="{{ route('affectations.create') }}" class="btn btn-success btn-sm float-right">Nouvelle Affectation</a>
                 </div>
 
                 <div class="card-body">

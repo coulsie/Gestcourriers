@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Courrier;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-
+use Illuminate\Support\Facades\Validator;
 
 class CourrierController extends Controller
 {
@@ -38,19 +38,20 @@ class CourrierController extends Controller
      */
     public function store(Request $request)
     {
-        
-        // Valider les données de la requête
-        $validatedData = $request->validate([
+
+        $validator = Validator::make($request->all(), [
             'reference' => 'required|unique:courriers|max:255',
             'type' => 'required',
             'objet' => 'required',
-            // ... Ajoutez d'autres règles de validation ici
+            // date_affectation will use default
         ]);
 
-        // dd($request->all());die;
-        // Courrier::create($validatedData); // Attention, la validation ne retourne que les données valident.
-        Courrier::create($request->all()); // $request->all() permet d'acceder à toutes les données.
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
+        $datas = $request->all();
+        Courrier::create($datas);
         return redirect()->route('courriers.index')
                          ->with('success', 'Courrier créé avec succès.');
     }
@@ -95,7 +96,8 @@ class CourrierController extends Controller
         ]);
 
         // $courrier->update($validatedData);
-        $courrier->update($request->all());
+       //$courrier->update($request->all());
+        $courrier->update($validatedData);
 
         return redirect()->route('courriers.index')
                          ->with('success', 'Courrier mis à jour avec succès.');
