@@ -30,7 +30,7 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::resource('courriers', CourrierController::class);
+// Route::resource('courriers', CourrierController::class);
 Route::resource('courriers.affectations', AffectationController::class)->shallow();
 
 
@@ -58,12 +58,12 @@ Route::post('/courriers/{id}/affecter', [CourrierAffectationController::class, '
 
 
 
-Route::get('/affectations', [AffectationController::class, 'index'])->name('affectations.index');
-Route::get('/affectations/create', [AffectationController::class, 'create'])->name('affectations.create');
-Route::post('/affectations', [AffectationController::class, 'store'])->name('affectations.store');
+// Route::get('/affectations', [AffectationController::class, 'index'])->name('affectations.index');
+// Route::get('/affectations/create', [AffectationController::class, 'create'])->name('affectations.create');
+// Route::post('/affectations', [AffectationController::class, 'store'])->name('affectations.store');
 
 
-Route::resource('affectations', AffectationController::class);
+Route::resource('affectation', AffectationController::class);
 
 // Add a route for the custom status update method
 Route::put('/affectations/{affectation}/status', [AffectationController::class, 'updateStatus'])->name('affectations.updateStatus');

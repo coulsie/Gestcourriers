@@ -16,6 +16,7 @@ class AffectationController extends Controller
     public function index()
     {
         $affectations = Affectation::with(['courrier', 'agent'])->get();
+        // dd($affectations);die;
         return view('affectations.index', compact('affectations'));
     }
 
@@ -26,6 +27,7 @@ class AffectationController extends Controller
     {
         $courriers = Courrier::all();
         $agents = Agent::all();
+        // dd($agents);
         return view('affectations.create', compact('courriers', 'agents'));
     }
 
@@ -46,7 +48,10 @@ class AffectationController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        Affectation::create($request->all());
+        $datas = $request->all();
+        $datas['date_affectation'] = date('Y-m-d H:i:s');
+        $datas['date_traitement'] = date('Y-m-d H:i:s');
+        Affectation::create($datas);
 
         return redirect()->route('affectations.index')->with('success', 'Affectation created successfully.');
     }

@@ -8,14 +8,14 @@
                 <div class="card-header">
                     Détails de l'Affectation n°: <strong>{{ $affectation->id }}</strong>
                     <div class="float-right">
-                        <a href="{{ route('affectations.index', $affectation->courrier) }}" class="btn btn-success btn-sm">
+                        <a href="{{ route('affectations.index') }}" class="btn btn-success btn-sm">
                             Retour aux Affectations
                         </a>
                     </div>
                 </div>
 
                 <div class="card-body">
-                    <h5 class="card-title">Courrier Associé : {{ $courrier->objet ?? 'N/A' }}</h5>
+                    <h5 class="card-title">Courrier Associé : {{ $affectation->courrier->objet ?? 'N/A' }}</h5>
                     <hr>
 
                     <dl class="row">

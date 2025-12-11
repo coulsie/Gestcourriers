@@ -47,7 +47,9 @@ class CourrierController extends Controller
             // ... Ajoutez d'autres règles de validation ici
         ]);
 
-        Courrier::create($validatedData); // Crée un courrier avec les données validées
+        // dd($request->all());die;
+        // Courrier::create($validatedData); // Attention, la validation ne retourne que les données valident.
+        Courrier::create($request->all()); // $request->all() permet d'acceder à toutes les données.
 
         return redirect()->route('courriers.index')
                          ->with('success', 'Courrier créé avec succès.');
@@ -92,7 +94,8 @@ class CourrierController extends Controller
             // ... Ajoutez d'autres règles de validation ici
         ]);
 
-        $courrier->update($validatedData);
+        // $courrier->update($validatedData);
+        $courrier->update($request->all());
 
         return redirect()->route('courriers.index')
                          ->with('success', 'Courrier mis à jour avec succès.');

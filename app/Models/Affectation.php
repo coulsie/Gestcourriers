@@ -10,7 +10,14 @@ use App\Models\Agent;
 
 class Affectation extends Model
 {
-    use HasFactory;
+    protected $fillable = [
+        'courrier_id',
+         'agent_id', 
+         'statut', 
+         'commentaires', 
+         'date_affectation', 
+         'date_traitement',
+    ];
 
     // ... (protected $table, $fillable, $casts definitions from previous messages) ...
 

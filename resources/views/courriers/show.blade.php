@@ -30,7 +30,7 @@
                                     {{ ucfirst($courrier->statut) }}
                                 </span>
                             </p>
-                            <p><strong>{{ __('Assigné à') }}:</strong> {{ $courrier->assigne_a ?  $courrier->currentAffectation->user->name :'Non assigné' }}</p>
+                            <p><strong>{{ __('Assigné à') }}:</strong> {{ ($courrier->assigne_a && isset($courrier->currentAffectation) && isset($courrier->currentAffectation->user))?  $courrier->currentAffectation->user->name :'Non assigné' }}</p>
                         </div>
 
                         <!-- Colonne de droite (Expéditeur/Destinataire) -->
