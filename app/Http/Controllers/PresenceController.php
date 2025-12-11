@@ -60,8 +60,9 @@ class PresenceController extends Controller
 
         // 2. Create the Presence record using the validated data
         // This relies on the $fillable property being set in the Presence model.
-
-            $presence = Presence::create($validatedData);
+            $datas = $request->all();
+            // $presence = Presence::create($validatedData);
+            $presence = Presence::create($datas);
            return redirect()->route('presences.index')->with('success', 'Présence créée avec succès.');
 
     }
