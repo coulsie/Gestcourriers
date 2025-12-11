@@ -43,13 +43,13 @@ class PresenceController extends Controller
         // 1. Validate the incoming request data
         $validatedData = $request->validate([
             // 'agent_id' must be present, a number, and exist in the 'agents' table
-            'agent_id' => 'required|integer|exists:agents,id',
+            'AgentID' => 'required|integer|exists:agents,id',
 
             // 'heure_arrivee' is required and must be a valid date/time string
-            'heure_arrivee' => 'required|date',
+            'heurearrivee' => 'required|date',
 
             // 'heure_depart' is optional (nullable in DB) and must be a valid date/time if provided
-            'heure_depart' => 'nullable|date|after:heure_arrivee',
+            'heuredepart' => 'nullable|date|after:heure_arrivee',
 
             // 'statut' must be one of the defined enum values
             'statut' => ['required',Rule::in(['Absent', 'Présent', 'En Retard']),],

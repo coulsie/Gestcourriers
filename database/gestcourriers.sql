@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3307
--- Généré le : ven. 05 déc. 2025 à 14:39
+-- Généré le : jeu. 11 déc. 2025 à 17:07
 -- Version du serveur : 11.4.9-MariaDB
 -- Version de PHP : 8.3.28
 
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `affectations` (
   PRIMARY KEY (`id`),
   KEY `affectations_courrier_id_foreign` (`courrier_id`),
   KEY `affectations_user_id_foreign` (`agent_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `affectations`
@@ -72,7 +72,11 @@ INSERT INTO `affectations` (`id`, `courrier_id`, `agent_id`, `statut`, `commenta
 (1, 1, 1, 'Affecté', 'jklklkmlkl', '2025-12-03 16:36:36', NULL, '2025-12-03 16:36:36', '2025-12-03 16:36:36'),
 (2, 3, 2, 'Affecté', 'klllmlm', '2025-12-03 16:38:28', NULL, '2025-12-03 16:38:28', '2025-12-03 16:38:28'),
 (3, 6, 1, 'Affecté', NULL, '2025-12-04 09:24:03', NULL, '2025-12-04 09:24:03', '2025-12-04 09:24:03'),
-(4, 5, 1, 'Affecté', NULL, '2025-12-04 09:25:02', NULL, '2025-12-04 09:25:02', '2025-12-04 09:25:02');
+(4, 5, 1, 'Affecté', NULL, '2025-12-04 09:25:02', NULL, '2025-12-04 09:25:02', '2025-12-04 09:25:02'),
+(5, 12, 2, 'in_progress', '2jours', '2025-12-11 09:44:17', '2025-12-11 09:44:17', '2025-12-11 09:44:17', '2025-12-11 09:44:17'),
+(6, 5, 2, 'pending', NULL, '2025-12-11 09:57:20', '2025-12-11 09:57:20', '2025-12-11 09:57:20', '2025-12-11 09:57:20'),
+(7, 12, 3, 'in_progress', NULL, '2025-12-11 09:57:43', '2025-12-11 09:57:43', '2025-12-11 09:57:43', '2025-12-11 09:57:43'),
+(8, 7, 2, 'in_progress', 'bonjour', '2025-12-11 10:18:08', '2025-12-11 10:18:08', '2025-12-11 10:18:08', '2025-12-11 10:18:08');
 
 -- --------------------------------------------------------
 
@@ -83,6 +87,7 @@ INSERT INTO `affectations` (`id`, `courrier_id`, `agent_id`, `statut`, `commenta
 DROP TABLE IF EXISTS `agents`;
 CREATE TABLE IF NOT EXISTS `agents` (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `email_professionnel` varchar(191) DEFAULT NULL,
   `matricule` varchar(191) NOT NULL,
   `first_name` varchar(191) NOT NULL,
   `last_name` varchar(191) NOT NULL,
@@ -106,16 +111,19 @@ CREATE TABLE IF NOT EXISTS `agents` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `agents_matricule_unique` (`matricule`),
   UNIQUE KEY `agents_email_unique` (`email`),
+  UNIQUE KEY `agents_email_professionnel_unique` (`email_professionnel`),
   KEY `agents_service_id_foreign` (`service_id`),
   KEY `agents_user_id_foreign` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `agents`
 --
 
-INSERT INTO `agents` (`id`, `matricule`, `first_name`, `last_name`, `status`, `sexe`, `date_of_birth`, `Place of birth`, `photo`, `email`, `phone_number`, `address`, `Emploi`, `Grade`, `Date_Prise_de_service`, `Personne_a_prevenir`, `Contact_personne_a_prevenir`, `service_id`, `user_id`, `created_at`, `updated_at`) VALUES
-(1, '287688C', 'Sié Yacouba', 'COULIBALY', 'Agent', NULL, NULL, NULL, NULL, NULL, '0707584396', NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-12-04 13:36:01', '2025-12-04 13:36:01');
+INSERT INTO `agents` (`id`, `email_professionnel`, `matricule`, `first_name`, `last_name`, `status`, `sexe`, `date_of_birth`, `Place of birth`, `photo`, `email`, `phone_number`, `address`, `Emploi`, `Grade`, `Date_Prise_de_service`, `Personne_a_prevenir`, `Contact_personne_a_prevenir`, `service_id`, `user_id`, `created_at`, `updated_at`) VALUES
+(1, NULL, '287688C', 'Sié Yacouba', 'COULIBALY', 'Agent', NULL, NULL, NULL, NULL, NULL, '0707584396', NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-12-04 13:36:01', '2025-12-04 13:36:01'),
+(2, NULL, '410702H', 'Nafata', 'KONE', 'Agent', NULL, NULL, NULL, NULL, NULL, '0707188674', 'Grand Bassam mockeyville', NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-12-09 15:06:21', '2025-12-09 15:06:21'),
+(3, NULL, '421263X', 'SIAKOURI', 'Justine', 'Agent', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 14, NULL, '2025-12-09 15:58:42', '2025-12-09 15:58:42');
 
 -- --------------------------------------------------------
 
@@ -184,14 +192,14 @@ CREATE TABLE IF NOT EXISTS `courriers` (
   `destinataire_nom` varchar(255) NOT NULL DEFAULT 'Valeur par défaut',
   `destinataire_contact` varchar(255) DEFAULT NULL,
   `statut` enum('reçu','en_traitement','traité','archivé','envoyé') NOT NULL DEFAULT 'reçu',
-  `assigne_a` bigint(20) UNSIGNED DEFAULT NULL,
+  `assigne_a` varchar(255) DEFAULT NULL,
   `chemin_fichier` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `courriers_reference_unique` (`reference`) USING HASH,
-  KEY `courriers_assigne_a_foreign` (`assigne_a`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  KEY `courriers_assigne_a_foreign` (`assigne_a`(250))
+) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `courriers`
@@ -201,9 +209,18 @@ INSERT INTO `courriers` (`id`, `reference`, `type`, `objet`, `description`, `dat
 (4, '2134', 'Outgoing', 'Information', NULL, '2025-12-04', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-04 07:57:30', '2025-12-04 17:05:58'),
 (2, '0210', 'Outgoing', 'info', NULL, '2025-12-01', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-01 15:55:11', '2025-12-01 15:55:11'),
 (3, '1010', 'Outgoing', 'Information', NULL, '2025-12-03', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-03 16:37:56', '2025-12-03 16:37:56'),
-(5, '011002025', 'Incoming', 'Information', NULL, '2025-12-04', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-04 07:58:06', '2025-12-04 07:58:06'),
 (6, '203', 'Incoming', 'Information', NULL, '2025-12-04', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-04 07:58:40', '2025-12-04 07:58:40'),
-(7, '10425', 'Incoming', 'travail a faire', NULL, '2025-12-05', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-05 08:24:02', '2025-12-05 08:24:02');
+(7, '10425', 'Incoming', 'travail a faire', NULL, '2025-12-05', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-05 08:24:02', '2025-12-05 08:24:02'),
+(8, '275', 'Incoming', 'travail a faire', NULL, '2025-12-08', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-08 11:09:26', '2025-12-08 11:09:26'),
+(9, '21', 'Incoming', 'TAF', NULL, '2025-12-10', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-10 14:31:11', '2025-12-10 14:31:11'),
+(10, '20', 'Outgoing', 'TAF', NULL, '2025-12-10', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-10 14:41:14', '2025-12-10 14:41:14'),
+(11, '77', 'Outgoing', 'Avoir', NULL, '2025-12-11', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-11 09:07:18', '2025-12-11 09:07:18'),
+(12, '10', 'Outgoing', 'travail a faire', NULL, '2025-12-11', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-11 09:33:41', '2025-12-11 09:33:41'),
+(13, '281', 'Incoming', 'impots', NULL, '2025-12-11', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-11 10:37:07', '2025-12-11 10:37:07'),
+(14, '11121', 'Outgoing', 'TAF', NULL, '2025-12-11', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-11 12:21:08', '2025-12-11 12:21:08'),
+(15, '001', 'Outgoing', 'TAF', NULL, '2025-12-11', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-11 12:21:38', '2025-12-11 12:21:38'),
+(16, '1111111011002025', 'Incoming', 'TAF', 'tpo', '2025-12-11', 'SAPH', '0707584396', 'S/D GUDEF', '1223566', 'reçu', 'COUL', NULL, '2025-12-11 14:01:42', '2025-12-11 14:01:42'),
+(17, '123588996', 'Incoming', 'bnh', 'hgfiuluoioiu', '2025-12-11', 'h,njkll', '014535536', 'bkjlkml', '254966', 'reçu', NULL, NULL, '2025-12-11 16:13:59', '2025-12-11 16:13:59');
 
 -- --------------------------------------------------------
 
@@ -324,7 +341,7 @@ CREATE TABLE IF NOT EXISTS `migrations` (
   `migration` varchar(255) NOT NULL,
   `batch` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `migrations`
@@ -348,7 +365,34 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (15, '2025_12_04_143140_create_presences_table', 15),
 (16, '2025_12_04_143949_create_absences_table', 16),
 (17, '2025_12_04_145524_create_type_absences_table', 17),
-(18, '2025_12_05_123929_rename_user_id_to_agent_id_in_affectations_table', 18);
+(18, '2025_12_05_123929_rename_user_id_to_agent_id_in_affectations_table', 18),
+(19, '2025_12_09_150923_add_email_professionnel_to_agents_table', 19),
+(20, '2025_12_10_144650_create_notifications_taches_table', 20),
+(21, '2025_12_11_092142_change_statut_column_type_to_enum', 21);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `notifications_taches`
+--
+
+DROP TABLE IF EXISTS `notifications_taches`;
+CREATE TABLE IF NOT EXISTS `notifications_taches` (
+  `id_notification` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id_agent` bigint(20) UNSIGNED NOT NULL,
+  `titre` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `date_creation` timestamp NOT NULL DEFAULT current_timestamp(),
+  `date_echeance` timestamp NULL DEFAULT NULL,
+  `suivi_par` varchar(100) NOT NULL,
+  `priorite` enum('Faible','Moyenne','Élevée','Urgent') NOT NULL DEFAULT 'Moyenne',
+  `statut` enum('Non lu','En cours','Complétée','Annulée') NOT NULL DEFAULT 'Non lu',
+  `lien_action` varchar(512) DEFAULT NULL,
+  `date_lecture` timestamp NULL DEFAULT NULL,
+  `date_completion` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id_notification`),
+  KEY `notifications_taches_id_agent_foreign` (`id_agent`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -376,8 +420,7 @@ CREATE TABLE IF NOT EXISTS `presences` (
   `agent_id` bigint(20) UNSIGNED NOT NULL,
   `heure_arrivee` timestamp NOT NULL,
   `heure_depart` timestamp NULL DEFAULT NULL,
-  `statut` varchar(50) NOT NULL,
-  `status` enum('Absent','Présent','En Retard') NOT NULL DEFAULT 'Présent',
+  `statut` enum('Absent','Présent','En Retard') NOT NULL DEFAULT 'Présent',
   `notes` text DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -436,7 +479,7 @@ INSERT INTO `services` (`id`, `name`, `code`, `description`, `direction_id`, `he
 DROP TABLE IF EXISTS `type_absences`;
 CREATE TABLE IF NOT EXISTS `type_absences` (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `nom_type` enum('Congé','Maladie','Mission','Autres') NOT NULL DEFAULT 'Congé',
+  `nom_type` enum('Congé','Repos Maladie','Mission','Permission','Autres') NOT NULL DEFAULT 'Congé',
   `code` varchar(10) DEFAULT NULL,
   `description` text DEFAULT NULL,
   `est_paye` tinyint(1) NOT NULL DEFAULT 0,
