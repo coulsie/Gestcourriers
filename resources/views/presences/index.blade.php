@@ -36,7 +36,7 @@
                 @foreach ($presences as $presence)
                     <tr>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            {{ $presence->agent->name ?? 'N/A' }}
+                            {{ $presence->agent->name ?? 'N/A'  }} {{ $presence->agent->last_name}} {{ $presence->agent->first_name}} {{ $presence->agent->service->name}}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             {{-- @dd($presence->heure_arrivee) --}}
@@ -58,12 +58,19 @@
                             {{ Str::limit($presence->notes, 30) }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <a href="{{ route('presences.show', $presence->id) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Voir</a>
-                            <a href="{{ route('presences.edit', $presence->id) }}" class="text-blue-600 hover:text-blue-900 mr-3">Éditer</a>
+                            <a href="{{ route('presences.show', $presence->id) }}" class="btn btn-info btn-sm" title="Voir">
+                              <i class="fa fa-eye"></i> Voir
+                            </a>
+                            <a href="{{ route('presences.edit', $presence->id) }}" class="btn btn-warning btn-sm" title="Modifier">
+                                <i class="fa fa-edit"></i> Modifier
+                            </a>
+
                             <form action="{{ route('presences.destroy', $presence->id) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Êtes-vous sûr ?')">Supprimer</button>
+                                <button type="submit" class="btn btn-danger btn-sm" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce courrier ?')">
+                                                <i class="fa fa-trash"></i> Supprimer
+                                </button>
                             </form>
                         </td>
                     </tr>

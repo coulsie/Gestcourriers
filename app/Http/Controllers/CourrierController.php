@@ -6,6 +6,7 @@ use App\Models\Courrier;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class CourrierController extends Controller
 {
@@ -160,6 +161,22 @@ class CourrierController extends Controller
             'courriers' => $courriers,
             'request' => $request->all(), // Utile pour garder les filtres dans le formulaire
         ]);
+    }
+     public function visualiserDocument($id)
+    {
+        $courrier = Courrier::findOrFail($id);
+        $cheminFichier = $courrier->chemin_fichier; // Assurez-vous que ce chemin est relatif au disque de stockage
+
+        if (Storage::disk('public')->exists($cheminFichier)) {
+            // Utiliser response()->file() pour afficher le fichier dans le navigateur
+            // Laravel définit automatiquement l'en-tête Content-Disposition sur 'inline' par défaut pour cette méthode
+            return response()->file(storage_path('app/public/' . $cheminFichier));
+
+            // Alternativement, pour plus de contrôle sur les en-têtes (par exemple, forcer le téléchargement), vous pouvez utiliser:
+            // return Storage::disk('public')->response($cheminFichier, null, ['Content-Disposition' => 'inline']);
+        }
+
+        abort(404, "Le document n'a pas été trouvé.");
     }
 
 

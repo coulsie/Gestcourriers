@@ -120,3 +120,4 @@ Route::resource('typeabsences', TypeAbsenceController::class);
 Route::middleware(['auth'])->group(function () {
     Route::resource('notifications_taches', NotificationTacheController::class);
 });
+Route::get('/courriers/{id}/visualiser-document', [CourrierController::class, 'visualiserDocument'])->name('courriers.visualiser');
