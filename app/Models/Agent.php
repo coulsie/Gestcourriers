@@ -18,16 +18,26 @@ class Agent extends Model
      * Ces noms de colonnes doivent correspondre à ceux définis dans votre migration 'agents'.
      */
     protected $fillable = [
+        'email_professionnel',
         'matricule',
         'first_name',
         'last_name',
-        'date prise de service',
+        'status',
+        'sexe',
+        'date_of_birth',
+        'place of birth',
+        'photo',
+        'email',
         'phone_number',
         'address',
+        'emploi',
+        'Grade',
+        'date_prise_de_service',
+        'Personne_a_prevenir',
+        'Contact_personne_a_prevenir',
         'service_id', // Clé étrangère vers le service d'affectation
         'user_id',    // Clé étrangère optionnelle vers le compte utilisateur pour l'authentification
-        'email_professionnel', // Nouvelle colonne pour l'email professionnel
-    ];
+        ];
 
     /**
      * Définit la relation : un Agent appartient à un seul Service.
