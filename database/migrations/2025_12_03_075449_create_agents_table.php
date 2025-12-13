@@ -21,7 +21,7 @@ return new class extends Migration
             $table->enum('status', ['Agent','Chef de service','Sous-directeur','Directeur','Conseiller Technique','Conseiller Spécial'])->default('Agent'); // Define the enum column
             $table->enum('sexe', ['Male', 'Female'])->nullable(); // Adjust 'name' if needed for column order
             $table->date('date_of_birth')->nullable();
-            $table->string('Place of birth')->nullable();
+            $table->string('place_birth')->nullable();
             $table->string('Photo');
             $table->string('email')->unique();
             $table->string('phone_number')->nullable();

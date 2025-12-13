@@ -48,13 +48,11 @@ class AgentController extends Controller
             'matricule' => 'required|string|max:191|unique:agents,matricule',
             'first_name' => 'required|string|max:191',
             'last_name' => 'required|string|max:191',
-            'status' => [
-                'required',
-                Rule::in(['Agent', 'Chef de service', 'Sous-directeur', 'Directeur']) // Ajustez selon vos ENUM
+            'status' => ['required',Rule::in(['Agent', 'Chef de service', 'Sous-directeur', 'Directeur']) // Ajustez selon vos ENUM
             ],
             'sexe' => ['nullable', Rule::in(['Male', 'Female'])],
             'date_of_birth' => 'nullable|date',
-            'Place of birth' => 'nullable|string|max:191',
+            'place_birth' => 'nullable|string|max:191',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validation de l'image
             'email' => 'nullable|email|max:191|unique:agents,email',
             'phone_number' => 'nullable|string|max:191',
@@ -70,7 +68,7 @@ class AgentController extends Controller
 
         // 2. Gestion du téléchargement de la photo (si présente)
         if ($request->hasFile('photo')) {
-            $path = $request->file('photo')->store('public/storage/agents_photos');
+            $path = $request->file('photo')->store('public/agents_photos');
             // Stocke uniquement le chemin relatif pour la DB
             $validatedData['photo'] = Storage::url($path);
         }
@@ -120,13 +118,11 @@ class AgentController extends Controller
             'matricule' => 'required|string|max:191|unique:agents,matricule,' . $agent->id,
             'first_name' => 'required|string|max:191',
             'last_name' => 'required|string|max:191',
-            'status' => [
-                'required',
-                Rule::in(['Agent', 'Chef de service', 'Sous-directeur', 'Directeur']) // Ajustez selon vos ENUM
+            'status' => ['required',Rule::in(['Agent', 'Chef de service', 'Sous-directeur', 'Directeur']) // Ajustez selon vos ENUM
             ],
             'sexe' => ['nullable', Rule::in(['Male', 'Female'])],
             'date_of_birth' => 'nullable|date',
-            'Place of birth' => 'nullable|string|max:191',
+            'place_birth' => 'nullable|string|max:191',
             // Photo is not required for update, but if provided, it must be an image
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'email' => 'nullable|email|max:191|unique:agents,email,' . $agent->id,
@@ -149,7 +145,7 @@ class AgentController extends Controller
             }
 
             // Store the new photo
-            $path = $request->file('photo')->store('public/agents_photos');
+            $path = $request->file('photo')->store('public/storage/agents_photos');
             $validatedData['photo'] = Storage::url($path);
         }
 

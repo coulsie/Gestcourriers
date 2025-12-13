@@ -15,8 +15,8 @@
                     <div class="row">
                         {{-- Photo de l'agent (Optionnel, si vous gérez le stockage des images) --}}
                         <div class="col-md-3 text-center">
-                            @if($agent->photo_path)
-                                <img src="{{ asset('storage/' . $agent->photo_path) }}" alt="Photo de {{ $agent->first_name }}" class="img-fluid rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+                            @if($agent->photo)
+                                <img src="{{ asset('public/' . $agent->photo) }}" alt="Photo de {{ $agent->last_name }} {{ $agent->first_name }} " class="img-fluid rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
                             @else
                                 <div class="bg-light p-5 rounded-circle mb-3" style="width: 150px; height: 150px;">
                                     <i class="fas fa-user fa-4x text-muted"></i>
@@ -52,9 +52,9 @@
                                     Non affecté
                                 @endif
                             </p>
-                            <p><strong>Emploi/Poste :</strong> {{ $agent->emploi }}</p>
-                            <p><strong>Grade :</strong> {{ $agent->grade }}</p>
-                            <p><strong>Date prise de service :</strong> {{ $agent->date_prise_de_service }}</p>
+                            <p><strong>Emploi/Poste :</strong> {{ $agent->Emploi }}</p>
+                            <p><strong>Grade :</strong> {{ $agent->Grade }}</p>
+                            <p><strong>Date prise de service :</strong> {{ $agent->Date_Prise_de_service }}</p>
                         </div>
                     </div>
 
@@ -65,12 +65,12 @@
                         <div class="col-md-6">
                             <h5>État Civil</h5>
                             <p><strong>Date de naissance :</strong> {{ $agent->date_of_birth }}</p>
-                            <p><strong>Lieu de naissance :</strong> {{ $agent->place_of_birth }}</p>
+                            <p><strong>Lieu de naissance :</strong> {{ $agent->place_birth }}</p>
                         </div>
                         <div class="col-md-6">
                             <h5>Contact d'Urgence</h5>
-                            <p><strong>Personne à prévenir :</strong> {{ $agent->personne_a_prevenir }}</p>
-                            <p><strong>Contact :</strong> {{ $agent->contact_personne_a_prevenir }}</p>
+                            <p><strong>Personne à prévenir :</strong> {{ $agent->Personne_a_prevenir }}</p>
+                            <p><strong>Contact :</strong> {{ $agent->Contact_personne_a_prevenir }}</p>
                         </div>
                     </div>
 

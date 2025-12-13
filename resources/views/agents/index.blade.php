@@ -38,7 +38,7 @@
                                 <tr>
                                     <td>{{ $agent->matricule }}</td>
                                     <td>{{ $agent->first_name }} {{ $agent->last_name }}</td>
-                                    <td>{{ $agent->hire_date }}</td>
+                                    <td>{{ $agent->Date_Prise_de_service }}</td>
                                     {{-- Accès à la relation 'service' --}}
                                     <td>
                                         @if($agent->service)

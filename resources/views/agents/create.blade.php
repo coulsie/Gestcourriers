@@ -74,10 +74,21 @@
                                 @error('date_of_birth') <span class="invalid-feedback">{{ $message }}</span> @enderror
                             </div>
                             <div class="form-group col-md-3">
-                                <label for="Place of birth">Lieu de Naissance</label>
-                                <input type="text" name="Place of birth" id="Place of birth" class="form-control @error('Place of birth') is-invalid @enderror" value="{{ old('Place of birth') }}">
-                                @error('Place of birth') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                                <label for="place_birth">Lieu de Naissance</label>
+                                <input type="text" name="place_birth" id="place_birth" class="form-control @error('place_birth') is-invalid @enderror" value="{{ old('place_birth') }}">
+                                @error('place_birth') <span class="invalid-feedback">{{ $message }}</span> @enderror
                             </div>
+                            <div class="form-group col-md-3">
+                                <label for="phone_number">Téléphone</label>
+                                <input type="text" name="phone_number" id="phone_number" class="form-control @error('phone_number') is-invalid @enderror" value="{{ old('phone_number') }}">
+                                @error('phone_number') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="address">Adresse</label>
+                                <input type="text" name="address" id="address" class="form-control @error('address') is-invalid @enderror" value="{{ old('address') }}">
+                                @error('address') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                            </div>
+
                              <div class="form-group col-md-3">
                                 <label for="service_id">Service <span class="text-danger">*</span></label>
                                 <select name="service_id" id="service_id" class="form-control @error('service_id') is-invalid @enderror" required>

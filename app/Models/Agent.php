@@ -25,7 +25,7 @@ class Agent extends Model
         'status',
         'sexe',
         'date_of_birth',
-        'place of birth',
+        'place_birth',
         'photo',
         'email',
         'phone_number',
