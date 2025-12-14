@@ -15,14 +15,14 @@
                     <div class="row mb-3">
                         <label class="col-sm-4 col-form-label"><strong>Agent Name:</strong></label>
                         <div class="col-sm-8">
-                            <p class="form-control-static">{{ $absence->agent->name ?? 'N/A' }}</p>
+                            <p class="form-control-static">{{ $absence->agent->name}} {{ $absence->agent->last_name }} {{ $absence->agent->first_name}}</p>
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <label class="col-sm-4 col-form-label"><strong>Absence Type:</strong></label>
                         <div class="col-sm-8">
-                            <p class="form-control-static">{{ $absence->typeAbsence->name ?? 'N/A' }}</p>
+                            <p class="form-control-static">{{ $absence->typeAbsence->name}} {{ $absence->typeAbsence->nom_type}}</p>
                         </div>
                     </div>
 

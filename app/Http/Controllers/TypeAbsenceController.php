@@ -34,10 +34,10 @@ class TypeAbsenceController extends Controller
     {
         // 1. Validation des données
         $validatedData = $request->validate([
-            'NomType' => 'required|string|max:50',
-            'Code' => 'nullable|string|max:10',
-            'Description' => 'nullable|string',
-            'EstPaye' => 'boolean',
+            'nom_type' => 'required|string|max:50',
+            'code' => 'nullable|string|max:10',
+            'description' => 'nullable|string',
+            'est_paye' => 'boolean',
         ]);
 
         // 2. Création de l'enregistrement
@@ -74,10 +74,10 @@ class TypeAbsenceController extends Controller
     public function update(Request $request, TypeAbsence $typeAbsence)
     {
         $validatedData = $request->validate([
-            'NomType' => 'required|string|max:50',
-            'Code' => 'nullable|string|max:10',
-            'Description' => 'nullable|string',
-            'EstPaye' => 'boolean',
+            'nom_type' => 'required|string|max:50',
+            'code' => 'nullable|string|max:10',
+            'description' => 'nullable|string',
+            'est_paye' => 'boolean',
         ]);
 
         $typeAbsence->update($validatedData);

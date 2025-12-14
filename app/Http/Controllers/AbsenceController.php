@@ -1,133 +1,112 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\Presence;
-use Illuminate\Http\Request;
-use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
-use App\Models\Agent;
 use App\Models\Absence;
+use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+use App\Models\Agent;
 use App\Models\TypeAbsence;
 
 class AbsenceController extends Controller
 {
     /**
-     * Affiche une liste des absences (filtré par statut 'Absent').
+     * Affiche la liste des ressources (absences).
      */
     public function index(): View
     {
-        // Récupère uniquement les enregistrements où le statut est 'Absent'
-        $absences = Presence::where('Statut', 'Absent')->latest()->paginate(10);
+        // Récupère toutes les absences et charge les relations Agent et TypeAbsence
+        $absences = Absence::with(['agent', 'typeAbsence'])->latest()->paginate();
 
-        return view('Absences.index', compact('absences'));
-
-        //$absences = Absence::with(['agent', 'typeAbsence'])->get();
-
-        //return view('absences.index', compact('absences'));
-
+        // Renvoie les données à une vue Blade (par ex. resources/views/absences/index.blade.php)
+        return view('absences.index', compact('absences'));
     }
-
-    /**
-     * Affiche le formulaire de création d'une nouvelle absence.
-     */
-    public function create(): View
+     public function create()
     {
+        // Récupérer tous les agents et types d'absence pour les menus déroulants
+        $agents = Agent::all();
+        $type_absences = TypeAbsence::all();
 
-        //$agents = Agent::all(['id', 'first_name', 'last_name']);
-        // Le statut sera implicitement "Absent" lors du stockage
-       // return view('Absences.create', compact('agents'));
-        $agents = Agent::all(['id', 'first_name', 'last_name']);
-        // Récupérer les types d'absences depuis la table type_absences
-        $type_absences = \App\Models\TypeAbsence::all(['id', 'nom_type']);
-
-        return view('Absences.create', compact('agents', 'type_absences'));
+        // Passer les données à la vue
+        return view('absences.create', compact('agents', 'type_absences'));
     }
 
     /**
-     * Stocke une nouvelle absence dans la base de données.
+     * Stocke une nouvelle ressource dans la base de données.
      */
     public function store(Request $request): RedirectResponse
     {
         // Validation des données entrantes
         $validatedData = $request->validate([
-            'AgentID'      => 'required|exists:agents,id',
-            'HeureArrivee' => 'nullable|date', // Les absences peuvent ne pas avoir d'heure d'arrivée/départ
-            'HeureDepart'  => 'nullable|date|after:HeureArrivee',
-            // Le statut n'est pas requis dans le formulaire car il sera fixé à 'Absent' ici
-            'Notes'        => 'nullable|string',
+            
+            'agent_id' => 'required|integer|exists:agents,id',
+            'type_absence_id' => 'required|exists:type_absences,id',
+            'date_debut' => 'required|date',
+            'date_fin' => 'required|date|after_or_equal:date_debut',
+            'approuvee' => 'boolean', // Sera 0 par défaut si non coché dans le formulaire
         ]);
-
-        // Fixe le statut à 'Absent' manuellement avant la création
         $datas = $request->all();
-        // $validatedData['Statut'] = 'Absent';
-        $datas['Statut'] = 'Absent';
-        // $validatedData['HeureArrivee'] = null;
-        $datas['HeureArrivee'] = null;
-        // $validatedData['HeureDepart'] = null;
-        $datas['HeureDepart'] = null;
+        // Crée l'enregistrement dans la base de données
+        
+        $Absence = Absence::create($datas);
 
-
-        // Création de l'enregistrement
-        Presence::create($datas);
-
-        return redirect()->route('absences.index')
-                         ->with('success', 'Absence enregistrée avec succès.');
+        // Redirige l'utilisateur
+        return redirect()->route('absences.index')->with('success', 'Absence créée avec succès.');
+        
     }
 
     /**
-     * Les méthodes show, edit, update, et destroy restent similaires
-     * mais gèrent uniquement les enregistrements d'absence spécifiques passés
-     * via le Model Binding (Route Model Binding).
+     * Met à jour la ressource spécifiée dans la base de données.
      */
-
-    public function show(Presence $absence): View
+    public function update(Request $request, Absence $absence): RedirectResponse
     {
-        // On s'assure que c'est bien une absence si nécessaire
-        if ($absence->Statut !== 'Absent') {
-            abort(404);
-        }
+        // Validation (similaire à store)
+        $validatedData = $request->validate([
+            'agent_id' => 'required|exists:agents,id',
+            'type_absence_id' => 'required|exists:type_absences,id',
+            'date_debut' => 'required|date',
+            'date_fin' => 'required|date|after_or_equal:date_debut',
+            'approuvee' => 'sometimes|boolean', // Valide si le champ est présent dans la requête
+        ]);
+
+        // Mise à jour de l'instance du modèle
+        $absence->update($validatedData);
+
+        // Redirection
+        return redirect()->route('absences.index')->with('success', 'Absence mise à jour.');
+    }
+
+    /**
+     * Supprime la ressource spécifiée de la base de données.
+     */
+    public function destroy(Absence $absence): RedirectResponse
+    {
+        $absence->delete();
+
+        return redirect()->route('absences.index')->with('success', 'Absence supprimée.');
+    }
+
+    public function show($id)
+    {
+        // Charge l'absence et la relation 'typeAbsence' associée.
+        // Si l'absence n'existe pas, Laravel générera automatiquement une 404.
+        $absence = Absence::with('typeAbsence', 'agent')->findOrFail($id);
+
+        // Passe l'objet $absence complet (avec ses relations chargées) à la vue.
         return view('absences.show', compact('absence'));
     }
 
-    public function edit(Presence $absence): View
+     public function edit($id)
     {
-        if ($absence->Statut !== 'Absent') {
-            abort(404);
-        }
-        return view('absences.edit', compact('absence'));
-    }
+        // 1. Récupérer l'absence actuelle (avec 404 si non trouvée)
+        $absence = Absence::findOrFail($id);
 
-    public function update(Request $request, Presence $absence): RedirectResponse
-    {
-         if ($absence->Statut !== 'Absent') {
-             // Empêche de modifier le statut d'une présence en absence ici, ou vice versa
-            abort(403, 'Vous ne pouvez modifier que les absences via ce contrôleur.');
-        }
+        // 2. Récupérer toutes les options pour les listes déroulantes
+        // On suppose que les tables TypeAbsence et Agent ont une colonne 'nom' ou 'libelle'.
+        $type_absences = TypeAbsence::pluck('nom_type', 'id'); 
+        $agents = Agent::pluck('last_name','first_name', 'id'); // Remplacez 'nom_complet' par le nom réel de votre colonne d'agent
 
-        $validatedData = $request->validate([
-            'AgentID'      => 'required|exists:agents,id',
-            'Notes'        => 'nullable|string',
-        ]);
-
-        // On force le statut à rester "Absent"
-        $validatedData['Statut'] = 'Absent';
-
-        $absence->update($validatedData);
-
-        return redirect()->route('absences.index')
-                         ->with('success', 'Absence mise à jour avec succès.');
-    }
-
-    public function destroy(Presence $absence): RedirectResponse
-    {
-        if ($absence->Statut !== 'Absent') {
-            abort(403, 'Vous ne pouvez supprimer que les absences via ce contrôleur.');
-        }
-
-        $absence->delete();
-
-        return redirect()->route('absences.index')
-                         ->with('success', 'Absence supprimée avec succès.');
+        // 3. Passer toutes les données à la vue
+        return view('absences.edit', compact('absence', 'type_absences', 'agents'));
     }
 }

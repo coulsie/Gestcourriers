@@ -21,7 +21,7 @@
                         <strong>Responsable (Head) :</strong>
                         @if($direction->head)
                             {{-- Suppose une relation 'head' définie dans le modèle Direction --}}
-                            <p>{{ $direction->head->name }}</p>
+                            <p>{{ $direction->head->last_name }} {{ $direction->head->first_name }}</p>
                         @else
                             <p>Non affecté</p>
                         @endif

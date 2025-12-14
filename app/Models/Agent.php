@@ -30,9 +30,9 @@ class Agent extends Model
         'email',
         'phone_number',
         'address',
-        'emploi',
+        'Emploi',
         'Grade',
-        'date_prise_de_service',
+        'Date_Prise_de_service',
         'Personne_a_prevenir',
         'Contact_personne_a_prevenir',
         'service_id', // Clé étrangère vers le service d'affectation

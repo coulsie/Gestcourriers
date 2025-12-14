@@ -17,15 +17,16 @@
                         {{-- Agent Selection Field --}}
                         <div class="mb-3">
                             <label for="agent_id" class="form-label">Nom de l'agent</label>
-                            <select class="form-select @error('agent_id') is-invalid @enderror" id="agent_id" name="agent_id" required>
-                                <option value="">Sélectionnez un agent</option>
-                                {{-- Loop through agents provided by the controller --}}
-                                @foreach($agents as $agent)
-                                    <option value="{{ $agent->id }}" {{ old('agent_id') == $agent->id ? 'selected' : '' }}>
-                                        {{ $agent->name }} {{ $agent->first_name}} {{ $agent->last_name}}
-                                    </option>
-                                @endforeach
-                            </select>
+                            <select id="agent_id" name="agent_id" class="form-control @error('agent_id') is-invalid @enderror" required>
+                                    <option value="">Sélectionner un agent</option>
+                                    {{-- Boucle sur les agents disponibles pour créer les options --}}
+                                    {{-- Remplacez $agents par le nom exact de votre variable --}}
+                                    @foreach($agents as $agent)
+                                        <option value="{{ $agent->id }}" {{ old('agent_id') == $agent->id ? 'selected' : '' }}>
+                                            {{ $agent->nom_complet }} {{ $agent->last_name }} {{ $agent->first_name }}{{-- Remplacez par le nom de la colonne appropriée --}}
+                                        </option>
+                                    @endforeach
+                                </select>
                             @error('agent_id')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror

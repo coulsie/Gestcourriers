@@ -1,71 +1,74 @@
-{{-- resources/views/absences/index.blade.php --}}
-
-@extends('layouts.app') {{-- Assuming you have a layout file --}}
+@extends('layouts.app')
 
 @section('content')
 <div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <h1>Enrégistrement d'autorisations d'absence</h1>
-            <a href="{{ route('absences.create') }}" class="btn btn-success">Créer une autorisation d'absence</a>
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header">Liste des Absences</div>
 
-            @if (session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
+                <div class="card-body">
+                    @if (session('status'))
+                        <div class="alert alert-success" role="alert">
+                            {{ session('status') }}
+                        </div>
+                    @endif
+
+                    <a href="{{ route('absences.create') }}" class="btn btn-primary mb-3">
+                        Ajouter une Absence
+                    </a>
+
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Agent</th>
+                                <th>Type d'Absence</th>
+                                <th>Date Début</th>
+                                <th>Date Fin</th>
+                                <th>Approuvée</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($absences as $absence)
+                                <tr>
+                                    <td>{{ $absence->id }}</td>
+                                    {{-- Assurez-vous que la relation 'agent' est définie dans le modèle Absence --}}
+                                    <td>{{ $absence->agent->nom}} {{ $absence->agent->last_name}} {{ $absence->agent->first_name}}</td>
+                                    {{-- Assurez-vous que la relation 'typeAbsence' est définie dans le modèle Absence --}}
+                                    <td>{{ $absence->typeAbsence->nom}} {{ $absence->typeAbsence->nom_type}}</td>
+                                    <td>{{ $absence->date_debut }}</td>
+                                    <td>{{ $absence->date_fin }}</td>
+                                    <td>
+                                        @if ($absence->approuvee)
+                                            <span class="badge badge-success">Oui</span>
+                                        @else
+                                            <span class="badge badge-danger">Non</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        {{-- Ajoutez des liens vers les actions modifier/supprimer --}}
+                                        <a href="{{ route('absences.show', $absence->id) }}" class="btn btn-sm btn-info">Voir</a>
+                                        <a href="{{ route('absences.edit', $absence->id) }}" class="btn btn-sm btn-warning">Modifier</a>
+                                        {{-- Formulaire pour la suppression (méthode DELETE) --}}
+                                        <form action="{{ route('absences.destroy', $absence->id) }}" method="POST" style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette absence ?');">Supprimer</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+
+                    {{-- Affichage des liens de pagination (résout l'erreur initiale) --}}
+                    <div class="d-flex justify-content-center">
+                        {{ $absences->links() }}
+                    </div>
                 </div>
-            @endif
-
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Agent Name</th>
-                            <th>Absence Type</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($absences as $absence)
-                            <tr>
-                                <td>{{ $absence->id }}</td>
-                                <td>{{ $absence->agent->name ?? 'N/A' }}</td>
-                                <td>{{ $absence->typeAbsence->name ?? 'N/A' }}</td>
-                                <td>{{ $absence->date_debut }}</td>
-                                <td>{{ $absence->date_fin }}</td>
-                                <td>
-                                    @if ($absence->approuvee)
-                                        <span class="badge bg-success text-white">Approuvé</span>
-                                    @else
-                                        <span class="badge bg-warning text-dark">En attente</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    <a href="{{ route('absences.show', $absence->id) }}" class="btn btn-info btn-sm">Voir</a>
-                                    <a href="{{ route('absences.edit', $absence->id) }}" class="btn btn-warning btn-sm">Modifier</a>
-
-                                    {{-- Delete Form (using a form for POST method) --}}
-                                    <form action="{{ route('absences.destroy', $absence->id) }}" method="POST" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this absence record?');">Delete</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="7" class="text-center">Aucun enregistrement d'absence trouvé.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
             </div>
-
-            {{-- Pagination Links --}}
-            {{ $absences->links() }}
         </div>
     </div>
 </div>

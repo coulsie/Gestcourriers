@@ -22,10 +22,9 @@
                                 <option value="">Sélectionnez un agent</option>
                                 {{-- Boucle à travers les agents fournis par le contrôleur --}}
                                 @foreach($agents as $agent)
-                                    <option value="{{ $agent->id }}"
-                                        {{ old('agent_id', $absence->agent_id) == $agent->id ? 'selected' : '' }}>
-                                        {{ $agent->name }}
-                                    </option>
+                                    <option value="{{ $agent->id }}" {{ (old('agent_id', $absence->agent_id) == $agent->id) ? 'selected' : '' }}>
+                                  {{ $agent->name}}  {{ $agent->last_name}} {{ $agent->first_name}}
+                               </option>
                                 @endforeach
                             </select>
                             @error('agent_id')
@@ -38,11 +37,10 @@
                             <label for="type_absence_id" class="form-label">Type d'absence</label>
                             <select class="form-select @error('type_absence_id') is-invalid @enderror" id="type_absence_id" name="type_absence_id" required>
                                 <option value="">Sélectionnez un type</option>
-                                {{-- Boucle à travers les types d'absence fournis par le contrôleur --}}
-                                @foreach($types as $type)
-                                    <option value="{{ $type->id }}"
-                                        {{ old('type_absence_id', $absence->type_absence_id) == $type->id ? 'selected' : '' }}>
-                                        {{ $type->name }}
+                                {{-- Loop through absence types provided by the controller --}}
+                                @foreach($type_absences as $type)
+                                    <option value="{{ $type->id }}" {{ old('type_absence_id') == $type->id ? 'selected' : '' }}>
+                                        {{ $type->name }} {{ $type->nom_type}}
                                     </option>
                                 @endforeach
                             </select>

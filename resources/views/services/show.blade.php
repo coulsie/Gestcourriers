@@ -35,7 +35,7 @@
                         <strong>Responsable du Service :</strong>
                         @if($service->head)
                             {{-- Suppose une relation 'head' (vers User) définie dans le modèle Service --}}
-                            <p>{{ $service->head->name }}</p>
+                            <p>{{ $service->head->last_name }} {{ $service->head->first_name }} </p>
                         @else
                             <p>Non affecté</p>
                         @endif

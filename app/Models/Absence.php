@@ -14,21 +14,21 @@ class Absence extends Model
     protected $table = 'absences';
 
     // Nom de la clé primaire personnalisée
-    protected $primaryKey = 'AbsenceID';
+    protected $primaryKey = 'id';
 
     // Les champs autorisés pour l'assignation de masse (Mass Assignment)
     protected $fillable = [
-        'AgentID',
-        'TypeAbsenceID',
-        'DateDebut',
-        'DateFin',
+        'agent_id',
+        'type_absence_id',
+        'date_debut',
+        'date_fin',
         'Approuvee',
     ];
-
+ 
     // Conversion automatique des types de données
     protected $casts = [
-        'DateDebut' => 'date',
-        'DateFin'   => 'date',
+        'date_debut' => 'date',
+        'date_fin'   => 'date',
         'Approuvee' => 'boolean', // Convertit 0/1 ou false/true en booléen PHP
     ];
 
@@ -40,7 +40,7 @@ class Absence extends Model
     public function agent(): BelongsTo
     {
         // Assurez-vous d'avoir un modèle App\Models\Agent existant
-        return $this->belongsTo(Agent::class, 'AgentID', 'id');
+        return $this->belongsTo(Agent::class, 'id', 'id');
     }
 
     /**
@@ -49,6 +49,14 @@ class Absence extends Model
     public function type(): BelongsTo
     {
         // Assurez-vous d'avoir un modèle App\Models\TypeAbsence existant
-        return $this->belongsTo(TypeAbsence::class, 'TypeAbsenceID', 'TypeAbsenceID');
+        return $this->belongsTo(TypeAbsence::class, 'type_absence_id', 'type_absence_id');
     }
+    public function typeAbsence()
+    {
+        // Remplacez 'App\Models\TypeAbsence' par le nom correct de votre modèle lié,
+        // et ajustez les clés étrangères si nécessaire.
+        return $this->belongsTo(TypeAbsence::class, 'type_absence_id');
+        // ou return $this->hasOne(TypeAbsence::class, 'absence_id');
+    }
+
 }

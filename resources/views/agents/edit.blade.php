@@ -70,7 +70,7 @@
                             </div>
                              <div class="form-group col-md-3">
                                 <label for="date_of_birth">Date de Naissance</label>
-                                <input type="date" name="date_of_birth" id="date_of_birth" class="form-control @error('date_of_birth') is-invalid @enderror" value="{{ old('date_of_birth', optional($agent->date_of_birth)->format('Y-m-d')) }}">
+                                <input type="date" name="date_of_birth" id="date_of_birth" class="form-control @error('date_of_birth') is-invalid @enderror" value="{{ old('date_of_birth',$agent->{'date_of_birth'}) }}">
                                 @error('date_of_birth') <span class="invalid-feedback">{{ $message }}</span> @enderror
                             </div>
                             <div class="form-group col-md-3">
@@ -80,16 +80,17 @@
                             </div>
                              <div class="form-group col-md-3">
                                 <label for="phone_number">Téléphone</label>
-                                <input type="text" name="phone_number" id="phone_number" class="form-control @error('phone_number') is-invalid @enderror" value="{{ old('phone_number') }}">
+                                <input type="text" name="phone_number" id="phone_number" class="form-control @error('phone_number') is-invalid @enderror" value="{{ old('phone_number',$agent->{'phone_number'}) }}">
                                 @error('phone_number') <span class="invalid-feedback">{{ $message }}</span> @enderror
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="address">Adresse</label>
-                                <input type="text" name="address" id="address" class="form-control @error('address') is-invalid @enderror" value="{{ old('address') }}">
+                                <input type="text" name="address" id="address" class="form-control @error('address') is-invalid @enderror" value="{{ old('address',$agent->{'address'}) }}">
                                 @error('address') <span class="invalid-feedback">{{ $message }}</span> @enderror
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="service_id">Service <span class="text-danger">*</span></label>
+                                
                                 <select name="service_id" id="service_id" class="form-control @error('service_id') is-invalid @enderror" required>
                                     <option value="">Sélectionner un service</option>
                                     {{-- Supposons que vous passez une variable $services depuis le contrôleur --}}
@@ -117,7 +118,7 @@
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="Date_Prise_de_service">Date Prise de Service</label>
-                                <input type="date" name="Date_Prise_de_service" id="Date_Prise_de_service" class="form-control @error('Date_Prise_de_service') is-invalid @enderror" value="{{ old('Date_Prise_de_service', optional($agent->Date_Prise_de_service)->format('Y-m-d')) }}">
+                                <input type="date" name="Date_Prise_de_service" id="Date_Prise_de_service" class="form-control @error('Date_Prise_de_service') is-invalid @enderror" value="{{ old('Date_Prise_de_service',$agent->{'Date_Prise_de_service'}) }}">
                                 @error('Date_Prise_de_service') <span class="invalid-feedback">{{ $message }}</span> @enderror
                             </div>
                         </div>

@@ -66,7 +66,7 @@ class PresenceController extends Controller
             $datas = $request->all();
             // dd($datas);
             // $presence = Presence::create($validatedData);
-            $presence = Presence::create($datas);
+            $Presence = Presence::create($datas);
            return redirect()->route('presences.index')->with('success', 'Présence créée avec succès.');
 
     }
