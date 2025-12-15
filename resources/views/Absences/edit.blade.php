@@ -7,7 +7,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Modifier l'absence #{{ $absence->id }}</div>
+                <div class="card-header">Modifier l'absence #{{ $absence->id }} {{ $absence->agent->last_name }} {{ $absence->agent->first_name }}</div>
 
                 <div class="card-body">
                     {{-- Le formulaire utilise la méthode POST mais simule PATCH/PUT avec @method --}}
@@ -16,21 +16,20 @@
                         @method('PUT') {{-- Indique à Laravel que c'est une requête de mise à jour --}}
 
                         {{-- Champ de sélection de l'agent --}}
-                        <div class="mb-3">
-                            <label for="agent_id" class="form-label">Nom de l'agent</label>
-                            <select class="form-select @error('agent_id') is-invalid @enderror" id="agent_id" name="agent_id" required>
-                                <option value="">Sélectionnez un agent</option>
-                                {{-- Boucle à travers les agents fournis par le contrôleur --}}
-                                @foreach($agents as $agent)
-                                    <option value="{{ $agent->id }}" {{ (old('agent_id', $absence->agent_id) == $agent->id) ? 'selected' : '' }}>
-                                  {{ $agent->name}}  {{ $agent->last_name}} {{ $agent->first_name}}
-                               </option>
-                                @endforeach
-                            </select>
-                            @error('agent_id')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+
+                            <div class="mb-3">
+                                <label for="agent_id" class="form-label">Agent</label>
+                                <select name="agent_id" id="agent_id" class="form-control @error('agent_id') is-invalid @enderror" required>
+                                    <option value="">Sélectionner un agent</option>
+                                    {{-- Supposons que vous passez une variable $agents depuis le contrôleur --}}
+                                    @foreach($agents as $agent)
+                                        <option value="{{ $agent->id }}" {{ old('agent_id', $absence->agent_id) == $agent->id ? 'selected' : '' }}>
+                                            {{ $agent->last_name }} {{ $agent->first_name}}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('agent_id') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                            </div>
 
                         {{-- Champ de sélection du type d'absence --}}
                         <div class="mb-3">
@@ -53,19 +52,15 @@
                         <div class="mb-3">
                             <label for="date_debut" class="form-label">Date de début</label>
                             <input type="date" class="form-control @error('date_debut') is-invalid @enderror" id="date_debut" name="date_debut"
-                                value="{{ old('date_debut', $absence->date_debut) }}" required>
-                            @error('date_debut')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                                value="{{ old('date_debut', $absence->date_debut) }}"required>
+                            @error('date_debut')<div class="invalid-feedback">{{ $message }}</div> @enderror
 
                         {{-- Champ Date de fin --}}
                         <div class="mb-3">
                             <label for="date_fin" class="form-label">Date de fin</label>
                             <input type="date" class="form-control @error('date_fin') is-invalid @enderror" id="date_fin" name="date_fin"
                                 value="{{ old('date_fin', $absence->date_fin) }}" required>
-                            @error('date_fin')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                            @error('date_fin') <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 

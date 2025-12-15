@@ -19,7 +19,7 @@ class AbsenceController extends Controller
         $absences = Absence::with(['agent', 'typeAbsence'])->latest()->paginate();
 
         // Renvoie les données à une vue Blade (par ex. resources/views/absences/index.blade.php)
-        return view('absences.index', compact('absences'));
+        return view('Absences.index', compact('absences'));
     }
      public function create()
     {
@@ -28,7 +28,7 @@ class AbsenceController extends Controller
         $type_absences = TypeAbsence::all();
 
         // Passer les données à la vue
-        return view('absences.create', compact('agents', 'type_absences'));
+        return view('Absences.create', compact('agents', 'type_absences'));
     }
 
     /**
@@ -38,7 +38,7 @@ class AbsenceController extends Controller
     {
         // Validation des données entrantes
         $validatedData = $request->validate([
-            
+
             'agent_id' => 'required|integer|exists:agents,id',
             'type_absence_id' => 'required|exists:type_absences,id',
             'date_debut' => 'required|date',
@@ -47,12 +47,12 @@ class AbsenceController extends Controller
         ]);
         $datas = $request->all();
         // Crée l'enregistrement dans la base de données
-        
+
         $Absence = Absence::create($datas);
 
         // Redirige l'utilisateur
         return redirect()->route('absences.index')->with('success', 'Absence créée avec succès.');
-        
+
     }
 
     /**
@@ -93,20 +93,16 @@ class AbsenceController extends Controller
         $absence = Absence::with('typeAbsence', 'agent')->findOrFail($id);
 
         // Passe l'objet $absence complet (avec ses relations chargées) à la vue.
-        return view('absences.show', compact('absence'));
+        return view('Absences.show', compact('absence'));
     }
 
-     public function edit($id)
+
+    public function edit(absence $absence): View
     {
-        // 1. Récupérer l'absence actuelle (avec 404 si non trouvée)
-        $absence = Absence::findOrFail($id);
+        $type_absences = TypeAbsence::all();
+        $agents = Agent::all();
 
-        // 2. Récupérer toutes les options pour les listes déroulantes
-        // On suppose que les tables TypeAbsence et Agent ont une colonne 'nom' ou 'libelle'.
-        $type_absences = TypeAbsence::pluck('nom_type', 'id'); 
-        $agents = Agent::pluck('last_name','first_name', 'id'); // Remplacez 'nom_complet' par le nom réel de votre colonne d'agent
-
-        // 3. Passer toutes les données à la vue
-        return view('absences.edit', compact('absence', 'type_absences', 'agents'));
+        return view('Absences.edit', compact('absence', 'type_absences', 'agents'));
     }
+
 }

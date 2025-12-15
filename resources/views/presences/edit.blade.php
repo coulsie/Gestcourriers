@@ -6,7 +6,7 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    Éditer la présence #{{ $presence->id }}
+                    Modifier la présence de {{ $presence->id }} {{ $presence->agent->last_name }} {{ $presence->agent->first_name }} du {{ $presence->heure_arrivee }}
                 </div>
 
                 <div class="card-body">
@@ -17,18 +17,19 @@
 
                         <!-- Champ Agent ID (ou une liste déroulante si vous avez les agents) -->
                         <div class="mb-3">
-                            <label for="agent_id" class="form-label">Agent</label>
-                            <!-- Idéalement, ceci devrait être une liste déroulante d'agents -->
-                            <input type="text"
-                                   class="form-control"
-                                   id="agent_id"
-                                   name="agent_id"
-                                   value="{{ old('agent_id', $presence->agent_id) }}"
-                                   required>
-                            @error('agent_id')
-                                <div class="text-danger mt-1">{{ $message }}</div>
-                            @enderror
-                        </div>
+                                <label for="agent_id" class="form-label">Agent</label>
+
+                                <select name="agent_id" id="agent_id" class="form-control @error('agent_id') is-invalid @enderror" required>
+                                    <option value="">Sélectionner un agent</option>
+                                    {{-- Supposons que vous passez une variable $agents depuis le contrôleur --}}
+                                    @foreach($agents as $agent)
+                                        <option value="{{ $agent->id }}" {{ old('agent_id', $presence->agent_id) == $agent->id ? 'selected' : '' }}>
+                                            {{ $agent->last_name }} {{ $agent->first_name}}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('agent_id') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                            </div>
 
                         <!-- Champ Heure d'arrivée -->
                         <div class="mb-3">

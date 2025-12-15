@@ -84,7 +84,8 @@ class PresenceController extends Controller
      */
     public function edit(Presence $presence): View
     {
-        return view('presences.edit', compact('presence'));
+        $agents = Agent::all();
+        return view('presences.edit', compact('presence', 'agents'));
     }
 
     /**
