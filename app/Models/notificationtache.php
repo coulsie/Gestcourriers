@@ -26,9 +26,11 @@ class NotificationTache extends Model
 
     // Définissez les colonnes qui peuvent être assignées massivement (Mass Assignment)
     protected $fillable = [
-        'id_agent',
+
+        'agent_id',
         'titre',
         'description',
+        'date_creation',
         'date_echeance',
         'suivi_par',
         'priorite',
@@ -37,6 +39,7 @@ class NotificationTache extends Model
         'document',
         'date_lecture',
         'date_completion',
+        
     ];
 
     // Cast des attributs de date en instances Carbon pour une manipulation facile
@@ -45,6 +48,7 @@ class NotificationTache extends Model
         'date_echeance'   => 'datetime',
         'date_lecture'    => 'datetime',
         'date_completion' => 'datetime',
+
         'priorite'        => \App\Enums\PrioriteEnum::class, // Nécessite l'Enum ci-dessous
         'statut'          => \App\Enums\StatutEnum::class,   // Nécessite l'Enum ci-dessous
     ];
@@ -59,6 +63,17 @@ class NotificationTache extends Model
         // Assurez-vous d'avoir un modèle App\Models\Agent existant
         return $this->belongsTo(Agent::class, 'id', 'id');
     }
+    public function getPrioriteLabelAttribute(): string
+    {
+        return $this->priorite->value;
+    }
 
-
+    public function getStatutLabelAttribute(): string
+    {
+        return $this->statut->value;
+    }
+   public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'agent_id', 'id');
+    }
 }

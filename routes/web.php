@@ -126,9 +126,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('notifications/{id_notification}/read', [NotificationTacheController::class, 'markAsRead'])->name('notifications.markAsRead');
 });
 // routes/web.php
-Route::get('/notifications/{id}/visualise', [NotificationTacheController::class, 'visualiserDocument'])
+Route::get('/notifications/{id}/visualiser', [NotificationTacheController::class, 'visualiserDocument'])
      // Attribuez le nom 'notifications.visualise' à cette route
      ->name('notifications.visualiser');
 
 
-Route::get('/courriers/visualiser', [CourrierController::class, 'visualiser'])->name('courriers.visualiser');
+Route::get('/courriers/visualiser', [CourrierController::class, 'visualiserDocument'])->name('courriers.visualiser');

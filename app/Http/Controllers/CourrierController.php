@@ -55,6 +55,11 @@ class CourrierController extends Controller
 
             // ... Ajoutez d'autres règles de validation ici
         ]);
+        if ($request->hasFile('chemin_fichier')) {
+            $path = $request->file('chemin_fichier')->store('public/documents');
+            // Stocke uniquement le chemin relatif pour la DB
+            $validatedData['chemin_fichier'] = Storage::url($path);
+           }
 
         // $courrier = Courrier::create($validatedData);
         $courrier = Courrier::create($request->all());//Laissez all() ici

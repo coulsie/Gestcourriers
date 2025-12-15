@@ -1,108 +1,112 @@
-@extends('layouts.app')
+@extends('layouts.app') {{-- Assurez-vous d'avoir un layout approprié --}}
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    Créer une nouvelle notification / tâche
-                </div>
+    <div class="container">
+        <h1>Créer une notification</h1>
 
-                <div class="card-body">
-                    <form action="{{ route('notifications.store') }}" method="POST">
-                        @csrf
+        {{-- Gestion des erreurs de validation --}}
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-                        <!-- Champ id_agent (Liste déroulante) -->
-                        <div class="mb-3">
-                            <label for="id_agent" class="form-label">Agent Bénéficiaire</label>
-                            <select class="form-select @error('id_agent') is-invalid @enderror" id="id_agent" name="id_agent" required>
-                                <option value="">Sélectionner un agent</option>
-                                @foreach ($agents as $agent)
-                                    <option value="{{ $agent->id }}" {{ old('id_agent') == $agent->id ? 'selected' : '' }}>
-                                        {{ $agent->name }} {{ $agent->last_name }} {{ $agent->first_name }} <!-- Affichez le nom ou une combinaison nom/prénom de l'agent -->
-                                    </option>
+        {{-- Formulaire de création --}}
+        <form method="POST" action="{{ route('notifications.store') }}" enctype="multipart/form-data">
+            @csrf {{-- Protection CSRF --}}
+
+            {{-- agent_id (champ de sélection pour l'agent) --}}
+
+            <div class="form-group">
+                <label for="agent_id">Agent assigné</label>
+                <div class="col-md-6">
+                    <select id="agent_id" name="agent_id" class="form-control @error('agent_id') is-invalid @enderror" required>
+                        <option value="">Sélectionner un agent</option>
+                        {{-- Boucle sur les agents disponibles pour créer les options --}}
+                        {{-- Remplacez $agents par le nom exact de votre variable --}}
+                                @foreach($agents as $agent)
+                                        <option value="{{ $agent->id }}" {{ old('agent_id') == $agent->id ? 'selected' : '' }}>
+                                            {{ $agent->nom_complet }} {{ $agent->last_name }} {{ $agent->first_name }}{{-- Remplacez par le nom de la colonne appropriée --}}
+                                        </option>
                                 @endforeach
-                            </select>
-                            @error('id_agent')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                                </select>
 
-                        <!-- Champ Titre -->
-                        <div class="mb-3">
-                            <label for="titre" class="form-label">Titre</label>
-                            <input type="text" class="form-control @error('titre') is-invalid @enderror" id="titre" name="titre" value="{{ old('titre') }}" required>
-                            @error('titre')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <!-- Champ Description (Textarea) -->
-                        <div class="mb-3">
-                            <label for="description" class="form-label">Description</label>
-                            <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="4" required>{{ old('description') }}</textarea>
-                            @error('description')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <!-- Champ Suivi Par -->
-                        <div class="mb-3">
-                            <label for="suivi_par" class="form-label">Suivi par</label>
-                            <input type="text" class="form-control @error('suivi_par') is-invalid @enderror" id="suivi_par" name="suivi_par" value="{{ old('suivi_par') }}" required>
-                            @error('suivi_par')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <!-- Champ Priorité (ENUM) -->
-                        <div class="mb-3">
-                            <label for="priorite" class="form-label">Priorité</label>
-                            <select class="form-select @error('priorite') is-invalid @enderror" id="priorite" name="priorite" required>
-                                <option value="Faible" {{ old('priorite') == 'Faible' ? 'selected' : '' }}>Faible</option>
-                                <option value="Moyenne" {{ old('priorite') == 'Moyenne' ? 'selected' : '' }}>Moyenne</option>
-                                <option value="Élevée" {{ old('priorite') == 'Élevée' ? 'selected' : '' }}>Élevée</option>
-                                <option value="Urgent" {{ old('priorite') == 'Urgent' ? 'selected' : '' }}>Urgent</option>
-                            </select>
-                            @error('priorite')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <!-- Champ date_echeance (Optionnel) -->
-                        <div class="mb-3">
-                            <label for="date_echeance" class="form-label">Date d'échéance (optionnel)</label>
-                            <input type="datetime-local" class="form-control @error('date_echeance') is-invalid @enderror" id="date_echeance" name="date_echeance" value="{{ old('date_echeance') }}">
-                            @error('date_echeance')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <!-- Champ lien_action (Optionnel) -->
-                        <div class="mb-3">
-                            <label for="lien_action" class="form-label">Lien d'action (URL optionnelle)</label>
-                            <input type="url" class="form-control @error('lien_action') is-invalid @enderror" id="lien_action" name="lien_action" value="{{ old('lien_action') }}">
-                            @error('lien_action')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="mb-3">
-                            <label for="document" class="form-label">Document</label>
-                            <input type="file" class="form-control @error('document') is-invalid @enderror" id="document" name="document" value="{{ old('document') }}">
-                            @error('document')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <!-- Les champs date_creation, statut, date_lecture, date_completion sont gérés par défaut dans le contrôleur/BDD -->
-
-                        <button type="submit" class="btn btn-success">Créer la notification</button>
-                        <a href="{{ route('notifications.index') }}" class="btn btn-danger">Annuler</a>
-                    </form>
+                                @error('agent_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                 </div>
             </div>
-        </div>
+
+            {{-- Titre (varchar) --}}
+            <div class="form-group">
+                <label for="titre">Titre</label>
+                <input type="text" name="titre" id="titre" class="form-control" value="{{ old('titre') }}" required maxlength="255">
+            </div>
+
+            {{-- Description (text) --}}
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea name="description" id="description" class="form-control" rows="4" required>{{ old('description') }}</textarea>
+            </div>
+
+            {{-- Date d'échéance (timestamp nullable) --}}
+            <div class="form-group">
+                <label for="date_echeance">Date d'échéance</label>
+                <input type="datetime-local" name="date_echeance" id="date_echeance" class="form-control" value="{{ old('date_echeance') }}">
+                {{-- Laisser vide si non requis, le champ est nullable dans la BD --}}
+            </div>
+
+            {{-- Suivi par (varchar) --}}
+            <div class="form-group">
+                <label for="suivi_par">Suivi par</label>
+                <input type="text" name="suivi_par" id="suivi_par" class="form-control" value="{{ old('suivi_par') }}" required maxlength="100">
+            </div>
+
+            {{-- Priorité (enum) --}}
+            <div class="form-group">
+                <label for="priorite">Priorité</label>
+                <select name="priorite" id="priorite" class="form-control" required>
+                    {{-- Si vous utilisez des Enums PHP, vous pouvez itérer sur les cas --}}
+                    @foreach(['Faible', 'Moyenne', 'Élevée', 'Urgent'] as $priorite)
+                        <option value="{{ $priorite }}" {{ old('priorite', 'Moyenne') == $priorite ? 'selected' : '' }}>
+                            {{ $priorite }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Statut (enum) --}}
+            <div class="form-group">
+                <label for="statut">Statut</label>
+                <select name="statut" id="statut" class="form-control" required>
+                    {{-- Si vous utilisez des Enums PHP, vous pouvez itérer sur les cas --}}
+                    @foreach(['Non lu', 'En cours', 'Complétée', 'Annulée'] as $statut)
+                        <option value="{{ $statut }}" {{ old('statut', 'Non lu') == $statut ? 'selected' : '' }}>
+                            {{ $statut }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Lien d'action (varchar nullable) --}}
+            <div class="form-group">
+                <label for="lien_action">Lien d'action</label>
+                <input type="url" name="lien_action" id="lien_action" class="form-control" value="{{ old('lien_action') }}" maxlength="512">
+            </div>
+
+            {{-- Document (varchar nullable - gestion de fichier) --}}
+            <div class="form-group">
+                <label for="document">Document (fichier)</label>
+                <input type="file" name="document" id="document" class="form-control-file">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Créer</button>
+        </form>
     </div>
-</div>
 @endsection

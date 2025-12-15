@@ -11,6 +11,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Response;
+use illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
+
 
 
 class NotificationTacheController extends Controller
@@ -20,9 +23,13 @@ class NotificationTacheController extends Controller
      */
     public function index()
     {
-        // Récupère toutes les notifications, triées par date de création descendante
-        $notifications = NotificationTache::orderBy('date_creation', 'desc')->get();
-        return view('notifications.index', compact('notifications'));
+     // Utilisez paginate() au lieu de get()
+     $notifications = NotificationTache::with(['agent'])->latest()->paginate();
+
+     return view('notifications.index', compact('notifications'));
+
+
+
     }
 
     /**
@@ -43,15 +50,26 @@ class NotificationTacheController extends Controller
     public function store(Request $request):RedirectResponse
     {
         $validatedData = $request->validate([
+
             'agent_id' => 'required|exists:agents,id', // Assurez-vous que la table 'agents' existe
             'titre'         => 'required|string|max:255',
             'description'   => 'required|string',
+            'date_creation' => 'nullable|date',
             'date_echeance' => 'nullable|date',
             'suivi_par'     => 'required|string|max:100',
             'priorite'      => 'required|in:' . implode(',', array_column(PrioriteEnum::cases(), 'value')),
             'statut'        => 'required|in:' . implode(',', array_column(StatutEnum::cases(), 'value')),
+            'document'      => 'nullable|string|max:512',
             'lien_action'   => 'nullable|string|max:512|url',
+            'date_lecture'  => 'nullable|date',
+            'date_completion' => 'nullable|date',
+
         ]);
+         if ($request->hasFile('document')) {
+            $path = $request->file('document')->store('public/documents');
+            // Stocke uniquement le chemin relatif pour la DB
+            $validatedData['document'] = Storage::url($path);
+        }
          $datas = $request->all();
          $NotificationTache = NotificationTache::create($datas);
 
@@ -89,14 +107,21 @@ class NotificationTacheController extends Controller
     public function update(Request $request, NotificationTache $notificationTache)
     {
         $validatedData = $request->validate([
-            'id_agent'      => 'required|exists:agents,id_agent',
+            'id_notification' => 'required|integer|exists:notifications_taches,id_notification',
+
+            'agent_id'      => 'required|exists:agents,agent_id',
             'titre'         => 'required|string|max:255',
             'description'   => 'required|string',
+            'date_creation' => 'nullable|date',
             'date_echeance' => 'nullable|date',
             'suivi_par'     => 'required|string|max:100',
             'priorite'      => 'required|in:' . implode(',', array_column(PrioriteEnum::cases(), 'value')),
             'statut'        => 'required|in:' . implode(',', array_column(StatutEnum::cases(), 'value')),
+            'document'      => 'nullable|string|max:512',
             'lien_action'   => 'nullable|string|max:512|url',
+            'date_lecture'  => 'nullable|date',
+            'date_completion' => 'nullable|date',
+
         ]);
 
         // Gérer la date de complétion automatiquement si le statut devient 'Complétée'
@@ -122,18 +147,38 @@ class NotificationTacheController extends Controller
         return redirect()->route('notifications.index')
                          ->with('success', 'Notification de tâche supprimée avec succès.');
     }
-    public function visualiserDocument($id)
-    { $notification = NotificationTache::findOrFail($id);
-    $filePath = Storage::disk('local')->path($notification->document);
 
-     if (file_exists($filePath)) {
+
+    public function visualiserDocument($id)
+    {
+
+        $notification = NotificationTache::findOrFail($id);
+        $filePath = Storage::disk('local')->path($notification->document);
+
+         if (file_exists($filePath)) {
         // Utilise le helper response() global et la méthode file()
         // Cela générera la réponse HTTP appropriée
-        return response()->file($filePath, [
-             'Content-Disposition' => 'inline; filename="'.$notification->titre.'"'
-        ]);
-    }
+        return response()->file(storage_path('app/public/' . $notification->document), [
+               ]);
+        }
 
         abort(404); // Fichier non trouvé
     }
+
+   public function markAsRead(Request $request, $id = null)
+    {
+        // Votre logique pour marquer la notification comme lue ici
+        // Exemple :
+        // $notification = $request->user()->notifications()->findOrFail($id);
+        // $notification->markAsRead();
+
+        // return back()->with('success', 'Notification marquée comme lue.');
+    }
+
+
+
+
+
+
+
 }

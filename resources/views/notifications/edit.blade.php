@@ -6,7 +6,7 @@
 <div class="container mx-auto px-4 py-8">
     <div class="flex items-center justify-between mb-6">
         <h1 class="text-3xl font-bold text-gray-800">Modifier la Tâche/Notification</h1>
-        <a href="{{ route('notifications_taches.show', $notificationTache->id_notification) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-md">
+        <a href="{{ route('notifications.show', $notificationTache->id_notification) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-md">
             Annuler et revenir
         </a>
     </div>
@@ -22,7 +22,7 @@
         </div>
     @endif
 
-    <form action="{{ route('notifications_taches.update', $notificationTache->id_notification) }}" method="POST" class="bg-white shadow-lg rounded-lg p-6">
+    <form action="{{ route('notifications.update', $notificationTache->id_notification) }}" method="POST" class="bg-white shadow-lg rounded-lg p-6">
         @csrf
         @method('PUT') {{-- Utilise la méthode PUT pour la mise à jour --}}
 
@@ -37,8 +37,8 @@
 
             {{-- ID Agent --}}
             <div>
-                <label for="id_agent" class="block text-sm font-medium text-gray-700">ID Agent Assigné</label>
-                <input type="number" name="id_agent" id="id_agent" value="{{ old('id_agent', $notificationTache->id_agent) }}"
+                <label for="agent_id" class="block text-sm font-medium text-gray-700">ID Agent Assigné</label>
+                <input type="number" name="agent_id" id="agent_id" value="{{ old('agent_id', $notificationTache->agent_id) }}"
                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
             </div>
 

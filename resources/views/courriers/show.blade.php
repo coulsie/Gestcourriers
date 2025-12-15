@@ -56,15 +56,14 @@
                         <div class="col-md-12">
                             <h5 class="text-primary">{{ __('Fichier Joint') }}</h5>
                             <hr>
-                    
+
                             {{-- Supposons que vous ayez une variable $courrier disponible dans votre vue --}}
 
                                 @if($courrier->chemin_fichier)
                                     <div class="mt-3">
                                         <p>Document associé :</p>
-
                                         <!-- Bouton pour visualiser/ouvrir dans un nouvel onglet -->
-                                        <a href="{{ asset($courrier->chemin_fichier) }}" target="_blank" class="btn btn-info">
+                                        <a href="{{ route('courriers.visualiser', ['id' => $courrier->id]) }}" target="_blank" class="btn btn-info">
                                             <i class="fas fa-eye"></i> Visualiser le document
                                         </a>
 

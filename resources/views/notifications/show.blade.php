@@ -6,7 +6,7 @@
 <div class="container mx-auto px-4 py-8">
     <div class="flex items-center justify-between mb-6">
         <h1 class="text-3xl font-bold text-gray-800">Détails de la Tâche/Notification</h1>
-        <a href="{{ route('notifications_taches.index') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-md">
+        <a href="{{ route('notifications.index') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-md">
             Retour à la liste
         </a>
     </div>
@@ -16,8 +16,12 @@
             <div>
                 <h2 class="text-2xl font-semibold text-gray-900 mb-2">{{ $notificationTache->titre }}</h2>
                 <p class="text-sm text-gray-500">
-                    Créée le: {{ $notificationTache->date_creation->format('d M Y à H:i') }}
-                </p>
+                    @if($notificationTache->date_creation)
+                       {{ $notificationTache->date_creation->format('d/m/Y') }}
+                    @else
+                        Date inconnue
+                    @endif
+               </p>
             </div>
 
             {{-- Badge de Priorité --}}
@@ -44,7 +48,7 @@
         <div class="grid grid-cols-2 gap-4 mt-6">
             <div>
                 <p class="text-sm font-medium text-gray-500">Assigné à l'Agent ID</p>
-                <p class="mt-1 text-sm text-gray-900">{{ $notificationTache->id_agent }}</p>
+                <p class="mt-1 text-sm text-gray-900">{{ $notificationTache->agent_id }}</p>
             </div>
             <div>
                 <p class="text-sm font-medium text-gray-500">Suivi par</p>
