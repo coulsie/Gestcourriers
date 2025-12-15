@@ -2,27 +2,29 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Enums\PrioriteEnum;
+use App\Enums\StatutEnum;
+use App\Models\Agent;
 
 class NotificationTache extends Model
 {
-    use HasFactory;
-
-    // Nom de la table dans la base de données
+    // Indique explicitement le nom de la table, car Laravel s'attendrait à 'notification_taches'
     protected $table = 'notifications_taches';
 
-    // Nom de la clé primaire personnalisée
+    // Indique explicitement le nom de la clé primaire
     protected $primaryKey = 'id_notification';
 
-    // Indique que la clé primaire est auto-incrémentée (true par défaut)
+    // Laravel s'attend par défaut à des clés auto-incrémentées
     public $incrementing = true;
 
-    // Type de la clé primaire (bigint(20) UNSIGNED)
-    protected $keyType = 'int';
+    // Laravel s'attend par défaut à des colonnes 'created_at' et 'updated_at'
+    // que nous n'avons pas ici (nous avons date_creation, date_lecture, etc.)
+    public $timestamps = false;
 
-    // Les colonnes qui peuvent être remplies massivement (Mass Assigned)
+    // Définissez les colonnes qui peuvent être assignées massivement (Mass Assignment)
     protected $fillable = [
         'id_agent',
         'titre',
@@ -32,33 +34,31 @@ class NotificationTache extends Model
         'priorite',
         'statut',
         'lien_action',
+        'document',
         'date_lecture',
         'date_completion',
     ];
 
-    // Les colonnes qui doivent être castées en types PHP natifs (dates, booléens, etc.)
+    // Cast des attributs de date en instances Carbon pour une manipulation facile
     protected $casts = [
         'date_creation'   => 'datetime',
         'date_echeance'   => 'datetime',
         'date_lecture'    => 'datetime',
         'date_completion' => 'datetime',
+        'priorite'        => \App\Enums\PrioriteEnum::class, // Nécessite l'Enum ci-dessous
+        'statut'          => \App\Enums\StatutEnum::class,   // Nécessite l'Enum ci-dessous
     ];
 
-    // Laravel gère 'created_at' et 'updated_at' par défaut.
-    // Comme nous avons nos propres colonnes de date spécifiques ('date_creation'),
-    // nous pouvons désactiver les timestamps automatiques de Laravel
-    // si nous n'utilisons pas la colonne 'updated_at'.
-    // public $timestamps = false;
-    // Si vous décidez de désactiver timestamps, assurez-vous de le faire aussi dans la migration.
-
-    /**
-     * Définit la relation Eloquent avec l'Agent (Utilisateur) assigné à la tâche.
-     */
+    // Vous pouvez définir des relations ici, par exemple avec l'Agent
+    // public function agent()
+    // {
+    //     return $this->belongsTo(Agent::class, 'id_agent');
+    // }
     public function agent(): BelongsTo
     {
-        // Supposons que votre modèle User est dans App\Models\User
-        // et que la clé étrangère est 'id_agent_assigne'
-        // et la clé locale est l'ID dans la table 'users'.
-        return $this->belongsTo(Agent::class, 'id_agent', 'id');
+        // Assurez-vous d'avoir un modèle App\Models\Agent existant
+        return $this->belongsTo(Agent::class, 'id', 'id');
     }
+
+
 }

@@ -35,6 +35,7 @@ class CreateNotificationsTachesTable extends Migration
             $table->timestamp('date_creation')->useCurrent();
 
             // date_echeance (DATETIME nullable)
+            $table->timestamp('date_creation')->nullable();
             $table->timestamp('date_echeance')->nullable();
 
             $table->string('suivi_par', 100);

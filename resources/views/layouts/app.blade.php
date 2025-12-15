@@ -97,7 +97,7 @@
                         <a class="collapse-item" href="{{ route('typeabsences.index') }}">Parametrage Absence</a>
                         <a class="collapse-item" href="{{ route('etats.agents_par_service') }}">Agents par Service</a>
                         <a class="collapse-item" href="{{ route('etats.agents_par_service_recherche') }}">Recherche Agents</a>
-                         <a class="collapse-item" href="{{ route('notifications_taches.index') }}">Notifications de tâches</a>
+                         <a class="collapse-item" href="{{ route('notifications.index') }}">Notifications de tâches</a>
 
                         <!-- <a class="collapse-item" href="">Dons</a> -->
                     </div>

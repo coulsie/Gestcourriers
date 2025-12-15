@@ -116,8 +116,19 @@ Route::get('/courriers.RechercheAffichage', [CourrierController::class, 'Recherc
 
 Route::resource('typeabsences', TypeAbsenceController::class);
 
-
 Route::middleware(['auth'])->group(function () {
-    Route::resource('notifications_taches', NotificationTacheController::class);
+    // Routes de ressources standard
+    Route::resource('notifications', NotificationTacheController::class)->parameters([
+        'notifications' => 'id_notification' // Utilise id_notification au lieu de {notification} dans l'URL
+    ]);
+
+    // Route supplémentaire pour marquer comme lue
+    Route::post('notifications/{id_notification}/read', [NotificationTacheController::class, 'markAsRead'])->name('notifications.markAsRead');
 });
-Route::get('/courriers/{id}/visualiser-document', [CourrierController::class, 'visualiserDocument'])->name('courriers.visualiser');
+// routes/web.php
+Route::get('/notifications/{id}/visualise', [NotificationTacheController::class, 'visualiserDocument'])
+     // Attribuez le nom 'notifications.visualise' à cette route
+     ->name('notifications.visualiser');
+
+
+Route::get('/courriers/visualiser', [CourrierController::class, 'visualiser'])->name('courriers.visualiser');
