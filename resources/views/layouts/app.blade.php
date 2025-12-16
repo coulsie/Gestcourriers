@@ -58,6 +58,38 @@
                 Interface Areloka
             </div>
 
+
+          <!-- Nav Item - Pages Collapse Menu -->
+            @if(auth()->user() && auth()->user()->isAdmin())
+             <li class="nav-item">
+                <a href="{{ url('/admin/dashboard') }}" class="nav-link text-danger">Tableau de bord Admin</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="{{ route('courriers.index') }}" data-toggle="collapse" data-target="#collapseCourriers"
+                        aria-expanded="true" aria-controls="collapseCourriers">
+                        <i class="fas fa-fw fa-cog"></i>
+                        <span>Administration</span>
+                    </a>
+                    <div id="collapseCourriers" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            {{-- <h6 class="collapse-header">Listes Des Courriers:</h6> --}}
+                            <a class="collapse-item" href="{{ route('agents.index') }}">Ressources Humaines</a>
+                            <a class="collapse-item" href="{{ route('notifications.index') }}">Consulter mes notifications</a>
+                            <a class="collapse-item" href="{{ route('notifications.create') }}">Créer une notification</a>
+
+
+                            >
+                            {{-- <a class="collapse-item" href="cards.html">Cards</a> --}}
+                        </div>
+                    </div>
+                </li>
+            @endif
+
+
+
+
+
+
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ route('courriers.index') }}" data-toggle="collapse" data-target="#collapseCourriers"
@@ -91,7 +123,6 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         {{-- <h6 class="collapse-header">Cotisations mensuelles</h6> --}}
 
-                        <a class="collapse-item" href="{{ route('agents.index') }}">Ressources Humaines</a>
                         <a class="collapse-item" href="{{ route('presences.index') }}">Enrégistrement Pointages</a>
                         <a class="collapse-item" href="{{ route('absences.index') }}">Congés et Permissions</a>
                         <a class="collapse-item" href="{{ route('typeabsences.index') }}">Parametrage Absence</a>

@@ -17,6 +17,7 @@ use App\Http\Controllers\TypeAbsenceController;
 use App\Http\Controllers\EtatAgentsController;
 use App\Http\Controllers\EtatAgentsController1;
 use App\Http\Controllers\NotificationTacheController;
+use App\Http\Controllers\AdminController;
 // ... autres routes
 
 
@@ -126,9 +127,13 @@ Route::middleware(['auth'])->group(function () {
     Route::post('notifications/{id_notification}/read', [NotificationTacheController::class, 'markAsRead'])->name('notifications.markAsRead');
 });
 // routes/web.php
-Route::get('/notifications/{id}/visualiser', [NotificationTacheController::class, 'visualiserDocument'])
-     // Attribuez le nom 'notifications.visualise' à cette route
-     ->name('notifications.visualiser');
+Route::get('/notifications/{id}/visualiser', [NotificationTacheController::class, 'visualiserDocument'])->name('notifications.visualiser');
 
 
 Route::get('/courriers/visualiser', [CourrierController::class, 'visualiserDocument'])->name('courriers.visualiser');
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('admin/dashboard', [AdminController::class, 'index']);
+    // Toutes les routes ici sont réservées aux admins
+});
+

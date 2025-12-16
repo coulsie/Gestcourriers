@@ -66,12 +66,20 @@ class AgentController extends Controller
             'user_id' => 'nullable|exists:users,id',
         ]);
 
-        // 2. Gestion du téléchargement de la photo (si présente)
-        if ($request->hasFile('photo')) {
-            $path = $request->file('photo')->store('public/agents_photos');
-            // Stocke uniquement le chemin relatif pour la DB
-            $validatedData['photo'] = Storage::url($path);
-        }
+
+
+    $request->validate(['photo' => 'required|image|mimes:jpeg,png,jpg|max:2048', ]);
+
+
+    if ($request->hasFile('photo')) {
+        // Enregistre dans storage/app/public/agents_photos
+        $path = $request->file('photo')->store('agents_photos', 'public');
+
+        // Sauvegardez $path dans votre base de données (ex: agents_photos/nom_image.jpg)
+        // $agent->photo = $path;
+        // $agent->save();
+    }
+
 
         // 3. Création de l'agent dans la base de données
         $agent = Agent::create($validatedData);
@@ -137,17 +145,19 @@ class AgentController extends Controller
             'user_id' => 'nullable|exists:users,id',
         ]);
 
-        // 2. Gestion du téléchargement et suppression de l'ancienne photo (si une nouvelle est fournie)
-        if ($request->hasFile('photo')) {
-            // Delete the old photo if it exists
-            if ($agent->photo) {
-                Storage::delete(str_replace('/storage', 'public', $agent->photo));
-            }
 
-            // Store the new photo
-            $path = $request->file('photo')->store('public/storage/agents_photos');
-            $validatedData['photo'] = Storage::url($path);
-        }
+    $request->validate(['photo' => 'required|image|mimes:jpeg,png,jpg|max:2048', ]);
+
+
+    if ($request->hasFile('photo')) {
+        // Enregistre dans storage/app/public/agents_photos
+        $path = $request->file('photo')->store('agents_photos', 'public');
+
+        // Sauvegardez $path dans votre base de données (ex: agents_photos/nom_image.jpg)
+        // $agent->photo = $path;
+        // $agent->save();
+    }
+
 
         // 3. Mise à jour de l'agent dans la base de données
         $agent->update($validatedData);

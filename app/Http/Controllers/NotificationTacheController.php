@@ -81,6 +81,8 @@ class NotificationTacheController extends Controller
      */
     public function show(NotificationTache $notificationTache)
     {
+           $notificationTache = NotificationTache::with(['agent'])->findOrFail($notificationTache->id_notification);
+
         // Marquer comme lu si nécessaire lors de la visualisation
         if ($notificationTache->statut === StatutEnum::NonLu) {
             $notificationTache->statut = StatutEnum::EnCours;
@@ -152,15 +154,17 @@ class NotificationTacheController extends Controller
     public function visualiserDocument($id)
     {
 
-        $notification = NotificationTache::findOrFail($id);
-        $filePath = Storage::disk('local')->path($notification->document);
+        $notificationTache = NotificationTache::findOrFail($id);
+        $document = $notificationTache->document;
 
-         if (file_exists($filePath)) {
-        // Utilise le helper response() global et la méthode file()
-        // Cela générera la réponse HTTP appropriée
-        return response()->file(storage_path('app/public/' . $notification->document), [
-               ]);
+
+        if (Storage::disk('public')->exists($document)) {
+            // Utiliser response()->file() pour afficher le fichier dans le navigateur
+            // Laravel définit automatiquement l'en-tête Content-Disposition sur 'inline' par défaut pour cette méthode
+            return response()->file(storage_path('app/public/' . $document));
+
         }
+
 
         abort(404); // Fichier non trouvé
     }

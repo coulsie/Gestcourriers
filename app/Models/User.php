@@ -63,4 +63,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Affectation::class, 'agent_id');
     }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
 }
