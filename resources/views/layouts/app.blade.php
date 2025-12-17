@@ -29,6 +29,30 @@
     <!-- Page Wrapper -->
     <div id="wrapper">
 
+
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+            </li>
+
+            {{-- Visible uniquement pour le type administration --}}
+            @if(auth()->user()->role === 'admin')
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('profile.create') }}">
+                    <i class="fas fa-user-plus"></i> Créer un Agent
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-danger" href="/admin/logs">
+                    <i class="fas fa-shield-alt"></i> Sécurité & Logs
+                </a>
+            </li>
+            @endif
+        </ul>
+
+
         <!-- Sidebar -->
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 

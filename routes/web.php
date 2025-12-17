@@ -137,3 +137,14 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Toutes les routes ici sont réservées aux admins
 });
 
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+});
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    // La route pour afficher le formulaire de création
+    Route::get('/profile/create', [ProfileController::class, 'create'])->name('profile.create');
+
+    // La route pour enregistrer les données (utilisée par le formulaire)
+    Route::post('/profile', [ProfileController::class, 'store'])->name('profile.store');
+});

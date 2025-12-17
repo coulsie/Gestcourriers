@@ -53,5 +53,36 @@ class ProfileController extends Controller
         $user = Auth::user();
         return view('profile.edit', compact('user'));
     }
+
+     public function store(Request $request)
+    {
+        // Validation des données
+        $validated = $request->validate([
+            'titre' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'role' => 'required|in:user,admin',
+        ]);
+
+        // Logique de stockage de la photo si présente
+        if ($request->hasFile('photo')) {
+            $path = $request->file('photo')->store('agents_photos', 'public');
+            $validated['document'] = $path;
+        }
+
+        // Création de l'entrée en base de données
+        // User::create($validated);
+
+        return redirect()->route('admin.dashboard')
+                         ->with('success', 'Le profil a été créé avec succès.');
+    }
+
+
+     public function create()
+    {
+        // On retourne la vue située dans resources/views/profil/create.blade.php
+        return view('profile.create');
+    }
+
 }
 
