@@ -1,85 +1,62 @@
-{{-- Étend un layout principal pour la structure de la page (header, footer, etc.) --}}
 @extends('layouts.app')
 
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Créer un nouvel utilisateur') }}</div>
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Créer un Nouvel Utilisateur / Agent</h5>
+                </div>
 
                 <div class="card-body">
-                    {{--
-                        Le formulaire pointe vers la route 'users.store'
-                        qui est gérée par la méthode 'store' du contrôleur.
-                        La méthode HTTP utilisée sera POST.
-                    --}}
-                    <form method="POST" action="{{ route('users.store') }}">
-                        @csrf {{-- Protection essentielle contre les attaques CSRF dans Laravel --}}
+                    {{-- L'attribut enctype est CRUCIAL pour l'envoi de la photo --}}
+                    <form action="{{ route('users.store') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
 
-                        {{-- Champ Nom (Name) --}}
-                        <div class="form-group row">
-                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Nom') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
-
-                                {{-- Affichage des erreurs de validation pour le champ 'name' --}}
-                                @error('name')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
+                        <!-- Nom complet -->
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nom complet</label>
+                            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" required>
+                            @error('name') <span class="invalid-feedback">{{ $message }}</span> @enderror
                         </div>
 
-                        {{-- Champ Email (Email Address) --}}
-                        <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('Adresse E-mail') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
-
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Adresse Email</label>
+                            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" required>
+                            @error('email') <span class="invalid-feedback">{{ $message }}</span> @enderror
                         </div>
 
-                        {{-- Champ Mot de passe (Password) --}}
-                        <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Mot de passe') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
+                        <!-- Type d'administration (Rôle) -->
+                        <div class="mb-3">
+                            <label for="role" class="form-label">Type d'accès (Rôle)</label>
+                            <select name="role" class="form-select @error('role') is-invalid @enderror" required>
+                                <option value="user" {{ old('role') == 'user' ? 'selected' : '' }}>Agent (Utilisateur standard)</option>
+                                <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Administrateur</option>
+                            </select>
+                            @error('role') <span class="invalid-feedback">{{ $message }}</span> @enderror
                         </div>
 
-                        {{-- Champ Confirmation du mot de passe (Password Confirmation) --}}
-                        <div class="form-group row">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirmer Mot de passe') }}</label>
-
-                            <div class="col-md-6">
-                                {{-- Le name doit être 'password_confirmation' pour que la validation Laravel 'confirmed' fonctionne automatiquement --}}
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
-                            </div>
+                       
+                        <!-- Mot de passe -->
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Mot de passe</label>
+                            <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" required>
+                            @error('password') <span class="invalid-feedback">{{ $message }}</span> @enderror
                         </div>
-
-                        {{-- Bouton de soumission --}}
-                        <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Créer l\'utilisateur') }}
-                                </button>
+                            <div>
+                            <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Confirmer le mot de passe</label>
+                            <input type="password" name="password_confirmation" id="password_confirmation"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                required>
                             </div>
+
+                        <hr>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">Annuler</a>
+                            <button type="submit" class="btn btn-success">Enregistrer l'utilisateur</button>
                         </div>
                     </form>
                 </div>

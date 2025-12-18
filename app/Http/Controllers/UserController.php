@@ -46,7 +46,9 @@ class UserController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users', // Email unique dans la table 'users'
-            'password' => 'required|string|min:8|confirmed', // 'confirmed' vérifie le champ 'password_confirmation'
+            'password' => 'required|string|min:8|confirmed',
+            'role' => 'required|string|in:user,admin',  // 'confirmed' role'
+            'bio' => 'nullable|string',
         ]);
 
         // 2. Création de l'utilisateur dans la base de données
@@ -55,6 +57,7 @@ class UserController extends Controller
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
             'password' => Hash::make($validatedData['password']), // Hachage sécurisé du mot de passe
+            'role'=> $validatedData['role'],
         ]);
 
         // 3. Redirection vers la liste des utilisateurs avec un message de succès
@@ -70,7 +73,7 @@ class UserController extends Controller
     public function show($id)
     {
         $user = User::findOrFail($id); // Trouve l'utilisateur ou génère une erreur 404
-        return view('users.show', compact('user'));
+        return view('Users.show', compact('user'));
     }
 
     /**
@@ -100,6 +103,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             // Règle d'unicité qui ignore l'ID de l'utilisateur actuel lors de la vérification
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'role'=> 'required|string',
         ]);
 
         // Mise à jour de l'instance du modèle

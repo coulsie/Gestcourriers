@@ -33,6 +33,13 @@
                                 @enderror
                             </div>
                         </div>
+                         {{-- Champ Nom (Role) --}}
+
+
+
+
+
+
 
                         {{-- Champ Email (Email Address) --}}
                         <div class="form-group row">

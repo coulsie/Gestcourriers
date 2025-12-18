@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.3
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3307
--- Généré le : lun. 15 déc. 2025 à 08:47
--- Version du serveur : 11.5.2-MariaDB
--- Version de PHP : 8.3.14
+-- Généré le : jeu. 18 déc. 2025 à 16:30
+-- Version du serveur : 11.4.9-MariaDB
+-- Version de PHP : 8.3.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -128,8 +128,8 @@ CREATE TABLE IF NOT EXISTS `agents` (
 --
 
 INSERT INTO `agents` (`id`, `email_professionnel`, `matricule`, `first_name`, `last_name`, `status`, `sexe`, `date_of_birth`, `place_birth`, `photo`, `email`, `phone_number`, `address`, `Emploi`, `Grade`, `Date_Prise_de_service`, `Personne_a_prevenir`, `Contact_personne_a_prevenir`, `service_id`, `user_id`, `created_at`, `updated_at`) VALUES
-(1, 'coulsie@live.fr', '287688C', 'Sié Yacouba', 'COULIBALY', 'Chef de service', 'Female', '1972-12-04', NULL, '/storage/storage/agents_photos/Hfez2qQ892HDSotgUxHjMRGcywyDH7ra7Xax6oBC.jpg', 'coulsie@gmail.com', '0707584396', NULL, NULL, 'A6', NULL, NULL, NULL, 1, NULL, '2025-12-04 13:36:01', '2025-12-13 11:23:11'),
-(2, NULL, '410702H', 'Nafata', 'KONE', 'Agent', NULL, NULL, NULL, NULL, NULL, '0707188674', 'Grand Bassam mockeyville', NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-12-09 15:06:21', '2025-12-09 15:06:21'),
+(1, 'coulsie@live.fr', '287688C', 'Sié Yacouba', 'COULIBALY', 'Chef de service', 'Female', '1972-12-04', 'COCODY', 'C:\\wamp64\\tmp\\php4092.tmp', 'coulsie@gmail.com', '0707584396', '08 BP 2359', 'Inspecteur Principal Informatique', 'A6', '2002-01-05', 'COULIBALY Youssef Kiyali', '0143677424', 1, NULL, '2025-12-04 13:36:01', '2025-12-16 15:39:03'),
+(2, NULL, '410702H', 'Nafata', 'KONE', 'Agent', NULL, NULL, NULL, '/storage/storage/agents_photos/kss1wbQcDFBK8pleueqQJdrzUjwrM318BitCWUHF.jpg', NULL, '0707188674', 'Grand Bassam mockeyville', NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-12-09 15:06:21', '2025-12-16 10:53:36'),
 (3, NULL, '421263X', 'SIAKOURI', 'Justine', 'Agent', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 14, NULL, '2025-12-09 15:58:42', '2025-12-09 15:58:42'),
 (4, 'vb@10klhg', '100600A', 'KOMIAN', 'Anselm', 'Chef de service', 'Male', NULL, NULL, '/storage/storage/agents_photos/wgoMB7Fhj32h9pNnqs2rjAucRMbG2FQKB2WMC6Vx.jpg', 'coulsie@live.fr', NULL, NULL, NULL, NULL, NULL, 'amoin', '010124578', 13, NULL, '2025-12-12 14:43:58', '2025-12-12 15:07:15'),
 (5, 'vb@gmail.com', '100501F', 'KONAN', 'Aya', 'Chef de service', 'Female', '1968-01-05', NULL, NULL, 'konan@aya25', NULL, NULL, NULL, NULL, NULL, 'aurore', '125849637', 7, NULL, '2025-12-12 21:48:34', '2025-12-12 21:48:34'),
@@ -354,7 +354,7 @@ CREATE TABLE IF NOT EXISTS `migrations` (
   `migration` varchar(255) NOT NULL,
   `batch` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `migrations`
@@ -381,7 +381,11 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (18, '2025_12_05_123929_rename_user_id_to_agent_id_in_affectations_table', 18),
 (19, '2025_12_09_150923_add_email_professionnel_to_agents_table', 19),
 (20, '2025_12_10_144650_create_notifications_taches_table', 20),
-(21, '2025_12_11_092142_change_statut_column_type_to_enum', 21);
+(21, '2025_12_11_092142_change_statut_column_type_to_enum', 21),
+(22, '2025_12_15_124007_add_document_to_notifications_taches_table', 22),
+(23, '2025_12_15_145617_rename_id_agent_to_agent_id_in_notifications_taches_table', 23),
+(24, '2025_12_15_155804_add_timestamps_to_notifications_taches_table', 24),
+(25, '2025_12_16_154155_add_role_to_users_table', 25);
 
 -- --------------------------------------------------------
 
@@ -392,7 +396,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 DROP TABLE IF EXISTS `notifications_taches`;
 CREATE TABLE IF NOT EXISTS `notifications_taches` (
   `id_notification` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `id_agent` bigint(20) UNSIGNED NOT NULL,
+  `agent_id` bigint(20) UNSIGNED NOT NULL,
   `titre` varchar(255) NOT NULL,
   `description` text NOT NULL,
   `date_creation` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -401,11 +405,21 @@ CREATE TABLE IF NOT EXISTS `notifications_taches` (
   `priorite` enum('Faible','Moyenne','Élevée','Urgent') NOT NULL DEFAULT 'Moyenne',
   `statut` enum('Non lu','En cours','Complétée','Annulée') NOT NULL DEFAULT 'Non lu',
   `lien_action` varchar(512) DEFAULT NULL,
+  `document` varchar(512) DEFAULT NULL,
   `date_lecture` timestamp NULL DEFAULT NULL,
   `date_completion` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id_notification`),
-  KEY `notifications_taches_id_agent_foreign` (`id_agent`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  KEY `notifications_taches_id_agent_foreign` (`agent_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `notifications_taches`
+--
+
+INSERT INTO `notifications_taches` (`id_notification`, `agent_id`, `titre`, `description`, `date_creation`, `date_echeance`, `suivi_par`, `priorite`, `statut`, `lien_action`, `document`, `date_lecture`, `date_completion`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Prjet recensement des agents', 'hjkiklk', '2025-12-15 15:32:21', '2025-12-18 15:32:00', 'yaoi', 'Moyenne', 'En cours', NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -420,6 +434,13 @@ CREATE TABLE IF NOT EXISTS `password_reset_tokens` (
   `created_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `password_reset_tokens`
+--
+
+INSERT INTO `password_reset_tokens` (`email`, `token`, `created_at`) VALUES
+('coulsie@gmail.com', '$2y$12$GK9NCUhTUFfBEBDeq7Yo2.NlsKLPvVzvQeqogMFQ7ONJlLb0TfpHu', '2025-12-18 15:26:58');
 
 -- --------------------------------------------------------
 
@@ -547,6 +568,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
+  `role` varchar(191) NOT NULL DEFAULT 'user',
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) NOT NULL,
   `remember_token` varchar(100) DEFAULT NULL,
@@ -555,16 +577,17 @@ CREATE TABLE IF NOT EXISTS `users` (
   `bio` text DEFAULT NULL,
   `profile_picture` varchar(191) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `users_email_unique` (`email`) USING HASH
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  UNIQUE KEY `users_email_unique` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`, `bio`, `profile_picture`) VALUES
-(1, 'Coulibaly Sie Yacouba', 'coulsie@gmail.com', NULL, '$2y$12$WAjiSLgNkjOq52FJwCm5dO0HMHY8HyP1aA5dMArsLqFT.kvZTzvvy', 'LlzUSHOwWyD5neqebsxnUyXKLJewGsZbnhUQ8Up0nsQDfLuh3vULnJz9PZRo', '2025-11-17 17:37:48', '2025-11-17 17:37:48', NULL, NULL),
-(2, 'YAKOU', 'coulsie@live.fr', NULL, '$2y$12$oiR9M0/fgELOtm.bvJIq9eAJFy8K3x7sa.exwZW9DUNC.otfOFvBG', NULL, '2025-12-01 12:07:44', '2025-12-01 12:07:44', NULL, NULL);
+INSERT INTO `users` (`id`, `name`, `email`, `role`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`, `bio`, `profile_picture`) VALUES
+(1, 'Coulibaly Sie Yacouba', 'coulsie@gmail.com', 'admin', NULL, '$2y$12$WAjiSLgNkjOq52FJwCm5dO0HMHY8HyP1aA5dMArsLqFT.kvZTzvvy', 'LlzUSHOwWyD5neqebsxnUyXKLJewGsZbnhUQ8Up0nsQDfLuh3vULnJz9PZRo', '2025-11-17 17:37:48', '2025-11-17 17:37:48', NULL, NULL),
+(3, 'Yacoub', 'coulsie@live.fr', 'user', NULL, '$2y$12$XkM6OYaChSDICBzxhSgfkuJcBBUHxS8uUVzAVteO8PSoOgisJhvmm', NULL, '2025-12-18 15:16:46', '2025-12-18 15:16:46', NULL, NULL),
+(4, 'Maman', 'ouattanass@gmail.com', 'user', NULL, '$2y$12$OTuC6vrFt5lohvrby4P0qOKdaq5gOtzBu6yUpFwYS4kSHe1MtZVcq', NULL, '2025-12-18 16:00:20', '2025-12-18 16:00:20', NULL, NULL);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
