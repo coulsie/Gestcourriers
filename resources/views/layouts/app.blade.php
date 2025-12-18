@@ -31,14 +31,14 @@
 
 
         <ul class="nav flex-column">
+
+            {{-- Visible uniquement pour le type administration --}}
+            @if(auth()->user()->role === 'admin')
             <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
                     <i class="fas fa-home"></i> Dashboard
                 </a>
             </li>
-
-            {{-- Visible uniquement pour le type administration --}}
-            @if(auth()->user()->role === 'admin')
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('profile.create') }}">
                     <i class="fas fa-user-plus"></i> Créer un Agent
@@ -84,7 +84,7 @@
 
 
           <!-- Nav Item - Pages Collapse Menu -->
-            @if(auth()->user() && auth()->user()->isAdmin())
+           @if(auth()->user()->role === 'admin')
              <li class="nav-item">
                 <a href="{{ url('/admin/dashboard') }}" class="nav-link text-danger">Tableau de bord Admin</a>
                 </li>
