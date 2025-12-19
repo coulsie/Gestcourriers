@@ -39,7 +39,7 @@ class NotificationTache extends Model
         'document',
         'date_lecture',
         'date_completion',
-        
+
     ];
 
     // Cast des attributs de date en instances Carbon pour une manipulation facile
@@ -61,7 +61,7 @@ class NotificationTache extends Model
     public function agent(): BelongsTo
     {
         // Assurez-vous d'avoir un modèle App\Models\Agent existant
-        return $this->belongsTo(Agent::class, 'id', 'id');
+        return $this->belongsTo(Agent::class, 'agent_id');
     }
     public function getPrioriteLabelAttribute(): string
     {

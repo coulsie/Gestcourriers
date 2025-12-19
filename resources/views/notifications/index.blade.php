@@ -1,117 +1,143 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    Liste de mes notifications et tâches
-                </div>
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">Gestion des Notifications</h1>
+        <a href="{{ route('notifications.create') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Nouvelle Notification
+        </a>
+    </div>
 
-                <div class="card-body">
-                    @if (session('success'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('success') }}
-                        </div>
-                    @endif
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
 
-                    @if($notifications->isEmpty())
-                        <p class="text-center">Vous n'avez aucune notification ou tâche en cours.</p>
-                    @else
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th class="fw-bold">Priorité</th>
-                                        <th class="fw-bold">Titre</th>
-                                        <th class="fw-bold">Description</th>
-                                        <th class="fw-bold">Statut</th>
-                                        <th class="fw-bold">Échéance</th>
-                                        <th class="fw-bold">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($notifications as $notification)
-                                        <!-- Appliquer une classe de ligne différente si non lu -->
-                                        <tr class="{{ $notification->statut == 'Non lu' ? 'table-info fw-semibold' : '' }}">
-                                            <td>
-                                                @php
-                                                    $prioriteClass = '';
-                                                    switch ($notification->priorite) {
-                                                        case 'Urgent': $prioriteClass = 'bg-danger'; break;
-                                                        case 'Élevée': $prioriteClass = 'bg-warning text-dark'; break;
-                                                        case 'Moyenne': $prioriteClass = 'bg-info'; break;
-                                                        case 'Faible': $prioriteClass = 'bg-secondary'; break;
-                                                    }
-                                                @endphp
-                                                <span class="badge {{ $prioriteClass }}">
-                                                    {{ $notification->priorite }}
-                                                </span>
-                                            </td>
-                                            <td>{{ $notification->titre }}</td>
-                                            <td>{{ Str::limit($notification->description, 50) }}</td>
-                                            <td>
-                                                @php
-                                                    $statutClass = '';
-                                                    switch ($notification->statut) {
-                                                        case 'Non lu': $statutClass = 'bg-primary'; break;
-                                                        case 'En cours': $statutClass = 'bg-info'; break;
-                                                        case 'Complétée': $statutClass = 'bg-success'; break;
-                                                        case 'Annulée': $statutClass = 'bg-danger'; break;
-                                                    }
-                                                @endphp
-                                                <span class="badge {{ $statutClass }}">
-                                                    {{ $notification->statut }}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                @if($notification->date_echeance)
-                                                    {{ $notification->date_echeance->format('d/m/Y') }}
-                                                    @if($notification->date_echeance->isPast() && $notification->statut != 'Complétée' && $notification->statut != 'Annulée')
-                                                        <span class="badge bg-danger ms-1">Expirée</span>
-                                                    @endif
-                                                @else
-                                                    N/A
-                                                @endif
-                                            </td>
-                                            <td>
-                                                <!-- Bouton Voir les détails (et marquer comme lu si nécessaire) -->
-                                                <a href="{{ route('notifications.show', $notification->id_notification) }}" class="btn btn-info btn-sm" title="Voir les détails">
-                                                    <i class="fa fa-eye"></i>
-                                                </a>
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Titre & Description</th>
+                            <th>Attribué à</th>
+                            <th>Priorité</th>
+                            <th>Statut</th>
+                            <th>Échéance</th>
+                            <th>Suivi par</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($notifications as $notification)
+                            <tr>
+                                <td>#{{ $notification->id_notification }}</td>
+                                <td>
+                                    <div class="fw-bold text-dark">{{ $notification->titre }}</div>
+                                    <small class="text-muted text-truncate d-inline-block" style="max-width: 250px;">
+                                        {{ $notification->description }}
+                                    </small>
+                                    @if($notification->document)
+                                        <div class="mt-1">
+                                            <a href="{{ asset('storage/' . $notification->document) }}" class="badge bg-info text-decoration-none text-white small" target="_blank">
+                                                📄 Document
+                                            </a>
+                                        </div>
+                                    @endif
+                                </td>
+                                <td>
+                                  @foreach ($notifications as $notification)
+                                        @if($notification) {{-- Vérifie que l'objet notification existe --}}
 
-                                                <!-- Bouton Accès direct si un lien d'action existe -->
-                                                @if($notification->lien_action)
-                                                    <a href="{{ $notification->lien_action }}" class="btn btn-primary btn-sm" title="Accès rapide" target="_blank">
-                                                        <i class="fa fa-arrow-right"></i>
-                                                    </a>
-                                                @endif
+                                            {{ $notification->id }}
 
-                                                <!-- Bouton pour marquer comme complétée (Formulaire) -->
-                                                @if($notification->statut != 'Complétée')
-                                                <form action="{{ route('notifications.markAsRead', $notification->id_notification) }}" method="POST" style="display: inline;">
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-success btn-sm" title="Marquer comme lue/traitée" onclick="return confirm('Confirmez-vous le traitement de cette notification ?')">
-                                                        <i class="fa fa-check"></i>
-                                                    </button>
-                                                </form>
-                                                @endif
-                                            </td>
-                                        </tr>
+                                            {{-- Utilisation de l'opérateur nullsafe pour plus de sécurité --}}
+                                            @if($notification->agent)
+                                                {{ $notification->agent->first_name }} {{ $notification->agent->last_name }}
+                                            @else
+                                                <span class="text-muted">Agent non assigné</span>
+                                            @endif
+
+                                        @endif
                                     @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                                {{-- Affichage des liens de pagination --}}
+                                {{ $notifications->links() }}
 
-                        <!-- Pagination Links -->
-                        <div class="d-flex justify-content-center">
-                            {{ $notifications->links() }}
-                        </div>
-                    @endif
-                </div>
+
+                                </td>
+                                <td>
+                                    @php
+                                        $prioriteColor = match($notification->priorite) {
+                                            'Urgent' => 'danger',
+                                            'Élevée' => 'warning',
+                                            'Moyenne' => 'primary',
+                                            default => 'secondary',
+                                        };
+                                    @endphp
+                                    <span class="badge success-{{ $prioriteColor }}">
+                                        {{ $notification->priorite }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge rounded-pill border {{ $notification->statut == 'Non lu' ? 'bg-danger text-white' : 'bg-light text-dark' }}">
+                                        {{ $notification->statut }}
+                                    </span>
+                                </td>
+                                <td>
+                                    @if($notification->date_echeance)
+                                        <div class="small {{ \Carbon\Carbon::parse($notification->date_echeance)->isPast() ? 'text-danger fw-bold' : '' }}">
+                                            {{ \Carbon\Carbon::parse($notification->date_echeance)->format('d/m/Y') }}
+                                        </div>
+                                    @else
+                                        <span class="text-muted small">Aucune</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <span class="small"><i class="bi bi-person"></i> {{ $notification->suivi_par }}</span>
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        @if($notification->lien_action)
+                                            <a href="{{ $notification->lien_action }}" class="btn btn-outline-primary" title="Lien action">
+                                                <i class="bi bi-link-45deg"></i>
+                                            </a>
+                                        @endif
+                                        <a href="{{ route('notifications.show', $notification->id_notification) }}" class="btn btn-info btn-sm">
+                                            <i class="fa fa-eye"></i>Voir
+                                        </a>
+                                        <a href="{{ route('notifications.edit', $notification->id_notification) }}" class="btn btn-primary btn-sm">
+                                            <i class="fa fa-edit"></i> Modifier
+                                        </a>
+                                        <form action="{{ route('notifications.destroy', $notification->id_notification) }}" method="POST" onsubmit="return confirm('Supprimer cette notification ?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-outline-danger">
+                                                <i class="fa fa-trash"></i> Supprimer
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="7" class="text-center py-5 text-muted">
+                                    Aucune notification trouvée.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
         </div>
+        @if($notifications->hasPages())
+            <div class="card-footer bg-white">
+                {{ $notifications->links() }}
+            </div>
+        @endif
     </div>
 </div>
 @endsection

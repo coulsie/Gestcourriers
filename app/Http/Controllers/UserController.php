@@ -17,10 +17,10 @@ class UserController extends Controller
     public function index()
     {
         // Récupère tous les utilisateurs de la base de données
-        $users = User::all();
+       $users = User::paginate(15);
 
         // Retourne la vue index.blade.php en lui passant les utilisateurs
-        return view('users.index', compact('users'));
+        return view('Users.index', compact('users'));
     }
 
     /**
@@ -31,7 +31,7 @@ class UserController extends Controller
     public function create()
     {
         // Retourne la vue create.blade.php (le formulaire vide)
-        return view('users.create');
+        return view('Users.create');
     }
 
     /**
@@ -85,7 +85,7 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::findOrFail($id);
-        return view('users.edit', compact('user'));
+        return view('Users.edit', compact('user'));
     }
 
     /**

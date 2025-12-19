@@ -16,18 +16,23 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 
 
+
 class NotificationTacheController extends Controller
 {
     /**
      * Affiche une liste des notifications de tâches.
      */
-    public function index()
+    public function index(Request $request)
     {
-     // Utilisez paginate() au lieu de get()
-     $notifications = NotificationTache::with(['agent'])->latest()->paginate();
+       // On récupère les notifications avec leur agent associé (Eager Loading)
+    // Cela évite le problème N+1 et permet d'accéder à first_name/last_name
+    $notifications = NotificationTache::with(['agent'])->latest()->paginate(10);
 
-     return view('notifications.index', compact('notifications'));
+    // Si vous n'avez pas besoin d'un agent spécifique "global",
+    // initialisez-le à null pour éviter l'erreur "Variable non définie"
+    $agent = null;
 
+    return view('notifications.index', compact('notifications', 'agent'));
 
 
     }
@@ -79,35 +84,37 @@ class NotificationTacheController extends Controller
     /**
      * Affiche la notification de tâche spécifiée.
      */
-    public function show(NotificationTache $notificationTache)
-    {
-           $notificationTache = NotificationTache::with(['agent'])->findOrFail($notificationTache->id_notification);
+   public function show($id_notification)
+        {
+            // Récupère la notification par sa clé primaire id_notification
+            // findOrFail retourne une erreur 404 si l'ID n'existe pas
+            $NotificationTache = NotificationTache::findOrFail($id_notification);
 
-        // Marquer comme lu si nécessaire lors de la visualisation
-        if ($notificationTache->statut === StatutEnum::NonLu) {
-            $notificationTache->statut = StatutEnum::EnCours;
-            $notificationTache->date_lecture = now();
-            $notificationTache->save();
+            // Retourne la vue en passant la variable exacte attendue par votre fichier Blade
+            return view('notifications.show', compact('NotificationTache'));
         }
 
-        return view('notifications.show', compact('notificationTache'));
-    }
 
     /**
      * Affiche le formulaire d'édition de la notification de tâche spécifiée.
      */
-    public function edit(NotificationTache $notificationTache)
+    public function edit($id)
     {
-        $priorites = PrioriteEnum::cases();
-        $statuts = StatutEnum::cases();
-        return view('notifications.edit', compact('notificationTache', 'priorites', 'statuts'));
+
+        $NotificationTache = NotificationTache::findOrFail($id);
+
+        return view('notifications.edit', compact('NotificationTache'));
+
+
     }
 
     /**
      * Met à jour la notification de tâche spécifiée.
      */
-    public function update(Request $request, NotificationTache $notificationTache)
+
+ public function update(Request $request, $id): RedirectResponse
     {
+        // 1. Validation des données entrantes
         $validatedData = $request->validate([
             'id_notification' => 'required|integer|exists:notifications_taches,id_notification',
 
@@ -123,31 +130,36 @@ class NotificationTacheController extends Controller
             'lien_action'   => 'nullable|string|max:512|url',
             'date_lecture'  => 'nullable|date',
             'date_completion' => 'nullable|date',
-
+            // Ajoutez vos autres règles ici
         ]);
 
-        // Gérer la date de complétion automatiquement si le statut devient 'Complétée'
-        if ($request->statut === StatutEnum::Completee->value && is_null($notificationTache->date_completion)) {
-            $validatedData['date_completion'] = now();
-        } elseif ($request->statut !== StatutEnum::Completee->value) {
-            $validatedData['date_completion'] = null;
-        }
+        // 2. Récupération de l'instance existante
+        $NotificationTache = NotificationTache::findOrFail($id);
 
-        $notificationTache->update($validatedData);
+        // 3. Mise à jour avec les données validées
+        $NotificationTache->update($validatedData);
 
+        // 4. Redirection avec un message de succès
         return redirect()->route('notifications.index')
-                         ->with('success', 'Notification de tâche mise à jour avec succès.');
+                         ->with('success', 'La notification a été mise à jour avec succès.');
     }
+
 
     /**
      * Supprime la notification de tâche spécifiée.
      */
-    public function destroy(NotificationTache $notificationTache)
+    public function destroy($id_notification)
     {
-        $notificationTache->delete();
+        $notification = NotificationTache::findOrFail($id_notification);
 
-        return redirect()->route('notifications.index')
-                         ->with('success', 'Notification de tâche supprimée avec succès.');
+        // Vérifier si un document existe et le supprimer du disque
+        if ($notification->document) {
+            Storage::disk('public')->delete($notification->document);
+        }
+
+        $notification->delete();
+
+        return redirect()->route('notifications.index')->with('success', 'Supprimé avec succès');
     }
 
 
@@ -179,7 +191,11 @@ class NotificationTacheController extends Controller
         // return back()->with('success', 'Notification marquée comme lue.');
     }
 
-
+    public function agent()
+    {
+        // Indique que agent_id dans cette table pointe vers la clé primaire de la table Agent
+        return $this->belongsTo(Agent::class, 'agent_id');
+    }
 
 
 

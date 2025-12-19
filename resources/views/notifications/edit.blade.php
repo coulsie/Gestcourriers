@@ -1,110 +1,102 @@
-{{-- resources/views/notifications_taches/edit.blade.php --}}
-
-@extends('layouts.app') {{-- Assurez-vous d'avoir ce layout de base --}}
+@extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-4 py-8">
-    <div class="flex items-center justify-between mb-6">
-        <h1 class="text-3xl font-bold text-gray-800">Modifier la Tâche/Notification</h1>
-        <a href="{{ route('notifications.show', $notificationTache->id_notification) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-md">
-            Annuler et revenir
-        </a>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow border-0">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0 text-primary">Modifier la Notification #{{ $NotificationTache->id_notification }}</h4>
+                    <a href="{{ route('notifications.index') }}" class="btn btn-outline-secondary btn-sm">Retour</a>
+                </div>
+
+                <div class="card-body p-4">
+                    <form action="{{ route('notifications.update', $NotificationTache->id_notification) }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+
+                        <div class="row g-3">
+                            {{-- Titre --}}
+                            <div class="col-md-8">
+                                <label class="form-label fw-bold">Titre</label>
+                                <input type="text" name="titre" class="form-control @error('titre') is-invalid @enderror"
+                                       value="{{ old('titre', $NotificationTache->titre) }}" required>
+                                @error('titre') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+
+                            {{-- Priorité (Enum) --}}
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Priorité</label>
+                                <select name="priorite" class="form-select @error('priorite') is-invalid @enderror">
+                                    @foreach(['Faible', 'Moyenne', 'Élevée', 'Urgent'] as $prio)
+                                        <option value="{{ $prio }}" {{ old('priorite', $NotificationTache->priorite) == $prio ? 'selected' : '' }}>
+                                            {{ $prio }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            {{-- Description --}}
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Description</label>
+                                <textarea name="description" class="form-control @error('description') is-invalid @enderror" rows="4" required>{{ old('description', $NotificationTache->description) }}</textarea>
+                                @error('description') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+
+                            {{-- Statut (Enum) --}}
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Statut</label>
+                                <select name="statut" class="form-select @error('statut') is-invalid @enderror">
+                                    @foreach(['Non lu', 'En cours', 'Complétée', 'Annulée'] as $stat)
+                                        <option value="{{ $stat }}" {{ old('statut', $NotificationTache->statut) == $stat ? 'selected' : '' }}>
+                                            {{ $stat }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            {{-- Suivi par --}}
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Suivi par</label>
+                                <input type="text" name="suivi_par" class="form-control" value="{{ old('suivi_par', $NotificationTache->suivi_par) }}" required>
+                            </div>
+
+                            {{-- Date Échéance --}}
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Date d'échéance</label>
+                                <input type="datetime-local" name="date_echeance" class="form-control"
+                                       value="{{ old('date_echeance', $NotificationTache->date_echeance ? date('Y-m-d\TH:i', strtotime($NotificationTache->date_echeance)) : '') }}">
+                            </div>
+
+                            {{-- Lien Action --}}
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Lien d'action (URL)</label>
+                                <input type="url" name="lien_action" class="form-control" value="{{ old('lien_action', $NotificationTache->lien_action) }}">
+                            </div>
+
+                            {{-- Document --}}
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Document (Actuel : {{ $NotificationTache->document ?? 'Aucun' }})</label>
+                                <input type="file" name="document" class="form-control @error('document') is-invalid @enderror">
+                                <small class="text-muted">Laissez vide pour conserver le document actuel.</small>
+                            </div>
+
+                            {{-- Dates de lecture/complétion (Lecture seule ou automatique via bouton) --}}
+                            @if($NotificationTache->date_lecture)
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted">Lu le : {{ date('d/m/Y H:i', strtotime($NotificationTache->date_lecture)) }}</label>
+                                </div>
+                            @endif
+                        </div>
+
+                        <div class="mt-5 border-top pt-3 d-flex justify-content-end gap-2">
+                            <button type="reset" class="btn btn-light border">Réinitialiser</button>
+                            <button type="submit" class="btn btn-primary px-4">Enregistrer les modifications</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-
-    {{-- Affichage des erreurs de validation --}}
-    @if ($errors->any())
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-    <form action="{{ route('notifications.update', $notificationTache->id_notification) }}" method="POST" class="bg-white shadow-lg rounded-lg p-6">
-        @csrf
-        @method('PUT') {{-- Utilise la méthode PUT pour la mise à jour --}}
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-            {{-- Titre --}}
-            <div>
-                <label for="titre" class="block text-sm font-medium text-gray-700">Titre</label>
-                <input type="text" name="titre" id="titre" value="{{ old('titre', $notificationTache->titre) }}"
-                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
-            </div>
-
-            {{-- ID Agent --}}
-            <div>
-                <label for="agent_id" class="block text-sm font-medium text-gray-700">ID Agent Assigné</label>
-                <input type="number" name="agent_id" id="agent_id" value="{{ old('agent_id', $notificationTache->agent_id) }}"
-                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
-            </div>
-
-            {{-- Suivi Par --}}
-            <div>
-                <label for="suivi_par" class="block text-sm font-medium text-gray-700">Suivi par (Responsable)</label>
-                <input type="text" name="suivi_par" id="suivi_par" value="{{ old('suivi_par', $notificationTache->suivi_par) }}"
-                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
-            </div>
-
-            {{-- Date d'échéance --}}
-            <div>
-                <label for="date_echeance" class="block text-sm font-medium text-gray-700">Date d'échéance</label>
-                {{-- Formatte la date pour l'input type="datetime-local" --}}
-                @php
-                    $echeanceValue = old('date_echeance', $notificationTache->date_echeance ? $notificationTache->date_echeance->format('Y-m-d\TH:i') : '');
-                @endphp
-                <input type="datetime-local" name="date_echeance" id="date_echeance" value="{{ $echeanceValue }}"
-                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-            </div>
-
-            {{-- Priorité (Utilise les Enums passés par le contrôleur) --}}
-            <div>
-                <label for="priorite" class="block text-sm font-medium text-gray-700">Priorité</label>
-                <select name="priorite" id="priorite" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
-                    @foreach($priorites as $priorite)
-                        <option value="{{ $priorite->value }}" {{ old('priorite', $notificationTache->priorite) === $priorite->value ? 'selected' : '' }}>
-                            {{ $priorite->value }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-            {{-- Statut (Utilise les Enums passés par le contrôleur) --}}
-            <div>
-                <label for="statut" class="block text-sm font-medium text-gray-700">Statut</label>
-                <select name="statut" id="statut" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
-                    @foreach($statuts as $statut)
-                        <option value="{{ $statut->value }}" {{ old('statut', $notificationTache->statut) === $statut->value ? 'selected' : '' }}>
-                            {{ $statut->value }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
-
-        {{-- Description --}}
-        <div class="mt-6">
-            <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-            <textarea name="description" id="description" rows="4"
-                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>{{ old('description', $notificationTache->description) }}</textarea>
-        </div>
-
-        {{-- Lien d'action --}}
-        <div class="mt-6">
-            <label for="lien_action" class="block text-sm font-medium text-gray-700">Lien d'action (URL)</label>
-            <input type="url" name="lien_action" id="lien_action" value="{{ old('lien_action', $notificationTache->lien_action) }}"
-                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-        </div>
-
-        {{-- Bouton de soumission --}}
-        <div class="mt-6">
-            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded shadow-md">
-                Mettre à jour la tâche
-            </button>
-        </div>
-    </form>
 </div>
 @endsection
