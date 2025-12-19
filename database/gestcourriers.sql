@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3307
--- Généré le : jeu. 18 déc. 2025 à 16:30
+-- Généré le : ven. 19 déc. 2025 à 16:56
 -- Version du serveur : 11.4.9-MariaDB
 -- Version de PHP : 8.3.28
 
@@ -128,7 +128,7 @@ CREATE TABLE IF NOT EXISTS `agents` (
 --
 
 INSERT INTO `agents` (`id`, `email_professionnel`, `matricule`, `first_name`, `last_name`, `status`, `sexe`, `date_of_birth`, `place_birth`, `photo`, `email`, `phone_number`, `address`, `Emploi`, `Grade`, `Date_Prise_de_service`, `Personne_a_prevenir`, `Contact_personne_a_prevenir`, `service_id`, `user_id`, `created_at`, `updated_at`) VALUES
-(1, 'coulsie@live.fr', '287688C', 'Sié Yacouba', 'COULIBALY', 'Chef de service', 'Female', '1972-12-04', 'COCODY', 'C:\\wamp64\\tmp\\php4092.tmp', 'coulsie@gmail.com', '0707584396', '08 BP 2359', 'Inspecteur Principal Informatique', 'A6', '2002-01-05', 'COULIBALY Youssef Kiyali', '0143677424', 1, NULL, '2025-12-04 13:36:01', '2025-12-16 15:39:03'),
+(1, 'coulsie@live.fr', '287688C', 'Sié Yacouba', 'COULIBALY', 'Chef de service', 'Female', '1972-12-04', 'COCODY', 'C:\\wamp64\\tmp\\phpE50B.tmp', 'coulsie@gmail.com', '0707584396', '08 BP 2359', 'Inspecteur Principal Informatique', 'A6', '2002-01-05', 'COULIBALY Youssef Kiyali', '0143677424', 1, NULL, '2025-12-04 13:36:01', '2025-12-19 16:50:38'),
 (2, NULL, '410702H', 'Nafata', 'KONE', 'Agent', NULL, NULL, NULL, '/storage/storage/agents_photos/kss1wbQcDFBK8pleueqQJdrzUjwrM318BitCWUHF.jpg', NULL, '0707188674', 'Grand Bassam mockeyville', NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-12-09 15:06:21', '2025-12-16 10:53:36'),
 (3, NULL, '421263X', 'SIAKOURI', 'Justine', 'Agent', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 14, NULL, '2025-12-09 15:58:42', '2025-12-09 15:58:42'),
 (4, 'vb@10klhg', '100600A', 'KOMIAN', 'Anselm', 'Chef de service', 'Male', NULL, NULL, '/storage/storage/agents_photos/wgoMB7Fhj32h9pNnqs2rjAucRMbG2FQKB2WMC6Vx.jpg', 'coulsie@live.fr', NULL, NULL, NULL, NULL, NULL, 'amoin', '010124578', 13, NULL, '2025-12-12 14:43:58', '2025-12-12 15:07:15'),
@@ -412,14 +412,14 @@ CREATE TABLE IF NOT EXISTS `notifications_taches` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id_notification`),
   KEY `notifications_taches_id_agent_foreign` (`agent_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `notifications_taches`
 --
 
 INSERT INTO `notifications_taches` (`id_notification`, `agent_id`, `titre`, `description`, `date_creation`, `date_echeance`, `suivi_par`, `priorite`, `statut`, `lien_action`, `document`, `date_lecture`, `date_completion`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Prjet recensement des agents', 'hjkiklk', '2025-12-15 15:32:21', '2025-12-18 15:32:00', 'yaoi', 'Moyenne', 'En cours', NULL, NULL, NULL, NULL, NULL, NULL);
+(2, 2, 'Prjet recensement des agents', 'lmmùm', '2025-12-19 11:22:38', '2026-01-02 11:22:00', 'bnhj', 'Élevée', 'En cours', NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
