@@ -6,7 +6,7 @@
         <div class="col-md-8">
             <div class="card shadow">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Créer un Nouvel Utilisateur / Agent</h5>
+                    <h5 class="mb-0">Créer un Nouvel Utilisateur</h5>
                 </div>
 
                 <div class="card-body">
@@ -38,7 +38,7 @@
                             @error('role') <span class="invalid-feedback">{{ $message }}</span> @enderror
                         </div>
 
-                       
+
                         <!-- Mot de passe -->
                         <div class="mb-3">
                             <label for="password" class="form-label">Mot de passe</label>
