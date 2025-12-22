@@ -154,3 +154,5 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/tableau-de-bord', [AgentController::class, 'dashb'])->name('agent.dashboard');
 });
 
+// Route pour générer et télécharger le PDF
+Route::get('/notifications/pdf', [NotificationtacheController::class, 'genererPdf'])->name('notifications.index_pdf');

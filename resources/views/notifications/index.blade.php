@@ -1,5 +1,15 @@
 @extends('layouts.app')
 
+<style>
+@media print {
+    .btn, .navbar, .sidebar, footer {
+        display: none !important;
+    }
+}
+</style>
+
+
+
 @section('content')
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -50,23 +60,19 @@
                                     @endif
                                 </td>
                                 <td>
-                                  @foreach ($notifications as $notification)
+
                                         @if($notification) {{-- Vérifie que l'objet notification existe --}}
 
                                             {{ $notification->id }}
 
                                             {{-- Utilisation de l'opérateur nullsafe pour plus de sécurité --}}
-                                            @if($notification->agent)
-                                                {{ $notification->agent->first_name }} {{ $notification->agent->last_name }}
-                                            @else
+
+                                            {{ $notification->agent->last_name }} {{ $notification->agent->first_name }}
+                                        @else
                                                 <span class="text-muted">Agent non assigné</span>
-                                            @endif
-
                                         @endif
-                                    @endforeach
-                                {{-- Affichage des liens de pagination --}}
-                                {{ $notifications->links() }}
-
+                                    {{-- Affichage des liens de pagination --}}
+                                    {{ $notifications->links() }}
 
                                 </td>
                                 <td>
@@ -139,5 +145,9 @@
             </div>
         @endif
     </div>
+    <nav class="navbar no-print"> ... </nav>
+         <button onclick="window.print()" class="btn btn-primary no-print">
+    Imprimer la page
+    </button>
 </div>
 @endsection
