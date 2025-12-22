@@ -156,3 +156,4 @@ Route::middleware(['auth'])->group(function () {
 
 // Route pour générer et télécharger le PDF
 Route::get('/notifications/pdf', [NotificationtacheController::class, 'genererPdf'])->name('notifications.index_pdf');
+Route::get('/notifications/{id}/pdf', [NotificationTacheController::class, 'visualiserDocument'])->name('notifications.index_pdf');
