@@ -119,7 +119,7 @@
                                             <i class="fa fa-edit"></i> Modifier
                                         </a>
                                          <a href="{{ route('notifications.index_pdf', $notification->id_notification) }}" class="btn btn-primary btn-sm">
-                                            <i class="fa fa-edit"></i> pdf
+                                            <i class="fa fa-edit"></i> Voirpdf
                                         </a>
                                         <form action="{{ route('notifications.destroy', $notification->id_notification) }}" method="POST" onsubmit="return confirm('Supprimer cette notification ?')">
                                             @csrf
