@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Response;
 use illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 
@@ -196,9 +197,21 @@ class NotificationTacheController extends Controller
         // Indique que agent_id dans cette table pointe vers la clé primaire de la table Agent
         return $this->belongsTo(Agent::class, 'agent_id');
     }
+    public function downloadPDF()
+    {
+    $notifications = NotificationTache::all();
+    $pdf = Pdf::loadView('notifications.index_pdf', compact('notifications'));
+    return $pdf->download('notifications.pdf');
+}
 
+        public function genererPdf()
+        {
+            $notifications = NotificationTache::with('agent')->get();
 
+            $pdf = Pdf::loadView('notifications.index_pdf', compact('notifications'))
+                    ->setPaper('a4', 'landscape'); // Force le mode Paysage
 
-
+            return $pdf->stream('liste-notifications-2025.pdf');
+        }
 
 }
