@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Agent;
+use App\Models\NotificationTache;
 use App\Models\Service;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -10,6 +11,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class AgentController extends Controller
 {
@@ -181,4 +183,16 @@ class AgentController extends Controller
     {
         return $this->belongsTo(Agent::class); // Ou toute autre relation appropriée
     }
+
+        public function dashb()
+        {
+            // On ne récupère que les notifications appartenant à cet agent
+            $notifications = NotificationTache::where('agent_id', Auth::id())
+                ->orderBy('date_creation', 'desc')
+                ->take(10)
+                ->get();
+
+            return view('agents.dashboard', compact('notifications'));
+        }
+
 }

@@ -148,3 +148,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // La route pour enregistrer les données (utilisée par le formulaire)
     Route::post('/profile', [ProfileController::class, 'store'])->name('profile.store');
 });
+
+// Accès Agent
+Route::middleware(['auth'])->group(function () {
+    Route::get('/tableau-de-bord', [AgentController::class, 'dashb'])->name('agent.dashboard');
+});
+
