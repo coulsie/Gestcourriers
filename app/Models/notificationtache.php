@@ -9,6 +9,7 @@ use App\Enums\PrioriteEnum;
 use App\Enums\StatutEnum;
 use App\Models\Agent;
 
+
 class NotificationTache extends Model
 {
     // Indique explicitement le nom de la table, car Laravel s'attendrait à 'notification_taches'
@@ -76,4 +77,22 @@ class NotificationTache extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+            public function getProgressionAttribute()
+        {
+            $start = Carbon::parse($this->date_creation);
+            $end = Carbon::parse($this->date_echeance);
+            $now = Carbon::now();
+
+            // Si la date actuelle est avant la création
+            if ($now->lt($start)) return 0;
+            // Si l'échéance est dépassée
+            if ($now->gt($end)) return 100;
+
+            $totalDays = $start->diffInDays($end);
+            $daysPassed = $start->diffInDays($now);
+
+            return ($totalDays > 0) ? round(($daysPassed / $totalDays) * 100) : 100;
+        }
+
 }

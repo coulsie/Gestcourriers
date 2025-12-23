@@ -39,6 +39,7 @@
                             <th>Statut</th>
                             <th>Échéance</th>
                             <th>Suivi par</th>
+                            <th>Progression</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -105,6 +106,30 @@
                                 <td>
                                     <span class="small"><i class="bi bi-person"></i> {{ $notification->suivi_par }}</span>
                                 </td>
+                                <td>
+                                @foreach($notifications as $tache)
+                                    @php $percent = $tache->progression; @endphp
+                                    
+                                    <div class="mb-2">
+                                        <strong>{{ $tache->titre }}</strong> ({{ $percent }}%)
+                                        <div class="progress" style="height: 20px;">
+                                            <div class="progress-bar {{ $percent > 80 ? 'bg-danger' : ($percent > 50 ? 'bg-warning' : 'bg-success') }}" 
+                                                role="progressbar" 
+                                                style="width: {{ $percent }}%;" 
+                                                aria-valuenow="{{ $percent }}" 
+                                                aria-valuemin="0" 
+                                                aria-valuemax="100">
+                                            </div>
+                                        </div>
+                                        <small class="text-muted">
+                                            Échéance le : {{ \Carbon\Carbon::parse($tache->date_echeance)->format('d/m/Y') }}
+                                        </small>
+                                    </div>
+                                    @endforeach
+
+                                </td>
+
+
                                 <td>
                                     <div class="btn-group btn-group-sm">
                                         @if($notification->lien_action)

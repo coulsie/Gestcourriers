@@ -213,5 +213,10 @@ class NotificationTacheController extends Controller
 
             return $pdf->stream('liste-notifications-2025.pdf');
         }
+    public function showNotifications($id) {
+       
+        $tache = NotificationTache::where('id_notification', $id)->firstOrFail();
+        return view('notifications.index', compact('tache')); // ou ['tache' => $tache]
+    }
 
 }
