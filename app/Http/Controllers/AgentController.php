@@ -184,15 +184,16 @@ class AgentController extends Controller
         return $this->belongsTo(Agent::class); // Ou toute autre relation appropriée
     }
 
-        public function dashb()
-        {
-            // On ne récupère que les notifications appartenant à cet agent
-            $notifications = NotificationTache::where('agent_id', Auth::id())
+        public function dashb() {
+            $notifications = NotificationTache::where('agent_id', auth::id())
+                ->where('is_archived', false) // On filtre les archivées
                 ->orderBy('date_creation', 'desc')
                 ->take(10)
                 ->get();
 
-            return view('agents.dashboard', compact('notifications'));
+            return view('agent.dashboard', compact('notifications'));
         }
+
+
 
 }

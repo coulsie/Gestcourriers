@@ -14,6 +14,8 @@ use Illuminate\Http\Response;
 use illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
+
 
 
 
@@ -68,6 +70,7 @@ class NotificationTacheController extends Controller
             'document'      => 'nullable|string|max:512',
             'lien_action'   => 'nullable|string|max:512|url',
             'date_lecture'  => 'nullable|date',
+            'is_archived' => 'boolean',
             'date_completion' => 'nullable|date',
 
         ]);
@@ -85,7 +88,7 @@ class NotificationTacheController extends Controller
     /**
      * Affiche la notification de tâche spécifiée.
      */
-   public function show($id_notification)
+       public function show($id_notification)
         {
             // Récupère la notification par sa clé primaire id_notification
             // findOrFail retourne une erreur 404 si l'ID n'existe pas
@@ -130,6 +133,7 @@ class NotificationTacheController extends Controller
             'document'      => 'nullable|string|max:512',
             'lien_action'   => 'nullable|string|max:512|url',
             'date_lecture'  => 'nullable|date',
+            'is_archived' => 'boolean',
             'date_completion' => 'nullable|date',
             // Ajoutez vos autres règles ici
         ]);
@@ -197,22 +201,33 @@ class NotificationTacheController extends Controller
         // Indique que agent_id dans cette table pointe vers la clé primaire de la table Agent
         return $this->belongsTo(Agent::class, 'agent_id');
     }
+    
     public function downloadPDF()
     {
     $notifications = NotificationTache::all();
     $pdf = Pdf::loadView('notifications.index_pdf', compact('notifications'));
     return $pdf->download('notifications.pdf');
-}
+    }
+        
+    
+    public function archive($id) 
+    {
+        $notification = NotificationTache::where('agent_id', auth::id());
+        $notification->update(['is_archived' => true]);
 
-        public function genererPdf()
-        {
-            $notifications = NotificationTache::with('agent')->get();
+        return back()->with('success', 'Notification archivée.');
+    }
 
-            $pdf = Pdf::loadView('notifications.index_pdf', compact('notifications'))
+    public function genererPdf()
+    {
+        $notifications = NotificationTache::with('agent')->get();
+
+        $pdf = Pdf::loadView('notifications.index_pdf', compact('notifications'))
                     ->setPaper('a4', 'landscape'); // Force le mode Paysage
 
-            return $pdf->stream('liste-notifications-2025.pdf');
-        }
+        return $pdf->stream('liste-notifications-2025.pdf');
+    }
+
     public function showNotifications($id) {
        
         $tache = NotificationTache::where('id_notification', $id)->firstOrFail();
