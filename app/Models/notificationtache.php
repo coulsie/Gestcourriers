@@ -8,14 +8,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Enums\PrioriteEnum;
 use App\Enums\StatutEnum;
 use App\Models\Agent;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 class NotificationTache extends Model
 {
     
-    use SoftDeletes; // Les notifications ne seront pas supprimées de la DB
-    // Indique explicitement le nom de la table, car Laravel s'attendrait à 'notification_taches'
+   
     protected $table = 'notifications_taches';
 
     // Indique explicitement le nom de la clé primaire

@@ -12,6 +12,7 @@ use App\Models\Agent;
 use App\Models\user;
 
 
+
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
