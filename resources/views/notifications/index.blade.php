@@ -107,27 +107,24 @@
                                     <span class="small"><i class="bi bi-person"></i> {{ $notification->suivi_par }}</span>
                                 </td>
                                 <td>
-                                @foreach($notifications as $tache)
-                                    @php $percent = $tache->progression; @endphp
-                                    
-                                    <div class="mb-2">
-                                        <strong>{{ $tache->titre }}</strong> ({{ $percent }}%)
-                                        <div class="progress" style="height: 20px;">
-                                            <div class="progress-bar {{ $percent > 80 ? 'bg-danger' : ($percent > 50 ? 'bg-warning' : 'bg-success') }}" 
-                                                role="progressbar" 
-                                                style="width: {{ $percent }}%;" 
-                                                aria-valuenow="{{ $percent }}" 
-                                                aria-valuemin="0" 
-                                                aria-valuemax="100">
-                                            </div>
-                                        </div>
-                                        <small class="text-muted">
-                                            Échéance le : {{ \Carbon\Carbon::parse($tache->date_echeance)->format('d/m/Y') }}
-                                        </small>
-                                    </div>
-                                    @endforeach
+                                       @php $percent = $notification->progression ?? 0; @endphp
 
-                                </td>
+                                        <div class="mb-2">
+                                            <strong>{{ $notification->titre }}</strong> ({{ $percent }}%)
+                                            <div class="progress" style="height: 20px;">
+                                                <div class="progress-bar {{ $percent > 80 ? 'bg-danger' : ($percent > 50 ? 'bg-warning' : 'bg-success') }}"
+                                                    role="progressbar"
+                                                    style="width: {{ $percent }}%;"
+                                                    aria-valuenow="{{ $percent }}"
+                                                    aria-valuemin="0"
+                                                    aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <small class="text-muted">
+                                                Échéance le : {{ $notification->date_echeance ? \Carbon\Carbon::parse($notification->date_echeance)->format('d/m/Y') : 'N/A' }}
+                                            </small>
+                                        </div>
+                                    </td>
 
 
                                 <td>

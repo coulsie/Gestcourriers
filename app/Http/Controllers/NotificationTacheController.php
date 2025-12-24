@@ -35,6 +35,7 @@ class NotificationTacheController extends Controller
     // initialisez-le à null pour éviter l'erreur "Variable non définie"
     $agent = null;
 
+
     return view('notifications.index', compact('notifications', 'agent'));
 
 
@@ -201,16 +202,16 @@ class NotificationTacheController extends Controller
         // Indique que agent_id dans cette table pointe vers la clé primaire de la table Agent
         return $this->belongsTo(Agent::class, 'agent_id');
     }
-    
+
     public function downloadPDF()
     {
     $notifications = NotificationTache::all();
     $pdf = Pdf::loadView('notifications.index_pdf', compact('notifications'));
     return $pdf->download('notifications.pdf');
     }
-        
-    
-    public function archive($id) 
+
+
+    public function archive($id)
     {
         $notification = NotificationTache::where('agent_id', auth::id());
         $notification->update(['is_archived' => true]);
@@ -229,7 +230,7 @@ class NotificationTacheController extends Controller
     }
 
     public function showNotifications($id) {
-       
+
         $tache = NotificationTache::where('id_notification', $id)->firstOrFail();
         return view('notifications.index', compact('tache')); // ou ['tache' => $tache]
     }
