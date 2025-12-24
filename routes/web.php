@@ -18,6 +18,7 @@ use App\Http\Controllers\EtatAgentsController;
 use App\Http\Controllers\EtatAgentsController1;
 use App\Http\Controllers\NotificationTacheController;
 use App\Http\Controllers\AdminController;
+use App\http\Controllers\ReponseNotificationController;
 // ... autres routes
 
 
@@ -160,3 +161,15 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/notifications/pdf', [NotificationtacheController::class, 'genererPdf'])->name('notifications.index_pdf');
 
 Route::get('/notifications/{id}/pdf', [NotificationTacheController::class, 'visualiserDocument'])->name('notifications.index_pdf');
+
+
+// Route pour afficher le formulaire (GET)
+Route::get('/reponses/create/{id_notification}/{agent_id}', [ReponseNotificationController::class, 'create'])
+    ->name('reponses.create');
+
+// Route pour ENREGISTRER les données (POST) - C'est celle qui vous manque
+Route::post('/reponses/store', [ReponseNotificationController::class, 'store'])
+    ->name('reponse.store');
+
+Route::get('reponses/create/{id_notification}/{agent_id}', [ReponseNotificationController::class, 'create'])
+     ->name('reponses.create');

@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Affectation;
 use App\Models\Agent;
 use App\Models\user;
+use App\Models\NotificationTache;
 
 
 
@@ -70,4 +71,6 @@ class User extends Authenticatable
     {
         return $this->role === 'admin';
     }
-}
+       
+
+    }

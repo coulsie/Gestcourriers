@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use app\Models\ReponseNotification;
+use Illuminate\Support\Facades\Auth;
+USE app\Models\User;
 
 class ReponseNotificationController extends Controller
 {
@@ -17,7 +19,7 @@ class ReponseNotificationController extends Controller
 
     $reponse = new ReponseNotification();
     $reponse->id_notification = $validated['id_notification'];
-    $reponse->agent_id = auth()->id();
+    $reponse->agent_id = Auth::id();
     $reponse->message = $validated['message'];
 
     if ($request->hasFile('Reponse_Piece_jointe')) {
@@ -30,10 +32,16 @@ class ReponseNotificationController extends Controller
     return back()->with('success', 'Réponse envoyée avec succès.');
 }
 
-public function create()
+ public function create($id_notification = null, $agent_id = null)
 {
-    // On peut passer des données nécessaires au formulaire (ex: liste des notifications)
-    return view('reponses.create');
+    // On passe les IDs à la vue pour les mettre dans des champs cachés (hidden)
+   return redirect()->route('reponses.create', [
+    'id_notification' => $id_notification,
+    'agent_id' => $agent_id
+    ]);
 }
+
+
+
 
 }

@@ -111,8 +111,10 @@
                                                         <i class="fa fa-arrow-right"></i>
                                                     </a>
                                                 @endif
-
-                                                <!-- Bouton pour marquer comme complétée (Formulaire) -->
+                                                 <a href="{{ route('reponses.create', ['id_notification' => $notification->id, 'agent_id' => $agent->id]) }}">
+                                                    Répondre
+                                                </a>
+                                                                                                                                               <!-- Bouton pour marquer comme complétée (Formulaire) -->
                                                 @if($notification->statut != 'Complétée')
                                                 <form action="{{ route('notifications.markAsRead', $notification->id_notification) }}" method="POST" style="display: inline;">
                                                     @csrf
@@ -121,6 +123,7 @@
                                                     </button>
                                                 </form>
                                                 @endif
+
                                             </td>
                                         </tr>
                                     @endforeach

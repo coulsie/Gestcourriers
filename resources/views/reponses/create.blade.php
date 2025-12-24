@@ -5,20 +5,27 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Créer un nouveau Service</div>
+                <div class="card-header">Créer une reponse</div>
 
                     <div class="card-body">
 
                         <form action="{{ route('reponses.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
-                            <!-- ID de la notification (souvent caché ou via un select) -->
-                            <input type="hidden" name="id_notification" value="{{ $notificationId }}">
+                            <!-- Champs cachés récupérés depuis la fonction create -->
+                            <input type="hidden" name="id_notification" value="{{ $id_notification }}">
+                            <input type="hidden" name="agent_id" value="{{ $agent_id }}">
 
-                            <textarea name="message" required></textarea>
-                            
-                            <input type="file" name="Reponse_Piece_jointe">
+                            <div class="form-group">
+                                <label>Message</label>
+                                <textarea name="message" class="form-control" required></textarea>
+                            </div>
 
-                            <button type="submit">Envoyer la réponse</button>
+                            <div class="form-group">
+                                <label>Pièce jointe</label>
+                                <input type="file" name="Reponse_Piece_jointe" class="form-control">
+                            </div>
+
+                            <button type="submit" class="btn btn-success">Envoyer la réponse</button>
                         </form>
                     </div>
              </div>
