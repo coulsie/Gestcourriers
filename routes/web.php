@@ -126,7 +126,9 @@ Route::middleware(['auth'])->group(function () {
     // Route supplémentaire pour marquer comme lue
     Route::post('notifications/{id_notification}/read', [NotificationTacheController::class, 'markAsRead'])->name('notifications.markAsRead');
 });
-// routes/web.php
+
+Route::get('/notifications.index1', [NotificationTacheController::class, 'index1'])->name('notifications.index1');
+
 Route::get('/notifications/{id}/visualiser', [NotificationTacheController::class, 'visualiserDocument'])->name('notifications.visualiser');
 
 

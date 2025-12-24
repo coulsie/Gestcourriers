@@ -99,7 +99,8 @@
                             {{-- <h6 class="collapse-header">Listes Des Courriers:</h6> --}}
                             <a class="collapse-item" href="{{ route('users.index') }}">Users</a>
                             <a class="collapse-item" href="{{ route('agents.index') }}">Ressources Humaines</a>
-                            <a class="collapse-item" href="{{ route('notifications.index') }}">Consulter mes notifications</a>
+                            <a class="collapse-item" href="{{ route('notifications.index') }}">Consulter les notifications</a>
+                            <a class="collapse-item" href="{{ route('notifications.index1') }}">Consulter mes notifications</a>
                             <a class="collapse-item" href="{{ route('notifications.create') }}">Créer une notification</a>
 
 

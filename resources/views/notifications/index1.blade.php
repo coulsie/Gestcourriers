@@ -28,6 +28,7 @@
                                         <th class="fw-bold">Description</th>
                                         <th class="fw-bold">Statut</th>
                                         <th class="fw-bold">Échéance</th>
+                                        <th class="fw-bold">Progression</th>
                                         <th class="fw-bold">Actions</th>
                                     </tr>
                                 </thead>
@@ -75,6 +76,29 @@
                                                     N/A
                                                 @endif
                                             </td>
+                                            <td>
+                                                @php $percent = $notification->progression ?? 0; @endphp
+
+                                                    <div class="mb-2">
+                                                        <strong>{{ $notification->titre }}</strong> ({{ $percent }}%)
+                                                        <div class="progress" style="height: 20px;">
+                                                            <div class="progress-bar {{ $percent > 80 ? 'bg-danger' : ($percent > 50 ? 'bg-warning' : 'bg-success') }}"
+                                                                role="progressbar"
+                                                                style="width: {{ $percent }}%;"
+                                                                aria-valuenow="{{ $percent }}"
+                                                                aria-valuemin="0"
+                                                                aria-valuemax="100">
+                                                            </div>
+                                                        </div>
+                                                        <small class="text-muted">
+                                                            Échéance le : {{ $notification->date_echeance ? \Carbon\Carbon::parse($notification->date_echeance)->format('d/m/Y') : 'N/A' }}
+                                                        </small>
+                                                    </div>
+                                            </td>
+
+
+
+
                                             <td>
                                                 <!-- Bouton Voir les détails (et marquer comme lu si nécessaire) -->
                                                 <a href="{{ route('notifications.show', $notification->id_notification) }}" class="btn btn-info btn-sm" title="Voir les détails">

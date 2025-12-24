@@ -40,6 +40,24 @@ class NotificationTacheController extends Controller
 
 
     }
+    
+    public function index1(Request $request)
+    {
+        // 1. On récupère l'ID de l'agent connecté
+        $agentConnecteId = Auth::id();
+
+        // 2. On filtre les notifications pour n'avoir que les siennes
+        // On garde le 'with' si vous affichez encore des infos de son propre profil
+        $notifications = NotificationTache::with(['agent'])
+            ->where('agent_id', $agentConnecteId) // Filtre crucial
+            ->latest()
+            ->paginate(10);
+
+        // 3. On récupère l'objet Agent complet pour l'utiliser dans la vue (ex: afficher son nom)
+        $agent = Auth::user();
+
+        return view('notifications.index1', compact('notifications', 'agent'));
+    }
 
     /**
      * Affiche le formulaire de création d'une nouvelle notification.

@@ -124,7 +124,7 @@
                                                 Échéance le : {{ $notification->date_echeance ? \Carbon\Carbon::parse($notification->date_echeance)->format('d/m/Y') : 'N/A' }}
                                             </small>
                                         </div>
-                                    </td>
+                                </td>
 
 
                                 <td>
