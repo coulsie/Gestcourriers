@@ -74,12 +74,11 @@ class ReponseNotificationController extends Controller
         return response()->json(['message' => 'Réponse supprimée']);
     }
 
-            public function create($id_notification, $agent_id)
+       
+        public function create($id_notification, $agent_id)
         {
-            // Affiche simplement la vue
-                return redirect()->route('reponses.create', [
-                    'id_notification' => $id_notification,
-                    'agent_id' => $agent_id
-            ]);
+            // On passe impérativement les deux variables à la vue
+            return view('reponses.create', compact('id_notification', 'agent_id'));
         }
+
 }
