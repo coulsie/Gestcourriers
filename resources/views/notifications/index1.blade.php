@@ -111,10 +111,12 @@
                                                         <i class="fa fa-arrow-right"></i>
                                                     </a>
                                                 @endif
-                                                 <a href="{{ route('reponses.create', ['id_notification' => $notification->id, 'agent_id' => $agent->id]) }}">
-                                                    Répondre
+                                                
+                                                <a href="{{ route('reponses.create', ['id_notification' => $notification->id_notification, 'agent_id' => $notification->agent_id]) }}" 
+                                                    class="btn btn-info btn-sm" 
+                                                    title="Repondre"> <i class="fa fa-paper-plane"></i>
                                                 </a>
-                                                                                                                                               <!-- Bouton pour marquer comme complétée (Formulaire) -->
+                                                                                                                                                                                            <!-- Bouton pour marquer comme complétée (Formulaire) -->
                                                 @if($notification->statut != 'Complétée')
                                                 <form action="{{ route('notifications.markAsRead', $notification->id_notification) }}" method="POST" style="display: inline;">
                                                     @csrf

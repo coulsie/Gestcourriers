@@ -2,46 +2,84 @@
 
 namespace App\Http\Controllers;
 
+namespace App\Http\Controllers;
+
+use App\Models\ReponseNotification;
 use Illuminate\Http\Request;
-use app\Models\ReponseNotification;
-use Illuminate\Support\Facades\Auth;
-USE app\Models\User;
+use Illuminate\Support\Facades\Storage;
 
 class ReponseNotificationController extends Controller
 {
+    /**
+     * Enregistrer une nouvelle réponse.
+     */
     public function store(Request $request)
-{
-    $validated = $request->validate([
-        'id_notification' => 'required|exists:notifications_taches,id',
-        'message' => 'required|string',
-        'Reponse_Piece_jointe' => 'nullable|file|mimes:pdf,jpg,png|max:2048',
-    ]);
+    {
+        // 1. Validation des données
+        $request->validate([
+            'id_notification' => 'required|exists:notifications,id',
+            'agent_id'        => 'required|exists:agents,id',
+            'message'         => 'required|string',
+            'piece_jointe'    => 'nullable|file|mimes:pdf,jpg,png,docx|max:2048',
+        ]);
 
-    $reponse = new ReponseNotification();
-    $reponse->id_notification = $validated['id_notification'];
-    $reponse->agent_id = Auth::id();
-    $reponse->message = $validated['message'];
+        // 2. Gestion du fichier (Pièce jointe)
+        $path = null;
+        if ($request->hasFile('piece_jointe')) {
+            // Stocke le fichier dans le dossier 'public/reponses'
+            $path = $request->file('piece_jointe')->store('reponses', 'public');
+        }
 
-    if ($request->hasFile('Reponse_Piece_jointe')) {
-        $path = $request->file('Reponse_Piece_jointe')->store('pieces_jointes', 'public');
-        $reponse->Reponse_Piece_jointe = $path;
+        // 3. Création de l'enregistrement
+        $reponse = ReponseNotification::create([
+            'id_notification'      => $request->id_notification,
+            'agent_id'             => $request->agent_id,
+            'message'              => $request->message,
+            'Reponse_Piece_jointe' => $path,
+        ]);
+
+        return response()->json([
+            'message' => 'Réponse envoyée avec succès',
+            'data'    => $reponse
+        ], 201);
     }
 
-    $reponse->save();
+    /**
+     * Afficher toutes les réponses d'une notification spécifique.
+     */
+    public function showByNotification($id_notification)
+    {
+        $reponses = ReponseNotification::with(['agent'])
+                    ->where('id_notification', $id_notification)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
 
-    return back()->with('success', 'Réponse envoyée avec succès.');
-}
+        return response()->json($reponses);
+    }
 
- public function create($id_notification = null, $agent_id = null)
-{
-    // On passe les IDs à la vue pour les mettre dans des champs cachés (hidden)
-   return redirect()->route('reponses.create', [
-    'id_notification' => $id_notification,
-    'agent_id' => $agent_id
-    ]);
-}
+    /**
+     * Supprimer une réponse (et son fichier associé).
+     */
+    public function destroy($id)
+    {
+        $reponse = ReponseNotification::findOrFail($id);
 
+        // Supprimer le fichier physique s'il existe
+        if ($reponse->Reponse_Piece_jointe) {
+            Storage::disk('public')->delete($reponse->Reponse_Piece_jointe);
+        }
 
+        $reponse->delete();
 
+        return response()->json(['message' => 'Réponse supprimée']);
+    }
 
+            public function create($id_notification, $agent_id)
+        {
+            // Affiche simplement la vue
+                return redirect()->route('reponses.create', [
+                    'id_notification' => $id_notification,
+                    'agent_id' => $agent_id
+            ]);
+        }
 }

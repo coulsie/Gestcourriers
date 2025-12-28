@@ -89,5 +89,10 @@ class Agent extends Model
     {
         return $this->hasMany(Affectation::class);
     }
+        public function notificationtache()
+        {
+            // S'il s'agit d'une relation (ex: HasMany)
+            return $this->hasMany(NotificationTache::class);
+        }
 
 }

@@ -169,7 +169,5 @@ Route::get('/reponses/create/{id_notification}/{agent_id}', [ReponseNotification
 
 // Route pour ENREGISTRER les données (POST) - C'est celle qui vous manque
 Route::post('/reponses/store', [ReponseNotificationController::class, 'store'])
-    ->name('reponse.store');
+    ->name('reponses.store');
 
-Route::get('reponses/create/{id_notification}/{agent_id}', [ReponseNotificationController::class, 'create'])
-     ->name('reponses.create');

@@ -209,10 +209,12 @@ class NotificationTacheController extends Controller
     {
         // Votre logique pour marquer la notification comme lue ici
         // Exemple :
-        // $notification = $request->user()->notifications()->findOrFail($id);
-        // $notification->markAsRead();
+       
 
-        // return back()->with('success', 'Notification marquée comme lue.');
+        $notificationTache = $request->agent()->notificationtache()->findOrFail($id);
+        $notificationTache->markAsRead();
+
+        return back()->with('success', 'Notification marquée comme lue.');
     }
 
     public function agent()
