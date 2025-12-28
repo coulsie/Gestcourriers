@@ -63,10 +63,10 @@
                         {{-- Bouton de soumission --}}
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-success">
                                     Envoyer la réponse
                                 </button>
-                                <a href="{{ url()->previous() }}" class="btn btn-secondary">Annuler</a>
+                                <a href="{{ url()->previous() }}" class="btn btn-danger">Annuler</a>
                             </div>
                         </div>
                     </form>

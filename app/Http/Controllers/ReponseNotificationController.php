@@ -17,7 +17,7 @@ class ReponseNotificationController extends Controller
     {
         // 1. Validation des données
         $request->validate([
-            'id_notification' => 'required|exists:notifications,id',
+            'id_notification' => 'required|exists:notifications_taches,id_notification',
             'agent_id'        => 'required|exists:agents,id',
             'message'         => 'required|string',
             'piece_jointe'    => 'nullable|file|mimes:pdf,jpg,png,docx|max:2048',
@@ -38,10 +38,7 @@ class ReponseNotificationController extends Controller
             'Reponse_Piece_jointe' => $path,
         ]);
 
-        return response()->json([
-            'message' => 'Réponse envoyée avec succès',
-            'data'    => $reponse
-        ], 201);
+        return redirect()->route('notifications.index1')->with('success', 'Réponse envoyée avec succès.');
     }
 
     /**
