@@ -39,8 +39,10 @@
                             <th>Statut</th>
                             <th>Échéance</th>
                             <th>Suivi par</th>
+                            <th>Reponses</th>
                             <th>Progression</th>
                             <th>Actions</th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -106,6 +108,10 @@
                                 <td>
                                     <span class="small"><i class="bi bi-person"></i> {{ $notification->suivi_par }}</span>
                                 </td>
+                                <td>
+                                    <span class="small"><i class="bi bi-chat-dots"></i> {{ optional($notification->reponseNotification)->Response_Piece_jointe }}</span>
+                                </td>
+
                                 <td>
                                        @php $percent = $notification->progression ?? 0; @endphp
 

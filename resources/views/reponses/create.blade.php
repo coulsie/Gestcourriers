@@ -1,4 +1,4 @@
-@extends('layouts.app') 
+@extends('layouts.app')
 
 @section('content')
 <div class="container">
@@ -8,8 +8,8 @@
                 <div class="card-header">Répondre à la notification</div>
 
                 <div class="card-body">
-                    {{-- 
-                        L'action du formulaire utilise la route 'reponses.store'. 
+                    {{--
+                        L'action du formulaire utilise la route 'reponses.store'.
                         Nous devons lui passer les IDs nécessaires pour l'enregistrement.
                         Assurez-vous d'avoir une route POST nommée 'reponses.store' définie.
                     --}}
@@ -26,10 +26,10 @@
                             <label for="message" class="col-md-4 col-form-label text-md-right">Message</label>
 
                             <div class="col-md-6">
-                                <textarea id="message" 
-                                          class="form-control @error('message') is-invalid @enderror" 
-                                          name="message" 
-                                          rows="5" 
+                                <textarea id="message"
+                                          class="form-control @error('message') is-invalid @enderror"
+                                          name="message"
+                                          rows="5"
                                           required>{{ old('message') }}</textarea>
 
                                 @error('message')
@@ -47,10 +47,8 @@
                             </label>
 
                             <div class="col-md-6">
-                                <input id="Reponse_Piece_jointe" 
-                                       type="file" 
-                                       class="form-control-file @error('Reponse_Piece_jointe') is-invalid @enderror" 
-                                       name="Reponse_Piece_jointe">
+                                <input id="Reponse_Piece_jointe"
+                                type="file" class="form-control-file @error('Reponse_Piece_jointe') is-invalid @enderror" name="Reponse_Piece_jointe">
 
                                 @error('Reponse_Piece_jointe')
                                     <span class="invalid-feedback" role="alert">

@@ -40,7 +40,7 @@ class NotificationTacheController extends Controller
 
 
     }
-    
+
     public function index1(Request $request)
     {
         // 1. On récupère l'ID de l'agent connecté
@@ -91,6 +91,7 @@ class NotificationTacheController extends Controller
             'date_lecture'  => 'nullable|date',
             'is_archived' => 'boolean',
             'date_completion' => 'nullable|date',
+            'approuvee'  => 'required|in:en_attente,acceptee,rejetee',
 
         ]);
          if ($request->hasFile('document')) {
@@ -154,6 +155,7 @@ class NotificationTacheController extends Controller
             'date_lecture'  => 'nullable|date',
             'is_archived' => 'boolean',
             'date_completion' => 'nullable|date',
+            'approuvee'  => 'required|in:en_attente,acceptee,rejetee',
             // Ajoutez vos autres règles ici
         ]);
 
@@ -206,15 +208,20 @@ class NotificationTacheController extends Controller
     }
 
    public function markAsRead(Request $request, $id = null)
-    {
-        // Votre logique pour marquer la notification comme lue ici
-        // Exemple :
-       
+    { // On récupère l'ID depuis la requête (la chaîne de caractères)
+    $agentId = $request->agent();
 
-        $notificationTache = $request->agent()->notificationtache()->findOrFail($id);
-        $notificationTache->markAsRead();
+    // On cherche l'instance du modèle Agent correspondant à cet ID
+    $agent = \App\Models\Agent::findOrFail($agentId);
 
-        return back()->with('success', 'Notification marquée comme lue.');
+    // Maintenant $agent est un objet, on peut appeler la relation
+    $notificationTache = $agent->notificationtache()->findOrFail($id);
+
+    $notificationTache->markAsRead();
+
+    return back()->with('success', 'Notification marquée comme lue.');
+
+
     }
 
     public function agent()

@@ -21,13 +21,15 @@ class ReponseNotificationController extends Controller
             'agent_id'        => 'required|exists:agents,id',
             'message'         => 'required|string',
             'piece_jointe'    => 'nullable|file|mimes:pdf,jpg,png,docx|max:2048',
+            'approuvee',
+            'appreciation_du_superieur',
         ]);
 
         // 2. Gestion du fichier (Pièce jointe)
         $path = null;
         if ($request->hasFile('piece_jointe')) {
             // Stocke le fichier dans le dossier 'public/reponses'
-            $path = $request->file('piece_jointe')->store('reponses', 'public');
+            $path = $request->file('piece_jointe')->store('reponsesNotifictions', 'public');
         }
 
         // 3. Création de l'enregistrement
@@ -36,6 +38,8 @@ class ReponseNotificationController extends Controller
             'agent_id'             => $request->agent_id,
             'message'              => $request->message,
             'Reponse_Piece_jointe' => $path,
+            'approuvee'            => $request->approuvee,
+            'appreciation_du_superieur' => $request->appreciation_du_superieur
         ]);
 
         return redirect()->route('notifications.index1')->with('success', 'Réponse envoyée avec succès.');
@@ -46,12 +50,13 @@ class ReponseNotificationController extends Controller
      */
     public function showByNotification($id_notification)
     {
-        $reponses = ReponseNotification::with(['agent'])
-                    ->where('id_notification', $id_notification)
-                    ->orderBy('created_at', 'desc')
-                    ->get();
+            $notification = reponseNotification::find($id_notification);
+            if (!$notification) {
+                return redirect()->back()->with('error', 'Notification introuvable');
+            }
+            return view('reponses.showByNotification', compact('notification'));
 
-        return response()->json($reponses);
+
     }
 
     /**
@@ -71,7 +76,7 @@ class ReponseNotificationController extends Controller
         return response()->json(['message' => 'Réponse supprimée']);
     }
 
-       
+
         public function create($id_notification, $agent_id)
         {
             // On passe impérativement les deux variables à la vue

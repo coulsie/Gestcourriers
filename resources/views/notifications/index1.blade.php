@@ -111,10 +111,10 @@
                                                         <i class="fa fa-arrow-right"></i>
                                                     </a>
                                                 @endif
-                                                
-                                                <a href="{{ route('reponses.create', ['id_notification' => $notification->id_notification, 'agent_id' => $notification->agent_id]) }}" 
-                                                    class="btn btn-info btn-sm" 
-                                                    title="Repondre"> <i class="fa fa-paper-plane"></i>
+
+                                                <a href="{{ route('reponses.create', ['id_notification' => $notification->id_notification, 'agent_id' => $notification->agent_id]) }}"
+                                                    class="btn btn-info btn-sm"
+                                                    title="Repondre"> <i class="fas fa-save"></i>
                                                 </a>
                                                                                                                                                                                             <!-- Bouton pour marquer comme complétée (Formulaire) -->
                                                 @if($notification->statut != 'Complétée')

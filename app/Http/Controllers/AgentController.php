@@ -70,21 +70,46 @@ class AgentController extends Controller
 
 
 
-    $request->validate(['photo' => 'required|image|mimes:jpeg,png,jpg|max:2048', ]);
+        $request->validate(['photo' => 'required|image|mimes:jpeg,png,jpg|max:2048','matricule' => 'required|string|unique:agents,matricule']);
+        $agent = new Agent();
+        $agent->matricule = $request->matricule;
+        $agent->first_name = $request->first_name;
+        $agent->last_name = $request->last_name;
+        $agent->status = $request->status;
+        $agent->sexe = $request->sexe;
+        $agent->date_of_birth = $request->date_of_birth;
+        $agent->place_birth = $request->place_birth;
+        $agent->email_professionnel = $request->email_professionnel;
+        $agent->email = $request->email;
+        $agent->phone_number = $request->phone_number;
+        $agent->address = $request->address;
+        $agent->Emploi = $request->Emploi;
+        $agent->Grade = $request->Grade;
+        $agent->Date_Prise_de_service = $request->Date_Prise_de_service;
+        $agent->Personne_a_prevenir = $request->Personne_a_prevenir;
+        $agent->Contact_personne_a_prevenir = $request->Contact_personne_a_prevenir;
+        $agent->service_id = $request->service_id;
+        $agent->user_id = $request->user_id;
 
 
-    if ($request->hasFile('photo')) {
-        // Enregistre dans storage/app/public/agents_photos
-        $path = $request->file('photo')->store('agents_photos', 'public');
+        if ($request->hasFile('photo')) {
+        $file = $request->file('photo');
+        // Générer un nom unique pour éviter les doublons
+        $fileName = time() . '_' . $file->getClientOriginalName();
 
-        // Sauvegardez $path dans votre base de données (ex: agents_photos/nom_image.jpg)
-        // $agent->photo = $path;
-        // $agent->save();
+        // Déplace le fichier physiquement
+        $file->move(public_path('agents_photos'), $fileName);
+
+        // Enregistre uniquement le nom (ou le chemin relatif) en base de données
+        $agent->photo = 'agents_photos/' . $fileName;
+        $agent->save();
     }
 
-
         // 3. Création de l'agent dans la base de données
-        $agent = Agent::create($validatedData);
+       $agent = Agent::updateOrCreate(
+            ['matricule' => $request->matricule], // On cherche par matricule
+            $validatedData                       // On remplit avec les données validées
+        );
 
         // 4. Redirection avec un message de succès
         return redirect()->route('agents.index')->with('success', 'L\'agent ' . $agent->first_name . ' ' . $agent->last_name . ' a été enregistré avec succès.');

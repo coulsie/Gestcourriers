@@ -171,3 +171,6 @@ Route::get('/reponses/create/{id_notification}/{agent_id}', [ReponseNotification
 Route::post('/reponses/store', [ReponseNotificationController::class, 'store'])
     ->name('reponses.store');
 
+
+Route::get('/reponses/notification/{id_notification}', [ReponseNotificationController::class, 'showByNotification'])
+    ->name('reponseNotification.showByNotification');

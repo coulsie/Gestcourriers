@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ReponseNotification extends Model
 {
     // Nom de la table si différent du pluriel automatique
-    protected $table = 'reponse_notifications'; 
+    protected $table = 'reponse_notifications';
 
     // Champs autorisés pour le remplissage de masse (mass assignment)
     protected $fillable = [
@@ -15,6 +15,8 @@ class ReponseNotification extends Model
         'agent_id',
         'message',
         'Reponse_Piece_jointe',
+        'approuvee',
+        'appreciation_du_superieur',
     ];
 
     /**
