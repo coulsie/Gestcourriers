@@ -51,6 +51,7 @@
                                                 </span>
                                             </td>
                                             <td>{{ $notification->titre }}</td>
+                                            
                                             <td>{{ Str::limit($notification->description, 50) }}</td>
                                             <td>
                                                 @php

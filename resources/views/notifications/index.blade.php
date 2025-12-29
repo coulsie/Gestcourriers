@@ -56,7 +56,7 @@
                                     </small>
                                     @if($notification->document)
                                         <div class="mt-1">
-                                            <a href="{{ asset('storage/' . $notification->document) }}" class="badge bg-info text-decoration-none text-white small" target="_blank">
+                                            <a href="{{ asset('documents/' . $notification->document) }}" class="badge bg-info text-decoration-none text-white small" target="_blank">
                                                 📄 Document
                                             </a>
                                         </div>
@@ -69,8 +69,8 @@
                                             {{ $notification->id }}
 
                                             {{-- Utilisation de l'opérateur nullsafe pour plus de sécurité --}}
+                                           {{ $notification->agent?->last_name }} {{ $notification->agent?->first_name }}
 
-                                            {{ $notification->agent->last_name }} {{ $notification->agent->first_name }}
                                         @else
                                                 <span class="text-muted">Agent non assigné</span>
                                         @endif
@@ -146,9 +146,7 @@
                                         <a href="{{ route('notifications.edit', $notification->id_notification) }}" class="btn btn-primary btn-sm">
                                             <i class="fa fa-edit"></i> Modifier
                                         </a>
-                                         <a href="{{ route('notifications.index_pdf', $notification->id_notification) }}" class="btn btn-primary btn-sm">
-                                            <i class="fa fa-edit"></i> Voirpdf
-                                        </a>
+
                                         <form action="{{ route('notifications.destroy', $notification->id_notification) }}" method="POST" onsubmit="return confirm('Supprimer cette notification ?')">
                                             @csrf
                                             @method('DELETE')

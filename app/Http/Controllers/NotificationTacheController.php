@@ -74,36 +74,32 @@ class NotificationTacheController extends Controller
     /**
      * Stocke une nouvelle notification de tâche.
      */
-    public function store(Request $request):RedirectResponse
-    {
-        $validatedData = $request->validate([
 
-            'agent_id' => 'required|exists:agents,id', // Assurez-vous que la table 'agents' existe
-            'titre'         => 'required|string|max:255',
-            'description'   => 'required|string',
-            'date_creation' => 'nullable|date',
-            'date_echeance' => 'nullable|date',
-            'suivi_par'     => 'required|string|max:100',
-            'priorite'      => 'required|in:' . implode(',', array_column(PrioriteEnum::cases(), 'value')),
-            'statut'        => 'required|in:' . implode(',', array_column(StatutEnum::cases(), 'value')),
-            'document'      => 'nullable|string|max:512',
-            'lien_action'   => 'nullable|string|max:512|url',
-            'date_lecture'  => 'nullable|date',
-            'is_archived' => 'boolean',
-            'date_completion' => 'nullable|date',
-            'approuvee'  => 'required|in:en_attente,acceptee,rejetee',
 
-        ]);
-         if ($request->hasFile('document')) {
-            $path = $request->file('document')->store('public/documents');
-            // Stocke uniquement le chemin relatif pour la DB
-            $validatedData['document'] = Storage::url($path);
-        }
-         $datas = $request->all();
-         $NotificationTache = NotificationTache::create($datas);
-
-        return redirect()->route('notifications.index')->with('success', 'Notification de tâche créée avec succès.');
+public function store(Request $request) {
+    $path = null;
+    if ($request->hasFile('document')) {
+        // Enregistre le fichier dans le dossier 'documents'
+        $path = $request->file('document')->store('documents', 'public');
     }
+
+    NotificationTache::create([
+        'agent_id'    => $request->agent_id,
+        'titre'       => $request->titre,
+        'description' => $request->description,
+        'lien_action' => $request->lien_action, // Vérifiez que ce nom correspond au 'name' de votre input HTML
+        'document'    => $path, // On enregistre le lien vers le fichier
+        'suivi_par'   => $request->suivi_par,
+        'priorite'    => $request->priorite,
+        'statut'      => $request->statut,
+        'date_creation' => $request->date_creation,
+        'date_echeance' => $request->date_echeance,
+        
+    ]);
+    return redirect()->route('notifications.index')->with('success', 'Notification créée avec succès.');
+}
+
+
 
     /**
      * Affiche la notification de tâche spécifiée.

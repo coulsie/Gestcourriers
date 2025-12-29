@@ -16,7 +16,8 @@
                         {{-- Photo de l'agent (Optionnel, si vous gérez le stockage des images) --}}
                         <div class="col-md-3 text-center">
                             @if($agent->photo)
-                            <img src="{{ asset('storage/' . $agent->photo) }}" alt="Photo de {{ $agent->last_name }} {{ $agent->first_name }} " class="img-fluid rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+                            <img src="{{asset($agent->photo)  }}" alt="Photo de {{ $agent->last_name }} {{ $agent->first_name }} " class="img-fluid rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+                            
                             @else
                                 <div class="bg-light p-5 rounded-circle mb-3" style="width: 150px; height: 150px;">
                                     <i class="fas fa-user fa-4x text-muted"></i>
