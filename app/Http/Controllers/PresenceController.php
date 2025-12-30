@@ -14,6 +14,9 @@ class PresenceController extends Controller
     /**
      * Affiche une liste des ressources (présences).
      */
+
+
+
     public function index(): View
     {
         // Récupère toutes les présences et les passe à la vue 'presences.index'
@@ -22,7 +25,6 @@ class PresenceController extends Controller
         // dd($presences );die;
         return view('presences.index', compact('presences'));
     }
-
 
     /**
      * Affiche le formulaire de création d'une nouvelle ressource (présence).
