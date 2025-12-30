@@ -32,6 +32,7 @@
                     <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
             </thead>
+            {{-- @dd($presences) --}}
             <tbody class="bg-white divide-y divide-gray-200">
                 @foreach ($presences as $presence)
                     <tr>
@@ -79,8 +80,8 @@
         </table>
     </div>
 
-    <div class="mt-4">
+    {{-- <div class="mt-4">
         {{ $presences->links() }}
-    </div>
+    </div> --}}
 </div>
 @endsection

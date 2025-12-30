@@ -135,32 +135,45 @@ public function store(Request $request) {
  public function update(Request $request, $id): RedirectResponse
     {
         // 1. Validation des données entrantes
+        // dd($request->all());//Ayez pour habitude l'utilisation de la fonction dd() comme je l'ai fait ici pour voir le contenu réel afin de comprendre ce qui ne marche pas
         $validatedData = $request->validate([
-            'id_notification' => 'required|integer|exists:notifications_taches,id_notification',
 
-            'agent_id'      => 'required|exists:agents,agent_id',
-            'titre'         => 'required|string|max:255',
-            'description'   => 'required|string',
-            'date_creation' => 'nullable|date',
+            'titre' => 'required',
+            'priorite' => 'required',
+            'description' => 'required',
+            'statut' => 'required',
+            'suivi_par' => "required",
             'date_echeance' => 'nullable|date',
-            'suivi_par'     => 'required|string|max:100',
-            'priorite'      => 'required|in:' . implode(',', array_column(PrioriteEnum::cases(), 'value')),
-            'statut'        => 'required|in:' . implode(',', array_column(StatutEnum::cases(), 'value')),
-            'document'      => 'nullable|string|max:512',
-            'lien_action'   => 'nullable|string|max:512|url',
-            'date_lecture'  => 'nullable|date',
-            'is_archived' => 'boolean',
-            'date_completion' => 'nullable|date',
-            'approuvee'  => 'required|in:en_attente,acceptee,rejetee',
+            'lien_action' => 'required',
+            
+            //Valider les bons champs s'il vous plaît
+
+
+            // 'id_notification' => 'required|integer|exists:notifications_taches,id_notification',
+
+            // // 'agent_id'      => 'required|exists:agents,agent_id',
+            // 'titre'         => 'required|string|max:255',
+            // 'description'   => 'required|string',
+            // 'date_creation' => 'nullable|date',
+            // 'date_echeance' => 'nullable|date',
+            // 'suivi_par'     => 'required|string|max:100',
+            // 'priorite'      => 'required|in:' . implode(',', array_column(PrioriteEnum::cases(), 'value')),
+            // 'statut'        => 'required|in:' . implode(',', array_column(StatutEnum::cases(), 'value')),
+            // 'document'      => 'nullable|string|max:512',
+            // 'lien_action'   => 'nullable|string|max:512|url',
+            // 'date_lecture'  => 'nullable|date',
+            // 'is_archived' => 'boolean',
+            // 'date_completion' => 'nullable|date',
+            // 'approuvee'  => 'required|in:en_attente,acceptee,rejetee',
             // Ajoutez vos autres règles ici
         ]);
-
+//  dd($request->all());
         // 2. Récupération de l'instance existante
         $NotificationTache = NotificationTache::findOrFail($id);
-
+ 
         // 3. Mise à jour avec les données validées
         $NotificationTache->update($validatedData);
-
+// dd($NotificationTache);
         // 4. Redirection avec un message de succès
         return redirect()->route('notifications.index')
                          ->with('success', 'La notification a été mise à jour avec succès.');

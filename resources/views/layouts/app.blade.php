@@ -29,11 +29,12 @@
     <!-- Page Wrapper -->
     <div id="wrapper">
 
-
+    @if(auth()->user()->role === 'admin')
         <ul class="nav flex-column">
 
             {{-- Visible uniquement pour le type administration --}}
-            @if(auth()->user()->role === 'admin')
+           
+            {{-- @dd(auth()->user()->role) --}}
             <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
                     <i class="fas fa-home"></i> Dashboard
@@ -49,10 +50,11 @@
                     <i class="fas fa-shield-alt"></i> Sécurité & Logs
                 </a>
             </li>
-            @endif
+            
         </ul>
 
 
+@else
         <!-- Sidebar -->
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
@@ -131,7 +133,7 @@
                         <a class="collapse-item" href="{{ route('courriers.RechercheAffichage') }}">Recherche avancée</a>
                         <a class="collapse-item" href="{{ route('affectations.index') }}">Liste des affectations</a>
 
-                        >
+                        
                         {{-- <a class="collapse-item" href="cards.html">Cards</a> --}}
                     </div>
                 </div>
@@ -233,6 +235,7 @@
 
 
         </ul>
+@endif
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
