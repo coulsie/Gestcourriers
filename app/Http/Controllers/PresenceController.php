@@ -20,8 +20,9 @@ class PresenceController extends Controller
    public function index(): View
     {
         // Récupère toutes les présences et les passe à la vue 'presences.index'
-        $presences = Presence::latest()->paginate(10);
-
+        // $presences = Presence::latest()->paginate(10);//Prière utiliser un datatable pour gérer la paginantion
+        $presences = Presence::get();
+        // dd($presences );die;
         return view('presences.index', compact('presences'));
     }
 
