@@ -20,65 +20,77 @@
         </div>
     @endif
 
-    <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
+    <div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Nom de l'Agent</th>
+                <th>Prénoms de l'Agent</th>
+                <th>Arrivée</th>
+                <th>Départ</th>
+                <th>Statut</th>
+                <th class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($presences as $presence)
                 <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Agent</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Arrivée</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Départ</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">statut</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">notes</th>
-                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                </tr>
-            </thead>
-            {{-- @dd($presences) --}}
-            <tbody class="bg-white divide-y divide-gray-200">
-                @foreach ($presences as $presence)
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            {{ $presence->agent->name ?? 'N/A'  }} {{ $presence->agent?->last_name }} {{ $presence->agent?->first_name }} {{ $presence->agent?->service?->name}}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            {{-- @dd($presence->heure_arrivee) --}}
-                            {{ $presence->heure_arrivee ? \Carbon\Carbon::parse($presence->heure_arrivee )->format('d/m/Y H:i') : 'N/A' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            {{ $presence->heure_depart ? \Carbon\Carbon::parse($presence->heure_depart )->format('d/m/Y H:i')  : 'N/A' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                                @if($presence->statut === 'Présent') bg-green-100 text-green-800
-                                @elseif($presence->statut === 'Absent') bg-red-100 text-red-800
-                                @else bg-yellow-100 text-yellow-800
-                                @endif">
-                                {{ $presence->statut }}
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 text-sm text-gray-500">
-                            {{ Str::limit($presence->notes, 30) }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <a href="{{ route('presences.show', $presence->id) }}" class="btn btn-info btn-sm" title="Voir">
-                              <i class="fa fa-eye"></i> Voir
-                            </a>
-                            <a href="{{ route('presences.edit', $presence->id) }}" class="btn btn-warning btn-sm" title="Modifier">
-                                <i class="fa fa-edit"></i> Modifier
-                            </a>
+                    <td>{{ $presence->id }}</td>
 
-                            <form action="{{ route('presences.destroy', $presence->id) }}" method="POST" class="inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce courrier ?')">
-                                                <i class="fa fa-trash"></i> Supprimer
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
+                    <td class="text-uppercase fw-bold">
+                        {{-- Le ?-> est obligatoire sur TOUTES les propriétés de l'agent --}}
+                        {{ $presence->agent?->name ?? '' }} {{ $presence->agent?->last_name }}
+                    </td>
+                    <td>
+                        {{ $presence->agent?->first_name ?? '-' }}
+                    </td>
+
+                    {{-- Formatage des dates si elles sont castées en Carbon --}}
+                    <td>{{ \Carbon\Carbon::parse($presence->heure_arrivee)->format('d/m/Y H:i') }}</td>
+                    <td>
+                        @if($presence->heure_depart)
+                            {{ \Carbon\Carbon::parse($presence->heure_depart)->format('H:i') }}
+                        @else
+                            <span class="text-muted small">En cours...</span>
+                        @endif
+                    </td>
+
+                    <td>
+                        @php
+                            $badgeClass = match($presence->statut) {
+                                'Présent' => 'bg-success',
+                                'En Retard' => 'bg-warning text-dark',
+                                'Absent' => 'bg-danger',
+                                default => 'bg-secondary',
+                            };
+                        @endphp
+                        <span class="badge {{ $badgeClass }}">
+                            {{ $presence->statut }}
+                        </span>
+                    </td>
+
+                    <td class="text-center">
+                        <div class="btn-group" role="group">
+                            <a href="{{ route('presences.show', $presence->id) }}" class="btn btn-sm btn-info text-white" title="Détails">
+                                <i class="fas fa-eye"></i> Voir
+                            </a>
+                            <a href="{{ route('presences.edit', $presence->id) }}" class="btn btn-sm btn-primary" title="Modifier">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="7" class="text-center py-4 text-muted">
+                        Aucun enregistrement de présence trouvé.
+                    </td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
+</div>
 
     {{-- <div class="mt-4">
         {{ $presences->links() }}
