@@ -94,7 +94,7 @@ public function store(Request $request) {
         'statut'      => $request->statut,
         'date_creation' => $request->date_creation,
         'date_echeance' => $request->date_echeance,
-        
+
     ]);
     return redirect()->route('notifications.index')->with('success', 'Notification créée avec succès.');
 }
@@ -145,7 +145,7 @@ public function store(Request $request) {
             'suivi_par' => "required",
             'date_echeance' => 'nullable|date',
             'lien_action' => 'required',
-            
+
             //Valider les bons champs s'il vous plaît
 
 
@@ -170,7 +170,7 @@ public function store(Request $request) {
 //  dd($request->all());
         // 2. Récupération de l'instance existante
         $NotificationTache = NotificationTache::findOrFail($id);
- 
+
         // 3. Mise à jour avec les données validées
         $NotificationTache->update($validatedData);
 // dd($NotificationTache);
@@ -269,6 +269,12 @@ public function store(Request $request) {
 
         $tache = NotificationTache::where('id_notification', $id)->firstOrFail();
         return view('notifications.index', compact('tache')); // ou ['tache' => $tache]
+    }
+
+    function doesntHave()
+    {
+        $notifsSansReponse = NotificationTache::doesntHave('reponses')->count();
+        
     }
 
 }

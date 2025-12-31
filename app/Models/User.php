@@ -71,11 +71,11 @@ class User extends Authenticatable
     {
         return $this->role === 'admin';
     }
-            public function notificationtache()
-        {
-            // S'il s'agit d'une relation (ex: HasMany)
-            return $this->hasMany(NotificationTache::class);
-        }
-       
+    public function notificationtache()
+    {
+      // S'il s'agit d'une relation (ex: HasMany)
+        return $this->hasMany(NotificationTache::class);
+    }
+
 
     }

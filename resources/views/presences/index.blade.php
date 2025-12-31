@@ -37,7 +37,7 @@
                 @foreach ($presences as $presence)
                     <tr>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            {{ $presence->agent->name ?? 'N/A'  }} {{ $presence->agent->last_name}} {{ $presence->agent->first_name}} {{ $presence->agent->service->name}}
+                            {{ $presence->agent->name ?? 'N/A'  }} {{ $presence->agent?->last_name }} {{ $presence->agent?->first_name }} {{ $presence->agent?->service?->name}}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             {{-- @dd($presence->heure_arrivee) --}}

@@ -47,9 +47,10 @@
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                MEMBRES</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">1</div>
-                                        </div>
+                                                    NOMBRE D'AGENTS</div>
+
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"> {{ $nombreAgents ?? 0 }} </div>                 </div>
+
                                         <div class="col-auto">
                                             <i class="fas fa-calendar fa-2x text-gray-300"></i>
                                         </div>
@@ -65,8 +66,8 @@
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                COTISATIONS MENSUELLES</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">1</div>
+                                                NOTIFICATIONS SANS REPONSE</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $notifsSansReponse ?? 0 }} </div>
                                         </div>
                                         <div class="col-auto">
                                             <span class="fw-bold fs-2 text-gray-300">₣</span>
@@ -83,7 +84,7 @@
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                COTISATIONS EXCEPTIONNELLES</div>
+                                                COURRIERS NON AFFECTES</div>
                                             <div class="h5 mb-0 font-weight-bold text-gray-800">1</div>
                                         </div>
                                         <div class="col-auto">
@@ -100,7 +101,7 @@
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tâches
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">TÂCHES NON EXECUTEES
                                             </div>
                                             <div class="row no-gutters align-items-center">
                                                 <div class="col-auto">

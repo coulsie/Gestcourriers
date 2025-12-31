@@ -12,8 +12,8 @@ use App\Models\Agent;
 
 class NotificationTache extends Model
 {
-    
-   
+
+
     protected $table = 'notifications_taches';
 
     // Indique explicitement le nom de la clé primaire
@@ -97,4 +97,8 @@ class NotificationTache extends Model
             return ($totalDays > 0) ? round(($daysPassed / $totalDays) * 100) : 100;
         }
 
+        public function reponses()
+        {
+            return $this->hasMany(ReponseNotification::class, 'id_notification');
+        }
 }
