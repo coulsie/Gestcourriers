@@ -84,7 +84,7 @@
                             <div class="collapse-divider"></div>
                             <h6 class="collapse-header">Communications:</h6>
                             <a class="collapse-item" href="{{ route('notifications.index') }}">Toutes les notifications</a>
-                            <a class="collapse-item" href="{{ route('notifications.index1') }}">Mes notifications</a>
+                            <a class="collapse-item" href="{{ route('notifications.index2') }}">Mes notifications</a>
                             <a class="collapse-item" href="{{ route('notifications.create') }}">Créer une notification</a>
                         </div>
                     </div>

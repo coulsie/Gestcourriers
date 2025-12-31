@@ -12,6 +12,8 @@ use Illuminate\View\View;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class AgentController extends Controller
 {
@@ -216,9 +218,70 @@ class AgentController extends Controller
                 ->take(10)
                 ->get();
 
-            return view('agent.dashboard', compact('notifications'));
+            return view('dashboard', compact('notifications'));
         }
 
+    public function Enr(Request $request)
+    {
+        $request->validate([
+            'email_professionnel' => 'nullable|email|unique:agents,email_professionnel',
+            'matricule' => 'required|string|max:191|unique:agents,matricule',
+            'first_name' => 'required|string|max:191',
+            'last_name' => 'required|string|max:191',
+            'status' => ['required',Rule::in(['Agent', 'Chef de service', 'Sous-directeur', 'Directeur']) // Ajustez selon vos ENUM
+            ],
+            'sexe' => ['nullable', Rule::in(['Male', 'Female'])],
+            'date_of_birth' => 'nullable|date',
+            'place_birth' => 'nullable|string|max:191',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validation de l'image
+            'email' => 'nullable|email|max:191|unique:agents,email',
+            'phone_number' => 'nullable|string|max:191',
+            'address' => 'nullable|string|max:191',
+            'Emploi' => 'nullable|string|max:191',
+            'Grade' => 'nullable|string|max:191',
+            'Date_Prise_de_service' => 'nullable|date',
+            'Personne_a_prevenir' => 'nullable|string|max:191',
+            'Contact_personne_a_prevenir' => 'nullable|string|max:191',
+            'service_id' => 'required|exists:services,id', // Assurez-vous que le service existe
+            'user_id' => 'nullable|exists:users,id',
+        ]);
 
+        try {
+            DB::beginTransaction();
+
+            // 1. Créer le compte utilisateur
+            $user = User::create([
+                'name' => $request->first_name . ' ' . $request->last_name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
+
+            // 2. Créer l'agent lié à cet utilisateur
+            Agent::create([
+                'user_id' => $user->id, // Liaison
+                'last_name' => $request->last_name,
+                'first_name' => $request->first_name,
+                'telephone' => $request->telephone,
+            ]);
+
+            DB::commit();
+            return redirect()->route('agents.index')->with('success', 'Agent et compte créés avec succès.');
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->withInput()->with('error', 'Erreur lors de la création : ' . $e->getMessage());
+        }
+    }
+     public function nouveau():View
+        {
+            // Si vous avez des départements ou des services à choisir dans le formulaire
+            // $departements = Departement::all();
+
+            // On retourne la vue située dans resources/views/agents/create.blade.php
+            return view('agents.nouveau');
+
+            // Si vous aviez des données à passer :
+            // return view('agents.create', compact('departements'));
+        }
 
 }

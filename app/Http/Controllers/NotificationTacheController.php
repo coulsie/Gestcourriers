@@ -274,7 +274,25 @@ public function store(Request $request) {
     function doesntHave()
     {
         $notifsSansReponse = NotificationTache::doesntHave('reponses')->count();
-        
+
     }
+        public function index2()
+    {
+       // Récupère l'ID de l'utilisateur connecté de manière sécurisée
+        $userId = Auth::id();
+
+        if (!$userId) {
+            return redirect()->route('login')->with('error', 'Vous devez être connecté.');
+        }
+
+        $notifications = NotificationTache::with('agent')
+            ->where('agent_id', $userId)
+            ->where('is_archived', 0)
+            ->orderByDesc('date_creation')
+            ->paginate(10);
+
+        return view('notifications.index', compact('notifications'));
+        }
+        
 
 }

@@ -83,7 +83,9 @@ Route::resource('services', ServiceController::class);
 
 Route::resource('agents', AgentController::class);
 
+Route::get('/agents/nouveau', [AgentController::class, 'nouveau'])->name('agents.nouveau');
 
+Route::post('/agents/enregistrer', [AgentController::class, 'Enr'])->name('agents.enregistrer');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
@@ -129,6 +131,8 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('/notifications.index1', [NotificationTacheController::class, 'index1'])->name('notifications.index1');
+Route::get('/notifications.index2', [NotificationTacheController::class, 'index2'])->name('notifications.index2');
+
 
 Route::get('/notifications/{id}/visualiser', [NotificationTacheController::class, 'visualiserDocument'])->name('notifications.visualiser');
 

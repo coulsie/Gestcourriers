@@ -14,7 +14,7 @@
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3">Gestion des Notifications</h1>
-        <a href="{{ route('notifications.create') }}" class="btn btn-primary">
+        <a href="{{ route('notifications.create') }}" class="btn btn-success">
             <i class="bi bi-plus-circle"></i> Nouvelle Notification
         </a>
     </div>
@@ -31,6 +31,7 @@
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
+                     <thead class="table-dark">
                         <tr>
                             <th>ID</th>
                             <th>Titre & Description</th>
@@ -44,6 +45,7 @@
                             <th>Actions</th>
 
                         </tr>
+                        </thead>
                     </thead>
                     <tbody>
                         @forelse($notifications as $notification)
@@ -175,7 +177,7 @@
         @endif
     </div>
     <nav class="navbar no-print"> ... </nav>
-         <button onclick="window.print()" class="btn btn-primary no-print">
+         <button onclick="window.print()" class="btn btn-success">
     Imprimer la page
     </button>
 </div>
