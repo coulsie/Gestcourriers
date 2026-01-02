@@ -74,9 +74,8 @@
                                                 <p>Document associé :</p>
 
                                                 <!-- Bouton pour visualiser/ouvrir dans un nouvel onglet -->
-                                                
-                                                <a href="{{ route('courriers.visualiser', $courrier->id) }}" target="_blank" class="btn btn-info">
-                                                    <i class="fas fa-eye"></i> Visualiser le document
+                                                <a href="{{ asset($courrier->chemin_fichier) }}" target="_blank" class="btn btn-primary">
+                                                    <i class="fas fa-eye"></i> Voir le fichier
                                                 </a>
 
                                                 <!-- Bouton pour forcer le téléchargement -->

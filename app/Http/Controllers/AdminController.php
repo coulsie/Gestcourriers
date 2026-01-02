@@ -6,6 +6,7 @@ use App\Models\Notification;
 use App\Models\NotificationTache;
 use App\Models\User; // Ou Agent
 use Illuminate\Http\Request;
+use App\Models\Agent;
 
 class AdminController extends Controller
 {
