@@ -254,6 +254,9 @@ class AgentController extends Controller
                 'name' => $request->first_name . ' ' . $request->last_name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
+                'role' => $request->role, // Récupérer le rôle depuis le formulaire
+                'is_active' => true,
+                
             ]);
 
             // 2. Créer l'agent lié à cet utilisateur
@@ -262,7 +265,23 @@ class AgentController extends Controller
                 'last_name' => $request->last_name,
                 'first_name' => $request->first_name,
                 'telephone' => $request->telephone,
-            ]);
+                'email_professionnel' => $request->email_professionnel,
+                'matricule' => $request->matricule,
+                'status' => $request->status,
+                'sexe' => $request->sexe,
+                'date_of_birth' => $request->date_of_birth,
+                'place_birth' => $request->place_birth,
+                'photo' => $request->validate(['photo' => 'required|image|mimes:jpeg,png,jpg|max:2048','matricule' => 'required|string|unique:agents,matricule']),
+                'email' => $request->email,
+                'phone_number' => $request->phone_number,
+                'address' => $request->address,
+                'Emploi' => $request->Emploi,
+                'Grade' => $request->Grade,
+                'Date_Prise_de_service' => $request->Date_Prise_de_service,
+                'Personne_a_prevenir' => $request->Personne_a_prevenir,
+                'Contact_personne_a_prevenir' => $request->Contact_personne_a_prevenir,
+                'service_id' => $request->service_id, // Clé étrangère vers le service d'affectation
+                ]);
 
             DB::commit();
             return redirect()->route('agents.index')->with('success', 'Agent et compte créés avec succès.');
@@ -272,16 +291,9 @@ class AgentController extends Controller
             return back()->withInput()->with('error', 'Erreur lors de la création : ' . $e->getMessage());
         }
     }
-     public function nouveau():View
-        {
-            // Si vous avez des départements ou des services à choisir dans le formulaire
-            // $departements = Departement::all();
-
-            // On retourne la vue située dans resources/views/agents/create.blade.php
-            return view('agents.nouveau');
-
-            // Si vous aviez des données à passer :
-            // return view('agents.create', compact('departements'));
+     
+        public function nouveau() {
+            $services = \App\Models\Service::all(); // Assurez-vous que le modèle Service existe
+            return view('agents.nouveau', compact('services'));
         }
-
 }

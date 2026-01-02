@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use App\Http\Controllers\Auth\PasswordSetupController;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -10,13 +11,13 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-    ->withMiddleware(function (Middleware $middleware): void {
+    ->withMiddleware(function (Middleware $middleware) {
+        // C'est ici que vous ajoutez votre alias
         $middleware->alias([
-        'admin' => \App\Http\Middleware\AdminMiddleware::class,
-    ]);
-    
-    })
-    ->withExceptions(function (Exceptions $exceptions): void {
+            'force.password' => \App\Http\Middleware\ForcePasswordChange::class,
+        ]);
+    }) // Ne pas mettre de point-virgule ici si vous continuez l'enchaînement
+    ->withExceptions(function (Exceptions $exceptions) {
         //
-    })->create();
-
+    })
+    ->create(); // Le point-virgule final doit être ici

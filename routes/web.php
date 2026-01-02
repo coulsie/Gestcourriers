@@ -19,10 +19,24 @@ use App\Http\Controllers\EtatAgentsController1;
 use App\Http\Controllers\NotificationTacheController;
 use App\Http\Controllers\AdminController;
 use App\http\Controllers\ReponseNotificationController;
+use App\Http\Controllers\Auth\PasswordSetupController;
+use App\Http\Controllers\HomeController;
+
 // ... autres routes
 
 
+// Routes accessibles uniquement après avoir configuré le mot de passe
+Route::middleware(['auth', 'force.password'])->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('home');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    // ... toutes vos autres routes d'application
+});
 
+// Routes pour la configuration (exclues du middleware force.password pour éviter les boucles)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/password/setup', [PasswordSetupController::class, 'show'])->name('password.setup');
+    Route::post('/password/setup', [PasswordSetupController::class, 'update'])->name('password.setup.update');
+});
 
 Route::get('/', function () {
     return view('welcome-login');
@@ -31,6 +45,65 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
+
+// Cette seule ligne gère toutes les routes (index, create, store, show, edit, update, destroy)
+Route::resource('users', UserController::class);
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+});
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('admin/dashboard', [AdminController::class, 'index']);
+    // Toutes les routes ici sont réservées aux admins
+});
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+});
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    // La route pour afficher le formulaire de création
+    Route::get('/profile/create', [ProfileController::class, 'create'])->name('profile.create');
+
+    // La route pour enregistrer les données (utilisée par le formulaire)
+    Route::post('/profile', [ProfileController::class, 'store'])->name('profile.store');
+});
+
+// Accès Agent
+Route::middleware(['auth'])->group(function () {
+    Route::get('/tableau-de-bord', [AgentController::class, 'dashb'])->name('agent.dashboard');
+});
+
+Route::middleware(['auth'])->group(function () {
+    // Routes de ressources standard
+    Route::resource('notifications', NotificationTacheController::class)->parameters([
+        'notifications' => 'id_notification' // Utilise id_notification au lieu de {notification} dans l'URL
+    ]);
+
+    // Route supplémentaire pour marquer comme lue
+    Route::post('notifications/{id_notification}/read', [NotificationTacheController::class, 'markAsRead'])->name('notifications.markAsRead');
+});
+Route::middleware(['auth'])->group(function () {
+    // Route d'affichage du formulaire
+    Route::get('/password/setup', [PasswordSetupController::class, 'show'])->name('password.setup');
+    // Route de traitement
+    Route::post('/password/setup', [PasswordSetupController::class, 'update'])->name('password.setup.update');
+    
+    // Vos routes protégées par le middleware personnalisé
+    Route::middleware(['force.password'])->group(function () {
+        Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
+    });
+});
+Route::get('/setup-password', [PasswordSetupController::class, 'show'])->name('password.setup');
+Route::post('/setup-password', [PasswordSetupController::class, 'update'])->name('password.setup.update');
+
 
 // Route::resource('courriers', CourrierController::class);
 Route::resource('courriers.affectations', AffectationController::class)->shallow();
@@ -42,10 +115,6 @@ Route::resource('courriers', CourrierController::class);
 
 //
 // Fichier : routes/web.php
-
-
-// Cette seule ligne gère toutes les routes (index, create, store, show, edit, update, destroy)
-Route::resource('users', UserController::class);
 
 
 Route::get('/affectation/create', function () {
@@ -81,21 +150,23 @@ Route::resource('directions', DirectionController::class);
 Route::resource('services', ServiceController::class);
 
 
-Route::resource('agents', AgentController::class);
+
 
 Route::get('/agents/nouveau', [AgentController::class, 'nouveau'])->name('agents.nouveau');
 
-Route::post('/agents/enregistrer', [AgentController::class, 'Enr'])->name('agents.enregistrer');
-
+Route::resource('agents', AgentController::class);
+// Si votre route est dans un groupe 'auth', elle échouera si vous n'êtes pas connecté
 Route::middleware(['auth'])->group(function () {
-    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
-    Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
-
+    Route::get('/agents/nouveau', [AgentController::class, 'nouveau']);
 });
 
-route::resource('affectations', AffectationController::class);
+
+
+
+
+Route::post('/agents/enregistrer', [AgentController::class, 'Enr'])->name('agents.enregistrer');
+
+Route::resource('affectations', AffectationController::class);
 
 
 Route::resource('presences', PresenceController::class);
@@ -120,15 +191,7 @@ Route::get('/courriers.RechercheAffichage', [CourrierController::class, 'Recherc
 
 Route::resource('typeabsences', TypeAbsenceController::class);
 
-Route::middleware(['auth'])->group(function () {
-    // Routes de ressources standard
-    Route::resource('notifications', NotificationTacheController::class)->parameters([
-        'notifications' => 'id_notification' // Utilise id_notification au lieu de {notification} dans l'URL
-    ]);
 
-    // Route supplémentaire pour marquer comme lue
-    Route::post('notifications/{id_notification}/read', [NotificationTacheController::class, 'markAsRead'])->name('notifications.markAsRead');
-});
 
 Route::get('/notifications.index1', [NotificationTacheController::class, 'index1'])->name('notifications.index1');
 Route::get('/notifications.index2', [NotificationTacheController::class, 'index2'])->name('notifications.index2');
@@ -139,27 +202,7 @@ Route::get('/notifications/{id}/visualiser', [NotificationTacheController::class
 
 Route::get('/courriers/visualiser', [CourrierController::class, 'visualiserDocument'])->name('courriers.visualiser');
 
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('admin/dashboard', [AdminController::class, 'index']);
-    // Toutes les routes ici sont réservées aux admins
-});
 
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
-});
-
-Route::middleware(['auth', 'admin'])->group(function () {
-    // La route pour afficher le formulaire de création
-    Route::get('/profile/create', [ProfileController::class, 'create'])->name('profile.create');
-
-    // La route pour enregistrer les données (utilisée par le formulaire)
-    Route::post('/profile', [ProfileController::class, 'store'])->name('profile.store');
-});
-
-// Accès Agent
-Route::middleware(['auth'])->group(function () {
-    Route::get('/tableau-de-bord', [AgentController::class, 'dashb'])->name('agent.dashboard');
-});
 
 // Route pour générer et télécharger le PDF
 Route::get('/notifications/pdf', [NotificationtacheController::class, 'genererPdf'])->name('notifications.index_pdf');
