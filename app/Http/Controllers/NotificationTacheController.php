@@ -15,6 +15,7 @@ use illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 
 
@@ -293,6 +294,23 @@ public function store(Request $request) {
 
         return view('notifications.index', compact('notifications'));
         }
-        
 
+
+       public function index3(Request $request) {
+            /** @var \App\Models\User $user */
+            $user = $request->user();
+
+            if (!$user || !$user->agent) {
+                // Redirige si l'utilisateur n'est pas connecté ou n'a pas de profil Agent
+                return redirect()->route('login')->with('error', 'Profil agent introuvable.');
+            }
+
+            // On passe par la relation agent pour atteindre les notificationtaches
+            $notifications = $user->agent->notificationtaches()
+                ->where('is_archived', 0)
+                ->orderByDesc('created_at')
+                ->paginate(10);
+
+            return view('notifications.index3', compact('notifications'));
+        }
 }

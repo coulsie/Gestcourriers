@@ -95,4 +95,9 @@ class Agent extends Model
             return $this->hasMany(NotificationTache::class);
         }
 
+
+        public function notificationtaches() {
+            return $this->hasMany(NotificationTache::class);
+        }
+        
 }

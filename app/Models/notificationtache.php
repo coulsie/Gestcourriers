@@ -20,6 +20,7 @@ class NotificationTache extends Model
     // Indique explicitement le nom de la clé primaire
     protected $primaryKey = 'id_notification';
 
+
     // Laravel s'attend par défaut à des clés auto-incrémentées
     public $incrementing = true;
 
@@ -109,6 +110,6 @@ class NotificationTache extends Model
         {
             // hasMany garantit de toujours renvoyer une collection (même vide),
             // évitant ainsi l'erreur "count() on null".
-            return $this->hasMany(ReponseNotification::class); 
+            return $this->hasMany(ReponseNotification::class);
         }
 }

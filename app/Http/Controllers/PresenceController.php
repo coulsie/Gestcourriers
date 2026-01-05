@@ -8,6 +8,9 @@ use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
+use App\Models\Horaire; // <--- AJOUTER CET IMPORT
+use Carbon\Carbon;      // <--- AJOUTER CET IMPORT
 
 class PresenceController extends Controller
 {
@@ -21,7 +24,7 @@ class PresenceController extends Controller
     {
         // Récupère toutes les présences et les passe à la vue 'presences.index'
         // $presences = Presence::latest()->paginate(10);//Prière utiliser un datatable pour gérer la paginantion
-        $presences = Presence::get();
+        $presences = Presence::with('agent')->get();
         // dd($presences );die;
         return view('presences.index', compact('presences'));
     }
@@ -40,39 +43,71 @@ class PresenceController extends Controller
 
     /**
      * Stocke une nouvelle ressource (présence) dans la base de données.
-     */
- public function store(Request $request): RedirectResponse
-    {
-        // 1. Validate the incoming request data
-        $validatedData = $request->validate([
-            // 'agent_id' must be present, a number, and exist in the 'agents' table
-            // 'AgentID' => 'required|integer|exists:agents,id', //ce champs n'est pas bien nommé. Faire attention au nom des champs
-            'agent_id' => 'required|integer|exists:agents,id',
+                            */
+         public function store(Request $request)
+        {
+            // 1. Définition de l'heure d'arrivée
+            $heureArrivee = $request->filled('heure_arrivee')
+                ? \Carbon\Carbon::parse($request->heure_arrivee)
+                : \Carbon\Carbon::now();
 
-            // 'heure_arrivee' is required and must be a valid date/time string
-            // 'heurearrivee' => 'required|date',//ce champs n'est pas bien nommé. Faire attention au nom des champs
-            'heure_arrivee' => 'required|date',
+            // 2. Récupération de l'horaire (on cherche en anglais car votre système est en anglais)
+            $jourQuery = $heureArrivee->format('l');
+            $horaireFixe = \App\Models\Horaire::where('jour', $jourQuery)->first();
 
-            // 'heure_depart' is optional (nullable in DB) and must be a valid date/time if provided
-            // 'heuredepart' => 'nullable|date|after:heure_arrivee',//ce champs n'est pas bien nommé. Faire attention au nom des champs
-            'heure_depart' => 'nullable|date|after:heure_arrivee',
+            if (!$horaireFixe) {
+                return redirect()->back()->with('error', "Aucun horaire trouvé pour : $jourQuery");
+            }
 
-            // 'statut' must be one of the defined enum values
-            'statut' => ['required',Rule::in(['Absent', 'Présent', 'En Retard']),],
+            // 3. CALCUL DES MINUTES (Correction de la logique)
+            // Heure d'arrivée en minutes depuis minuit
+            $minutesArrivee = ($heureArrivee->hour * 60) + $heureArrivee->minute;
 
-            // 'notes' is optional (text field)
-            'notes' => 'nullable|string|max:1000',
-        ]);
+            // Heure de début théorique (ex: 07:30)
+            $debutTheorique = \Carbon\Carbon::parse($horaireFixe->getRawOriginal('heure_debut'));
 
-        // 2. Create the Presence record using the validated data
-        // This relies on the $fillable property being set in the Presence model.
-            $datas = $request->all();
-            // dd($datas);
-            // $presence = Presence::create($validatedData);
-            $Presence = Presence::create($datas);
-           return redirect()->route('presences.index')->with('success', 'Présence créée avec succès.');
+            // On force la tolérance en entier (int) pour éviter les erreurs de calcul
+            $tolerance = (int) ($horaireFixe->tolerance_retard ?? 15);
 
-    }
+            $minutesLimite = ($debutTheorique->hour * 60) + $debutTheorique->minute + $tolerance;
+
+            // 4. Attribution du statut
+            // Si l'heure d'arrivée est INFÉRIEURE ou ÉGALE à la limite, il est Présent
+            $statut = ($minutesArrivee <= $minutesLimite) ? 'Présent' : 'En Retard';
+
+            // 5. Enregistrement
+            \App\Models\Presence::create([
+                'agent_id'      => $request->agent_id,
+                'heure_arrivee' => $heureArrivee,
+                'statut'        => $statut,
+                'notes'         => $request->notes,
+                'heure_depart'  => $request->heure_depart // Sera null si non rempli
+            ]);
+
+           // ... fin de l'enregistrement ...
+
+            return redirect()->route('presences.index')
+                            ->with('success', "Pointage enregistré ($statut) à " . $heureArrivee->format('H:i'));
+
+        }
+    // --- La méthode à introduire ---
+        // On la met en 'private' ou 'protected' car c'est un outil interne au contrôleur
+
+        protected function verifierStatutArrivee()
+        {
+            // 1. Récupère le nom du jour (ex: "lundi") et met une majuscule
+            $nomJour = ucfirst(Carbon::now()->translatedFormat('l'));
+
+            // 2. Cherche l'horaire en base
+            $horaireDuJour = Horaire::where('jour', $nomJour)->first();
+
+            // 3. Utilise la méthode estEnRetard() définie dans le modèle Horaire
+            if ($horaireDuJour && $horaireDuJour->estEnRetard(Carbon::now())) {
+                return 'En Retard';
+            }
+
+            return 'Présent';
+        }
 
     /**
      * Affiche la ressource (présence) spécifiée.
@@ -139,4 +174,94 @@ class PresenceController extends Controller
         return redirect()->route('presences.index')
                          ->with('success', 'Présence supprimée avec succès.');
     }
+
+
+    public function statsPresences()
+        {
+            $annee = 2026;
+
+            // 1. Stats Journalières (30 derniers jours)
+            $journalier = Presence::select(
+                    DB::raw('DATE(heure_arrivee) as date'),
+                    DB::raw("COUNT(*) as total"),
+                    DB::raw("SUM(CASE WHEN statut = 'Présent' THEN 1 ELSE 0 END) as presents"),
+                    DB::raw("SUM(CASE WHEN statut = 'En Retard' THEN 1 ELSE 0 END) as retards"),
+                    DB::raw("SUM(CASE WHEN statut = 'Absent' THEN 1 ELSE 0 END) as absents")
+                )
+                ->whereYear('heure_arrivee', $annee)
+                ->groupBy('date')
+                ->orderBy('date', 'desc')
+                ->limit(30)
+                ->get();
+
+            // 2. Stats Hebdomadaires
+            $hebdo = Presence::select(
+                    DB::raw('WEEK(heure_arrivee) as semaine'),
+                    DB::raw("COUNT(*) as total"),
+                    DB::raw("SUM(statut = 'Présent') as presents")
+                )
+                ->whereYear('heure_arrivee', $annee)
+                ->groupBy('semaine')
+                ->get();
+
+            // 3. Stats Mensuelles
+            $mensuel = Presence::select(
+                    DB::raw('MONTH(heure_arrivee) as mois'),
+                    DB::raw("COUNT(*) as total"),
+                    DB::raw("SUM(statut = 'Présent') as presents"),
+                    DB::raw("SUM(statut = 'En Retard') as retards")
+                )
+                ->whereYear('heure_arrivee', $annee)
+                ->groupBy('mois')
+                ->get();
+
+            return view('presences.etat', compact('journalier', 'hebdo', 'mensuel', 'annee'));
+        }
+            public function agent()
+            {
+                // Laravel cherchera par défaut la colonne agent_id dans la table presences
+                return $this->belongsTo(Agent::class, 'agent_id');
+            }
+
+public function stats(Request $request)
+{
+    $annee = 2026;
+
+    // Récupération des dates depuis le formulaire de recherche
+    $dateDebut = $request->input('date_debut');
+    $dateFin = $request->input('date_fin');
+
+    // Query de base avec filtrage optionnel
+    $query = Presence::with('agent')
+        ->select(
+            DB::raw('DATE(heure_arrivee) as date'),
+            DB::raw("COUNT(*) as total"),
+            DB::raw("SUM(CASE WHEN statut = 'Présent' THEN 1 ELSE 0 END) as presents"),
+            DB::raw("SUM(CASE WHEN statut = 'En Retard' THEN 1 ELSE 0 END) as retards"),
+            DB::raw("SUM(CASE WHEN statut = 'Absent' THEN 1 ELSE 0 END) as absents")
+        )
+        ->whereYear('heure_arrivee', $annee);
+
+    // Appliquer le filtre si les dates sont saisies
+    if ($dateDebut && $dateFin) {
+        $query->whereBetween(DB::raw('DATE(heure_arrivee)'), [$dateDebut, $dateFin]);
+    }
+
+    $journalier = $query->groupBy('date')
+        ->orderBy('date', 'desc')
+        ->get();
+
+    // On conserve vos autres stats (hebdo/mensuel) pour la vue
+    $hebdo = Presence::select(DB::raw('WEEK(heure_arrivee) as semaine'), DB::raw("COUNT(*) as total"), DB::raw("SUM(statut = 'Présent') as presents"))
+        ->whereYear('heure_arrivee', $annee)->groupBy('semaine')->get();
+
+    $mensuel = Presence::select(DB::raw('MONTH(heure_arrivee) as mois'), DB::raw("COUNT(*) as total"), DB::raw("SUM(statut = 'Présent') as presents"))
+        ->whereYear('heure_arrivee', $annee)->groupBy('mois')->get();
+
+    return view('presences.stats', compact('journalier', 'hebdo', 'mensuel', 'annee', 'dateDebut', 'dateFin'));
+}
+
+
+
+
 }

@@ -7,6 +7,10 @@ namespace App\Http\Controllers;
 use App\Models\ReponseNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Models\NotificationTache;
+use App\Models\Agent;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class ReponseNotificationController extends Controller
 {
@@ -75,12 +79,32 @@ class ReponseNotificationController extends Controller
 
         return response()->json(['message' => 'Réponse supprimée']);
     }
+        public function __construct() {
+            $this->middleware('auth');
+        }
 
-
-        public function create($id_notification, $agent_id)
+        public function create($id_notification)
         {
-            // On passe impérativement les deux variables à la vue
-            return view('reponses.create', compact('id_notification', 'agent_id'));
+            if (Auth::check()) {
+                $user = Auth::user();
+
+                if ($user && $user->agent) {
+                    $agent_id = $user->agent->id;
+
+                    // --- AJOUTEZ CETTE LIGNE ---
+                    // On récupère l'objet notification complet à partir de l'ID
+                    $notification = NotificationTache::findOrFail($id_notification);
+                    // ---------------------------
+
+                } else {
+                    return redirect()->back()->with('error', "Cet utilisateur n'est pas lié à un agent.");
+                }
+            } else {
+                return redirect()->route('login');
+            }
+
+            // Ajoutez 'notification' dans le compact
+            return view('reponses.create', compact('id_notification', 'agent_id', 'notification'));
         }
 
 }

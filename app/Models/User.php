@@ -18,7 +18,7 @@ class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
-
+    use Notifiable;
     /**
      * The attributes that are mass assignable.
      *
@@ -76,6 +76,15 @@ class User extends Authenticatable
       // S'il s'agit d'une relation (ex: HasMany)
         return $this->hasMany(NotificationTache::class);
     }
-
+    public function notificationtaches() {
+        return $this->hasManyThrough(
+            NotificationTache::class, // Modèle final
+            Agent::class,             // Modèle intermédiaire
+            'user_id',                // Clé étrangère sur Agent
+            'agent_id',               // Clé étrangère sur NotificationTache
+            'id',                     // Clé locale sur User
+            'id'                      // Clé locale sur Agent
+        );
+    }
 
     }

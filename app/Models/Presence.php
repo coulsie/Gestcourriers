@@ -48,12 +48,7 @@ class Presence extends Model
     /**
      * Une présence appartient à un agent.
      */
-    public function agent(): BelongsTo
-    {
-        // Assurez-vous que le modèle App\Models\Agent existe
-        return $this->belongsTo(Agent::class, 'id', 'id');
-    }
-
+    
     // --- Scopes Locaux (Utile pour filtrer facilement les absences) ---
 
     /**
@@ -72,6 +67,11 @@ class Presence extends Model
     public function scopePresentes($query)
     {
         return $query->where('statut', 'Présent');
+          }
+
+      public function agent()
+    {
+        return $this->belongsTo(Agent::class, 'agent_id');
     }
 }
 

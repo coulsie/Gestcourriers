@@ -15,24 +15,46 @@
             <div class="form-group">
                 {{-- <label for="courrier_id">Courrier associé :</label> --}}
                 {{-- $courriers doit être passé depuis le contrôleur create() --}}
-                <fieldset class="border p-3">
-                    <legend class="w-auto  text-info"> <b>Information générale du courrier associé</b> </legend>
-                    <p class="">
-                        <span>Référence : </span>
-                        <span> <b>{{ $courrier->reference }}</b> </span>
-                        <br>
-                        <span>Objet : </span>
-                        <span><b>{{ $courrier->objet }} </b></span>
-                        <br>
-                        <span>Type : </span>
-                        <span><b>{{ $courrier->type }} </b></span>
-                        <br>
-                        <span>Description : </span>
-                        <span><b>{{ $courrier->description }} </b></span>
-                        <br>
-                        <span>Date d'enregistrement : </span>
-                        <span><b>{{ $courrier->date_courrier?$courrier->date_courrier->format('d/m/Y'):'' }} </b></span>
-                    </p>
+                <fieldset class="border border-primary p-3 rounded shadow-sm" style="border-width: 2px !important;">
+                    <legend class="w-auto px-3 text-white bg-primary rounded">
+                        <i class="fas fa-envelope"></i> <b>Information générale du courrier associé</b>
+                    </legend>
+
+                    <div class="row pt-2">
+                        <div class="col-md-6 mb-2">
+                            <span class="text-muted small d-block">Référence :</span>
+                            <span class="text-primary"><b>{{ $courrier->reference }}</b></span>
+                        </div>
+
+                        <div class="col-md-6 mb-2">
+                            <span class="text-muted small d-block">Type :</span>
+                            <span class="badge {{ $courrier->type > now() ? 'bg-success text-white' : 'bg-danger' }}"
+                                style="{{ $courrier->type <= now() ? 'color: #00008B !important;' : '' }}">
+                                {{ $courrier->type }}
+                            </span>
+                        </div>
+
+
+
+
+                        <div class="col-12 mb-2">
+                            <span class="text-muted small d-block">Objet :</span>
+                            <span class="text-dark"><b>{{ $courrier->objet }}</b></span>
+                        </div>
+
+                        <div class="col-12 mb-2">
+                            <span class="text-muted small d-block">Description :</span>
+                            <p class="text-dark mb-0" style="font-size: 0.95rem;">{{ $courrier->description }}</p>
+                        </div>
+
+                        <div class="col-12 mt-2 pt-2 border-top">
+                            <span class="text-muted small">Date d'enregistrement : </span>
+                            <span class="text-info">
+                                <i class="far fa-calendar-alt"></i>
+                                <b>{{ $courrier->date_courrier ? $courrier->date_courrier->format('d/m/Y') : 'Non précisée' }}</b>
+                            </span>
+                        </div>
+                    </div>
                 </fieldset>
 
 

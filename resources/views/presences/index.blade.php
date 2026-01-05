@@ -38,12 +38,15 @@
                 <tr>
                     <td>{{ $presence->id }}</td>
 
-                    <td class="text-uppercase fw-bold">
-                        {{-- Le ?-> est obligatoire sur TOUTES les propriétés de l'agent --}}
-                        {{ $presence->agent?->name ?? '' }} {{ $presence->agent?->last_name }}
+                   <td class="text-uppercase fw-bold">
+                        @if($presence->agent)
+                            {{ $presence->agent->name }} {{ $presence->agent->last_name }}
+                        @else
+                            <span class="text-muted">Agent inconnu</span>
+                        @endif
                     </td>
                     <td>
-                        {{ $presence->agent?->first_name ?? '-' }}
+                        {{ $presence->agent?->first_name ?? '—' }}
                     </td>
 
                     {{-- Formatage des dates si elles sont castées en Carbon --}}
@@ -52,7 +55,7 @@
                         @if($presence->heure_depart)
                             {{ \Carbon\Carbon::parse($presence->heure_depart)->format('H:i') }}
                         @else
-                            <span class="text-muted small">En cours...</span>
+                            <span class="text-muted small"></span>
                         @endif
                     </td>
 

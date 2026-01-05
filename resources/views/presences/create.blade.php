@@ -37,18 +37,12 @@
                         </div>
 
                         {{-- Champ heure_arrivee (Timestamp) --}}
-                        <div class="form-group row mb-3">
-                            <label for="heure_arrivee" class="col-md-4 col-form-label text-md-right">Heure d'arrivée</label>
-                            <div class="col-md-6">
-                                {{-- Utilisez 'datetime-local' pour une interface simple de sélection date/heure --}}
-                                <input id="heure_arrivee" type="datetime-local" class="form-control @error('heure_arrivee') is-invalid @enderror" name="heure_arrivee" value="{{ old('heure_arrivee') ?? now()->format('Y-m-d\TH:i') }}" required autocomplete="heure_arrivee" autofocus>
-
-                                @error('heure_arrivee')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
+                        <div class="mb-3">
+                            <label for="heure_arrivee" class="form-label">Heure d'arrivée (laisser vide pour l'heure actuelle)</label>
+                            <input type="datetime-local"
+                                name="heure_arrivee"
+                                id="heure_arrivee"
+                                class="form-control">
                         </div>
                         <div class="form-group row mb-3">
                             <label for="heure_depart" class="col-md-4 col-form-label text-md-right">Heure depart</label>
@@ -66,23 +60,7 @@
 
 
                         {{-- Champ statut (Enum: Absent, Présent, En Retard) --}}
-                        <div class="form-group row mb-3">
-                            <label for="statut" class="col-md-4 col-form-label text-md-right">Statut</label>
-                            <div class="col-md-6">
-                                <select id="statut" name="statut" class="form-control @error('statut') is-invalid @enderror" required>
-                                    {{-- Les valeurs doivent correspondre exactement à celles définies dans l'ENUM de la BDD --}}
-                                    <option value="Présent" {{ old('statut', 'Présent') == 'Présent' ? 'selected' : '' }}>Présent</option>
-                                    <option value="Absent" {{ old('statut') == 'Absent' ? 'selected' : '' }}>Absent</option>
-                                    <option value="En Retard" {{ old('statut') == 'En Retard' ? 'selected' : '' }}>En Retard</option>
-                                </select>
 
-                                @error('statut')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
 
                         {{-- Champ notes (Text) --}}
                         <div class="form-group row mb-3">
@@ -104,9 +82,14 @@
 
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
+                              <a href="{{ route('presences.index') }}" class="btn btn-danger px-4">
+                                <i class="fas fa-times me-1"></i> Annuler
+                                </a>
                                 <button type="submit" class="btn btn-success">
                                     Enregistrer
                                 </button>
+
+
                             </div>
                         </div>
                     </form>
