@@ -3,30 +3,28 @@
 
 @section('content')
 <div class="container-fluid">
-
-
                    {{-- Bande d'annonces défilantes --}}
                     <div class="annonces-ticker mb-4">
                         <div class="annonces-wrapper">
 
-                             {{-- @foreach($recentAnnonces as $annonce)
-                             @php
-                                 // Définir la couleur selon le type
-                                  $color = match($annonce->type) {
-                                      'urgent' => 'bg-danger',
-                                      'information' => 'bg-primary',
-                                      'evenement' => 'bg-success',
-                                      'avertissement' => 'bg-warning text-dark',
-                                      default => 'bg-secondary',
-                                    };
-                            @endphp
+                            @foreach($recentAnnonces as $annonce)
+                                    @php
+                                        // Définir la couleur selon le type
+                                        $color = match($annonce->type) {
+                                            'urgent' => 'bg-danger',
+                                            'information' => 'bg-primary',
+                                            'evenement' => 'bg-success',
+                                            'avertissement' => 'bg-warning text-dark',
+                                            default => 'bg-secondary',
+                                            };
+                                    @endphp
 
-                        <div class="annonce-card">
-                    <strong>{{ Str::limit('le titre', 50) }}</strong> :
-                            {{ Str::limit('le contenu', 100) }}
-                         </div>
-                        @endforeach --}}
-                      </div>
+                                <div class="annonce-card">
+                                    <strong>{{ Str::limit($annonce->titre, 50) }}</strong> :
+                                            {{ Str::limit($annonce->contenu, 100) }}
+                                </div>
+                            @endforeach 
+                        </div>
                     </div>
                     <!-- FIN Bande défilante -->
 
@@ -104,17 +102,27 @@
                                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">TÂCHES NON EXECUTEES
                                             </div>
                                             <div class="row no-gutters align-items-center">
+                                        
                                                 <div class="col-auto">
-                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
+                                                    {{-- On affiche une seule décimale pour la lisibilité --}}
+                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">
+                                                        {{ number_format($pourcentageNonExecutees, 1) }}%
+                                                    </div>
                                                 </div>
                                                 <div class="col">
                                                     <div class="progress progress-sm mr-2">
-                                                        <div class="progress-bar bg-info" role="progressbar"
-                                                            style="width: 50%" aria-valuenow="50" aria-valuemin="0"
-                                                            aria-valuemax="100"></div>
+                                                        {{-- Utilisation de la variable brute pour la largeur CSS --}}
+                                                        <div class="progress-bar bg-info" 
+                                                            role="progressbar"
+                                                            style="width: {{ $pourcentageNonExecutees }}%" 
+                                                            aria-valuenow="{{ $pourcentageNonExecutees }}" 
+                                                            aria-valuemin="0"
+                                                            aria-valuemax="100">
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                           </div>
+
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
@@ -132,7 +140,7 @@
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                                 ANNONCES</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">1</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $nombreAnnonces ?? 0 }}</div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-comments fa-2x text-gray-300"></i>

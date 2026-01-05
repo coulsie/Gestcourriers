@@ -7,7 +7,7 @@ use App\Http\Controllers\{
     AgentController, CourrierController, AffectationController,
     CourrierAffectationController, DirectionController, ServiceController,
     PresenceController, AbsenceController, TypeAbsenceController,
-    EtatAgentsController, NotificationTacheController
+    EtatAgentsController, NotificationTacheController,AnnonceController
 };
 
 use App\Http\Controllers\Auth\{LoginController,RegisterController,ForgotPasswordController,
@@ -108,3 +108,8 @@ Route::middleware(['auth', 'force.password'])->group(function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/annonces', [AnnonceController::class, 'index'])->name('annonces.index');
+Route::get('/annonces/create', [AnnonceController::class, 'create'])->name('annonces.create');
+Route::post('/annonces', [AnnonceController::class, 'store'])->name('annonces.store');
+Route::delete('/annonces/{annonce}', [AnnonceController::class, 'destroy'])->name('annonces.destroy');

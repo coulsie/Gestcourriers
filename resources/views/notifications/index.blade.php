@@ -111,7 +111,12 @@
                                     <span class="small"><i class="bi bi-person"></i> {{ $notification->suivi_par }}</span>
                                 </td>
                                 <td>
-                                    <span class="small"><i class="bi bi-chat-dots"></i> {{ optional($notification->reponseNotification)->Response_Piece_jointe }}</span>
+                                    <h3>
+                                        <span class="badge bg-info text-dark">
+                                            {{ $notification->reponse?->count() ?? 0}}
+                                        </span>
+                                    </h3>
+                                    
                                 </td>
 
                                 <td>

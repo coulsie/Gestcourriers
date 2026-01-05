@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Enums\PrioriteEnum;
 use App\Enums\StatutEnum;
 use App\Models\Agent;
+use App\Models\ReponseNotification;
 
 
 class NotificationTache extends Model
@@ -97,8 +98,17 @@ class NotificationTache extends Model
             return ($totalDays > 0) ? round(($daysPassed / $totalDays) * 100) : 100;
         }
 
+
         public function reponses()
         {
-            return $this->hasMany(ReponseNotification::class, 'id_notification');
+            return $this->hasMany(ReponseNotification::class, 'id_notification' );
+        }
+
+
+        public function reponseNotification()
+        {
+            // hasMany garantit de toujours renvoyer une collection (même vide),
+            // évitant ainsi l'erreur "count() on null".
+            return $this->hasMany(ReponseNotification::class); 
         }
 }

@@ -79,7 +79,8 @@
                     <div id="collapseAdmin" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Utilisateurs & RH:</h6>
-                            <a class="collapse-item" href="{{ route('agents.nouveau') }}">Créer un compte Utilisateur</a>
+                            <a class="collapse-item" href="{{ route('annonces.index') }}">Annonces</a>
+                            <a class="collapse-item" href="{{ route('agents.nouveau') }}">compte Utilisateur</a>
                             <a class="collapse-item" href="{{ route('agents.index') }}">Ressources Humaines</a>
                             <div class="collapse-divider"></div>
                             <h6 class="collapse-header">Communications:</h6>

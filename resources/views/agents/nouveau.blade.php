@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container py-5">
-    <div class="card shadow-lg border-0">
+<div class="container-fluid">
+    <div class="row">
         <div class="card-header bg-primary text-white py-3">
             <h4 class="mb-0"><i class="fas fa-user-plus me-2"></i> Création de l'Agent et du Compte</h4>
         </div>
-        <div class="card-body p-4">
+        <div class="col-12">
             <form action="{{ route('agents.enregistrer') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
@@ -186,7 +186,7 @@
                 </div>
 
                 <div class="text-end mt-4">
-                    <button type="reset" class="btn btn-light border me-2">Annuler</button>
+                    <button type="reset" class="btn btn-danger">Annuler</button>
                     <button type="submit" class="btn btn-success">Enregistrer l'Agent</button>
                 </div>
             </form>
