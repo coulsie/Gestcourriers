@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3307
--- Généré le : lun. 29 déc. 2025 à 08:28
+-- Généré le : lun. 05 jan. 2026 à 08:34
 -- Version du serveur : 11.5.2-MariaDB
 -- Version de PHP : 8.3.14
 
@@ -136,6 +136,33 @@ INSERT INTO `agents` (`id`, `email_professionnel`, `matricule`, `first_name`, `l
 (6, 'bgff@HGJK', '100235M', 'SYLLA', 'Youssouf', 'Sous-directeur', 'Male', '1980-01-01', 'ISSIA', '/storage/agents_photos/92U7VhTeiYCNOIFRi565I9tHSvcwcc4CEkAFM8HA.jpg', 'youssouf@gmail.com', NULL, NULL, NULL, 'A6', NULL, 'HHHH', '455888', 6, NULL, '2025-12-13 10:23:37', '2025-12-13 10:23:37'),
 (7, 'didier@45', '100542Q', 'CAMARA', 'Naotchin Didier', 'Directeur', 'Male', '1971-02-01', 'DIVO', '/storage/agents_photos/81UJDuSmCHcDhWrFyp4t2TtAjvnVeJSD6RZMpHHi.jpg', 'Sieben@v', '225 0707584396', '08 BP 2359', NULL, 'A7', NULL, 'rosalie45', '25665666', 14, NULL, '2025-12-13 10:49:55', '2025-12-13 10:49:55'),
 (8, 'sylva@gmail.com', '100222A', 'KOFFI', 'Sylvanus', 'Chef de service', 'Male', '1987-12-04', 'YAMOUSSOUKRO', '/storage/agents_photos/A7LUuO7BCx80Nr7rlfrZWMlaesD1Kg8T8juKDc5Z.jpg', 'sylvanus@yahoo.fr', '0584365858', '01BP4125', 'Ingenieur statiticien economiste', 'A5', '2007-01-01', 'Koffi rita', '55525666', 5, NULL, '2025-12-13 16:31:12', '2025-12-13 16:31:12');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `annonces`
+--
+
+DROP TABLE IF EXISTS `annonces`;
+CREATE TABLE IF NOT EXISTS `annonces` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `titre` varchar(191) NOT NULL,
+  `contenu` text NOT NULL,
+  `type` enum('urgent','information','evenement','avertissement','general') NOT NULL DEFAULT 'general',
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `expires_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `annonces`
+--
+
+INSERT INTO `annonces` (`id`, `titre`, `contenu`, `type`, `is_active`, `expires_at`, `created_at`, `updated_at`) VALUES
+(1, 'Réunion de comité', '10 h  ce jour salle de conférence', 'urgent', 1, NULL, '2026-01-04 12:43:52', '2026-01-04 12:43:52'),
+(2, 'Atelier sur la GED', 'Atelier de formation sur la gestion electronique des documents le vendredi 9 janvier 2026 à la salle de conférence au 6ème etage', 'evenement', 1, NULL, '2026-01-04 13:00:53', '2026-01-04 13:00:53');
 
 -- --------------------------------------------------------
 
@@ -354,7 +381,7 @@ CREATE TABLE IF NOT EXISTS `migrations` (
   `migration` varchar(255) NOT NULL,
   `batch` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `migrations`
@@ -388,7 +415,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (25, '2025_12_16_154155_add_role_to_users_table', 25),
 (26, '2025_12_23_132434_add_is_archived_to_notifications_taches_table', 26),
 (27, '2025_12_23_142311_create_reponse_notifications_table', 27),
-(28, '2025_12_23_153002_add_soft_deletes_to_notifications_taches_table', 28);
+(28, '2025_12_23_153002_add_soft_deletes_to_notifications_taches_table', 28),
+(29, '2026_01_02_105921_add_must_change_password_to_users_table', 29),
+(30, '2026_01_04_120452_create_annonces_table', 30);
 
 -- --------------------------------------------------------
 
@@ -609,6 +638,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `role` varchar(191) NOT NULL DEFAULT 'user',
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) NOT NULL,
+  `must_change_password` tinyint(1) NOT NULL DEFAULT 0,
   `remember_token` varchar(100) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -622,10 +652,10 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Déchargement des données de la table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `role`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`, `bio`, `profile_picture`) VALUES
-(1, 'Coulibaly Sie Yacouba', 'coulsie@gmail.com', 'admin', NULL, '$2y$12$WAjiSLgNkjOq52FJwCm5dO0HMHY8HyP1aA5dMArsLqFT.kvZTzvvy', 'LlzUSHOwWyD5neqebsxnUyXKLJewGsZbnhUQ8Up0nsQDfLuh3vULnJz9PZRo', '2025-11-17 17:37:48', '2025-11-17 17:37:48', NULL, NULL),
-(3, 'Yacoub', 'coulsie@live.fr', 'user', NULL, '$2y$12$XkM6OYaChSDICBzxhSgfkuJcBBUHxS8uUVzAVteO8PSoOgisJhvmm', NULL, '2025-12-18 15:16:46', '2025-12-18 15:16:46', NULL, NULL),
-(4, 'Maman', 'ouattanass@gmail.com', 'user', NULL, '$2y$12$OTuC6vrFt5lohvrby4P0qOKdaq5gOtzBu6yUpFwYS4kSHe1MtZVcq', NULL, '2025-12-18 16:00:20', '2025-12-18 16:00:20', NULL, NULL);
+INSERT INTO `users` (`id`, `name`, `email`, `role`, `email_verified_at`, `password`, `must_change_password`, `remember_token`, `created_at`, `updated_at`, `bio`, `profile_picture`) VALUES
+(1, 'Coulibaly Sie Yacouba', 'coulsie@gmail.com', 'admin', NULL, '$2y$12$WAjiSLgNkjOq52FJwCm5dO0HMHY8HyP1aA5dMArsLqFT.kvZTzvvy', 0, 'LlzUSHOwWyD5neqebsxnUyXKLJewGsZbnhUQ8Up0nsQDfLuh3vULnJz9PZRo', '2025-11-17 17:37:48', '2025-11-17 17:37:48', NULL, NULL),
+(3, 'Yacoub', 'coulsie@live.fr', 'user', NULL, '$2y$12$XkM6OYaChSDICBzxhSgfkuJcBBUHxS8uUVzAVteO8PSoOgisJhvmm', 0, NULL, '2025-12-18 15:16:46', '2025-12-18 15:16:46', NULL, NULL),
+(4, 'Maman', 'ouattanass@gmail.com', 'user', NULL, '$2y$12$OTuC6vrFt5lohvrby4P0qOKdaq5gOtzBu6yUpFwYS4kSHe1MtZVcq', 0, NULL, '2025-12-18 16:00:20', '2025-12-18 16:00:20', NULL, NULL);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
