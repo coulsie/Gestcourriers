@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.3
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3307
--- Généré le : lun. 05 jan. 2026 à 08:34
--- Version du serveur : 11.5.2-MariaDB
--- Version de PHP : 8.3.14
+-- Généré le : mar. 06 jan. 2026 à 16:44
+-- Version du serveur : 11.4.9-MariaDB
+-- Version de PHP : 8.3.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -67,23 +67,18 @@ CREATE TABLE IF NOT EXISTS `affectations` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`),
   KEY `affectations_courrier_id_foreign` (`courrier_id`),
   KEY `affectations_user_id_foreign` (`agent_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `affectations`
 --
 
 INSERT INTO `affectations` (`id`, `courrier_id`, `agent_id`, `statut`, `commentaires`, `date_affectation`, `date_traitement`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 'Affecté', 'jklklkmlkl', '2025-12-03 16:36:36', NULL, '2025-12-03 16:36:36', '2025-12-03 16:36:36'),
-(2, 3, 2, 'Affecté', 'klllmlm', '2025-12-03 16:38:28', NULL, '2025-12-03 16:38:28', '2025-12-03 16:38:28'),
-(3, 6, 1, 'Affecté', NULL, '2025-12-04 09:24:03', NULL, '2025-12-04 09:24:03', '2025-12-04 09:24:03'),
-(4, 5, 1, 'Affecté', NULL, '2025-12-04 09:25:02', NULL, '2025-12-04 09:25:02', '2025-12-04 09:25:02'),
-(5, 12, 2, 'in_progress', '2jours', '2025-12-11 09:44:17', '2025-12-11 09:44:17', '2025-12-11 09:44:17', '2025-12-11 09:44:17'),
-(6, 5, 2, 'pending', NULL, '2025-12-11 09:57:20', '2025-12-11 09:57:20', '2025-12-11 09:57:20', '2025-12-11 09:57:20'),
 (7, 12, 3, 'in_progress', NULL, '2025-12-11 09:57:43', '2025-12-11 09:57:43', '2025-12-11 09:57:43', '2025-12-11 09:57:43'),
-(8, 7, 2, 'in_progress', 'bonjour', '2025-12-11 10:18:08', '2025-12-11 10:18:08', '2025-12-11 10:18:08', '2025-12-11 10:18:08');
+(23, 2, 1, 'en_cours', 'BONJOUR', '2026-01-06 16:41:00', '2026-01-14 16:42:00', '2026-01-06 16:42:11', '2026-01-06 16:42:11');
 
 -- --------------------------------------------------------
 
@@ -128,7 +123,7 @@ CREATE TABLE IF NOT EXISTS `agents` (
 --
 
 INSERT INTO `agents` (`id`, `email_professionnel`, `matricule`, `first_name`, `last_name`, `status`, `sexe`, `date_of_birth`, `place_birth`, `photo`, `email`, `phone_number`, `address`, `Emploi`, `Grade`, `Date_Prise_de_service`, `Personne_a_prevenir`, `Contact_personne_a_prevenir`, `service_id`, `user_id`, `created_at`, `updated_at`) VALUES
-(1, 'coulsie@live.fr', '287688C', 'Sié Yacouba', 'COULIBALY', 'Chef de service', 'Female', '1972-12-04', 'COCODY', 'C:\\wamp64\\tmp\\phpE50B.tmp', 'coulsie@gmail.com', '0707584396', '08 BP 2359', 'Inspecteur Principal Informatique', 'A6', '2002-01-05', 'COULIBALY Youssef Kiyali', '0143677424', 1, NULL, '2025-12-04 13:36:01', '2025-12-19 16:50:38'),
+(1, 'coulsie@live.fr', '287688C', 'Sié Yacouba', 'COULIBALY', 'Chef de service', 'Female', '1972-12-04', 'COCODY', 'C:\\wamp64\\tmp\\phpE50B.tmp', 'coulsie@gmail.com', '0707584396', '08 BP 2359', 'Inspecteur Principal Informatique', 'A6', '2002-01-05', 'COULIBALY Youssef Kiyali', '0143677424', 1, 1, '2025-12-04 13:36:01', '2025-12-19 16:50:38'),
 (2, NULL, '410702H', 'Nafata', 'KONE', 'Agent', NULL, NULL, NULL, '/storage/storage/agents_photos/kss1wbQcDFBK8pleueqQJdrzUjwrM318BitCWUHF.jpg', NULL, '0707188674', 'Grand Bassam mockeyville', NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-12-09 15:06:21', '2025-12-16 10:53:36'),
 (3, NULL, '421263X', 'SIAKOURI', 'Justine', 'Agent', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 14, NULL, '2025-12-09 15:58:42', '2025-12-09 15:58:42'),
 (4, 'vb@10klhg', '100600A', 'KOMIAN', 'Anselm', 'Chef de service', 'Male', NULL, NULL, '/storage/storage/agents_photos/wgoMB7Fhj32h9pNnqs2rjAucRMbG2FQKB2WMC6Vx.jpg', 'coulsie@live.fr', NULL, NULL, NULL, NULL, NULL, 'amoin', '010124578', 13, NULL, '2025-12-12 14:43:58', '2025-12-12 15:07:15'),
@@ -221,6 +216,7 @@ CREATE TABLE IF NOT EXISTS `contacts` (
 DROP TABLE IF EXISTS `courriers`;
 CREATE TABLE IF NOT EXISTS `courriers` (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `affecter` tinyint(1) NOT NULL DEFAULT 0,
   `reference` varchar(255) DEFAULT NULL,
   `type` enum('Incoming','Outgoing','Information','Other_possible_value') DEFAULT NULL,
   `objet` varchar(255) NOT NULL,
@@ -230,13 +226,13 @@ CREATE TABLE IF NOT EXISTS `courriers` (
   `expediteur_contact` varchar(255) DEFAULT NULL,
   `destinataire_nom` varchar(255) NOT NULL DEFAULT 'Valeur par défaut',
   `destinataire_contact` varchar(255) DEFAULT NULL,
-  `statut` enum('reçu','en_traitement','traité','archivé','envoyé') NOT NULL DEFAULT 'reçu',
+  `statut` enum('reçu','en_traitement','traité','archivé','affecté') NOT NULL DEFAULT 'reçu',
   `assigne_a` varchar(255) DEFAULT NULL,
   `chemin_fichier` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `courriers_reference_unique` (`reference`) USING HASH,
+  UNIQUE KEY `courriers_reference_unique` (`reference`),
   KEY `courriers_assigne_a_foreign` (`assigne_a`(250))
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -244,23 +240,23 @@ CREATE TABLE IF NOT EXISTS `courriers` (
 -- Déchargement des données de la table `courriers`
 --
 
-INSERT INTO `courriers` (`id`, `reference`, `type`, `objet`, `description`, `date_courrier`, `expediteur_nom`, `expediteur_contact`, `destinataire_nom`, `destinataire_contact`, `statut`, `assigne_a`, `chemin_fichier`, `created_at`, `updated_at`) VALUES
-(2, '0210', 'Outgoing', 'info', NULL, '2025-12-01', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-01 15:55:11', '2025-12-01 15:55:11'),
-(3, '1010', 'Outgoing', 'Information', NULL, '2025-12-03', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-03 16:37:56', '2025-12-03 16:37:56'),
-(4, '2134', 'Outgoing', 'Information', NULL, '2025-12-04', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-04 07:57:30', '2025-12-04 17:05:58'),
-(6, '203', 'Incoming', 'Information', NULL, '2025-12-04', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-04 07:58:40', '2025-12-04 07:58:40'),
-(7, '10425', 'Incoming', 'travail a faire', NULL, '2025-12-05', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-05 08:24:02', '2025-12-05 08:24:02'),
-(8, '275', 'Incoming', 'travail a faire', NULL, '2025-12-08', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-08 11:09:26', '2025-12-08 11:09:26'),
-(9, '21', 'Incoming', 'TAF', NULL, '2025-12-10', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-10 14:31:11', '2025-12-10 14:31:11'),
-(10, '20', 'Outgoing', 'TAF', NULL, '2025-12-10', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-10 14:41:14', '2025-12-10 14:41:14'),
-(11, '77', 'Outgoing', 'Avoir', NULL, '2025-12-11', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-11 09:07:18', '2025-12-11 09:07:18'),
-(12, '10', 'Outgoing', 'travail a faire', NULL, '2025-12-11', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-11 09:33:41', '2025-12-11 09:33:41'),
-(13, '281', 'Incoming', 'impots', NULL, '2025-12-11', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-11 10:37:07', '2025-12-11 10:37:07'),
-(14, '11121', 'Outgoing', 'TAF', NULL, '2025-12-11', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-11 12:21:08', '2025-12-11 12:21:08'),
-(15, '001', 'Outgoing', 'TAF', NULL, '2025-12-11', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-11 12:21:38', '2025-12-11 12:21:38'),
-(16, '1111111011002025', 'Incoming', 'TAF', 'tpo', '2025-12-11', 'SAPH', '0707584396', 'S/D GUDEF', '1223566', 'reçu', 'COUL', NULL, '2025-12-11 14:01:42', '2025-12-11 14:01:42'),
-(17, '123588996', 'Incoming', 'bnh', 'hgfiuluoioiu', '2025-12-11', 'h,njkll', '014535536', 'bkjlkml', '254966', 'reçu', NULL, NULL, '2025-12-11 16:13:59', '2025-12-11 16:13:59'),
-(18, '24A', 'Incoming', 'Bon pour Travaux', 'Appréciation du Directeur', '2025-12-12', 'DMGE', '0584365858', 'DSESF', '254966', 'reçu', 'KOFFI', '243 ADJAME DALLAS 25 juin 2025 VERSION 1.docx', '2025-12-12 09:08:13', '2025-12-12 09:08:13');
+INSERT INTO `courriers` (`id`, `affecter`, `reference`, `type`, `objet`, `description`, `date_courrier`, `expediteur_nom`, `expediteur_contact`, `destinataire_nom`, `destinataire_contact`, `statut`, `assigne_a`, `chemin_fichier`, `created_at`, `updated_at`) VALUES
+(2, 1, '0210', 'Outgoing', 'info', NULL, '2025-12-01', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'affecté', NULL, NULL, '2025-12-01 15:55:11', '2026-01-06 16:42:11'),
+(3, 0, '1010', 'Outgoing', 'Information', NULL, '2025-12-03', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-03 16:37:56', '2025-12-03 16:37:56'),
+(4, 0, '2134', 'Outgoing', 'Information', NULL, '2025-12-04', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-04 07:57:30', '2025-12-04 17:05:58'),
+(6, 1, '203', 'Incoming', 'Information', NULL, '2025-12-04', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-04 07:58:40', '2026-01-06 16:20:52'),
+(7, 1, '10425', 'Incoming', 'travail a faire', NULL, '2025-12-05', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'affecté', NULL, NULL, '2025-12-05 08:24:02', '2026-01-06 16:32:01'),
+(8, 0, '275', 'Incoming', 'travail a faire', NULL, '2025-12-08', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-08 11:09:26', '2025-12-08 11:09:26'),
+(9, 0, '21', 'Incoming', 'TAF', NULL, '2025-12-10', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-10 14:31:11', '2025-12-10 14:31:11'),
+(10, 0, '20', 'Outgoing', 'TAF', NULL, '2025-12-10', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-10 14:41:14', '2025-12-10 14:41:14'),
+(11, 0, '77', 'Outgoing', 'Avoir', NULL, '2025-12-11', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-11 09:07:18', '2025-12-11 09:07:18'),
+(12, 0, '10', 'Outgoing', 'travail a faire', NULL, '2025-12-11', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-11 09:33:41', '2025-12-11 09:33:41'),
+(13, 1, '281', 'Incoming', 'impots', NULL, '2025-12-11', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-11 10:37:07', '2026-01-06 16:26:20'),
+(14, 0, '11121', 'Outgoing', 'TAF', NULL, '2025-12-11', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-11 12:21:08', '2025-12-11 12:21:08'),
+(15, 0, '001', 'Outgoing', 'TAF', NULL, '2025-12-11', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-11 12:21:38', '2025-12-11 12:21:38'),
+(16, 0, '1111111011002025', 'Incoming', 'TAF', 'tpo', '2025-12-11', 'SAPH', '0707584396', 'S/D GUDEF', '1223566', 'reçu', 'COUL', NULL, '2025-12-11 14:01:42', '2025-12-11 14:01:42'),
+(17, 0, '123588996', 'Incoming', 'bnh', 'hgfiuluoioiu', '2025-12-11', 'h,njkll', '014535536', 'bkjlkml', '254966', 'reçu', NULL, NULL, '2025-12-11 16:13:59', '2025-12-11 16:13:59'),
+(18, 1, '24A', 'Incoming', 'Bon pour Travaux', 'Appréciation du Directeur', '2025-12-12', 'DMGE', '0584365858', 'DSESF', '254966', 'reçu', 'KOFFI', '243 ADJAME DALLAS 25 juin 2025 VERSION 1.docx', '2025-12-12 09:08:13', '2026-01-06 16:21:27');
 
 -- --------------------------------------------------------
 
@@ -332,6 +328,38 @@ CREATE TABLE IF NOT EXISTS `failed_jobs` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `horaires`
+--
+
+DROP TABLE IF EXISTS `horaires`;
+CREATE TABLE IF NOT EXISTS `horaires` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `jour` varchar(191) NOT NULL,
+  `heure_debut` time NOT NULL,
+  `heure_fin` time NOT NULL,
+  `tolerance_retard` int(11) NOT NULL DEFAULT 15,
+  `est_ouvre` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `horaires`
+--
+
+INSERT INTO `horaires` (`id`, `jour`, `heure_debut`, `heure_fin`, `tolerance_retard`, `est_ouvre`, `created_at`, `updated_at`) VALUES
+(1, 'Monday', '07:30:00', '16:30:00', 15, 1, '2026-01-05 16:31:50', '2026-01-05 16:31:50'),
+(2, 'Tuesday', '07:30:00', '16:30:00', 15, 1, '2026-01-05 16:31:50', '2026-01-05 16:31:50'),
+(3, 'Wednesday', '07:30:00', '16:30:00', 15, 1, '2026-01-05 16:31:50', '2026-01-05 16:31:50'),
+(4, 'Thursday', '07:30:00', '16:30:00', 15, 1, '2026-01-05 16:31:50', '2026-01-05 16:31:50'),
+(5, 'Friday', '07:30:00', '16:30:00', 15, 1, '2026-01-05 16:31:50', '2026-01-05 16:31:50'),
+(6, 'Saturday', '00:00:00', '00:00:00', 0, 0, '2026-01-05 16:31:50', '2026-01-05 16:31:50'),
+(7, 'Sunday', '00:00:00', '00:00:00', 0, 0, '2026-01-05 16:31:50', '2026-01-05 16:31:50');
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `jobs`
 --
 
@@ -381,7 +409,7 @@ CREATE TABLE IF NOT EXISTS `migrations` (
   `migration` varchar(255) NOT NULL,
   `batch` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `migrations`
@@ -417,7 +445,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (27, '2025_12_23_142311_create_reponse_notifications_table', 27),
 (28, '2025_12_23_153002_add_soft_deletes_to_notifications_taches_table', 28),
 (29, '2026_01_02_105921_add_must_change_password_to_users_table', 29),
-(30, '2026_01_04_120452_create_annonces_table', 30);
+(30, '2026_01_04_120452_create_annonces_table', 30),
+(31, '2026_01_05_151012_create_horaires_table', 31),
+(32, '2026_01_06_151247_add_affecter_to_courriers_table', 32);
 
 -- --------------------------------------------------------
 
@@ -446,7 +476,7 @@ CREATE TABLE IF NOT EXISTS `notifications_taches` (
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id_notification`),
   KEY `notifications_taches_id_agent_foreign` (`agent_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `notifications_taches`
@@ -454,7 +484,8 @@ CREATE TABLE IF NOT EXISTS `notifications_taches` (
 
 INSERT INTO `notifications_taches` (`id_notification`, `agent_id`, `titre`, `description`, `date_creation`, `date_echeance`, `suivi_par`, `priorite`, `statut`, `lien_action`, `document`, `date_lecture`, `date_completion`, `created_at`, `updated_at`, `is_archived`, `deleted_at`) VALUES
 (2, 2, 'Prjet recensement des agents', 'lmmùm', '2025-12-19 11:22:38', '2026-01-02 11:22:00', 'bnhj', 'Élevée', 'En cours', NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL),
-(3, 1, 'prise en main de emeraude', 'hjjjkj', '2025-12-20 21:26:39', '2025-12-27 21:25:00', 'ettien', 'Moyenne', 'Non lu', NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL);
+(3, 1, 'prise en main de emeraude', 'hjjjkj', '2025-12-20 21:26:39', '2025-12-27 21:25:00', 'ettien', 'Moyenne', 'Non lu', NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL),
+(4, 2, 'jardin de la cité administrative', 'gfhhjlkjklkl', '2026-01-06 10:58:15', '2026-01-07 10:57:00', 'Mme N\'doume', 'Moyenne', 'Non lu', NULL, 'documents/xyRsERo8HYlIrYBDjNVvz56pXyl4G598QjOS4raH.docx', NULL, NULL, NULL, NULL, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -495,16 +526,17 @@ CREATE TABLE IF NOT EXISTS `presences` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `presences_agent_id_foreign` (`agent_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `presences`
 --
 
 INSERT INTO `presences` (`id`, `agent_id`, `heure_arrivee`, `heure_depart`, `statut`, `notes`, `created_at`, `updated_at`) VALUES
-(1, 2, '2025-12-12 07:02:00', '2025-12-12 18:12:00', 'Présent', 'Bien', '2025-12-12 08:58:18', '2025-12-12 08:59:10'),
-(2, 2, '2025-12-12 10:32:00', '2025-12-12 16:32:00', 'Présent', NULL, '2025-12-12 10:32:21', '2025-12-12 10:32:21'),
-(3, 3, '2025-12-14 11:11:00', '2025-12-14 16:11:00', 'Présent', '??', '2025-12-14 11:12:22', '2025-12-14 11:12:22');
+(21, 6, '2026-01-05 07:52:00', '2026-01-05 19:47:00', 'En Retard', NULL, '2026-01-05 16:48:14', '2026-01-05 16:48:14'),
+(22, 7, '2026-01-05 07:40:00', '2026-01-05 19:51:00', 'Présent', NULL, '2026-01-05 16:52:17', '2026-01-05 16:52:17'),
+(23, 7, '2026-01-05 08:56:00', '2026-01-05 19:52:00', 'En Retard', NULL, '2026-01-05 16:53:04', '2026-01-05 16:53:04'),
+(24, 1, '2026-01-05 07:52:00', '2026-01-05 20:56:00', 'En Retard', NULL, '2026-01-05 16:57:30', '2026-01-05 16:57:30');
 
 -- --------------------------------------------------------
 
