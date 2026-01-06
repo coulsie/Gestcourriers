@@ -11,7 +11,7 @@
 
                 <div class="card-body">
                     {{-- Form action points to the update method in TypeAbsenceController --}}
-                    <form method="POST" action="{{ route('typeabsences.update', $typeAbsence->id) }}">
+                    <form method="POST" action="{{ route('typeabsences.update', $typeabsence) }}" method="POST">
                         @csrf
                         @method('PUT') {{-- Simulates a PUT/PATCH request for updates --}}
 

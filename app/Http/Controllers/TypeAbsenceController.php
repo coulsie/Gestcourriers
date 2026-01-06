@@ -62,11 +62,15 @@ class TypeAbsenceController extends Controller
 
     /**
      * Affiche le formulaire d'édition du type d'absence spécifié.
-     */
-    public function edit(TypeAbsence $typeAbsence)
-    {
-        return view('typeabsences.edit', compact('typeAbsence'));
-    }
+            */
+            public function edit($id)
+        {
+            // 1. Récupérer l'enregistrement
+            $typeabsence = TypeAbsence::findOrFail($id);
+
+            // 2. Passer la variable à la vue (le nom doit correspondre exactement)
+            return view('typeabsences.edit', compact('typeabsence'));
+        }
 
     /**
      * Met à jour le type d'absence spécifié dans la base de données.

@@ -78,77 +78,88 @@
                 @enderror
             </div>
 
-             <fieldset class="border p-3">
-                <legend class="w-auto text-success"> <b> Affectation </b>   </legend>
-                {{-- 2. Sélection de l'Utilisateur destinataire (Obligatoire) --}}
-                {{-- Champ Agent (Utilisateur) --}}
-                        <div class="mb-3">
-                            <label for="agent_id" class="form-label">Agent</label>
-                            {{-- Le nom du champ POST doit être 'agent_id' --}}
-                            <select name="agent_id" id="agent_id" class="form-control @error('agent_id') is-invalid @enderror" required>
-                                <option value="">Sélectionnez un agent</option>
-                                {{-- Supposons que vous passez une variable $agents depuis le contrôleur --}}
-                                @foreach($agents as $agent)
-                                    <option value="{{ $agent->id }}" {{ old('agent_id') == $agent->id ? 'selected' : '' }}>
-                                        {{ $agent->name }} {{ $agent->first_name}} {{ $agent->last_name}}
+             <fieldset class="border border-primary p-4 rounded shadow-sm bg-light">
+    <legend class="w-auto px-3 text-primary fw-bold">
+        <i class="fas fa-user-plus"></i> Affectation
+    </legend>
 
-                                    </option>
-                                @endforeach
+    {{-- 2. Sélection de l'Utilisateur destinataire --}}
+    <div class="mb-3">
+        <label for="agent_id" class="form-label fw-semibold text-secondary">
+            <span class="text-danger">*</span> Agent
+        </label>
+        <div class="input-group">
+            <span class="input-group-text bg-primary text-white"><i class="fas fa-user"></i></span>
+            <select name="agent_id" id="agent_id" class="form-select border-primary @error('agent_id') is-invalid @enderror" required>
+                <option value="" disabled selected>Sélectionnez un agent...</option>
+                @foreach($agents as $agent)
+                    <option value="{{ $agent->id }}" {{ old('agent_id') == $agent->id ? 'selected' : '' }}>
+                        {{ $agent->name }} {{ $agent->first_name }} {{ $agent->last_name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+        @error('agent_id')
+            <div class="invalid-feedback d-block"><strong>{{ $message }}</strong></div>
+        @enderror
+    </div>
 
-                            </select>
-                            @error('agent_id')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
+    {{-- 3. Statut Initial avec couleurs distinctes --}}
+    <div class="mb-3">
+        <label for="statut" class="form-label fw-semibold text-secondary">Statut de la tâche :</label>
+        <select name="statut" id="statut" class="form-select border-info fw-bold @error('statut') is-invalid @enderror" required>
+            <option value="en_attente" class="text-warning" {{ old('statut', 'en_attente') == 'en_attente' ? 'selected' : '' }}>
+                🟡 En attente
+            </option>
+            <option value="en_cours" class="text-primary" {{ old('statut') == 'en_cours' ? 'selected' : '' }}>
+                🔵 En cours
+            </option>
+            <option value="traite" class="text-success" {{ old('statut') == 'traite' ? 'selected' : '' }}>
+                🟢 Traité
+            </option>
+        </select>
+        @error('statut')
+            <div class="invalid-feedback d-block"><strong>{{ $message }}</strong></div>
+        @enderror
+    </div>
 
-                {{-- 3. Statut Initial --}}
-                <div class="form-group">
-                    <label for="statut">Statut :</label>
-                    <select name="statut" id="statut" class="form-control @error('statut') is-invalid @enderror" required>
-                        <option value="en_attente" {{ old('statut', 'en_attente') == 'en_attente' ? 'selected' : '' }}>En attente</option>
-                        <option value="en_cours" {{ old('statut') == 'en_cours' ? 'selected' : '' }}>En cours</option>
-                        <option value="traite" {{ old('statut') == 'traite' ? 'selected' : '' }}>Traité</option>
-                    </select>
-                    @error('statut')
-                        <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-                    @enderror
-                </div>
+    {{-- 4. Commentaires --}}
+    <div class="mb-3">
+        <label for="commentaires" class="form-label fw-semibold text-secondary">Commentaires / Instructions :</label>
+        <textarea name="commentaires" id="commentaires" rows="3"
+                  class="form-control border-secondary @error('commentaires') is-invalid @enderror"
+                  placeholder="Ajoutez des détails ici...">{{ old('commentaires') }}</textarea>
+        @error('commentaires')
+            <div class="invalid-feedback d-block"><strong>{{ $message }}</strong></div>
+        @enderror
+    </div>
 
-                {{-- 4. Commentaires --}}
-                <div class="form-group">
-                    <label for="commentaires">Commentaires :</label>
-                    <textarea name="commentaires" id="commentaires" rows="4" class="form-control @error('commentaires') is-invalid @enderror">{{ old('commentaires') }}</textarea>
-                    @error('commentaires')
-                        <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-                    @enderror
-                </div>
+    <div class="row">
+        {{-- 5. Date d'affectation --}}
+        <div class="col-md-6 mb-3">
+            <label for="date_affectation" class="form-label fw-semibold text-secondary">Date d'affectation :</label>
+            <input type="datetime-local" name="date_affectation" id="date_affectation"
+                   class="form-control border-success @error('date_affectation') is-invalid @enderror"
+                   value="{{ old('date_affectation', now()->format('Y-m-d\TH:i')) }}" required>
+            @error('date_affectation')
+                <div class="invalid-feedback d-block"><strong>{{ $message }}</strong></div>
+            @enderror
+        </div>
 
-                {{-- 5. Date d'affectation (Pré-remplie avec la date/heure actuelle) --}}
-                <div class="form-group">
-                    <label for="date_affectation">Date d'affectation :</label>
-                    {{-- Format datetime-local requis par HTML5, utilisez Carbon pour la valeur par défaut si nécessaire --}}
-                    <input type="datetime-local" name="date_affectation" id="date_affectation" class="form-control @error('date_affectation') is-invalid @enderror" value="{{ old('date_affectation', now()->format('Y-m-d\TH:i')) }}" required>
-                    @error('date_affectation')
-                        <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-                    @enderror
-                </div>
+        {{-- 6. Date de traitement --}}
+        <div class="col-md-6 mb-3">
+            <label for="date_traitement" class="form-label fw-semibold text-secondary">Date de traitement (Optionnel) :</label>
+            <input type="datetime-local" name="date_traitement" id="date_traitement"
+                   class="form-control border-muted @error('date_traitement') is-invalid @enderror"
+                   value="{{ old('date_traitement') }}">
+            @error('date_traitement')
+                <div class="invalid-feedback d-block"><strong>{{ $message }}</strong></div>
+            @enderror
+        </div>
+    </div>
+</fieldset>
 
-                {{-- 6. Date de traitement (Optionnel, généralement rempli lors de la mise à jour) --}}
-                <div class="form-group">
-                    <label for="date_traitement">Date de traitement (Optionnel) :</label>
-                    <input type="datetime-local" name="date_traitement" id="date_traitement" class="form-control @error('date_traitement') is-invalid @enderror" value="{{ old('date_traitement') }}">
-                    @error('date_traitement')
-                        <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-                    @enderror
-                </div>
-
-            </fieldset>
-
-
-
-            <hr>
+<hr class="my-4 border-2 opacity-50">
 
             <button type="submit" class="btn btn-success">Créer l'Affectation</button>
 

@@ -4,105 +4,129 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    {{ __('Liste des Courriers') }}
-                    <a href="{{ route('courriers.create') }}" class="btn btn-success float-end">
-                        {{ __('Nouveau Courrier') }}
+            <div class="card shadow-sm">
+                <!-- En-tête avec dégradé bleu -->
+                <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center py-3">
+                    <h5 class="mb-0"><i class="fas fa-envelope-open-text me-2"></i>{{ __('Liste des Courriers') }}</h5>
+                    <a href="{{ route('courriers.create') }}" class="btn btn-light btn-sm fw-bold shadow-sm text-success">
+                        <i class="fas fa-plus-circle"></i> {{ __('Nouveau Courrier') }}
                     </a>
                 </div>
 
-                <div class="card-body">
-                    <!-- Message de succès flash -->
+                <div class="card-body bg-light">
                     @if (session('success'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('success') }}
+                        <div class="alert alert-success border-0 shadow-sm" role="alert">
+                            <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
                         </div>
                     @endif
 
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped">
-                            <thead>
+                    <div class="table-responsive rounded shadow-sm bg-white p-2">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-primary text-primary">
                                 <tr>
                                     <th>ID</th>
                                     <th>Référence</th>
                                     <th>Type</th>
                                     <th>Objet</th>
                                     <th>Statut</th>
-                                    <th>Date Courrier</th>
+                                    <th>Affecté</th>
+                                    <th>Date</th>
                                     <th>Expéditeur</th>
                                     <th>Destinataire</th>
-                                    <th>Actions</th>
+                                    <th class="text-center">Actions / Documents</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($courriers as $courrier)
                                 <tr>
-                                    <td>{{ $courrier->id }}</td>
-                                    <td>{{ $courrier->reference }}</td>
-                                    <td>{{ $courrier->type }}</td>
-                                    <td>{{ $courrier->objet }}</td>
+                                    <td class="fw-bold text-muted">{{ $courrier->id }}</td>
+                                    <td><span class="badge bg-success text-white">{{ $courrier->reference }}</span></td>
                                     <td>
-                                        <span class="badge {{ $courrier->statut == 'completed' ? 'bg-success' : ($courrier->statut == 'pending' ? 'bg-warning text-dark' : 'bg-danger') }}">
-                                            {{ ucfirst($courrier->statut) }}
+                                        @if($courrier->type == 'Incoming')
+                                            <span class="text-primary fw-bold"><i class="fas fa-arrow-alt-circle-down"></i> Entrant</span>
+                                        @else
+                                            <span class="text-orange fw-bold" style="color: #fd7e14;"><i class="fas fa-arrow-alt-circle-up"></i> Sortant</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-truncate" style="max-width: 150px;">{{ $courrier->objet }}</td>
+                                  <td>
+                                        @php
+                                            // On utilise match pour définir la couleur selon le statut
+                                            $color = match($courrier->statut) {
+                                                'Réçu', 'reçu', 'Reçu' => 'danger',
+                                                'En_Traitement'        => 'warning',
+                                                'Traité', 'traité'     => 'info',
+                                                'Archive', 'archive'   => 'secondary',
+                                                default                => 'dark',
+                                            };
+                                        @endphp {{-- <--- Correction ici : utilisez @endphp et non @php --}}
+
+                                        <span class="badge bg-{{ $color }} text-white rounded-pill">
+                                            {{ $courrier->statut }}
                                         </span>
                                     </td>
-                                    <td>{{ $courrier->date_courrier->format('d/m/Y') }}</td>
-                                    <td>{{ $courrier->expediteur_nom }}</td>
-                                    <td>{{ $courrier->destinataire_nom }}</td>
                                     <td>
-                                        <a href="{{ route('courriers.show', $courrier->id) }}" class="btn btn-info btn-sm" title="Voir">
-                                            <i class="fa fa-eye"></i> Voir
-                                        </a>
-                                        <a href="{{ route('courriers.edit', $courrier->id) }}" class="btn btn-warning btn-sm" title="Modifier">
-                                            <i class="fa fa-edit"></i> Modifier
-                                        </a>
-                                        <a href="{{ route('courriers.affectation.create', $courrier->id) }}" class="btn btn-success btn-sm" title="Affecter">
-                                            <i class="fa fa-edit"></i> Affecter
-                                        </a>
-                                        <form action="{{ route('courriers.destroy', $courrier->id) }}" method="POST" style="display: inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce courrier ?')">
-                                                <i class="fa fa-trash"></i> Supprimer
-                                            </button>
-                                        </form>
-                                        {{-- Supposons que vous ayez une variable $courrier disponible dans votre vue --}}
-
-                                        @if($courrier->chemin_fichier)
-                                            <div class="mt-3">
-                                                <p>Document associé :</p>
-
-                                                <!-- Bouton pour visualiser/ouvrir dans un nouvel onglet -->
-                                                <a href="{{ asset($courrier->chemin_fichier) }}" target="_blank" class="btn btn-primary">
-                                                    <i class="fas fa-eye"></i> Voir le fichier
-                                                </a>
-
-                                                <!-- Bouton pour forcer le téléchargement -->
-                                                <a href="{{ asset($courrier->chemin_fichier) }}" download class="btn btn-success ml-2">
-                                                    <i class="fas fa-download"></i> Télécharger le fichier
-                                                </a>
-                                            </div>
+                                        @if($courrier->affectation)
+                                            <span class="badge bg-success text-white">Oui</span>
                                         @else
-                                            <p class="text-muted">Aucun fichier n'est associé à ce courrier.</p>
+                                            <span class="badge bg-secondary text-white">Non</span>
                                         @endif
-                                                                        </td>
+                                    </td>
+
+                                    <td class="text-nowrap">{{ $courrier->date_courrier->format('d/m/Y') }}</td>
+                                    <td><small class="fw-bold">{{ $courrier->expediteur_nom }}</small></td>
+                                    <td><small class="fw-bold text-info">{{ $courrier->destinataire_nom }}</small></td>
+                                    <td>
+                                        <!-- Groupe de boutons Actions -->
+                                        <div class="d-flex gap-1 justify-content-center mb-2">
+                                            <a href="{{ route('courriers.show', $courrier->id) }}" class="btn btn-outline-info btn-sm" title="Voir">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                            <a href="{{ route('courriers.edit', $courrier->id) }}" class="btn btn-outline-warning btn-sm" title="Modifier">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <a href="{{ route('courriers.affectation.create', $courrier->id) }}" class="btn btn-outline-success btn-sm" title="Affecter">
+                                                <i class="fa fa-user-tag"></i>
+                                            </a>
+                                            <form action="{{ route('courriers.destroy', $courrier->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-outline-danger btn-sm" title="Supprimer" onclick="return confirm('Supprimer ce courrier ?')">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+
+                                        <!-- Section Document avec couleurs -->
+                                        <div class="text-center pt-2 border-top">
+                                            @if($courrier->chemin_fichier)
+                                                <div class="btn-group btn-group-sm w-100">
+                                                    <a href="{{ asset($courrier->chemin_fichier) }}" target="_blank" class="btn btn-primary shadow-sm">
+                                                        <i class="fas fa-file-pdf"></i> Voir
+                                                    </a>
+                                                    <a href="{{ asset($courrier->chemin_fichier) }}" download class="btn btn-success shadow-sm">
+                                                        <i class="fas fa-download"></i>
+                                                    </a>
+                                                </div>
+                                            @else
+                                                <span class="badge bg-light text-muted fw-normal" style="font-size: 0.7rem;">Pas de fichier</span>
+                                            @endif
+                                        </div>
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
 
-                    {{-- Si vous utilisez la pagination dans le contrôleur, ajoutez ceci : --}}
-                    {{-- <div class="mt-3">
+                    @if(method_exists($courriers, 'links'))
+                    <div class="mt-4 d-flex justify-content-center">
                         {{ $courriers->links() }}
-                    </div> --}}
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
-        {{-- Supposons que vous ayez une variable $courrier disponible dans votre vue --}}
-
-
 </div>
 @endsection

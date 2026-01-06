@@ -49,7 +49,7 @@ Route::middleware(['auth', 'force.password'])->group(function () {
 
     // --- ACCUEIL & DASHBOARD ---
     Route::get('/home', [HomeController::class, 'index'])->name('home');
-    Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+
 
     // --- PROFIL ---
     Route::prefix('profile')->name('profile.')->group(function () {
@@ -57,7 +57,7 @@ Route::middleware(['auth', 'force.password'])->group(function () {
         Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
         Route::match(['put', 'post'], '/update', [ProfileController::class, 'update'])->name('update');
     });
-
+    Route::get('/profile/create', [ProfileController::class, 'create'])->name('profile.create');
     // --- ADMINISTRATION ---
     Route::middleware(['admin'])->prefix('admin')->group(function () {
         Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
@@ -74,9 +74,15 @@ Route::middleware(['auth', 'force.password'])->group(function () {
     // Note : Route placée AVANT le resource pour éviter les conflits 404
     Route::get('/presences/etat', [PresenceController::class, 'statsPresences'])->name('presences.etat');
     Route::resource('presences', PresenceController::class);
+    Route::get('/presences/stats', [PresenceController::class, 'stats'])->name('presences.etatperiodique');
 
     Route::resource('absences', AbsenceController::class);
     Route::resource('typeabsences', TypeAbsenceController::class);
+
+    // --- TypeAbsenceController Edit Route Fix ---
+    Route::get('/typeabsences/{id}/edit', [TypeAbsenceController::class, 'edit'])->name('typeabsences.edit');
+
+
 
     // --- COURRIERS & AFFECTATIONS ---
     Route::get('/courriers/recherche', [CourrierController::class, 'RechercheAffichage'])->name('courriers.RechercheAffichage');
@@ -85,7 +91,9 @@ Route::middleware(['auth', 'force.password'])->group(function () {
     Route::get('/courriers/{id}/affecter', [CourrierAffectationController::class, 'create'])->name('courriers.affectation.create');
     Route::post('/courriers/{id}/affecter', [CourrierAffectationController::class, 'store'])->name('courriers.affectation.store');
     Route::put('/affectations/{affectation}/status', [AffectationController::class, 'updateStatus'])->name('affectations.updateStatus');
-
+    Route::resource('affectations', AffectationController::class);
+    Route::get('/courriers/{courrier}/affectation', [CourrierAffectationController::class, 'show'])
+    ->name('courriers.affectation.show');
     // --- ÉTATS & RAPPORTS ---
     Route::get('/etats/agents-par-service', [EtatAgentsController::class, 'index'])->name('etats.agents_par_service');
     Route::get('/etats/recherche', [EtatAgentsController::class, 'Recherche'])->name('etats.agents_par_service_recherche');

@@ -43,58 +43,90 @@
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
 
-            <!-- Nav Item - Dashboard -->
+              <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
                 <a class="nav-link" href="">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Tableau de Bord</span></a>
             </li>
+                @if(auth()->user()->role === 'admin')
+                        <!-- CONTENU RÉSERVÉ À L'ADMINISTRATEUR -->
+                        <div class="sidebar-heading">
+                            Administration Système
+                        </div>
 
+                        <li class="nav-item">
+                            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAdmin"
+                                aria-expanded="true" aria-controls="collapseAdmin">
+                                <i class="fas fa-fw fa-lock"></i>
+                                <span>Gestion Système</span>
+                            </a>
+                            <div id="collapseAdmin" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                                <div class="bg-white py-2 collapse-inner rounded">
+                                    <h6 class="collapse-header">Utilisateurs & RH:</h6>
+                                    <a class="collapse-item" href="{{ route('agents.nouveau') }}">Compte Utilisateur</a>
+                                    <a class="collapse-item" href="{{ route('agents.index') }}">Ressources Humaines</a>
+                                    <div class="collapse-divider"></div>
+                                    <h6 class="collapse-header">Configurations:</h6>
+                                    <a class="collapse-item" href="{{ route('typeabsences.index') }}">Paramétrage Absence</a>
+                                    <a class="collapse-item" href="{{ route('notifications.index') }}">Toutes les notifications</a>
+                                    <a class="collapse-item" href="{{ route('notifications.create') }}">Créer une notification</a>
+                                </div>
+                            </div>
+
+                        </li>
+                          <!-- Nav Item - Pages Collapse Menu -->
+                        <li class="nav-item">
+                            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAnnonces"
+                                aria-expanded="true" aria-controls="collapseAnnonces">
+                                <i class="fas fa-fw fa-cog"></i>
+                                <span>Annonces</span>
+                            </a>
+                            <div id="collapseAnnonces" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                                <div class="bg-white py-2 collapse-inner rounded">
+                                    {{-- <h6 class="collapse-header">Listes Des Annonces:</h6> --}}
+                                    <a class="collapse-item" href="{{ route('annonces.index') }}">Afficher les Annonces</a>
+                                                                        {{-- <a class="collapse-item" href="cards.html">Cards</a> --}}
+                                </div>
+                            </div>
+                        </li>
+
+                    @endif
+
+
+                <hr class="sidebar-divider">
             <!-- Divider -->
-            <hr class="sidebar-divider">
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                Interface Areloka
+                Interface
             </div>
 
 
           <!-- Nav Item - Pages Collapse Menu -->
-           @if(auth()->user()->role === 'admin')
-                <!-- Nav Item - Dashboard Admin -->
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url('/admin/dashboard') }}">
-                        <i class="fas fa-fw fa-user-shield text-danger"></i>
-                        <span class="text-danger font-weight-bold">Dashboard Administrateur</span>
-                    </a>
-                </li>
 
                 <!-- Nav Item - Administration Collapse Menu -->
                 <li class="nav-item">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAdmin"
                         aria-expanded="true" aria-controls="collapseAdmin">
                         <i class="fas fa-fw fa-lock"></i>
-                        <span>Gestion Système</span>
+                        <span>Gestion utilisateur</span>
                     </a>
                     <div id="collapseAdmin" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <h6 class="collapse-header">Utilisateurs & RH:</h6>
-                            <a class="collapse-item" href="{{ route('annonces.index') }}">Annonces</a>
-                            <a class="collapse-item" href="{{ route('agents.nouveau') }}">compte Utilisateur</a>
-                            <a class="collapse-item" href="{{ route('agents.index') }}">Ressources Humaines</a>
+
                             <div class="collapse-divider"></div>
                             <h6 class="collapse-header">Communications:</h6>
-                            <a class="collapse-item" href="{{ route('notifications.index') }}">Toutes les notifications</a>
                             <a class="collapse-item" href="{{ route('notifications.index2') }}">Mes notifications</a>
                             <a class="collapse-item" href="{{ route('notifications.index3') }}">xnotifications</a>
-                            <a class="collapse-item" href="{{ route('notifications.create') }}">Créer une notification</a>
+
                         </div>
                     </div>
                 </li>
 
                 <!-- Divider pour séparer l'admin des fonctions standards -->
                 <hr class="sidebar-divider">
-            @endif
+
 
 
             <!-- Nav Item - Pages Collapse Menu -->
@@ -144,22 +176,7 @@
             </li>
 
 
-             <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAnnonces"
-                    aria-expanded="true" aria-controls="collapseAnnonces">
-                    <i class="fas fa-fw fa-cog"></i>
-                    <span>Annonces</span>
-                </a>
-                <div id="collapseAnnonces" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        {{-- <h6 class="collapse-header">Listes Des Annonces:</h6> --}}
-                        <a class="collapse-item" href="">Afficher les Annonces</a>
-                        <a class="collapse-item" href="">Ajouter une annonce</a>
-                        {{-- <a class="collapse-item" href="cards.html">Cards</a> --}}
-                    </div>
-                </div>
-            </li>
+
 
             <!-- Divider -->
             <hr class="sidebar-divider">

@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB; // Utilisé pour DB::raw() si nécessaire
 use App\Models\Agent;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Log;
+
 
 class CourrierAffectationController extends Controller
 {
@@ -34,46 +36,53 @@ class CourrierAffectationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id L'ID du courrier.
      * @return \Illuminate\Http\RedirectResponse
-     */
-    public function store(Request $request, $id)
-    {
-        $request->validate([
-            'user_id' => 'required|exists:users,id', // Valide l'ID de l'utilisateur cible
-            'commentaires' => 'nullable|string|max:500',
-            // 'statut' n'est généralement pas saisi par l'utilisateur mais défini par défaut
-        ]);
+        */
 
-        // Assurez-vous que le courrier existe
-        $courrier = Courrier::findOrFail($id);
-
-        // Utilisez une transaction pour assurer la cohérence si vous mettez à jour le statut du courrier principal aussi
-        DB::beginTransaction();
-
-        try {
-            // Créer une nouvelle entrée dans la table 'affectations'
-            $affectation = Affectation::create([
-                'courrier_id' => $courrier->id,
-                'user_id' => $request->user_id, // L'ID de l'utilisateur assigné
-                'statut' => 'Affecté', // Statut initial par défaut
-                'commentaires' => $request->commentaires,
-                'date_affectation' => now(), // Laravel gère created_at, mais vous avez une colonne spécifique
-                // date_traitement sera NULL initialement
+            public function store(Request $request, $id)
+        {
+            // 1. Validation stricte (incluant les nouveaux champs du formulaire)
+            $validated = $request->validate([
+                'agent_id'         => 'required|exists:agents,id',
+                'statut'           => 'required|string',
+                'commentaires'     => 'nullable|string|max:1000',
+                'date_affectation' => 'required|date',
+                'date_traitement'  => 'nullable|date',
             ]);
 
-            // Optionnel: Mettre à jour le statut du courrier principal
-            $courrier->statut = 'Affecté et en cours de traitement';
-            $courrier->save();
+            $courrier = Courrier::findOrFail($id);
 
-            DB::commit();
+            DB::beginTransaction();
 
-            return redirect()->route('courriers.show', $courrier->id)
-                ->with('success', 'Le courrier a été affecté avec succès.');
+            try {
+                // 2. Création de l'affectation
+                Affectation::create([
+                    'courrier_id'      => $courrier->id,
+                    'agent_id'         => $request->agent_id,
+                    'statut'           => $request->statut, // Utilise la valeur du formulaire (ex: en_cours)
+                    'commentaires'     => $request->commentaires,
+                    'date_affectation' => $request->date_affectation, // Récupère la date du formulaire
+                    'date_traitement'  => $request->date_traitement,
+                ]);
 
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->with('error', 'Une erreur est survenue lors de l\'affectation.')->withInput();
+                // 3. Mise à jour du statut du courrier
+                $courrier->update([
+                    'affecter' => true
+                ]);
+
+                DB::commit();
+
+                return redirect()->route('courriers.index')
+                    ->with('success', "Le courrier a été affecté à l'agent.");
+
+            } catch (\Exception $e) {
+                DB::rollBack();
+                Log::error("Erreur affectation : " . $e->getMessage());
+
+                return back()
+                    ->with('error', 'Erreur : ' . $e->getMessage())
+                    ->withInput();
+            }
         }
-    }
 
     /**
      * Marque une affectation comme traitée (exemple d'action supplémentaire).
@@ -103,7 +112,7 @@ class CourrierAffectationController extends Controller
         $courrier = $affectation->courrier;
 
         // Passe les variables '$affectation' et '$courrier' à la vue.
-        return view('Affectations.edit', compact('affectation', 'courrier'));
+        return view('affectations.edit', compact('affectation', 'courrier'));
 
     }
     public function update(Request $request, string $id)

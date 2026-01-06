@@ -10,14 +10,18 @@ use App\Models\Agent;
 
 class Affectation extends Model
 {
-    
+
 
     // ... (protected $table, $fillable, $casts definitions from previous messages) ...
 
     protected $table = 'affectations';
     protected $fillable = [
-        'courrier_id', 'agent_id', 'statut', 'commentaires',
-        'date_affectation', 'date_traitement',
+    'courrier_id',
+    'agent_id',
+    'statut',
+    'commentaires',
+    'date_affectation',
+    'date_traitement'
     ];
     protected $casts = [
         'date_affectation' => 'datetime',
@@ -32,7 +36,7 @@ class Affectation extends Model
     public const STATUT_IN_PROGRESS = 'in_progress';
     public const STATUT_COMPLETED = 'completed'; // The constant we will use
 
-   
+
     // --- Méthodes d'aide (Helper Methods) ---
 
     /**

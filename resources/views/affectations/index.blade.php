@@ -38,7 +38,7 @@
                                     <td>{{ $affectation->id }}</td>
                                     {{-- Displaying related data assumes you have relationships defined in your Affectation model --}}
                                     <td>{{ $affectation->courrier_id }}</td>
-                                    <td>{{ $affectation->agent_id}} </td> {{-- Assumes a 'agent' relationship --}}
+                                    <td> {{ $affectation->agent->last_name }} {{ $affectation->agent->first_name }} </td> {{-- Assumes a 'agent' relationship --}}
                                     <td>
                                         <span class="badge
                                             @if($affectation->statut == 'Pending') badge-warning
