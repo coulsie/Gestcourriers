@@ -52,6 +52,8 @@ class CourrierController extends Controller
             'destinataire_contact' => 'nullable|string|max:255',
             'assigne_a' => 'nullable|string|max:255',
             'chemin_fichier' => 'nullable|string|max:255',
+            'statut' => 'required|string',
+            'affecter' => 'required|boolean',
 
             // ... Ajoutez d'autres règles de validation ici
         ]);

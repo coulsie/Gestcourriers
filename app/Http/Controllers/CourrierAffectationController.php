@@ -65,9 +65,9 @@ class CourrierAffectationController extends Controller
                 ]);
 
                 // 3. Mise à jour du statut du courrier
-                $courrier->update([
-                    'affecter' => true
-                ]);
+                $courrier->affecter = true;
+                $courrier->statut = 'Affecté';
+                $courrier->save();
 
                 DB::commit();
 

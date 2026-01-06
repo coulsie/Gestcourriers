@@ -32,9 +32,9 @@ class Affectation extends Model
 
     // --- Constantes de Statut ---
 
-    public const STATUT_PENDING = 'pending';
-    public const STATUT_IN_PROGRESS = 'in_progress';
-    public const STATUT_COMPLETED = 'completed'; // The constant we will use
+    public const STATUT_PENDING = 'En attente';
+    public const STATUT_IN_PROGRESS = 'En cours';
+    public const STATUT_COMPLETED = 'Terminé'; // The constant we will use
 
 
     // --- Méthodes d'aide (Helper Methods) ---

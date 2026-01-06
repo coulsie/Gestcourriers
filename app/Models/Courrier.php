@@ -36,6 +36,7 @@ class Courrier extends Model
         'statut',
         'assigne_a',
         'chemin_fichier',
+        'affecter',
     ];
 
     /**
@@ -47,6 +48,7 @@ class Courrier extends Model
         'date_courrier' => 'date', // Cast en objet Date PHP (sans heure)
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'affecter' => 'boolean',
     ];
 
     // --- Constantes pour le champ 'type' ENUM ---
@@ -67,7 +69,7 @@ class Courrier extends Model
     /**
      * Get the agent assigned to this courrier.
      */
-   
+
     /**
      * Get the affectations for the courrier.
      */

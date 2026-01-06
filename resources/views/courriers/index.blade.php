@@ -29,7 +29,6 @@
                                     <th>Type</th>
                                     <th>Objet</th>
                                     <th>Statut</th>
-                                    <th>Affecté</th>
                                     <th>Date</th>
                                     <th>Expéditeur</th>
                                     <th>Destinataire</th>
@@ -53,10 +52,11 @@
                                         @php
                                             // On utilise match pour définir la couleur selon le statut
                                             $color = match($courrier->statut) {
+                                                'Affecté', 'affecté'   => 'success',
                                                 'Réçu', 'reçu', 'Reçu' => 'danger',
                                                 'En_Traitement'        => 'warning',
                                                 'Traité', 'traité'     => 'info',
-                                                'Archive', 'archive'   => 'secondary',
+                                                'Archivé', 'archivé'   => 'secondary',
                                                 default                => 'dark',
                                             };
                                         @endphp {{-- <--- Correction ici : utilisez @endphp et non @php --}}
@@ -65,13 +65,7 @@
                                             {{ $courrier->statut }}
                                         </span>
                                     </td>
-                                    <td>
-                                        @if($courrier->affectation)
-                                            <span class="badge bg-success text-white">Oui</span>
-                                        @else
-                                            <span class="badge bg-secondary text-white">Non</span>
-                                        @endif
-                                    </td>
+
 
                                     <td class="text-nowrap">{{ $courrier->date_courrier->format('d/m/Y') }}</td>
                                     <td><small class="fw-bold">{{ $courrier->expediteur_nom }}</small></td>
