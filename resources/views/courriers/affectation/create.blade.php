@@ -5,7 +5,7 @@
 @section('content')
     <div class="container">
         <h1>Créer une nouvelle affectation</h1>
-        <p>Affectations disponibles : <code>id</code>, <code>courrier_id</code>, <code>user_id</code>, <code>statut</code>, <code>commentaires</code>, <code>date_affectation</code>, <code>date_traitement</code></p>
+       
 
         {{-- Assurez-vous que la route 'affectations.store' est définie dans web.php --}}
         <form action="{{ route('courriers.affectation.store',['id' => $courrier->id]) }}" method="POST">
@@ -30,10 +30,9 @@
                             <span class="text-muted small d-block">Type :</span>
                             <span class="badge {{ $courrier->type > now() ? 'bg-success text-white' : 'bg-danger' }}"
                                 style="{{ $courrier->type <= now() ? 'color: #00008B !important;' : '' }}">
-                                {{ $courrier->type }}
+                                {{ __( $courrier->type) }}
                             </span>
                         </div>
-
 
 
 

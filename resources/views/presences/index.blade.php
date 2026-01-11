@@ -62,17 +62,17 @@
                     <td>
                         @php
                             $badgeClass = match($presence->statut) {
-                                'Présent' => 'bg-success',
+                                'Présent' => 'bg-success text-white',
                                 'En Retard' => 'bg-warning text-dark',
-                                'Absent' => 'bg-danger',
-                                default => 'bg-secondary',
+                                'Absent' => 'bg-danger text-white', // BLANC SUR ROUGE
+                                'permission' => 'bg-info text-white',
+                                default => 'bg-danger text-white',   // PAR DÉFAUT ROUGE SI INCONNU
                             };
                         @endphp
-                        <span class="badge {{ $badgeClass }}">
+                        <span class="badge {{ $badgeClass }} px-3 py-2 shadow-sm">
                             {{ $presence->statut }}
                         </span>
                     </td>
-
                     <td class="text-center">
                         <div class="btn-group" role="group">
                             <a href="{{ route('presences.show', $presence->id) }}" class="btn btn-sm btn-info text-white" title="Détails">

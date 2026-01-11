@@ -34,8 +34,8 @@ class Presence extends Model
     // Les types de données pour la conversion automatique (casting)
     // Important pour que les dates soient manipulées comme des objets Carbon
     protected $casts = [
-        'heure_arrivee',
-        'heure_depart',
+       'heure_arrivee' => 'datetime',
+       'heure_depart' => 'datetime',
         'statut'       => 'string',
     ];
     protected $dates = [
@@ -67,11 +67,16 @@ class Presence extends Model
     public function scopePresentes($query)
     {
         return $query->where('statut', 'Présent');
-          }
+    }
 
       public function agent()
     {
         return $this->belongsTo(Agent::class, 'agent_id');
+    }
+
+        public function absence()
+    {
+        return $this->hasOne(Absence::class, 'agent_id', 'agent_id');
     }
 }
 

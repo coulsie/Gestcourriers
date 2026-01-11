@@ -11,6 +11,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Models\Horaire; // <--- AJOUTER CET IMPORT
 use Carbon\Carbon;      // <--- AJOUTER CET IMPORT
+use App\Models\Absence;
 
 class PresenceController extends Controller
 {
@@ -261,7 +262,124 @@ public function stats(Request $request)
     return view('presences.stats', compact('journalier', 'hebdo', 'mensuel', 'annee', 'dateDebut', 'dateFin'));
 }
 
+        // app/Http/Controllers/PresenceController.php
 
+        public function indexValidationHebdo()
+{
+    $debutSemaine = now()->subWeek()->startOfWeek(); 
+    $finSemaine = now()->subWeek()->endOfWeek()->subDays(2); // Vendredi
+
+    $agents = Agent::all();
+    $absencesDetectees = [];
+
+    for ($date = $debutSemaine->copy(); $date <= $finSemaine; $date->addDay()) {
+        $jour = $date->format('Y-m-d');
+
+        foreach ($agents as $agent) {
+            // 1. Vérifier si présent dans la table 'presences'
+            $aPointe = Presence::where('agent_id', $agent->id)->whereDate('created_at', $jour)->exists();
+
+            if (!$aPointe) {
+                // 2. Vérifier si une absence est validée dans la table 'absences' pour ce jour
+                $absenceValidee = \App\Models\Absence::where('agent_id', $agent->id)
+                    ->where('approuvee', true)
+                    ->whereDate('date_debut', '<=', $jour)
+                    ->whereDate('date_fin', '>=', $jour)
+                    ->first();
+
+                $absencesDetectees[] = [
+                    'agent_id' => $agent->id,
+                    'nom' => $agent->last_name . ' ' . $agent->first_name,
+                    'date' => $jour,
+                    'est_justifie' => !is_null($absenceValidee),
+                    'motif' => $absenceValidee ? $absenceValidee->typeAbsence->libelle : 'Non justifié'
+                ];
+            }
+        }
+    }
+    return view('presences.validation-hebdo', compact('absencesDetectees'));
+}
+
+
+        public function storeValidationHebdo(Request $request)
+        {
+            $absences = $request->input('absences', []);
+
+            foreach ($absences as $data) {
+                if (isset($data['selected'])) {
+                    Presence::create([
+                        'agent_id' => $data['agent_id'],
+                        'statut'   => 'Absent',
+                        'notes'    => 'Absence hebdomadaire validée le lundi.',
+                        'created_at' => $data['date'] . ' 08:00:00', // On enregistre à la date concernée
+                        'heure_arrivee' => $data['date'] . ' 08:00:00', // AJOUTEZ CETTE LIGNE
+                    ]);
+                }
+            }
+
+            return redirect()->route('presences.index')->with('success', 'Le registre hebdomadaire a été mis à jour.');
+        }
+
+        public function rapport(Request $request) 
+        {
+            // 1. Normalisation des dates (Carbon) pour éviter les erreurs de format
+            $debut = $request->debut ? \Carbon\Carbon::parse($request->debut)->startOfDay() : now()->startOfMonth();
+            $fin = $request->fin ? \Carbon\Carbon::parse($request->fin)->endOfDay() : now()->endOfMonth();
+
+            // 2. Récupération des données avec les bonnes relations
+            // On remplace 'agent.autorisations' par 'agent.absences' car votre table s'appelle 'absences'
+            $presences = \App\Models\Presence::with(['agent.absences' => function($q) use ($debut, $fin) {
+                $q->where('approuvee', 1)
+                ->where(function($query) use ($debut, $fin) {
+                    $query->whereBetween('date_debut', [$debut, $fin])
+                            ->orWhereBetween('date_fin', [$debut, $fin]);
+                });
+            }])
+            ->whereBetween('heure_arrivee', [$debut, $fin])
+            ->get();
+
+            // 3. Calcul des analyses (KPI) avec sécurité division par zéro
+            $totalPresences = $presences->count();
+            
+            $analyses = [
+                'taux_presence' => $totalPresences > 0 
+                    ? round(($presences->where('statut', 'Présent')->count() / $totalPresences) * 100, 2) 
+                    : 0,
+                'total_retards' => $presences->where('statut', 'En Retard')->count(),
+                // On compte dans la table 'absences'
+                'absences_autorisees' => \App\Models\Absence::where('approuvee', 1)
+                                        ->whereBetween('date_debut', [$debut, $fin])->count(),
+                'absences_injustifiees' => $presences->where('statut', 'Absent')->count(),
+            ];
+
+            // 4. Retour à la vue avec les variables formatées pour les inputs date
+            return view('presences.etat_periodique', [
+                'donnees' => $presences,
+                'analyses' => $analyses,
+                'debut' => $debut->toDateString(),
+                'fin' => $fin->toDateString()
+            ]);
+        }
+
+
+// Fichier: app/Http/Controllers/PresenceController.php
+
+        public function rapportPeriodique(Request $request) 
+        {
+            // Récupération des dates depuis le formulaire (par défaut mois en cours)
+            $debut = $request->input('debut', now()->startOfMonth()->toDateString());
+            $fin = $request->input('fin', now()->endOfMonth()->toDateString());
+
+            // C'EST ICI QUE VOUS METTEZ LA REQUÊTE ELOQUENT
+            $presences = Presence::with(['agent.absences' => function($q) use ($debut, $fin) {
+                $q->where('approuvee', 1) 
+                ->whereBetween('date_debut', [$debut, $fin]);
+            }])
+            ->whereBetween('heure_arrivee', [$debut, $fin])
+            ->get();
+
+            return view('votre_vue', compact('presences', 'debut', 'fin'));
+        }
 
 
 }

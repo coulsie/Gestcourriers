@@ -1,7 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\{Auth, Route};
 
 // Importation des contrôleurs (Regroupés)
 use App\Http\Controllers\{
@@ -21,7 +20,7 @@ use App\Http\Controllers\Auth\{
 
 /*
 |--------------------------------------------------------------------------
-| 1. ROUTES PUBLIQUES
+| 1. ACCÈS PUBLICS & AUTHENTIFICATION
 |--------------------------------------------------------------------------
 */
 Route::get('/', function () {
@@ -32,7 +31,7 @@ Auth::routes();
 
 /*
 |--------------------------------------------------------------------------
-| 2. CONFIGURATION DU MOT DE PASSE
+| 2. CONFIGURATION INITIALE (Première connexion)
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth'])->group(function () {
@@ -42,62 +41,64 @@ Route::middleware(['auth'])->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| 3. ROUTES PROTÉGÉES (Auth + Force Password)
+| 3. ESPACE SÉCURISÉ (Auth + Changement de mot de passe forcé)
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'force.password'])->group(function () {
 
     // --- ACCUEIL & DASHBOARD ---
     Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::get('/tableau-de-bord', [AgentController::class, 'dashb'])->name('agent.dashboard');
 
-
-    // --- PROFIL ---
+    // --- PROFIL UTILISATEUR ---
     Route::prefix('profile')->name('profile.')->group(function () {
         Route::get('/', [ProfileController::class, 'show'])->name('show');
         Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
+        Route::get('/create', [ProfileController::class, 'create'])->name('create');
         Route::match(['put', 'post'], '/update', [ProfileController::class, 'update'])->name('update');
     });
-    Route::get('/profile/create', [ProfileController::class, 'create'])->name('profile.create');
-    // --- ADMINISTRATION ---
+
+    // --- ADMINISTRATION (ADMIN ONLY) ---
     Route::middleware(['admin'])->prefix('admin')->group(function () {
         Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
         Route::resource('users', UserController::class);
     });
 
-    // --- AGENTS ---
-    Route::get('/tableau-de-bord', [AgentController::class, 'dashb'])->name('agent.dashboard');
+    // --- GESTION DES AGENTS ---
     Route::get('/agents/nouveau', [AgentController::class, 'nouveau'])->name('agents.nouveau');
     Route::post('/agents/enregistrer', [AgentController::class, 'Enr'])->name('agents.enregistrer');
     Route::resource('agents', AgentController::class);
 
-    // --- RH : PRÉSENCES & STATISTIQUES ---
-    // Note : Route placée AVANT le resource pour éviter les conflits 404
+    // --- RH : PRÉSENCES & ABSENCES ---
+    // Les routes fixes (hebdo, stats) AVANT les resources pour éviter les 404
+    Route::get('/presences/validation-hebdo', [PresenceController::class, 'indexValidationHebdo'])->name('presences.validation-hebdo');
+    Route::post('/presences/valider-hebdo', [PresenceController::class, 'storeValidationHebdo'])->name('presences.valider-hebdo');
+    Route::get('/rapports/presences/periodique', [PresenceController::class, 'rapport'])->name('rapports.presences.periodique');
+    
     Route::get('/presences/etat', [PresenceController::class, 'statsPresences'])->name('presences.etat');
-    Route::resource('presences', PresenceController::class);
     Route::get('/presences/stats', [PresenceController::class, 'stats'])->name('presences.etatperiodique');
+    Route::resource('presences', PresenceController::class);
 
-    Route::resource('absences', AbsenceController::class);
     Route::resource('typeabsences', TypeAbsenceController::class);
+    Route::get('/typeabsences/{id}/edit', [TypeAbsenceController::class, 'edit'])->name('typeabsences.edit'); // Fix edit route
+    Route::resource('absences', AbsenceController::class);
 
-    // --- TypeAbsenceController Edit Route Fix ---
-    Route::get('/typeabsences/{id}/edit', [TypeAbsenceController::class, 'edit'])->name('typeabsences.edit');
-
-
-
-    // --- COURRIERS & AFFECTATIONS ---
+    // --- GESTION DES COURRIERS & AFFECTATIONS ---
     Route::get('/courriers/recherche', [CourrierController::class, 'RechercheAffichage'])->name('courriers.RechercheAffichage');
-    Route::resource('courriers', CourrierController::class);
-    Route::resource('courriers.affectations', AffectationController::class)->shallow();
     Route::get('/courriers/{id}/affecter', [CourrierAffectationController::class, 'create'])->name('courriers.affectation.create');
     Route::post('/courriers/{id}/affecter', [CourrierAffectationController::class, 'store'])->name('courriers.affectation.store');
+    Route::get('/courriers/{courrier}/affectation', [CourrierAffectationController::class, 'show'])->name('courriers.affectation.show');
+    
+    Route::resource('courriers', CourrierController::class);
+    Route::resource('courriers.affectations', AffectationController::class)->shallow();
+    
     Route::put('/affectations/{affectation}/status', [AffectationController::class, 'updateStatus'])->name('affectations.updateStatus');
     Route::resource('affectations', AffectationController::class);
-    Route::get('/courriers/{courrier}/affectation', [CourrierAffectationController::class, 'show'])
-    ->name('courriers.affectation.show');
+
     // --- ÉTATS & RAPPORTS ---
     Route::get('/etats/agents-par-service', [EtatAgentsController::class, 'index'])->name('etats.agents_par_service');
     Route::get('/etats/recherche', [EtatAgentsController::class, 'Recherche'])->name('etats.agents_par_service_recherche');
-
+    
     Route::match(['get', 'post'], '/etat-agents-par-service', [AgentServiceController::class, 'listeParService'])->name('agents.par.service');
     Route::match(['get', 'post'], '/etat-agents-par-service/recherche', [AgentServiceController::class, 'recherche'])->name('agents.par.service.recherche');
 

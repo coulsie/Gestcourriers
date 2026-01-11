@@ -50,27 +50,30 @@ class TypeAbsenceController extends Controller
     /**
      * Affiche le type d'absence spécifié.
      */
-    public function show(TypeAbsence $typeAbsence)
-    {
-        $type_Absences = ['maladie', 'conge', 'autre'];
+    
 
-        return view('typeabsences.show', compact('typeAbsence', 'type_Absences'));
-
-    }
-
+public function show($id)
+{
+    // Récupération de la donnée
+    $typeAbsence = TypeAbsence::findOrFail($id);
+    
+    // Transmission à la vue (le nom dans compact doit être identique)
+    return view('typeabsences.show', compact('typeAbsence'));
+}
 
 
     /**
      * Affiche le formulaire d'édition du type d'absence spécifié.
             */
-            public function edit($id)
-        {
-            // 1. Récupérer l'enregistrement
-            $typeabsence = TypeAbsence::findOrFail($id);
+        
+    public function edit($id)
+    {
+        $typeAbsence = TypeAbsence::findOrFail($id);
+        
+        // Vérifiez que le nom de la variable ici correspond à celui dans Blade
+        return view('typeabsences.edit', compact('typeAbsence'));
+    }
 
-            // 2. Passer la variable à la vue (le nom doit correspondre exactement)
-            return view('typeabsences.edit', compact('typeabsence'));
-        }
 
     /**
      * Met à jour le type d'absence spécifié dans la base de données.

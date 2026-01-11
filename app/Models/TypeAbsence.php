@@ -40,6 +40,7 @@ class TypeAbsence extends Model
         // Optional: Laravel handles timestamps by default, but you can explicitly cast if needed
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'date_champ' => 'date',
     ];
 
     // Optional: Define a constant for the enum values for better code consistency

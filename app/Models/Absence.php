@@ -22,7 +22,9 @@ class Absence extends Model
         'type_absence_id',
         'date_debut',
         'date_fin',
-        'Approuvee',
+        'approuvee', // <-- DOIT ÊTRE ÉCRIT EXACTEMENT COMME ÇA
+        'document_justificatif', 
+        'notes'
     ];
  
     // Conversion automatique des types de données
@@ -40,8 +42,9 @@ class Absence extends Model
     public function agent(): BelongsTo
     {
         // Assurez-vous d'avoir un modèle App\Models\Agent existant
-        return $this->belongsTo(Agent::class, 'id', 'id');
+        return $this->belongsTo(Agent::class, 'agent_id');
     }
+    
 
     /**
      * Définit la relation : Une absence a un type.

@@ -163,6 +163,8 @@
                         {{-- <h6 class="collapse-header">Cotisations mensuelles</h6> --}}
 
                         <a class="collapse-item" href="{{ route('presences.index') }}">Enrégistrement Pointages</a>
+                        <a class="collapse-item" href="{{ route('presences.validation-hebdo') }}">Validation hebdomadaire</a>
+                        <a class="collapse-item" href="{{ route('rapports.presences.periodique') }}">Rapport Périodique</a>
                         <a class="collapse-item" href="{{ route('absences.index') }}">Congés et Permissions</a>
                         <a class="collapse-item" href="{{ route('typeabsences.index') }}">Parametrage Absence</a>
                         <a class="collapse-item" href="{{ route('agents.par.service') }}">Agents par Service</a>
@@ -196,9 +198,9 @@
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Écran de connexion:</h6>
-                        <a class="collapse-item" href="">Se connecter</a>
-                        <a class="collapse-item" href="">S'inscrire</a>
-                        <a class="collapse-item" href="">Mot de passe oublié</a>
+                        <a class="collapse-item" href="{{ route('login') }}">Se connecter</a>
+                        <a class="collapse-item" href="{{ route('register') }}">S'inscrire</a>
+                        <a class="collapse-item" href="{{ route('password.request') }}">Mot de passe oublié</a>
                         <!-- <div class="collapse-divider"></div>
                         <h6 class="collapse-header">Autres pages:</h6>
                         <a class="collapse-item" href="404.html">404 Page</a>

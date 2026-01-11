@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Courrier extends Model
 {
@@ -81,6 +82,21 @@ class Courrier extends Model
     public function currentAffectation()
     {
         return $this->hasOne(Affectation::class)->latestOfMany();
+    }
+    
+
+    protected function type(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value) {
+                $types = [
+                    'urgent' => 'Urgent',
+                    'normal' => 'Normal',
+                    'recommande' => 'Recommandé',
+                ];
+                return $types[$value] ?? $value;
+            },
+        );
     }
 
 }

@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-11">
             <div class="card shadow-lg border-0 rounded-lg">
-                <!-- En-tête avec dégradé ambre/orange -->
+                <!-- En-tête -->
                 <div class="card-header text-white py-3 shadow-sm" style="background: linear-gradient(135deg, #f6c23e 0%, #f4b619 100%);">
                     <h5 class="mb-0 font-weight-bold">
                         <i class="fas fa-user-edit me-2"></i> Modifier l'agent : {{ $agent->first_name }} {{ $agent->last_name }}
@@ -17,114 +17,143 @@
                         @csrf
                         @method('PUT')
 
-                        {{-- SECTION 1: IDENTITÉ & MATRICULE --}}
-                        <div class="p-4 bg-white rounded shadow-sm mb-4 border-left-warning">
+                        {{-- SECTION PHOTO --}}
+                        <div class="p-4 bg-white rounded shadow-sm mb-4 border-left-warning text-center">
+                            <h6 class="text-warning font-weight-bold mb-3 text-uppercase text-start"><i class="fas fa-camera me-2"></i> Photo de profil</h6>
+                            <div class="mb-3">
+                                @if($agent->photo && file_exists(public_path('agents_photos/' . $agent->photo)))
+                                    <img src="{{ asset('agents_photos/' . $agent->photo) }}?v={{ time() }}" class="img-thumbnail rounded-circle shadow-sm" style="width: 120px; height: 120px; object-fit: cover; border: 3px solid #f6c23e;">
+                                @else
+                                    <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm" style="width: 120px; height: 120px; border: 3px solid #dee2e6;">
+                                        <i class="fas fa-user fa-3x text-muted"></i>
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="col-md-6 mx-auto">
+                                <input type="file" name="photo" class="form-control form-control-sm @error('photo') is-invalid @enderror">
+                                <small class="text-muted">Laisser vide pour conserver la photo actuelle</small>
+                            </div>
+                        </div>
+
+                        {{-- SECTION 1: IDENTITÉ & STATUT --}}
+                        <div class="p-4 bg-white rounded shadow-sm mb-4 border-left-warning border-start border-4">
                             <h6 class="text-warning font-weight-bold mb-4 text-uppercase"><i class="fas fa-id-card me-2"></i> État Civil & Identifiant</h6>
                             <div class="row">
                                 <div class="col-md-4 mb-3">
                                     <label class="form-label fw-bold small">Prénom <span class="text-danger">*</span></label>
-                                    <input type="text" name="first_name" class="form-control border-warning-soft @error('first_name') is-invalid @enderror" value="{{ old('first_name', $agent->first_name) }}" required>
-                                    @error('first_name') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                                    <input type="text" name="first_name" class="form-control @error('first_name') is-invalid @enderror" value="{{ old('first_name', $agent->first_name) }}" required>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label class="form-label fw-bold small">Nom <span class="text-danger">*</span></label>
-                                    <input type="text" name="last_name" class="form-control border-warning-soft @error('last_name') is-invalid @enderror" value="{{ old('last_name', $agent->last_name) }}" required>
-                                    @error('last_name') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                                    <input type="text" name="last_name" class="form-control @error('last_name') is-invalid @enderror" value="{{ old('last_name', $agent->last_name) }}" required>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label class="form-label fw-bold small text-primary">N° Matricule <span class="text-danger">*</span></label>
-                                    <input type="text" name="matricule" class="form-control border-left-primary fw-bold @error('matricule') is-invalid @enderror" value="{{ old('matricule', $agent->matricule) }}" required>
-                                    @error('matricule') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                                    <input type="text" name="matricule" class="form-control fw-bold border-primary @error('matricule') is-invalid @enderror" value="{{ old('matricule', $agent->matricule) }}" required>
                                 </div>
                             </div>
 
                             <div class="row mt-2">
                                 <div class="col-md-3 mb-3">
                                     <label class="form-label fw-bold small">Sexe</label>
-                                    <select name="sexe" class="form-select @error('sexe') is-invalid @enderror">
-                                        <option value="Male" {{ old('sexe', $agent->sexe) == 'Male' ? 'selected' : '' }}>♂ Masculin</option>
-                                        <option value="Female" {{ old('sexe', $agent->sexe) == 'Female' ? 'selected' : '' }}>♀ Féminin</option>
+                                    <select name="sexe" class="form-select">
+                                        <option value="Male" {{ old('sexe', $agent->sexe) == 'Male' ? 'selected' : '' }}>Masculin</option>
+                                        <option value="Female" {{ old('sexe', $agent->sexe) == 'Female' ? 'selected' : '' }}>Féminin</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3 mb-3">
                                     <label class="form-label fw-bold small">Date de Naissance</label>
                                     <input type="date" name="date_of_birth" class="form-control" value="{{ old('date_of_birth', $agent->date_of_birth) }}">
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-3 mb-3">
                                     <label class="form-label fw-bold small">Lieu de Naissance</label>
                                     <input type="text" name="place_birth" class="form-control" value="{{ old('place_birth', $agent->place_birth) }}">
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label fw-bold small">Statut (Rang)</label>
+                                    <select name="status" class="form-select">
+                                        @foreach(['Agent', 'Chef de service', 'Sous-directeur', 'Directeur'] as $st)
+                                            <option value="{{ $st }}" {{ old('status', $agent->status) == $st ? 'selected' : '' }}>{{ $st }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                         </div>
 
-                        {{-- SECTION 2: CONTACTS & COMMUNICATION --}}
-                        <div class="p-4 bg-white rounded shadow-sm mb-4 border-left-info">
+                        {{-- SECTION 2: CONTACTS --}}
+                        <div class="p-4 bg-white rounded shadow-sm mb-4 border-left-info border-start border-4 border-info">
                             <h6 class="text-info font-weight-bold mb-4 text-uppercase"><i class="fas fa-envelope-open-text me-2"></i> Contacts & Coordonnées</h6>
                             <div class="row">
                                 <div class="col-md-4 mb-3">
                                     <label class="form-label fw-bold small">E-mail Personnel</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light border-0"><i class="fas fa-at"></i></span>
-                                        <input type="email" name="email" class="form-control border-info-soft @error('email') is-invalid @enderror" value="{{ old('email', $agent->email) }}">
-                                    </div>
-                                    @error('email') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                                    <input type="email" name="email" class="form-control" value="{{ old('email', $agent->email) }}">
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <label class="form-label fw-bold small">E-mail Pro</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-soft-info border-0 text-info"><i class="fas fa-briefcase"></i></span>
-                                        <input type="email" name="email_professionnel" class="form-control border-info-soft @error('email_professionnel') is-invalid @enderror" value="{{ old('email_professionnel', $agent->email_professionnel) }}">
-                                    </div>
+                                    <label class="form-label fw-bold small text-info">E-mail Professionnel</label>
+                                    <input type="email" name="email_professionnel" class="form-control border-info" value="{{ old('email_professionnel', $agent->email_professionnel) }}">
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label class="form-label fw-bold small">Téléphone</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light border-0"><i class="fas fa-phone"></i></span>
-                                        <input type="text" name="phone_number" class="form-control @error('phone_number') is-invalid @enderror" value="{{ old('phone_number', $agent->phone_number) }}">
-                                    </div>
+                                    <input type="text" name="phone_number" class="form-control" value="{{ old('phone_number', $agent->phone_number) }}">
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12">
-                                    <label class="form-label fw-bold small">Adresse Domicile</label>
+                                <div class="col-12 mb-3">
+                                    <label class="form-label fw-bold small">Adresse Résidence</label>
                                     <input type="text" name="address" class="form-control" value="{{ old('address', $agent->address) }}">
                                 </div>
                             </div>
                         </div>
 
-                        {{-- SECTION 3: AFFECTATION PROFESSIONNELLE --}}
-                        <div class="p-4 bg-white rounded shadow-sm mb-4 border-left-success">
+                        {{-- SECTION 3: CARRIÈRE --}}
+                        <div class="p-4 bg-white rounded shadow-sm mb-4 border-left-success border-start border-4 border-success">
                             <h6 class="text-success font-weight-bold mb-4 text-uppercase"><i class="fas fa-briefcase me-2"></i> Poste & Affectation</h6>
                             <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold small">Service Actuel <span class="text-danger">*</span></label>
-                                    <select name="service_id" class="form-select border-success-soft @error('service_id') is-invalid @enderror" required>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label fw-bold small">Service <span class="text-danger">*</span></label>
+                                    <select name="service_id" class="form-select shadow-sm border-success" required>
                                         @foreach($services as $service)
-                                            <option value="{{ $service->id }}" {{ old('service_id', $agent->service_id) == $service->id ? 'selected' : '' }}>
-                                                🏢 {{ $service->name }} ({{ $service->code }})
-                                            </option>
+                                            <option value="{{ $service->id }}" {{ old('service_id', $agent->service_id) == $service->id ? 'selected' : '' }}>{{ $service->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold small">Niveau Hiérarchique <span class="text-danger">*</span></label>
-                                    <select name="status" class="form-select border-success-soft" required>
-                                        <option value="Agent" {{ $agent->status == 'Agent' ? 'selected' : '' }}>Agent de base</option>
-                                        <option value="Chef de service" {{ $agent->status == 'Chef de service' ? 'selected' : '' }}>Chef de service</option>
-                                        <option value="Sous-directeur" {{ $agent->status == 'Sous-directeur' ? 'selected' : '' }}>Sous-directeur</option>
-                                        <option value="Directeur" {{ $agent->status == 'Directeur' ? 'selected' : '' }}>Directeur</option>
-                                    </select>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label fw-bold small">Emploi / Fonction</label>
+                                    <input type="text" name="Emploi" class="form-control" value="{{ old('Emploi', $agent->Emploi) }}">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label fw-bold small">Grade</label>
+                                    <input type="text" name="Grade" class="form-control" value="{{ old('Grade', $agent->Grade) }}">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label fw-bold small text-success">Date Prise de Service</label>
+                                    <input type="date" name="Date_Prise_de_service" class="form-control border-success" value="{{ old('Date_Prise_de_service', $agent->Date_Prise_de_service) }}">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label fw-bold small">Compte Utilisateur (ID)</label>
+                                    <input type="number" name="user_id" class="form-control bg-light" value="{{ old('user_id', $agent->user_id) }}" readonly>
+                                    <small class="text-muted italic text-xs">Liaison système uniquement</small>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- BOUTONS D'ACTION -->
-                        <div class="d-flex justify-content-between align-items-center mt-5 p-3 bg-white rounded shadow-sm border-top-warning">
-                            <a href="{{ route('agents.index') }}" class="btn btn-outline-secondary px-4 rounded-pill">
-                                <i class="fas fa-times me-2"></i> Abandonner les changements
-                            </a>
-                            <button type="submit" class="btn btn-warning px-5 text-white fw-bold rounded-pill shadow-sm hover-elevate">
-                                <i class="fas fa-sync-alt me-2"></i> Appliquer les modifications
+                        {{-- SECTION 4: URGENCE --}}
+                        <div class="p-4 bg-white rounded shadow-sm mb-4 border-left-danger border-start border-4 border-danger">
+                            <h6 class="text-danger font-weight-bold mb-4 text-uppercase"><i class="fas fa-exclamation-triangle me-2"></i> En cas d'urgence</h6>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold small">Personne à prévenir</label>
+                                    <input type="text" name="Personne_a_prevenir" class="form-control border-danger-soft" value="{{ old('Personne_a_prevenir', $agent->Personne_a_prevenir) }}">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold small">Contact Urgence</label>
+                                    <input type="text" name="Contact_personne_a_prevenir" class="form-control border-danger-soft" value="{{ old('Contact_personne_a_prevenir', $agent->Contact_personne_a_prevenir) }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-end mt-4">
+                            <a href="{{ route('agents.index') }}" class="btn btn-secondary px-4 me-2 shadow-sm">Annuler</a>
+                            <button type="submit" class="btn btn-warning px-5 fw-bold shadow-sm text-dark">
+                                <i class="fas fa-save me-2"></i> Mettre à jour l'agent
                             </button>
                         </div>
                     </form>
@@ -133,43 +162,4 @@
         </div>
     </div>
 </div>
-
-<style>
-    /* Custom Design 2026 */
-    .bg-light { background-color: #f8f9fc !important; }
-    .border-left-warning { border-left: 5px solid #f6c23e !important; }
-    .border-left-info { border-left: 5px solid #36b9cc !important; }
-    .border-left-success { border-left: 5px solid #1cc88a !important; }
-    .border-left-primary { border-left: 5px solid #4e73df !important; }
-
-    .border-warning-soft { border-color: #ffeeba !important; }
-    .border-info-soft { border-color: #bee5eb !important; }
-    .border-success-soft { border-color: #c3e6cb !important; }
-
-    .border-top-warning { border-top: 3px solid #f6c23e !important; }
-    .bg-soft-info { background-color: rgba(54, 185, 204, 0.1); }
-
-    .form-control, .form-select {
-        border-radius: 8px;
-        padding: 0.6rem 1rem;
-        transition: all 0.3s;
-    }
-
-    .form-control:focus {
-        border-color: #f6c23e;
-        box-shadow: 0 0 0 0.25rem rgba(246, 194, 62, 0.25);
-    }
-
-    .hover-elevate {
-        transition: all 0.3s;
-    }
-
-    .hover-elevate:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(246, 194, 62, 0.4) !important;
-        background-color: #dda20a !important;
-    }
-
-    .form-label { letter-spacing: 0.5px; }
-</style>
 @endsection
