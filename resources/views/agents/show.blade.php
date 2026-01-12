@@ -14,18 +14,21 @@
                 <div class="card-body">
                     <div class="row">
                         {{-- Photo de l'agent (Optionnel, si vous gérez le stockage des images) --}}
-                        
-                        <div class="col-md-3 text-center">
-                            @if($agent->photo)
-                           <img src="{{ asset($agent->photo) }}" alt="Photo de {{ $agent->last_name }}" class="img-fluid rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
 
+                        <div class="col-md-3 text-center">
+                            {{-- On vérifie si l'agent a une photo enregistrée --}}
+                            @if($agent->photo && file_exists(public_path('agents_photos/' . $agent->photo)))
+                                {{-- asset() pointera directement vers le dossier public/ --}}
+                               <img src="{{ asset('agents_photos/' . $agent->photo) }}?v={{ time() }}" alt="Photo de {{ $agent->last_name }} {{ $agent->first_name }} "
+                                class="img-fluid rounded-circle mb-3"
+                                style="width: 150px; height: 150px; object-fit: cover;">
                             @else
-                                <div class="bg-light p-5 rounded-circle mb-3" style="width: 150px; height: 150px;">
+                                {{-- Image par défaut si aucune photo n'est trouvée --}}
+                                <div class="bg-light p-5 rounded-circle mb-3 mx-auto" style="width: 150px; height: 150px;">
                                     <i class="fas fa-user fa-4x text-muted"></i>
                                 </div>
                             @endif
                         </div>
-
                         {{-- Informations principales --}}
                         <div class="col-md-9">
                             <h3>{{ $agent->first_name }} {{ $agent->last_name }}</h3>

@@ -44,80 +44,55 @@ class AgentController extends Controller
     /**
      * Stocke un nouvel agent dans la base de données.
      */
-    public function store(Request $request)
-    {
-        // 1. Validation des données
-        $validatedData = $request->validate([
-            'email_professionnel' => 'nullable|email|unique:agents,email_professionnel',
-            'matricule' => 'required|string|max:191|unique:agents,matricule',
-            'first_name' => 'required|string|max:191',
-            'last_name' => 'required|string|max:191',
-            'status' => ['required',Rule::in(['Agent', 'Chef de service', 'Sous-directeur', 'Directeur']) // Ajustez selon vos ENUM
-            ],
-            'sexe' => ['nullable', Rule::in(['Male', 'Female'])],
-            'date_of_birth' => 'nullable|date',
-            'place_birth' => 'nullable|string|max:191',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validation de l'image
-            'email' => 'nullable|email|max:191|unique:agents,email',
-            'phone_number' => 'nullable|string|max:191',
-            'address' => 'nullable|string|max:191',
-            'Emploi' => 'nullable|string|max:191',
-            'Grade' => 'nullable|string|max:191',
-            'Date_Prise_de_service' => 'nullable|date',
-            'Personne_a_prevenir' => 'nullable|string|max:191',
-            'Contact_personne_a_prevenir' => 'nullable|string|max:191',
-            'service_id' => 'required|exists:services,id', // Assurez-vous que le service existe
-            'user_id' => 'nullable|exists:users,id',
-        ]);
+public function store(Request $request)
+{
+    // 1. Validation
+    $validated = $request->validate([
+        'matricule' => 'required|string|max:191|unique:agents,matricule',
+        'first_name' => 'required|string|max:191',
+        'last_name' => 'required|string|max:191',
+        'status' => 'required',
+        'sexe' => 'nullable',
+        'date_of_birth' => 'nullable|date',
+        'place_birth' => 'nullable|string|max:191',
+        'email_professionnel' => 'nullable|email|unique:agents,email_professionnel',
+        'email' => 'nullable|email|unique:agents,email',
+        'phone_number' => 'nullable|string|max:191',
+        'address' => 'nullable|string|max:191',
+        'Emploi' => 'nullable|string|max:191',
+        'Grade' => 'nullable|string|max:191',
+        'Date_Prise_de_service' => 'nullable|date',
+        'Personne_a_prevenir' => 'nullable|string|max:191',
+        'Contact_personne_a_prevenir' => 'nullable|string|max:191',
+        'service_id' => 'required|exists:services,id',
+        'user_id' => 'nullable|exists:users,id',
+        'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+    ]);
 
-
-
-        $request->validate(['photo' => 'required|image|mimes:jpeg,png,jpg|max:2048','matricule' => 'required|string|unique:agents,matricule']);
-        $agent = new Agent();
-        $agent->matricule = $request->matricule;
-        $agent->first_name = $request->first_name;
-        $agent->last_name = $request->last_name;
-        $agent->status = $request->status;
-        $agent->sexe = $request->sexe;
-        $agent->date_of_birth = $request->date_of_birth;
-        $agent->place_birth = $request->place_birth;
-        $agent->email_professionnel = $request->email_professionnel;
-        $agent->email = $request->email;
-        $agent->phone_number = $request->phone_number;
-        $agent->address = $request->address;
-        $agent->Emploi = $request->Emploi;
-        $agent->Grade = $request->Grade;
-        $agent->Date_Prise_de_service = $request->Date_Prise_de_service;
-        $agent->Personne_a_prevenir = $request->Personne_a_prevenir;
-        $agent->Contact_personne_a_prevenir = $request->Contact_personne_a_prevenir;
-        $agent->service_id = $request->service_id;
-        $agent->user_id = $request->user_id;
-
-
-        if ($request->hasFile('photo')) {
+    // 2. Gestion de la photo
+    if ($request->hasFile('photo')) {
         $file = $request->file('photo');
-        // Générer un nom unique pour éviter les doublons
         $fileName = time() . '_' . $file->getClientOriginalName();
 
-        // Déplace le fichier physiquement
+        // On déplace le fichier dans public/agents_photos
         $file->move(public_path('agents_photos'), $fileName);
 
-        // Enregistre uniquement le nom (ou le chemin relatif) en base de données
-        $agent->photo = 'agents_photos/' . $fileName;
-        $agent->save();
+        // Crucial : On écrase l'objet UploadedFile par la chaîne de caractères du nom
+        $validated['photo'] = $fileName;
+    } else {
+        // Si pas de photo, on s'assure que la valeur est nulle
+        $validated['photo'] = null;
     }
 
-        // 3. Création de l'agent dans la base de données
-       $agent = Agent::updateOrCreate(
-            ['matricule' => $request->matricule], // On cherche par matricule
-            $validatedData                       // On remplit avec les données validées
-        );
+    // 3. Création
+    \App\Models\Agent::create($validated);
 
-        // 4. Redirection avec un message de succès
-        return redirect()->route('agents.index')->with('success', 'L\'agent ' . $agent->first_name . ' ' . $agent->last_name . ' a été enregistré avec succès.');
-    }
+    return redirect()->route('agents.index')->with('success', 'Agent créé avec succès.');
+}
 
-    /**
+
+
+/**
      * Affiche les détails d'un agent spécifique.
      */
     public function show(Agent $agent): View
@@ -146,54 +121,45 @@ class AgentController extends Controller
     /**
      * Met à jour l'agent spécifié dans la base de données.
      */
-     public function update(Request $request, Agent $agent): RedirectResponse
-    {
-        // 1. Validation des données
-        $validatedData = $request->validate([
-            // Use Rule::unique()->ignore($agent->id) to allow the current agent's own email/matricule
-            'email_professionnel' => 'nullable|email|max:191|unique:agents,email_professionnel,' . $agent->id,
-            'matricule' => 'required|string|max:191|unique:agents,matricule,' . $agent->id,
-            'first_name' => 'required|string|max:191',
-            'last_name' => 'required|string|max:191',
-            'status' => ['required',Rule::in(['Agent', 'Chef de service', 'Sous-directeur', 'Directeur']) // Ajustez selon vos ENUM
-            ],
-            'sexe' => ['nullable', Rule::in(['Male', 'Female'])],
-            'date_of_birth' => 'nullable|date',
-            'place_birth' => 'nullable|string|max:191',
-            // Photo is not required for update, but if provided, it must be an image
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'email' => 'nullable|email|max:191|unique:agents,email,' . $agent->id,
-            'phone_number' => 'nullable|string|max:191',
-            'address' => 'nullable|string|max:191',
-            'Emploi' => 'nullable|string|max:191',
-            'Grade' => 'nullable|string|max:191',
-            'Date_Prise_de_service' => 'nullable|date',
-            'Personne_a_prevenir' => 'nullable|string|max:191',
-            'Contact_personne_a_prevenir' => 'nullable|string|max:191',
-            'service_id' => 'required|exists:services,id',
-            'user_id' => 'nullable|exists:users,id',
-        ]);
+    public function update(Request $request, Agent $agent)
+{
+    // 1. Validation (on retire l'unique sur le matricule de l'agent actuel)
+    $validated = $request->validate([
+        'matricule' => 'required|string|max:191|unique:agents,matricule,' . $agent->id,
+        'first_name' => 'required|string|max:191',
+        'last_name' => 'required|string|max:191',
+        'status' => 'required',
+        'service_id' => 'required|exists:services,id',
+        'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        // Ajoutez vos autres champs ici...
+    ]);
 
-
-    $request->validate(['photo' => 'required|image|mimes:jpeg,png,jpg|max:2048', ]);
-
-
+    // 2. Gestion de la photo
     if ($request->hasFile('photo')) {
-        // Enregistre dans storage/app/public/agents_photos
-        $path = $request->file('photo')->store('agents_photos', 'public');
+        // --- ÉTAPE A : Supprimer l'ancienne photo du dossier public si elle existe ---
+        if ($agent->photo && file_exists(public_path('agents_photos/' . $agent->photo))) {
+            unlink(public_path('agents_photos/' . $agent->photo));
+        }
 
-        // Sauvegardez $path dans votre base de données (ex: agents_photos/nom_image.jpg)
-        // $agent->photo = $path;
-        // $agent->save();
+        // --- ÉTAPE B : Stocker la nouvelle photo ---
+        $file = $request->file('photo');
+        $fileName = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('agents_photos'), $fileName);
+
+        // --- ÉTAPE C : Mettre à jour la valeur dans le tableau validé ---
+        $validated['photo'] = $fileName;
+    } else {
+        // Si aucune nouvelle photo n'est téléchargée, on garde l'ancienne
+        // On retire 'photo' du tableau validé pour ne pas écraser avec du vide
+        unset($validated['photo']);
     }
 
+    // 3. Mise à jour de l'agent
+    $agent->update($validated);
 
-        // 3. Mise à jour de l'agent dans la base de données
-        $agent->update($validatedData);
+    return redirect()->route('agents.index')->with('success', 'Les informations de l\'agent ' . $agent->last_name . ' ' . $agent->first_name . ' ont été mises à jour avec succès.');
+}
 
-        // 4. Redirection avec un message de succès
-        return redirect()->route('agents.index')->with('success', 'Les informations de l\'agent ' . $agent->first_name . ' ont été mises à jour avec succès.');
-    }
     /**
      * Supprime l'agent spécifié de la base de données.
      */
@@ -256,7 +222,7 @@ class AgentController extends Controller
                 'password' => Hash::make($request->password),
                 'role' => $request->role, // Récupérer le rôle depuis le formulaire
                 'is_active' => true,
-                
+
             ]);
 
             // 2. Créer l'agent lié à cet utilisateur
@@ -291,7 +257,7 @@ class AgentController extends Controller
             return back()->withInput()->with('error', 'Erreur lors de la création : ' . $e->getMessage());
         }
     }
-     
+
         public function nouveau() {
             $services = \App\Models\Service::all(); // Assurez-vous que le modèle Service existe
             return view('agents.nouveau', compact('services'));

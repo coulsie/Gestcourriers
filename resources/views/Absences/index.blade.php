@@ -8,10 +8,10 @@
             <div class="card shadow-lg border-0 border-top border-4 border-primary">
                 <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                     <h4 class="mb-0 text-primary fw-bold">
-                        <i class="fas fa-calendar-alt me-2"></i>Gestion des Absences
+                        <i class="fas fa-calendar-alt me-2"></i>Gestion des Autorisations d'Absences
                     </h4>
                     <a href="{{ route('absences.create') }}" class="btn btn-primary shadow-sm">
-                        <i class="fas fa-plus-circle me-1"></i> Ajouter une Absence
+                        <i class="fas fa-plus-circle me-1"></i> Ajouter une Autorisation d'Absence
                     </a>
                 </div>
 
@@ -46,7 +46,7 @@
                                                 </div>
                                                 <div>
                                                     <div class="fw-bold text-dark">
-                                                        @if($absence->agent)  
+                                                        @if($absence->agent)
                                                             {{ $absence->agent->last_name }} {{ $absence->agent->first_name }}
                                                         @else
                                                             <span class="badge bg-danger">ID #{{ $absence->agent_id }} non trouvé</span>
@@ -97,7 +97,7 @@
                                                 <a href="{{ route('absences.edit', $absence->id) }}" class="btn btn-sm btn-outline-warning" title="Modifier">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
-                                                <button type="button" class="btn btn-sm btn-outline-danger" 
+                                                <button type="button" class="btn btn-sm btn-outline-danger"
                                                         onclick="if(confirm('Supprimer cette absence ?')) document.getElementById('delete-{{ $absence->id }}').submit();" title="Supprimer">
                                                     <i class="fas fa-trash"></i>
                                                 </button>

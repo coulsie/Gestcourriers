@@ -74,7 +74,7 @@ Route::middleware(['auth', 'force.password'])->group(function () {
     Route::get('/presences/validation-hebdo', [PresenceController::class, 'indexValidationHebdo'])->name('presences.validation-hebdo');
     Route::post('/presences/valider-hebdo', [PresenceController::class, 'storeValidationHebdo'])->name('presences.valider-hebdo');
     Route::get('/rapports/presences/periodique', [PresenceController::class, 'rapport'])->name('rapports.presences.periodique');
-    
+
     Route::get('/presences/etat', [PresenceController::class, 'statsPresences'])->name('presences.etat');
     Route::get('/presences/stats', [PresenceController::class, 'stats'])->name('presences.etatperiodique');
     Route::resource('presences', PresenceController::class);
@@ -84,21 +84,23 @@ Route::middleware(['auth', 'force.password'])->group(function () {
     Route::resource('absences', AbsenceController::class);
 
     // --- GESTION DES COURRIERS & AFFECTATIONS ---
+    Route::get('/courriers/visualiser/{id}', [CourrierController::class, 'visualiserDocument'])
+    ->name('courriers.visualiser');
     Route::get('/courriers/recherche', [CourrierController::class, 'RechercheAffichage'])->name('courriers.RechercheAffichage');
     Route::get('/courriers/{id}/affecter', [CourrierAffectationController::class, 'create'])->name('courriers.affectation.create');
     Route::post('/courriers/{id}/affecter', [CourrierAffectationController::class, 'store'])->name('courriers.affectation.store');
     Route::get('/courriers/{courrier}/affectation', [CourrierAffectationController::class, 'show'])->name('courriers.affectation.show');
-    
+
     Route::resource('courriers', CourrierController::class);
     Route::resource('courriers.affectations', AffectationController::class)->shallow();
-    
+
     Route::put('/affectations/{affectation}/status', [AffectationController::class, 'updateStatus'])->name('affectations.updateStatus');
     Route::resource('affectations', AffectationController::class);
 
     // --- ÉTATS & RAPPORTS ---
     Route::get('/etats/agents-par-service', [EtatAgentsController::class, 'index'])->name('etats.agents_par_service');
     Route::get('/etats/recherche', [EtatAgentsController::class, 'Recherche'])->name('etats.agents_par_service_recherche');
-    
+
     Route::match(['get', 'post'], '/etat-agents-par-service', [AgentServiceController::class, 'listeParService'])->name('agents.par.service');
     Route::match(['get', 'post'], '/etat-agents-par-service/recherche', [AgentServiceController::class, 'recherche'])->name('agents.par.service.recherche');
 
