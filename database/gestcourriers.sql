@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.3
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3307
--- Généré le : dim. 11 jan. 2026 à 15:48
--- Version du serveur : 11.5.2-MariaDB
--- Version de PHP : 8.3.14
+-- Généré le : lun. 12 jan. 2026 à 17:31
+-- Version du serveur : 11.4.9-MariaDB
+-- Version de PHP : 8.3.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -122,21 +122,22 @@ CREATE TABLE IF NOT EXISTS `agents` (
   UNIQUE KEY `agents_email_professionnel_unique` (`email_professionnel`),
   KEY `agents_service_id_foreign` (`service_id`),
   KEY `agents_user_id_foreign` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `agents`
 --
 
 INSERT INTO `agents` (`id`, `email_professionnel`, `matricule`, `first_name`, `last_name`, `status`, `sexe`, `date_of_birth`, `place_birth`, `photo`, `email`, `phone_number`, `address`, `Emploi`, `Grade`, `Date_Prise_de_service`, `Personne_a_prevenir`, `Contact_personne_a_prevenir`, `service_id`, `user_id`, `created_at`, `updated_at`) VALUES
-(1, 'coulsie@live.fr', '287688C', 'Sié Yacouba', 'COULIBALY', 'Agent', 'Female', '1972-12-04', 'COCODY', 'C:\\wamp64\\tmp\\php9CEA.tmp', 'coulsie@gmail.com', '0707584396', '08 BP 2359', 'Inspecteur Principal Informatique', 'A6', '2002-01-05', 'COULIBALY Youssef Kiyali', '0143677424', 1, 1, '2025-12-04 13:36:01', '2026-01-11 13:52:35'),
-(2, NULL, '410702H', 'Nafata', 'KONE', 'Agent', NULL, NULL, NULL, '/storage/storage/agents_photos/kss1wbQcDFBK8pleueqQJdrzUjwrM318BitCWUHF.jpg', NULL, '0707188674', 'Grand Bassam mockeyville', NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-12-09 15:06:21', '2025-12-16 10:53:36'),
-(3, NULL, '421263X', 'SIAKOURI', 'Justine', 'Agent', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 14, NULL, '2025-12-09 15:58:42', '2025-12-09 15:58:42'),
-(4, 'vb@10klhg', '100600A', 'KOMIAN', 'Anselm', 'Chef de service', 'Male', NULL, NULL, '/storage/storage/agents_photos/wgoMB7Fhj32h9pNnqs2rjAucRMbG2FQKB2WMC6Vx.jpg', 'coulsie@live.fr', NULL, NULL, NULL, NULL, NULL, 'amoin', '010124578', 13, NULL, '2025-12-12 14:43:58', '2025-12-12 15:07:15'),
-(5, 'vb@gmail.com', '100501F', 'KONAN', 'Aya', 'Chef de service', 'Female', '1968-01-05', NULL, NULL, 'konan@aya25', NULL, NULL, NULL, NULL, NULL, 'aurore', '125849637', 7, NULL, '2025-12-12 21:48:34', '2025-12-12 21:48:34'),
-(6, 'bgff@HGJK', '100235M', 'SYLLA', 'Youssouf', 'Sous-directeur', 'Male', '1980-01-01', 'ISSIA', '/storage/agents_photos/92U7VhTeiYCNOIFRi565I9tHSvcwcc4CEkAFM8HA.jpg', 'youssouf@gmail.com', NULL, NULL, NULL, 'A6', NULL, 'HHHH', '455888', 6, NULL, '2025-12-13 10:23:37', '2025-12-13 10:23:37'),
-(7, 'didier@45', '100542Q', 'CAMARA', 'Naotchin Didier', 'Directeur', 'Male', '1971-02-01', 'DIVO', '/storage/agents_photos/81UJDuSmCHcDhWrFyp4t2TtAjvnVeJSD6RZMpHHi.jpg', 'Sieben@v', '225 0707584396', '08 BP 2359', NULL, 'A7', NULL, 'rosalie45', '25665666', 14, NULL, '2025-12-13 10:49:55', '2025-12-13 10:49:55'),
-(8, 'sylva@gmail.com', '100222A', 'KOFFI', 'Sylvanus', 'Chef de service', 'Male', '1987-12-04', 'YAMOUSSOUKRO', '/storage/agents_photos/A7LUuO7BCx80Nr7rlfrZWMlaesD1Kg8T8juKDc5Z.jpg', 'sylvanus@yahoo.fr', '0584365858', '01BP4125', 'Ingenieur statiticien economiste', 'A5', '2007-01-01', 'Koffi rita', '55525666', 5, NULL, '2025-12-13 16:31:12', '2025-12-13 16:31:12');
+(1, 'coulsie@live.fr', '287688C', 'Sié Yacouba', 'COULIBALY', 'Agent', 'Male', '1972-12-04', 'PLATEAU', '1768237714_Photo identite COULIBALY Sié Yacouba 287 688C.JPG', 'coulsie@gmail.com', '0707584396', '08 BP 2359 ABIDJAN 08', 'Inspecteur Principal Informatique', 'A6', '2025-07-08', 'COULIBALY Youssef Kiyali', '0143677424', 1, 1, '2025-12-04 13:36:01', '2026-01-12 17:08:34'),
+(2, NULL, '410702H', 'Nafata', 'KONE', 'Agent', 'Male', NULL, NULL, '1768237653_Photo identite COULIBALY Sié Yacouba 287 688C.JPG', NULL, '0707188674', 'Grand Bassam mockeyville', NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-12-09 15:06:21', '2026-01-12 17:07:33'),
+(3, NULL, '421263X', 'SIAKOURI', 'Justine', 'Agent', 'Male', NULL, NULL, '1768237839_Photo identite COULIBALY Sié Yacouba 287 688C.JPG', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 14, NULL, '2025-12-09 15:58:42', '2026-01-12 17:10:39'),
+(4, 'vb@10klhg', '100600A', 'KOMIAN', 'Anselm', 'Chef de service', 'Male', NULL, NULL, '1768237929_Photo identite COULIBALY Sié Yacouba 287 688C.JPG', 'coulsie@live.fr', NULL, NULL, NULL, NULL, NULL, 'amoin', '010124578', 13, NULL, '2025-12-12 14:43:58', '2026-01-12 17:12:09'),
+(5, 'vb@gmail.com', '100501F', 'KONAN', 'Aya', 'Chef de service', 'Female', '1968-01-05', NULL, NULL, 'konan@aya25', NULL, NULL, NULL, NULL, NULL, 'aurore', '125849637', 7, NULL, '2025-12-12 21:48:34', '2026-01-12 15:11:14'),
+(6, 'bgff@HGJK', '100235M', 'SYLLA', 'Youssouf', 'Sous-directeur', 'Male', '1980-01-01', 'ISSIA', NULL, 'youssouf@gmail.com', NULL, NULL, NULL, 'A6', NULL, 'HHHH', '455888', 6, NULL, '2025-12-13 10:23:37', '2026-01-12 15:11:14'),
+(7, 'didier@45', '100542Q', 'CAMARA', 'Naotchin Didier', 'Directeur', 'Male', '1971-02-01', 'DIVO', NULL, 'Sieben@v', '225 0707584396', '08 BP 2359', NULL, 'A7', NULL, 'rosalie45', '25665666', 14, NULL, '2025-12-13 10:49:55', '2026-01-12 15:11:14'),
+(8, 'sylva@gmail.com', '100222A', 'KOFFI', 'Sylvanus', 'Chef de service', 'Male', '1987-12-04', 'YAMOUSSOUKRO', NULL, 'sylvanus@yahoo.fr', '0584365858', '01BP4125', 'Ingenieur statiticien economiste', 'A5', '2007-01-01', 'Koffi rita', '55525666', 5, NULL, '2025-12-13 16:31:12', '2026-01-12 15:11:14'),
+(9, 'assa@gouv.ci', '102030kj', 'ASSAHORE', 'Didier', 'Agent', 'Female', '1987-01-01', 'BOUAKE', '1768236879_Photo identite COULIBALY Sié Yacouba 287 688C.JPG', NULL, '4578963215', '08 BP 2359', 'Technicien superieur en statistique', 'B3', '2017-06-01', 'Koffi rita', '12555', 12, NULL, '2026-01-12 16:54:39', '2026-01-12 16:54:39');
 
 -- --------------------------------------------------------
 
@@ -527,13 +528,13 @@ CREATE TABLE IF NOT EXISTS `presences` (
   `agent_id` bigint(20) UNSIGNED NOT NULL,
   `heure_arrivee` timestamp NOT NULL,
   `heure_depart` timestamp NULL DEFAULT NULL,
-  `statut` enum('Absent','Présent','En Retard','permissionnaire','congé') NOT NULL DEFAULT 'Présent',
+  `statut` enum('Absent','Présent','En Retard','permissionnaire','congé','Absence justifiée') NOT NULL DEFAULT 'Présent',
   `notes` text DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `presences_agent_id_foreign` (`agent_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=362 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `presences`
@@ -545,27 +546,42 @@ INSERT INTO `presences` (`id`, `agent_id`, `heure_arrivee`, `heure_depart`, `sta
 (23, 7, '2026-01-05 08:56:00', '2026-01-05 19:52:00', 'En Retard', NULL, '2026-01-05 16:53:04', '2026-01-05 16:53:04'),
 (24, 1, '2026-01-05 07:52:00', '2026-01-05 20:56:00', 'En Retard', NULL, '2026-01-05 16:57:30', '2026-01-05 16:57:30'),
 (25, 6, '2026-01-09 08:11:00', NULL, 'En Retard', 'permission', '2026-01-09 15:12:24', '2026-01-09 15:12:24'),
-(26, 6, '2025-12-29 08:00:00', NULL, 'Absent', 'Absence hebdomadaire validée le lundi.', '2026-01-11 15:02:21', '2026-01-11 15:02:21'),
-(27, 7, '2025-12-29 08:00:00', NULL, 'Absent', 'Absence hebdomadaire validée le lundi.', '2026-01-11 15:02:21', '2026-01-11 15:02:21'),
-(28, 2, '2025-12-30 08:00:00', NULL, 'Absent', 'Absence hebdomadaire validée le lundi.', '2026-01-11 15:02:21', '2026-01-11 15:02:21'),
-(29, 6, '2025-12-30 08:00:00', NULL, 'Absent', 'Absence hebdomadaire validée le lundi.', '2026-01-11 15:02:21', '2026-01-11 15:02:21'),
-(30, 7, '2025-12-30 08:00:00', NULL, 'Absent', 'Absence hebdomadaire validée le lundi.', '2026-01-11 15:02:21', '2026-01-11 15:02:21'),
-(31, 8, '2025-12-30 08:00:00', NULL, 'Absent', 'Absence hebdomadaire validée le lundi.', '2026-01-11 15:02:21', '2026-01-11 15:02:21'),
-(32, 2, '2025-12-31 08:00:00', NULL, 'Absent', 'Absence hebdomadaire validée le lundi.', '2026-01-11 15:02:21', '2026-01-11 15:02:21'),
-(33, 4, '2025-12-31 08:00:00', NULL, 'Absent', 'Absence hebdomadaire validée le lundi.', '2026-01-11 15:02:21', '2026-01-11 15:02:21'),
-(34, 6, '2025-12-31 08:00:00', NULL, 'Absent', 'Absence hebdomadaire validée le lundi.', '2026-01-11 15:02:21', '2026-01-11 15:02:21'),
-(35, 7, '2025-12-31 08:00:00', NULL, 'Absent', 'Absence hebdomadaire validée le lundi.', '2026-01-11 15:02:21', '2026-01-11 15:02:21'),
-(36, 8, '2025-12-31 08:00:00', NULL, 'Absent', 'Absence hebdomadaire validée le lundi.', '2026-01-11 15:02:21', '2026-01-11 15:02:21'),
-(37, 2, '2026-01-01 08:00:00', NULL, 'Absent', 'Absence hebdomadaire validée le lundi.', '2026-01-11 15:02:21', '2026-01-11 15:02:21'),
-(38, 4, '2026-01-01 08:00:00', NULL, 'Absent', 'Absence hebdomadaire validée le lundi.', '2026-01-11 15:02:21', '2026-01-11 15:02:21'),
-(39, 6, '2026-01-01 08:00:00', NULL, 'Absent', 'Absence hebdomadaire validée le lundi.', '2026-01-11 15:02:21', '2026-01-11 15:02:21'),
-(40, 7, '2026-01-01 08:00:00', NULL, 'Absent', 'Absence hebdomadaire validée le lundi.', '2026-01-11 15:02:21', '2026-01-11 15:02:21'),
-(41, 8, '2026-01-01 08:00:00', NULL, 'Absent', 'Absence hebdomadaire validée le lundi.', '2026-01-11 15:02:21', '2026-01-11 15:02:21'),
-(42, 2, '2026-01-02 08:00:00', NULL, 'Absent', 'Absence hebdomadaire validée le lundi.', '2026-01-11 15:02:21', '2026-01-11 15:02:21'),
-(43, 4, '2026-01-02 08:00:00', NULL, 'Absent', 'Absence hebdomadaire validée le lundi.', '2026-01-11 15:02:21', '2026-01-11 15:02:21'),
-(44, 6, '2026-01-02 08:00:00', NULL, 'Absent', 'Absence hebdomadaire validée le lundi.', '2026-01-11 15:02:21', '2026-01-11 15:02:21'),
-(45, 7, '2026-01-02 08:00:00', NULL, 'Absent', 'Absence hebdomadaire validée le lundi.', '2026-01-11 15:02:21', '2026-01-11 15:02:21'),
-(46, 8, '2026-01-02 08:00:00', NULL, 'Absent', 'Absence hebdomadaire validée le lundi.', '2026-01-11 15:02:21', '2026-01-11 15:02:21');
+(326, 2, '2026-01-05 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-05 00:00:00', '2026-01-12 10:18:31'),
+(327, 3, '2026-01-05 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-05 00:00:00', '2026-01-12 10:18:31'),
+(328, 4, '2026-01-05 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-05 00:00:00', '2026-01-12 10:18:31'),
+(329, 8, '2026-01-05 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-05 00:00:00', '2026-01-12 10:18:31'),
+(330, 1, '2026-01-06 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-06 00:00:00', '2026-01-12 10:18:31'),
+(331, 2, '2026-01-06 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-06 00:00:00', '2026-01-12 10:18:31'),
+(332, 3, '2026-01-06 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-06 00:00:00', '2026-01-12 10:18:31'),
+(333, 4, '2026-01-06 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-06 00:00:00', '2026-01-12 10:18:31'),
+(334, 6, '2026-01-06 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-06 00:00:00', '2026-01-12 10:18:31'),
+(335, 7, '2026-01-06 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-06 00:00:00', '2026-01-12 10:18:31'),
+(336, 8, '2026-01-06 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-06 00:00:00', '2026-01-12 10:18:31'),
+(337, 1, '2026-01-07 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-07 00:00:00', '2026-01-12 10:18:31'),
+(338, 2, '2026-01-07 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-07 00:00:00', '2026-01-12 10:18:31'),
+(339, 3, '2026-01-07 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-07 00:00:00', '2026-01-12 10:18:31'),
+(340, 4, '2026-01-07 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-07 00:00:00', '2026-01-12 10:18:31'),
+(341, 6, '2026-01-07 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-07 00:00:00', '2026-01-12 10:18:31'),
+(342, 7, '2026-01-07 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-07 00:00:00', '2026-01-12 10:18:31'),
+(343, 8, '2026-01-07 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-07 00:00:00', '2026-01-12 10:18:31'),
+(344, 1, '2026-01-08 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-08 00:00:00', '2026-01-12 10:18:31'),
+(345, 2, '2026-01-08 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-08 00:00:00', '2026-01-12 10:18:31'),
+(346, 3, '2026-01-08 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-08 00:00:00', '2026-01-12 10:18:31'),
+(347, 4, '2026-01-08 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-08 00:00:00', '2026-01-12 10:18:31'),
+(348, 6, '2026-01-08 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-08 00:00:00', '2026-01-12 10:18:31'),
+(349, 7, '2026-01-08 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-08 00:00:00', '2026-01-12 10:18:31'),
+(350, 8, '2026-01-08 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-08 00:00:00', '2026-01-12 10:18:31'),
+(351, 1, '2026-01-09 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-09 00:00:00', '2026-01-12 10:18:31'),
+(352, 2, '2026-01-09 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-09 00:00:00', '2026-01-12 10:18:31'),
+(353, 3, '2026-01-09 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-09 00:00:00', '2026-01-12 10:18:31'),
+(354, 4, '2026-01-09 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-09 00:00:00', '2026-01-12 10:18:31'),
+(355, 7, '2026-01-09 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-09 00:00:00', '2026-01-12 10:18:31'),
+(356, 8, '2026-01-09 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-09 00:00:00', '2026-01-12 10:18:31'),
+(357, 5, '2026-01-05 08:00:00', NULL, 'Absence justifiée', 'Justifié par autorisation.', '2026-01-05 00:00:00', '2026-01-12 10:26:27'),
+(358, 5, '2026-01-06 08:00:00', NULL, 'Absence justifiée', 'Justifié par autorisation.', '2026-01-06 00:00:00', '2026-01-12 10:26:27'),
+(359, 5, '2026-01-07 08:00:00', NULL, 'Absence justifiée', 'Justifié par autorisation.', '2026-01-07 00:00:00', '2026-01-12 10:26:27'),
+(360, 5, '2026-01-08 08:00:00', NULL, 'Absence justifiée', 'Justifié par autorisation.', '2026-01-08 00:00:00', '2026-01-12 10:26:27'),
+(361, 5, '2026-01-09 08:00:00', NULL, 'Absence justifiée', 'Justifié par autorisation.', '2026-01-09 00:00:00', '2026-01-12 10:26:27');
 
 -- --------------------------------------------------------
 
