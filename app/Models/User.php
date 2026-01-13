@@ -29,6 +29,13 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'is_active',
+        'email_verified_at',
+        'remember_token',
+        'password_changed_at',
+        'bio',
+        'profile_picture',
+
     ];
 
     /**
@@ -41,6 +48,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+  
     /**
      * Get the attributes that should be cast.
      *
@@ -53,6 +61,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    protected $casts = [
+        'role' => \App\Enums\UserRole::class,
+    ];
+
     public function affectations(): HasMany
     {
         return $this->hasMany(Affectation::class);

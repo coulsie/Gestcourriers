@@ -9,11 +9,15 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-use Illuminate\Validation\Rule;
+
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
+
+use Illuminate\Support\Facades\DB;   // <-- Ajout crucial pour DB
+use Illuminate\Support\Facades\Log;  // <-- Ajout crucial pour Log
+use Illuminate\Support\Facades\Hash; // <-- Pour Hash::make
+use Illuminate\Validation\Rule;      // <-- Pour Rule::in
+use PhpParser\Node\Expr\AssignOp\Plus;
 
 class AgentController extends Controller
 {
@@ -131,6 +135,21 @@ public function store(Request $request)
         'status' => 'required',
         'service_id' => 'required|exists:services,id',
         'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        'sexe' => 'nullable',
+        'date_of_birth' => 'nullable|date',
+        'place_birth' => 'nullable|string|max:191',
+        'email_professionnel' => ['nullable','email',Rule::unique('agents','email_professionnel')->ignore($agent->id)],
+        'email' => ['nullable','email',Rule::unique('agents','email')->ignore($agent->id)],
+        'phone_number' => 'nullable|string|max:191',
+        'address' => 'nullable|string|max:191',
+        'Emploi' => 'nullable|string|max:191',
+        'Grade' => 'nullable|string|max:191',
+        'Date_Prise_de_service' => 'nullable|date',
+        'Personne_a_prevenir' => 'nullable|string|max:191',
+        'Contact_personne_a_prevenir' => 'nullable|string|max:191',
+        'autres_champs' => 'nullable',
+        'user_id' => 'nullable|exists:users,id',
+        
         // Ajoutez vos autres champs ici...
     ]);
 
@@ -187,76 +206,96 @@ public function store(Request $request)
             return view('dashboard', compact('notifications'));
         }
 
-    public function Enr(Request $request)
-    {
-        $request->validate([
-            'email_professionnel' => 'nullable|email|unique:agents,email_professionnel',
-            'matricule' => 'required|string|max:191|unique:agents,matricule',
-            'first_name' => 'required|string|max:191',
-            'last_name' => 'required|string|max:191',
-            'status' => ['required',Rule::in(['Agent', 'Chef de service', 'Sous-directeur', 'Directeur']) // Ajustez selon vos ENUM
-            ],
-            'sexe' => ['nullable', Rule::in(['Male', 'Female'])],
-            'date_of_birth' => 'nullable|date',
-            'place_birth' => 'nullable|string|max:191',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validation de l'image
-            'email' => 'nullable|email|max:191|unique:agents,email',
-            'phone_number' => 'nullable|string|max:191',
-            'address' => 'nullable|string|max:191',
-            'Emploi' => 'nullable|string|max:191',
-            'Grade' => 'nullable|string|max:191',
-            'Date_Prise_de_service' => 'nullable|date',
-            'Personne_a_prevenir' => 'nullable|string|max:191',
-            'Contact_personne_a_prevenir' => 'nullable|string|max:191',
-            'service_id' => 'required|exists:services,id', // Assurez-vous que le service existe
-            'user_id' => 'nullable|exists:users,id',
+ public function Enr(Request $request)
+{
+    // 1. VALIDATION
+    $validatedData = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|max:191|unique:users,email',
+        'password' => 'required|string|min:3|confirmed',
+        'role' => 'required',
+        'matricule' => 'required|string|unique:agents,matricule',
+        'first_name' => 'required|string',
+        'last_name' => 'required|string',
+        'service_id' => 'required|exists:services,id',
+        'status' => 'required',
+        'email_professionnel' => 'nullable',
+        'sexe' => 'nullable',
+        'date_of_birth' => 'nullable',
+        'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validation stricte de l'image
+        'phone_number' => 'nullable',
+        'Emploi' => 'nullable',
+        'Grade' => 'nullable',
+        'Date_Prise_de_service' => 'nullable',
+        'Personne_a_prevenir' => 'nullable',
+        'Contact_personne_a_prevenir' => 'nullable',
+        'address' => 'nullable',
+        'place_birth' => 'nullable',
+        'adresse' => 'nullable',
+    ]);
+
+    try {
+        \Illuminate\Support\Facades\DB::beginTransaction();
+
+        // 2. GESTION DE LA PHOTO
+        $photoPath = null;
+        if ($request->hasFile('photo') && $request->file('photo')->isValid()) {
+            // Stockage dans storage/app/public/photos_agents
+            $photoPath = $request->file('photo')->store('photos_agents', 'public');
+        }
+
+        // 3. CRÉATION DU COMPTE UTILISATEUR
+        $user = \App\Models\User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => \Illuminate\Support\Facades\Hash::make($request->password),
+            'role' => $request->role,
+            'must_change_password' => $request->has('must_change_password'),
+            'profile_picture' => $photoPath, // Enregistre aussi le chemin ici si la colonne existe
         ]);
 
-        try {
-            DB::beginTransaction();
+        // 4. CRÉATION DE L'AGENT AVEC LA PHOTO
+        $agent = \App\Models\Agent::create([
+            'user_id' => $user->id,
+            'email' => $request->email_personnel,
+            'email_professionnel' => $request->email_professionnel,
+            'matricule' => $request->matricule,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'status' => $request->status,
+            'sexe' => $request->sexe,
+            'date_of_birth' => $request->date_of_birth,
+            'photo' => $photoPath, // <--- C'est cette ligne qui insère le chemin en base
+            'phone_number' => $request->phone_number,
+            'Emploi' => $request->Emploi,
+            'Grade' => $request->Grade,
+            'Date_Prise_de_service' => $request->Date_Prise_de_service,
+            'service_id' => $request->service_id,
+            'Personne_a_prevenir' => $request->Personne_a_prevenir,
+            'Contact_personne_a_prevenir' => $request->Contact_personne_a_prevenir,
+            'address' => $request->address,
+            'place_birth' => $request->place_birth,
+            'adresse' => $request->adresse,
 
-            // 1. Créer le compte utilisateur
-            $user = User::create([
-                'name' => $request->first_name . ' ' . $request->last_name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'role' => $request->role, // Récupérer le rôle depuis le formulaire
-                'is_active' => true,
+        ]);
 
-            ]);
+        \Illuminate\Support\Facades\DB::commit();
 
-            // 2. Créer l'agent lié à cet utilisateur
-            Agent::create([
-                'user_id' => $user->id, // Liaison
-                'last_name' => $request->last_name,
-                'first_name' => $request->first_name,
-                'telephone' => $request->telephone,
-                'email_professionnel' => $request->email_professionnel,
-                'matricule' => $request->matricule,
-                'status' => $request->status,
-                'sexe' => $request->sexe,
-                'date_of_birth' => $request->date_of_birth,
-                'place_birth' => $request->place_birth,
-                'photo' => $request->validate(['photo' => 'required|image|mimes:jpeg,png,jpg|max:2048','matricule' => 'required|string|unique:agents,matricule']),
-                'email' => $request->email,
-                'phone_number' => $request->phone_number,
-                'address' => $request->address,
-                'Emploi' => $request->Emploi,
-                'Grade' => $request->Grade,
-                'Date_Prise_de_service' => $request->Date_Prise_de_service,
-                'Personne_a_prevenir' => $request->Personne_a_prevenir,
-                'Contact_personne_a_prevenir' => $request->Contact_personne_a_prevenir,
-                'service_id' => $request->service_id, // Clé étrangère vers le service d'affectation
-                ]);
+        return redirect()->route('agents.index')->with('success', 'Agent et compte utilisateur créés avec succès !');
 
-            DB::commit();
-            return redirect()->route('agents.index')->with('success', 'Agent et compte créés avec succès.');
+    } catch (\Exception $e) {
+        \Illuminate\Support\Facades\DB::rollBack();
 
-        } catch (\Exception $e) {
-            DB::rollback();
-            return back()->withInput()->with('error', 'Erreur lors de la création : ' . $e->getMessage());
+        // En cas d'échec, on supprime la photo si elle a été physiquement enregistrée
+        if ($photoPath) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($photoPath);
         }
+
+        // Débogage : affiche l'erreur exacte (ex: colonne 'photo' manquante dans $fillable)
+        dd("Erreur lors de l'enregistrement : " . $e->getMessage());
     }
+}
+
 
         public function nouveau() {
             $services = \App\Models\Service::all(); // Assurez-vous que le modèle Service existe

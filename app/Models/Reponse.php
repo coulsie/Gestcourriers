@@ -1,0 +1,36 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class Reponse extends Model
+{
+    protected $fillable = [
+        'imputation_id',
+        'agent_id',
+        'contenu',
+        'fichiers_joints',
+        'date_reponse',
+        'pourcentage_avancement'
+    ];
+
+    protected $casts = [
+        'fichiers_joints' => 'array',
+        'date_reponse' => 'datetime',
+    ];
+
+    // Relation vers l'imputation
+    public function imputation(): BelongsTo
+    {
+        return $this->belongsTo(Imputation::class);
+    }
+
+    // Relation vers l'agent auteur de la réponse
+    public function agent(): BelongsTo
+    {
+        return $this->belongsTo(Agent::class);
+    }
+}
+

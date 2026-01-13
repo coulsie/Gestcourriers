@@ -49,7 +49,7 @@
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Tableau de Bord</span></a>
             </li>
-                @if(auth()->user()->role === 'admin')
+
                         <!-- CONTENU RÉSERVÉ À L'ADMINISTRATEUR -->
                         <div class="sidebar-heading">
                             Administration Système
@@ -66,6 +66,8 @@
                                     <h6 class="collapse-header">Utilisateurs & RH:</h6>
                                     <a class="collapse-item" href="{{ route('agents.nouveau') }}">Compte Utilisateur</a>
                                     <a class="collapse-item" href="{{ route('agents.index') }}">Ressources Humaines</a>
+                                    <a class="collapse-item" href="{{ route('imputations.index') }}">Imputations</a>
+                                    <a class="collapse-item" href="{{ route('imputations.mes_imputations') }}">Mes Imputations</a>
                                     <div class="collapse-divider"></div>
                                     <h6 class="collapse-header">Configurations:</h6>
                                     <a class="collapse-item" href="{{ route('typeabsences.index') }}">Paramétrage Absence</a>
@@ -91,7 +93,7 @@
                             </div>
                         </li>
 
-                    @endif
+
 
 
                 <hr class="sidebar-divider">

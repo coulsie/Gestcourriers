@@ -313,4 +313,92 @@ public function store(Request $request) {
 
             return view('notifications.index3', compact('notifications'));
         }
+
+    public function transmettre(Request $request, $id_originale)
+    {
+        // 1. Récupérer la notification source
+        $source = NotificationTache::findOrFail($id_originale);
+
+        // 2. Validation
+        $request->validate([
+            'agent_id' => 'required|exists:agents,id',
+            'description' => 'required|string',
+            'date_echeance' => 'nullable|date',
+        ]);
+
+        // 3. Récupérer l'utilisateur via la Façade (plus robuste)
+        $user = Auth::user();
+
+        // Sécurité : Vérifier que l'utilisateur est bien connecté
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        $role = $user->role;
+        $titre = "Imputation : " . $source->titre;
+
+        if ($role == 'Directeur') $titre = "[Primaire] " . $source->titre;
+        elseif ($role == 'Sous-directeur') $titre = "[Secondaire] " . $source->titre;
+        elseif ($role == 'Chef de service') $titre = "[Tertiaire] " . $source->titre;
+
+        // 4. Déterminer le nom de l'émetteur (Gestion sécurisée de la relation agent)
+        $nomEmetteur = ($user->agent)
+            ? $user->agent->first_name . ' ' . $user->agent->last_name
+            : $user->name;
+
+        // 5. Créer la nouvelle notification
+        NotificationTache::create([
+            'agent_id' => $request->agent_id,
+            'titre' => $titre,
+            'description' => $request->description,
+            'date_echeance' => $request->date_echeance ?? $source->date_echeance,
+            'suivi_par' => $nomEmetteur, // Correction ici
+            'priorite' => $request->priorite ?? $source->priorite,
+            'statut' => 'Non lu',
+            'document' => $source->document,
+            'lien_action' => $source->lien_action,
+        ]);
+
+        // 6. Mettre à jour la source
+        $source->update(['statut' => 'Complétée']);
+
+        return redirect()->route('notifications.index2')->with('success', 'Imputation transmise avec succès.');
+    }
+
+
+        public function showA($id)
+    {
+        $notification = NotificationTache::findOrFail($id);
+
+        if ($notification->statut === 'Non lu') {
+            $notification->update([
+                'statut' => 'En cours',
+                'date_lecture' => now()
+            ]);
+        }
+
+        // Utilisation sécurisée de la Façade Auth
+        $user = Auth::user();
+
+        // Si l'utilisateur n'est pas connecté, on redirige pour éviter l'erreur
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        $role = $user->role;
+        $subordonnes = [];
+
+        // Logique hiérarchique
+        if ($role === 'Directeur') {
+            $subordonnes = Agent::where('status', 'Sous-directeur')->get();
+        } elseif ($role === 'Sous-directeur') {
+            $subordonnes = Agent::where('status', 'Chef de service')->get();
+        } elseif ($role === 'Chef de service') {
+            $subordonnes = Agent::where('status', 'Agent')->get();
+        }
+
+        return view('notifications.show', compact('notification', 'subordonnes'));
+    }
+
+
 }

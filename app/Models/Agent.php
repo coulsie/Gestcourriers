@@ -100,4 +100,9 @@ class Agent extends Model
             return $this->hasMany(NotificationTache::class);
         }
         
+                public function imputations()
+        {
+            return $this->belongsToMany(Imputation::class, 'agent_imputation');
+        }
+
 }

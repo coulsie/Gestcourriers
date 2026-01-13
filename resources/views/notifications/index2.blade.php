@@ -82,7 +82,7 @@
                         </td>
                         <td class="text-center">
                             <div class="btn-group">
-                                <a href="{{ route('notifications.show', $notif->id_notification) }}" class="btn btn-sm btn-outline-primary" title="Voir">
+                                <a href="{{ route('notifications.showA', $notif->id_notification) }}" class="btn btn-sm btn-outline-primary" title="Voir">
                                     <i class="fas fa-eye"></i>
                                 </a>
                                 @if($notif->document)

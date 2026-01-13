@@ -32,8 +32,12 @@
                         <div class="mb-3">
                             <label for="role" class="form-label">Type d'accès (Rôle)</label>
                             <select name="role" class="form-select @error('role') is-invalid @enderror" required>
-                                <option value="user" {{ old('role') == 'user' ? 'selected' : '' }}>Agent (Utilisateur standard)</option>
-                                <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Administrateur</option>
+
+                                <option value="" disabled selected>-- Sélectionner un rôle --</option>
+                                <option value="directeur" {{ old('role') == 'directeur' ? 'selected' : '' }}>Directeur</option>
+                                <option value="sous_directeur" {{ old('role') == 'sous_directeur' ? 'selected' : '' }}>Sous-Directeur</option>
+                                <option value="chef_de_service" {{ old('role') == 'chef_de_service' ? 'selected' : '' }}>Chef de Service</option>
+                                <option value="agent" {{ old('role') == 'agent' ? 'selected' : '' }}>Agent</option>
                             </select>
                             @error('role') <span class="invalid-feedback">{{ $message }}</span> @enderror
                         </div>

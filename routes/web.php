@@ -1,22 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\{Auth, Route};
-
-// Importation des contrôleurs (Regroupés)
 use App\Http\Controllers\{
     HomeController, AdminController, UserController, ProfileController,
     AgentController, CourrierController, AffectationController,
     CourrierAffectationController, DirectionController, ServiceController,
     PresenceController, AbsenceController, TypeAbsenceController,
     EtatAgentsController, NotificationTacheController, AnnonceController,
-    ReponseNotificationController, AgentServiceController
+    ReponseNotificationController, AgentServiceController, ImputationController
 };
 
-use App\Http\Controllers\Auth\{
-    LoginController, RegisterController, ForgotPasswordController,
-    ResetPasswordController, VerificationController, ConfirmPasswordController,
-    PasswordSetupController
-};
+use App\Http\Controllers\Auth\PasswordSetupController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +31,12 @@ Auth::routes();
 Route::middleware(['auth'])->group(function () {
     Route::get('/password/setup', [PasswordSetupController::class, 'show'])->name('password.setup');
     Route::post('/password/setup', [PasswordSetupController::class, 'update'])->name('password.setup.update');
+
+    // --- GESTION DES IMPUTATIONS (2026) ---
+ // Déclaration de la route spécifique pour l'agent
+    Route::get('/imputations/mes-imputations', [ImputationController::class, 'mesImputations'])
+         ->name('imputations.mes_imputations'); // <--- C'est ce nom que le système cherche
+    Route::resource('imputations', ImputationController::class);
 });
 
 /*
@@ -65,31 +65,36 @@ Route::middleware(['auth', 'force.password'])->group(function () {
     });
 
     // --- GESTION DES AGENTS ---
-    Route::get('/agents/nouveau', [AgentController::class, 'nouveau'])->name('agents.nouveau');
-    Route::post('/agents/enregistrer', [AgentController::class, 'Enr'])->name('agents.enregistrer');
+    Route::prefix('agents')->group(function () {
+        Route::get('/nouveau', [AgentController::class, 'nouveau'])->name('agents.nouveau');
+        Route::post('/enregistrer', [AgentController::class, 'Enr'])->name('agents.enregistrer');
+    });
     Route::resource('agents', AgentController::class);
 
     // --- RH : PRÉSENCES & ABSENCES ---
-    // Les routes fixes (hebdo, stats) AVANT les resources pour éviter les 404
-    Route::get('/presences/validation-hebdo', [PresenceController::class, 'indexValidationHebdo'])->name('presences.validation-hebdo');
-    Route::post('/presences/valider-hebdo', [PresenceController::class, 'storeValidationHebdo'])->name('presences.valider-hebdo');
+    Route::prefix('presences')->name('presences.')->group(function () {
+        Route::get('/validation-hebdo', [PresenceController::class, 'indexValidationHebdo'])->name('validation-hebdo');
+        Route::post('/valider-hebdo', [PresenceController::class, 'storeValidationHebdo'])->name('valider-hebdo');
+        Route::get('/etat', [PresenceController::class, 'statsPresences'])->name('etat');
+        Route::get('/stats', [PresenceController::class, 'stats'])->name('etatperiodique');
+    });
     Route::get('/rapports/presences/periodique', [PresenceController::class, 'rapport'])->name('rapports.presences.periodique');
 
-    Route::get('/presences/etat', [PresenceController::class, 'statsPresences'])->name('presences.etat');
-    Route::get('/presences/stats', [PresenceController::class, 'stats'])->name('presences.etatperiodique');
     Route::resource('presences', PresenceController::class);
-
-    Route::resource('typeabsences', TypeAbsenceController::class);
-    Route::get('/typeabsences/{id}/edit', [TypeAbsenceController::class, 'edit'])->name('typeabsences.edit'); // Fix edit route
     Route::resource('absences', AbsenceController::class);
+    Route::resource('typeabsences', TypeAbsenceController::class);
+    Route::get('/typeabsences/{id}/edit', [TypeAbsenceController::class, 'edit'])->name('typeabsences.edit');
 
     // --- GESTION DES COURRIERS & AFFECTATIONS ---
-    Route::get('/courriers/visualiser/{id}', [CourrierController::class, 'visualiserDocument'])
-    ->name('courriers.visualiser');
-    Route::get('/courriers/recherche', [CourrierController::class, 'RechercheAffichage'])->name('courriers.RechercheAffichage');
-    Route::get('/courriers/{id}/affecter', [CourrierAffectationController::class, 'create'])->name('courriers.affectation.create');
-    Route::post('/courriers/{id}/affecter', [CourrierAffectationController::class, 'store'])->name('courriers.affectation.store');
-    Route::get('/courriers/{courrier}/affectation', [CourrierAffectationController::class, 'show'])->name('courriers.affectation.show');
+    Route::prefix('courriers')->name('courriers.')->group(function () {
+        Route::get('/visualiser/{id}', [CourrierController::class, 'visualiserDocument'])->name('visualiser');
+        Route::get('/recherche', [CourrierController::class, 'RechercheAffichage'])->name('RechercheAffichage');
+
+        // Sous-groupe Affectation pour Courriers
+        Route::get('/{id}/affecter', [CourrierAffectationController::class, 'create'])->name('affectation.create');
+        Route::post('/{id}/affecter', [CourrierAffectationController::class, 'store'])->name('affectation.store');
+        Route::get('/{courrier}/affectation', [CourrierAffectationController::class, 'show'])->name('affectation.show');
+    });
 
     Route::resource('courriers', CourrierController::class);
     Route::resource('courriers.affectations', AffectationController::class)->shallow();
@@ -98,18 +103,24 @@ Route::middleware(['auth', 'force.password'])->group(function () {
     Route::resource('affectations', AffectationController::class);
 
     // --- ÉTATS & RAPPORTS ---
-    Route::get('/etats/agents-par-service', [EtatAgentsController::class, 'index'])->name('etats.agents_par_service');
-    Route::get('/etats/recherche', [EtatAgentsController::class, 'Recherche'])->name('etats.agents_par_service_recherche');
+    Route::prefix('etats')->name('etats.')->group(function () {
+        Route::get('/agents-par-service', [EtatAgentsController::class, 'index'])->name('agents_par_service');
+        Route::get('/recherche', [EtatAgentsController::class, 'Recherche'])->name('agents_par_service_recherche');
+    });
 
-    Route::match(['get', 'post'], '/etat-agents-par-service', [AgentServiceController::class, 'listeParService'])->name('agents.par.service');
-    Route::match(['get', 'post'], '/etat-agents-par-service/recherche', [AgentServiceController::class, 'recherche'])->name('agents.par.service.recherche');
+    Route::prefix('etat-agents-par-service')->name('agents.par.service')->group(function () {
+        Route::match(['get', 'post'], '/', [AgentServiceController::class, 'listeParService']);
+        Route::match(['get', 'post'], '/recherche', [AgentServiceController::class, 'recherche'])->name('.recherche');
+    });
 
     // --- NOTIFICATIONS & RÉPONSES ---
     Route::prefix('notifications')->name('notifications.')->group(function () {
         Route::get('/index1', [NotificationTacheController::class, 'index1'])->name('index1');
         Route::get('/index2', [NotificationTacheController::class, 'index2'])->name('index2');
         Route::get('/index3', [NotificationTacheController::class, 'index3'])->name('index3');
+        Route::get('/{id}/voir', [NotificationTacheController::class, 'showA'])->name('showA');
         Route::get('/{id}/visualiser', [NotificationTacheController::class, 'visualiserDocument'])->name('visualiser');
+        Route::post('/transmettre/{id}', [NotificationTacheController::class, 'transmettre'])->name('transmettre');
         Route::post('/{id_notification}/read', [NotificationTacheController::class, 'markAsRead'])->name('markAsRead');
     });
     Route::resource('notifications', NotificationTacheController::class)->parameters(['notifications' => 'id_notification']);
@@ -121,9 +132,5 @@ Route::middleware(['auth', 'force.password'])->group(function () {
 
     // --- ANNONCES & STRUCTURE ---
     Route::resource('annonces', AnnonceController::class);
-    Route::get('/annonces/{annonce}/download', [AnnonceController::class, 'downloadAttachment'])->name('annonces.downloadAttachment');
-    Route::post('/annonces/{annonce}/read', [AnnonceController::class, 'markAsRead'])->name('annonces.markAsRead');
-
-    Route::resource('directions', DirectionController::class);
-    Route::resource('services', ServiceController::class);
+    // Ajoutez ici DirectionController ou ServiceController si nécessaire via resource
 });
