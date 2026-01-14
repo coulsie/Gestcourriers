@@ -4,15 +4,29 @@
 <div class="container-fluid py-4">
     <!-- En-tête Dynamique -->
     <div class="row mb-4">
-        <div class="col-md-12">
-            <div class="card border-0 shadow-lg" style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);">
-                <div class="card-body p-4 text-white">
-                    <h3 class="fw-bold mb-1"><i class="fas fa-user-check me-2"></i>Mon Bureau Virtuel</h3>
-                    <p class="mb-0 opacity-75">Suivi en temps réel de vos dossiers au {{ date('d/m/Y') }}</p>
+    <div class="col-md-12">
+        <div class="card border-0 shadow-lg" style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);">
+            <div class="card-body p-4 text-white">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0 me-3">
+                        <div class="bg-white text-primary rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 60px; height: 60px;">
+                            <i class="fas fa-user-tie fa-2x"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="fw-bold mb-1">
+                            <i class="fas fa-folder-open me-2"></i>Dossier Virtuel de :
+                            {{ auth()->user()->agent->first_name ?? '' }} {{ strtoupper(auth()->user()->agent->last_name ?? auth()->user()->name) }}
+                        </h3>
+                        <p class="mb-0 opacity-75">
+                            <i class="fas fa-calendar-day me-1"></i> Suivi en temps réel de vos dossiers au {{ date('d/m/Y à H:i') }}
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
     <div class="card shadow-lg border-0 rounded-3">
         <div class="card-body p-0">

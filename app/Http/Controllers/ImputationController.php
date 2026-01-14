@@ -8,6 +8,7 @@ use App\Models\Courrier;
 use App\Models\Agent;
 use App\Models\User;
 use App\Models\Service;
+use App\Models\Reponse;
 use Illuminate\Support\Facades\DB;   // RÉSOUT : Undefined type 'DB'
 use Illuminate\Support\Facades\Auth; // RÉSOUT : Undefined method 'user' (via Auth::user)
 use Illuminate\Support\Facades\Hash;
@@ -64,70 +65,82 @@ class ImputationController extends Controller
      */
 
         public function store(Request $request)
-        {
-            // On enlève le dd() pour laisser le code s'exécuter
-            $request->validate([
-                'courrier_id' => 'required',
-                'agent_ids'   => 'required|array',
-                'instructions'=> 'required',
-            ]);
+    {
+        $request->validate([
+            'agent_ids' => 'required|array',
+                'instructions' => 'required|string',
+                'annexes.*' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:10240',
+                'echeancier' => 'nullable|date',
+                'observations' => 'nullable|string',
+                'statut' => 'required|string',
+                'courrier_id' => 'required|exists:courriers,id',
+                'date_imputation' => 'required|date',
+                'niveau' => 'required|string',
+                'documents_annexes' => 'nullable',
+                'user_id' => 'required|exists:users,id',
+        ]);
 
-            try {
-                $user = auth::user();
+        try {
+            $user = auth::user();
 
-                // Détermination du niveau
-                $roleRaw = ($user->role instanceof \UnitEnum) ? $user->role->value : $user->role;
-                $roleValue = strtolower((string)$roleRaw);
-                $niveau = match($roleValue) {
-                    'directeur' => 'primaire',
-                    'sous_directeur' => 'secondaire',
-                    'chef_de_service' => 'tertiaire',
-                    default => 'tertiaire',
-                };
+            // Détermination du niveau hiérarchique
+            $roleRaw = ($user->role instanceof \UnitEnum) ? $user->role->value : $user->role;
+            $roleValue = strtolower((string)$roleRaw);
+            $niveau = match($roleValue) {
+                'directeur'       => 'primaire',
+                'sous_directeur'  => 'secondaire',
+                'chef_de_service' => 'tertiaire',
+                default           => 'tertiaire',
+            };
 
-                // Gestion fichiers
-                $filePaths = [];
-                if ($request->hasFile('annexes')) {
-                    foreach ($request->file('annexes') as $file) {
-                        $filePaths[] = $file->store('imputations/annexes', 'public');
-                    }
+            // 1. GESTION DES FICHIERS (Stockage direct dans public/documents)
+            $filePaths = [];
+            if ($request->hasFile('annexes')) {
+                foreach ($request->file('annexes') as $file) {
+                    // Génération d'un nom unique avec timestamp
+                    $fileName = time() . '_' . $file->getClientOriginalName();
+
+                    // Déplacement physique vers public/documents/imputations/annexes
+                    $file->move(public_path('documents/imputations/annexes'), $fileName);
+
+                    // On ajoute le nom du fichier au tableau
+                    $filePaths[] = $fileName;
                 }
-
-                // INSERTION DIRECTE (Sans transaction pour voir l'erreur brute)
-                $imputation = new \App\Models\Imputation();
-                $imputation->courrier_id = $request->courrier_id;
-                $imputation->user_id = $user->id;
-                $imputation->niveau = $niveau;
-                $imputation->instructions = $request->instructions;
-                $imputation->observations = $request->observations;
-                $imputation->documents_annexes = json_encode($filePaths);
-                $imputation->date_imputation = now()->format('Y-m-d');
-                $imputation->echeancier = $request->echeancier;
-                $imputation->statut = 'en_attente';
-
-                // On force la sauvegarde
-                $saveSuccess = $imputation->save();
-
-                if ($saveSuccess) {
-                    // Liaison des agents
-                        $imputation->agents()->sync($request->agent_ids);
-    // 2. MISE À JOUR DU STATUT DU COURRIER
-                // On récupère le courrier et on change son statut en 'Affecté'
-                $courrier = \App\Models\Courrier::find($request->courrier_id);
-                    if ($courrier) {
-                        $courrier->update(['statut' => 'Affecté']);
-                    }
-
-                    return redirect()->route('imputations.index')->with('success', 'Enregistré avec succès !');
-                } else {
-                    dd("L'enregistrement a échoué sans erreur SQL. Vérifiez les événements (Observers) du modèle.");
-                }
-
-            } catch (\Exception $e) {
-                // CECI DOIT VOUS AFFICHER L'ERREUR REELLE
-                dd("ERREUR DETECTEE : " . $e->getMessage());
             }
+
+            // 2. INSERTION DE L'IMPUTATION
+            $imputation = new \App\Models\Imputation();
+            $imputation->courrier_id = $request->courrier_id;
+            $imputation->user_id = $user->id;
+            $imputation->niveau = $niveau;
+            $imputation->instructions = $request->instructions;
+            $imputation->observations = $request->observations;
+            // Enregistrement des noms de fichiers sous format JSON
+            $imputation->documents_annexes = json_encode($filePaths);
+            $imputation->date_imputation = now()->format('Y-m-d');
+            $imputation->echeancier = $request->echeancier;
+            $imputation->statut = 'en_attente';
+
+            if ($imputation->save()) {
+                // Liaison des agents (Table pivot)
+                $imputation->agents()->sync($request->agent_ids);
+
+                // 3. MISE À JOUR DU STATUT DU COURRIER PARENT
+                $courrier = \App\Models\Courrier::find($request->courrier_id);
+                if ($courrier) {
+                    $courrier->update(['statut' => 'Affecté']);
+                }
+
+                return redirect()->route('imputations.index')->with('success', 'Imputation enregistrée et courrier marqué comme Affecté !');
+            } else {
+                dd("L'enregistrement a échoué. Vérifiez vos logs.");
+            }
+
+        } catch (\Exception $e) {
+            // Affiche l'erreur précise en cas de problème
+            dd("ERREUR DETECTEE : " . $e->getMessage());
         }
+    }
 
 
 
@@ -163,21 +176,113 @@ class ImputationController extends Controller
     }
 
 
-    public function update(Request $request, Imputation $imputation)
-    {
-        $request->validate([
-            'agent_ids' => 'required|array',
-            'instructions' => 'required|string',
-        ]);
+        public function update(Request $request, Imputation $imputation)
+{
+    $validated = $request->validate([
+        'agent_ids' => 'required|array',
+        'instructions' => 'required|string',
+        'annexes.*' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:10240',
+        'echeancier' => 'nullable|date',
+        'statut' => 'required|string',
+        'courrier_id' => 'required|exists:courriers,id',
+        'niveau' => 'required|string',
+        'user_id' => 'required|exists:users,id',
+    ]);
 
-        // Synchronisation des agents dans la table pivot
+    try {
+        // On utilise les données validées pour éviter les injections
+        $data = $request->except(['annexes', 'agent_ids']);
+
+        // 1. GESTION DES DOCUMENTS ANNEXES
+        if ($request->hasFile('annexes')) {
+            // Nettoyage anciens fichiers
+            $anciensFichiers = is_string($imputation->documents_annexes)
+                ? json_decode($imputation->documents_annexes, true)
+                : $imputation->documents_annexes;
+
+            if (is_array($anciensFichiers)) {
+                foreach ($anciensFichiers as $ancienNom) {
+                    $ancienPath = public_path('documents/imputations/annexes/' . $ancienNom);
+                    if (file_exists($ancienPath)) @unlink($ancienPath);
+                }
+            }
+
+            // Nouveaux fichiers
+            $newFilePaths = [];
+            foreach ($request->file('annexes') as $file) {
+                $fileName = time() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
+                $file->move(public_path('documents/imputations/annexes'), $fileName);
+                $newFilePaths[] = $fileName;
+            }
+
+            // IMPORTANT : Si vous utilisez le "Casting" array dans le modèle,
+            // passez directement le tableau, sinon encodez-le.
+            $data['documents_annexes'] = $newFilePaths;
+        }
+
+        // 2. Synchronisation des agents
         $imputation->agents()->sync($request->agent_ids);
 
-        // Mise à jour des autres champs
-        $imputation->update($request->all());
+        // 3. Mise à jour (Assurez-vous que les champs sont en "fillable" dans le modèle)
+        $imputation->update($data);
 
-        return redirect()->route('imputations.index')->with('success', 'Imputation mise à jour.');
+        return redirect()->route('imputations.index')->with('success', 'Imputation mise à jour avec succès.');
+
+    } catch (\Exception $e) {
+        return back()->withInput()->with('error', 'Erreur : ' . $e->getMessage());
+    }
+}
+
+        public function reponse() {
+            return $this->hasOne(Reponse::class, 'imputation_id');
+        }
+
+
+
+public function destroy(Imputation $imputation)
+{
+    try {
+        // 1. Supprimer les fichiers joints physiquement s'ils existent
+        if ($imputation->documents_annexes) {
+            $fichiers = is_array($imputation->documents_annexes)
+                ? $imputation->documents_annexes
+                : json_decode($imputation->documents_annexes, true);
+
+            if (is_array($fichiers)) {
+                foreach ($fichiers as $fichier) {
+                    $chemin = public_path('documents/imputations/annexes/' . $fichier);
+                    if (file_exists($chemin)) {
+                        @unlink($chemin);
+                    }
+                }
+            }
+        }
+
+        // 2. Supprimer les relations dans la table pivot (agents)
+        $imputation->agents()->detach();
+
+        // 3. Supprimer l'imputation
+        $imputation->delete();
+
+        return redirect()->route('imputations.index')
+            ->with('success', 'L\'imputation a été supprimée avec succès.');
+
+    } catch (\Exception $e) {
+        return back()->with('error', 'Erreur lors de la suppression : ' . $e->getMessage());
+    }
+}
+
+
+
+
+
+
+
+
+
+
     }
 
 
-    }
+
+

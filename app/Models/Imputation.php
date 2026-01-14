@@ -17,15 +17,9 @@ class Imputation extends Model
     protected $table = 'imputations';
 
    protected $fillable = [
-    'courrier_id',
-    'user_id',
-    'niveau',
-    'instructions',
-    'observations',
-    'documents_annexes',
-    'date_imputation',
-    'echeancier',
-    'statut'
+   'instructions', 'echeancier', 'observations', 'statut',
+    'courrier_id', 'date_imputation', 'niveau',
+    'documents_annexes', 'user_id', 'date_traitement'
 ];
 
 // Relation indispensable pour la table agent_imputation

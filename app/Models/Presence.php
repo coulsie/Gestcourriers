@@ -37,6 +37,8 @@ class Presence extends Model
        'heure_arrivee' => 'datetime',
        'heure_depart' => 'datetime',
         'statut'       => 'string',
+        'fichiers_joints' => 'array',
+        'notes'        => 'string',
     ];
     protected $dates = [
         'heure_arrivee',
@@ -48,7 +50,7 @@ class Presence extends Model
     /**
      * Une présence appartient à un agent.
      */
-    
+
     // --- Scopes Locaux (Utile pour filtrer facilement les absences) ---
 
     /**

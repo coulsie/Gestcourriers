@@ -21,6 +21,13 @@
                         @csrf
                         @method('PUT')
 
+                        <input type="hidden" name="user_id" value="{{ $imputation->user_id }}">
+                        <input type="hidden" name="courrier_id" value="{{ $imputation->courrier_id }}">
+                        <input type="hidden" name="date_imputation" value="{{ $imputation->date_imputation }}">
+                        <input type="hidden" name="niveau" value="{{ $imputation->niveau }}">
+
+
+
                         <!-- SECTION 1 : RÉFÉRENCE COURRIER (Lecture seule - Style Alerte Douce) -->
                         <div class="mb-4 p-3 rounded-3 border-start border-4 border-warning shadow-sm" style="background-color: #fffbeb;">
                             <label class="form-label fw-bold text-warning-700 small text-uppercase mb-2">
@@ -120,7 +127,7 @@
                                     @endphp
                                     @if(is_array($fichiers))
                                         @foreach($fichiers as $file)
-                                            <a href="{{ asset('storage/' . $file) }}" target="_blank" class="btn btn-sm btn-outline-dark me-2 mb-1 shadow-sm">
+                                            <a href="{{asset('documents/imputations/annexes/' . $file) }}" target="_blank" class="btn btn-sm btn-outline-dark me-2 mb-1 shadow-sm">
                                                 <i class="fas fa-file-pdf text-danger me-1"></i> {{ basename($file) }}
                                             </a>
                                         @endforeach

@@ -17,9 +17,11 @@ class Reponse extends Model
     ];
 
     protected $casts = [
-        'fichiers_joints' => 'array',
-        'date_reponse' => 'datetime',
+        'fichiers_joints' => 'array', // Convertit automatiquement le tableau en JSON pour MariaDB
+        'date_reponse' => 'datetime'
+         
     ];
+
 
     // Relation vers l'imputation
     public function imputation(): BelongsTo

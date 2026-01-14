@@ -24,7 +24,25 @@
                 <div class="card-body p-4" style="background-color: #f8fafc;">
                     <form action="{{ route('imputations.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
+                                            <!-- AJOUT DES CHAMPS REQUIS MANQUANTS -->
+                        <input type="hidden" name="user_id" value="{{ auth()->id() }}">
 
+                      <!-- Niveau dynamique selon le rôle -->
+                                            @php
+                            $niveau = 1;
+                            // On vérifie directement la valeur de la colonne 'role' dans la base de données
+                            $userRole = auth()->user()->role;
+
+                            if ($userRole === 'Directeur') {
+                                $niveau = 3;
+                            } elseif ($userRole === 'Chef de Service') {
+                                $niveau = 2;
+                            } else {
+                                $niveau = 1;
+                            }
+                        @endphp
+                        <input type="hidden" name="niveau" value="{{ $niveau }}">
+                        
                         <div class="row">
                             <!-- SECTION 1 : DOCUMENTS & DATES -->
                             <div class="col-md-6 mb-4">

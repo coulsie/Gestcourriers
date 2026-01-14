@@ -1,6 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
+@if ($errors->any())
+    <div class="alert alert-danger mx-4 mt-3">
+        <ul class="mb-0">
+            @foreach ($errors->all() as $error) <li>{{ $error }}</li> @endforeach
+        </ul>
+    </div>
+@endif
 <div class="container-fluid py-4">
     <div class="row justify-content-center">
         <div class="col-lg-11">
@@ -140,7 +147,7 @@
                             <div class="list-group list-group-flush border rounded-3">
                                 @if(is_array($annexes))
                                     @foreach($annexes as $file)
-                                        <a href="{{ asset('storage/' . $file) }}" target="_blank" class="list-group-item list-group-item-action d-flex align-items-center py-3">
+                                        <a href="{{ asset('documents/imputations/annexes/' . $file) }}" target="_blank" class="list-group-item list-group-item-action d-flex align-items-center py-3">
                                             <i class="fas fa-file-pdf text-danger fs-4 me-3"></i>
                                             <div class="overflow-hidden">
                                                 <div class="text-dark fw-semibold small text-truncate">{{ basename($file) }}</div>
@@ -149,6 +156,7 @@
                                         </a>
                                     @endforeach
                                 @endif
+
                             </div>
                         </div>
                     </div>
@@ -193,7 +201,7 @@
 
                            @if($reponse->fichiers_joints)
                                 @php
-                                    
+
                                     $files = is_array($reponse->fichiers_joints)
                                             ? $reponse->fichiers_joints
                                             : json_decode($reponse->fichiers_joints, true);
@@ -226,6 +234,9 @@
                     <form action="{{ route('reponses.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="imputation_id" value="{{ $imputation->id }}">
+
+                        <!-- Champ fichiers au format tableau [] -->
+                        <input type="file" name="fichiers[]" multiple class="form-control">
 
                         <div class="mb-3">
                             <label class="form-label fw-bold small">Votre message *</label>
