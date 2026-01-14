@@ -191,14 +191,23 @@
                             </div>
                             <p class="mb-2 text-dark">{{ $reponse->contenu }}</p>
 
-                            @if($reponse->fichiers_joints)
-                                <div class="mt-2">
-                                    @foreach($reponse->fichiers_joints as $file)
-                                        <a href="{{ asset('storage/' . $file) }}" target="_blank" class="btn btn-xs btn-outline-danger py-1 px-2 small">
-                                            <i class="fas fa-file-pdf me-1"></i> Document joint
-                                        </a>
-                                    @endforeach
-                                </div>
+                           @if($reponse->fichiers_joints)
+                                @php
+                                    
+                                    $files = is_array($reponse->fichiers_joints)
+                                            ? $reponse->fichiers_joints
+                                            : json_decode($reponse->fichiers_joints, true);
+                                @endphp
+
+                                @if(is_array($files))
+                                    <div class="mt-2">
+                                        @foreach($files as $file)
+                                            <a href="{{ asset('storage/' . $file) }}" target="_blank" class="btn btn-xs btn-outline-danger py-1 px-2 small">
+                                                <i class="fas fa-file-pdf me-1"></i> Document joint
+                                            </a>
+                                        @endforeach
+                                    </div>
+                                @endif
                             @endif
                         </div>
                     @empty
