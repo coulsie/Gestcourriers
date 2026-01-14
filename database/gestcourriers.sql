@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3307
--- Généré le : lun. 12 jan. 2026 à 17:31
+-- Généré le : mer. 14 jan. 2026 à 07:48
 -- Version du serveur : 11.4.9-MariaDB
 -- Version de PHP : 8.3.28
 
@@ -122,7 +122,7 @@ CREATE TABLE IF NOT EXISTS `agents` (
   UNIQUE KEY `agents_email_professionnel_unique` (`email_professionnel`),
   KEY `agents_service_id_foreign` (`service_id`),
   KEY `agents_user_id_foreign` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `agents`
@@ -130,14 +130,41 @@ CREATE TABLE IF NOT EXISTS `agents` (
 
 INSERT INTO `agents` (`id`, `email_professionnel`, `matricule`, `first_name`, `last_name`, `status`, `sexe`, `date_of_birth`, `place_birth`, `photo`, `email`, `phone_number`, `address`, `Emploi`, `Grade`, `Date_Prise_de_service`, `Personne_a_prevenir`, `Contact_personne_a_prevenir`, `service_id`, `user_id`, `created_at`, `updated_at`) VALUES
 (1, 'coulsie@live.fr', '287688C', 'Sié Yacouba', 'COULIBALY', 'Agent', 'Male', '1972-12-04', 'PLATEAU', '1768237714_Photo identite COULIBALY Sié Yacouba 287 688C.JPG', 'coulsie@gmail.com', '0707584396', '08 BP 2359 ABIDJAN 08', 'Inspecteur Principal Informatique', 'A6', '2025-07-08', 'COULIBALY Youssef Kiyali', '0143677424', 1, 1, '2025-12-04 13:36:01', '2026-01-12 17:08:34'),
-(2, NULL, '410702H', 'Nafata', 'KONE', 'Agent', 'Male', NULL, NULL, '1768237653_Photo identite COULIBALY Sié Yacouba 287 688C.JPG', NULL, '0707188674', 'Grand Bassam mockeyville', NULL, NULL, NULL, NULL, NULL, 1, NULL, '2025-12-09 15:06:21', '2026-01-12 17:07:33'),
 (3, NULL, '421263X', 'SIAKOURI', 'Justine', 'Agent', 'Male', NULL, NULL, '1768237839_Photo identite COULIBALY Sié Yacouba 287 688C.JPG', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 14, NULL, '2025-12-09 15:58:42', '2026-01-12 17:10:39'),
 (4, 'vb@10klhg', '100600A', 'KOMIAN', 'Anselm', 'Chef de service', 'Male', NULL, NULL, '1768237929_Photo identite COULIBALY Sié Yacouba 287 688C.JPG', 'coulsie@live.fr', NULL, NULL, NULL, NULL, NULL, 'amoin', '010124578', 13, NULL, '2025-12-12 14:43:58', '2026-01-12 17:12:09'),
 (5, 'vb@gmail.com', '100501F', 'KONAN', 'Aya', 'Chef de service', 'Female', '1968-01-05', NULL, NULL, 'konan@aya25', NULL, NULL, NULL, NULL, NULL, 'aurore', '125849637', 7, NULL, '2025-12-12 21:48:34', '2026-01-12 15:11:14'),
 (6, 'bgff@HGJK', '100235M', 'SYLLA', 'Youssouf', 'Sous-directeur', 'Male', '1980-01-01', 'ISSIA', NULL, 'youssouf@gmail.com', NULL, NULL, NULL, 'A6', NULL, 'HHHH', '455888', 6, NULL, '2025-12-13 10:23:37', '2026-01-12 15:11:14'),
 (7, 'didier@45', '100542Q', 'CAMARA', 'Naotchin Didier', 'Directeur', 'Male', '1971-02-01', 'DIVO', NULL, 'Sieben@v', '225 0707584396', '08 BP 2359', NULL, 'A7', NULL, 'rosalie45', '25665666', 14, NULL, '2025-12-13 10:49:55', '2026-01-12 15:11:14'),
 (8, 'sylva@gmail.com', '100222A', 'KOFFI', 'Sylvanus', 'Chef de service', 'Male', '1987-12-04', 'YAMOUSSOUKRO', NULL, 'sylvanus@yahoo.fr', '0584365858', '01BP4125', 'Ingenieur statiticien economiste', 'A5', '2007-01-01', 'Koffi rita', '55525666', 5, NULL, '2025-12-13 16:31:12', '2026-01-12 15:11:14'),
-(9, 'assa@gouv.ci', '102030kj', 'ASSAHORE', 'Didier', 'Agent', 'Female', '1987-01-01', 'BOUAKE', '1768236879_Photo identite COULIBALY Sié Yacouba 287 688C.JPG', NULL, '4578963215', '08 BP 2359', 'Technicien superieur en statistique', 'B3', '2017-06-01', 'Koffi rita', '12555', 12, NULL, '2026-01-12 16:54:39', '2026-01-12 16:54:39');
+(9, 'assa@gouv.ci', '102030kj', 'ASSAHORE', 'Didier', 'Agent', 'Female', '1987-01-01', 'BOUAKE', '1768236879_Photo identite COULIBALY Sié Yacouba 287 688C.JPG', NULL, '4578963215', '08 BP 2359', 'Technicien superieur en statistique', 'B3', '2017-06-01', 'Koffi rita', '12555', 12, NULL, '2026-01-12 16:54:39', '2026-01-12 16:54:39'),
+(10, 'roussou@dgi.gouv.ci', '291264E', 'Rosine Générosa Epse DJE', 'OUSSOU', 'Agent', 'Female', '1976-01-21', NULL, '1768309488_Photo_2026-01-13_114214.jpg', 'oussou.ge@gmail.com', '0707728488', NULL, 'ATTACHE DE DIRECTION', 'A3', '2011-04-12', NULL, NULL, 2, 5, '2026-01-13 13:02:51', '2026-01-13 13:04:48'),
+(11, 'nafikone@dgi.gouv.ci', '410702H', 'Nafata', 'KONE', 'Agent', 'Female', '1982-07-21', 'MARCORY', '1768315144_Photo_2026-01-13_143311.jpg', 'nafie410@gmail.com', '0707188674', 'Bassam Mockeyville', 'Contrôleur des Impôts', 'B3', '2014-11-03', 'KONE Dieudoné', '0747234646', 1, 6, '2026-01-13 14:38:30', '2026-01-13 14:50:04');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `agent_imputation`
+--
+
+DROP TABLE IF EXISTS `agent_imputation`;
+CREATE TABLE IF NOT EXISTS `agent_imputation` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `imputation_id` bigint(20) UNSIGNED NOT NULL,
+  `agent_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `agent_imputation_imputation_id_foreign` (`imputation_id`),
+  KEY `agent_imputation_agent_id_foreign` (`agent_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `agent_imputation`
+--
+
+INSERT INTO `agent_imputation` (`id`, `imputation_id`, `agent_id`, `created_at`, `updated_at`) VALUES
+(2, 2, 1, NULL, NULL),
+(3, 3, 10, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -367,6 +394,40 @@ INSERT INTO `horaires` (`id`, `jour`, `heure_debut`, `heure_fin`, `tolerance_ret
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `imputations`
+--
+
+DROP TABLE IF EXISTS `imputations`;
+CREATE TABLE IF NOT EXISTS `imputations` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `courrier_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `niveau` enum('primaire','secondaire','tertiaire') NOT NULL,
+  `instructions` text DEFAULT NULL,
+  `observations` text DEFAULT NULL,
+  `documents_annexes` text DEFAULT NULL,
+  `date_imputation` date NOT NULL DEFAULT '2026-01-13',
+  `date_traitement` date DEFAULT NULL,
+  `echeancier` date DEFAULT NULL,
+  `statut` enum('en_attente','en_cours','termine') NOT NULL DEFAULT 'en_attente',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `imputations_courrier_id_foreign` (`courrier_id`),
+  KEY `imputations_user_id_foreign` (`user_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `imputations`
+--
+
+INSERT INTO `imputations` (`id`, `courrier_id`, `user_id`, `niveau`, `instructions`, `observations`, `documents_annexes`, `date_imputation`, `date_traitement`, `echeancier`, `statut`, `created_at`, `updated_at`) VALUES
+(2, 17, 1, 'primaire', 'ghujkiki', 'approche', '\"[]\"', '2026-01-13', NULL, '2026-01-17', 'en_attente', '2026-01-13 17:04:06', '2026-01-13 17:04:06'),
+(3, 18, 1, 'primaire', 'travail à faire', 'urgent', '\"[]\"', '2026-01-13', NULL, '2026-01-15', 'en_attente', '2026-01-13 17:04:55', '2026-01-13 17:04:55');
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `jobs`
 --
 
@@ -416,7 +477,7 @@ CREATE TABLE IF NOT EXISTS `migrations` (
   `migration` varchar(255) NOT NULL,
   `batch` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `migrations`
@@ -455,7 +516,10 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (30, '2026_01_04_120452_create_annonces_table', 30),
 (31, '2026_01_05_151012_create_horaires_table', 31),
 (32, '2026_01_06_151247_add_affecter_to_courriers_table', 32),
-(33, '2026_01_09_222247_add_document_justificatif_to_absences_table', 33);
+(33, '2026_01_09_222247_add_document_justificatif_to_absences_table', 33),
+(34, '2026_01_13_083901_update_user_role_in_users_table', 34),
+(35, '2026_01_13_151143_create_imputations_table', 35),
+(36, '2026_01_13_175520_create_reponses_table', 36);
 
 -- --------------------------------------------------------
 
@@ -586,6 +650,28 @@ INSERT INTO `presences` (`id`, `agent_id`, `heure_arrivee`, `heure_depart`, `sta
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `reponses`
+--
+
+DROP TABLE IF EXISTS `reponses`;
+CREATE TABLE IF NOT EXISTS `reponses` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `imputation_id` bigint(20) UNSIGNED NOT NULL,
+  `agent_id` bigint(20) UNSIGNED NOT NULL,
+  `contenu` text NOT NULL,
+  `fichiers_joints` text DEFAULT NULL,
+  `date_reponse` datetime NOT NULL DEFAULT '2026-01-13 18:02:05',
+  `pourcentage_avancement` int(11) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `reponses_imputation_id_foreign` (`imputation_id`),
+  KEY `reponses_agent_id_foreign` (`agent_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `reponse_notifications`
 --
 
@@ -712,7 +798,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `role` varchar(191) NOT NULL DEFAULT 'user',
+  `role` varchar(191) NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) NOT NULL,
   `must_change_password` tinyint(1) NOT NULL DEFAULT 0,
@@ -723,16 +809,16 @@ CREATE TABLE IF NOT EXISTS `users` (
   `profile_picture` varchar(191) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_email_unique` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `users`
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `role`, `email_verified_at`, `password`, `must_change_password`, `remember_token`, `created_at`, `updated_at`, `bio`, `profile_picture`) VALUES
-(1, 'Coulibaly Sie Yacouba', 'coulsie@gmail.com', 'admin', NULL, '$2y$12$WAjiSLgNkjOq52FJwCm5dO0HMHY8HyP1aA5dMArsLqFT.kvZTzvvy', 0, 'LlzUSHOwWyD5neqebsxnUyXKLJewGsZbnhUQ8Up0nsQDfLuh3vULnJz9PZRo', '2025-11-17 17:37:48', '2025-11-17 17:37:48', NULL, NULL),
-(3, 'Yacoub', 'coulsie@live.fr', 'user', NULL, '$2y$12$XkM6OYaChSDICBzxhSgfkuJcBBUHxS8uUVzAVteO8PSoOgisJhvmm', 0, NULL, '2025-12-18 15:16:46', '2025-12-18 15:16:46', NULL, NULL),
-(4, 'Maman', 'ouattanass@gmail.com', 'user', NULL, '$2y$12$OTuC6vrFt5lohvrby4P0qOKdaq5gOtzBu6yUpFwYS4kSHe1MtZVcq', 0, NULL, '2025-12-18 16:00:20', '2025-12-18 16:00:20', NULL, NULL);
+(1, 'Coulibaly Sie Yacouba', 'coulsie@gmail.com', 'directeur', NULL, '$2y$12$WAjiSLgNkjOq52FJwCm5dO0HMHY8HyP1aA5dMArsLqFT.kvZTzvvy', 0, 'LlzUSHOwWyD5neqebsxnUyXKLJewGsZbnhUQ8Up0nsQDfLuh3vULnJz9PZRo', '2025-11-17 17:37:48', '2025-11-17 17:37:48', NULL, NULL),
+(5, 'Mme DJE', 'roussou@dgi.gouv.ci', 'chef_de_service', NULL, '$2y$12$fKc77kSkJLCrCqdH5Z/x3uGijMJLyszTM4/iUjDcQfJgYp/hGvPG.', 0, NULL, '2026-01-13 13:02:51', '2026-01-13 13:02:51', NULL, 'photos_agents/7ppiDfHIS3Zv8A6VVlvelLmb2YLDatUt4BsXT2Nz.jpg'),
+(6, 'nafi kone', 'nafikone@dgi.gouv.ci', 'directeur', NULL, '$2y$12$Q3WWtwkM6TjYJucHx6TNWet4spgYHsANhszcxpc4dfpsf39vUwAuq', 0, NULL, '2026-01-13 14:38:30', '2026-01-13 14:38:30', NULL, 'photos_agents/XbfkwHmUFPB9p0FRJ68go4zdDCDwDUVokNe6iSVa.jpg');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
