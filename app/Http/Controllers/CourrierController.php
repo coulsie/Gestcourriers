@@ -39,32 +39,41 @@ class CourrierController extends Controller
      */
     public function store(Request $request)
     {
-
+        // 1. Validation des données
         $validatedData = $request->validate([
-            'reference' => 'required|unique:courriers|max:255',
-            'type' => 'required',
-            'objet' => 'required',
-            'description' => 'nullable|string',
-            'date_courrier' => 'nullable|date',
-            'expediteur_nom' => 'required|string|max:255',
-            'expediteur_contact' => 'nullable|string|max:255',
-            'destinataire_nom' => 'required|string|max:255',
+            'reference'            => 'required|unique:courriers|max:255',
+            'type'                 => 'required',
+            'objet'                => 'required',
+            'description'          => 'nullable|string',
+            'date_courrier'        => 'nullable|date',
+            'expediteur_nom'       => 'required|string|max:255',
+            'expediteur_contact'   => 'nullable|string|max:255',
+            'destinataire_nom'     => 'required|string|max:255',
             'destinataire_contact' => 'nullable|string|max:255',
-            'assigne_a' => 'nullable|string|max:255',
-            'chemin_fichier' => 'nullable|string|max:255',
-            'statut' => 'required|string',
-            'affecter' => 'required|boolean',
-
-            // ... Ajoutez d'autres règles de validation ici
+            'assigne_a'            => 'nullable|string|max:255',
+            'statut'               => 'required|string',
+            'affecter'             => 'required|boolean',
+            'chemin_fichier'       => 'nullable|file|mimes:pdf,jpg,png|max:10240',
         ]);
-        if ($request->hasFile('chemin_fichier')) {
-            $path = $request->file('chemin_fichier')->store('public/documents');
-            // Stocke uniquement le chemin relatif pour la DB
-            $validatedData['chemin_fichier'] = Storage::url($path);
-           }
 
-        // $courrier = Courrier::create($validatedData);
-        $courrier = Courrier::create($request->all());//Laissez all() ici
+        // 2. Gestion du téléchargement du fichier (Nouveau Courrier)
+        if ($request->hasFile('chemin_fichier')) {
+            $file = $request->file('chemin_fichier');
+
+            // Générer un nom unique
+            $fileName = time() . '_' . $file->getClientOriginalName();
+
+            // Déplacer vers public/Documents
+            $file->move(public_path('Documents'), $fileName);
+
+            // Enregistrer le nom du fichier dans le tableau des données
+            $validatedData['chemin_fichier'] = $fileName;
+        }
+
+        // 3. Création du courrier en base de données
+        Courrier::create($validatedData);
+
+        // 4. Redirection
         return redirect()->route('courriers.index')->with('success', 'Courrier créé avec succès.');
     }
 
@@ -98,23 +107,57 @@ class CourrierController extends Controller
      * @param  \App\Models\Courrier  $courrier
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Courrier $courrier)
+        public function update(Request $request, Courrier $courrier)
     {
+        // 1. Validation des données (on exclut la référence actuelle de la règle unique)
         $validatedData = $request->validate([
-            'reference' => 'required|max:255|unique:courriers,reference,' . $courrier->id,
-            'type' => 'required',
-            'objet' => 'required',
-            // ... Ajoutez d'autres règles de validation ici
+            'reference'            => 'required|max:255|unique:courriers,reference,' . $courrier->id,
+            'type'                 => 'required',
+            'objet'                => 'required',
+            'description'          => 'nullable|string',
+            'date_courrier'        => 'nullable|date',
+            'expediteur_nom'       => 'required|string|max:255',
+            'expediteur_contact'   => 'nullable|string|max:255',
+            'destinataire_nom'     => 'required|string|max:255',
+            'destinataire_contact' => 'nullable|string|max:255',
+            'assigne_a'            => 'nullable|string|max:255',
+            'statut'               => 'required|string',
+            'affecter'             => 'required|boolean',
+            'chemin_fichier'       => 'nullable|file|mimes:pdf,jpg,png|max:10240',
         ]);
 
-        // $courrier->update($validatedData);
-       //$courrier->update($request->all());
+        // 2. Gestion du fichier (Mise à jour)
+        if ($request->hasFile('chemin_fichier')) {
+
+            // --- ÉTAPE A : Supprimer l'ancien fichier du dossier public/Documents s'il existe ---
+            if ($courrier->chemin_fichier) {
+                $ancienPath = public_path('Documents/' . $courrier->chemin_fichier);
+                if (file_exists($ancienPath)) {
+                    unlink($ancienPath);
+                }
+            }
+
+            // --- ÉTAPE B : Stocker le nouveau fichier ---
+            $file = $request->file('chemin_fichier');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('Documents'), $fileName);
+
+            // --- ÉTAPE C : Mettre à jour le nom dans le tableau de validation ---
+            $validatedData['chemin_fichier'] = $fileName;
+
+        } else {
+            // Si aucun nouveau fichier n'est envoyé, on garde l'ancien nom de fichier
+            // (On retire 'chemin_fichier' de la validation pour ne pas écraser par NULL)
+            unset($validatedData['chemin_fichier']);
+        }
+
+        // 3. Mise à jour de la base de données
         $courrier->update($validatedData);
 
+        // 4. Redirection
         return redirect()->route('courriers.index')
-                         ->with('success', 'Courrier mis à jour avec succès.');
+                        ->with('success', 'Courrier mis à jour avec succès.');
     }
-
     /**
      * Supprimer le courrier spécifié de la base de données.
      *

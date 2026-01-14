@@ -103,20 +103,29 @@
                                             <label for="destinataire_nom" class="form-label fw-bold">{{ __('Destinataire (Nom/Service)') }} <span class="text-danger">*</span></label>
                                             <input id="destinataire_nom" type="text" class="form-control @error('destinataire_nom') is-invalid @enderror" name="destinataire_nom" value="{{ old('destinataire_nom', 'Direction Générale') }}" required>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Section 3: Pièce Jointe -->
-                        <div class="p-3 mt-3 mb-4 bg-white rounded shadow-sm border">
-                            <h5 class="text-primary border-bottom pb-2 mb-3">{{ __('Document Numérisé') }}</h5>
-                            <div class="mb-3">
-                                <label for="chemin_fichier" class="form-label fw-bold">{{ __('Choisir le fichier (PDF, Image)') }}</label>
-                                <input type="file" class="form-control @error('chemin_fichier') is-invalid @enderror" id="chemin_fichier" name="chemin_fichier">
-                                <small class="text-muted">Format accepté : PDF, JPG, PNG (Max 5Mo)</small>
-                            </div>
+                        <
+                        <div class="mb-3">
+                                <label for="chemin_fichier">Document (PDF, Image)</label>
+                                <input type="file" name="chemin_fichier" id="chemin_fichier" class="form-control">
+                        </div>
+
+                            <!-- Champ Affecter (S'assurer qu'il a une valeur) -->
+                        <div class="mb-3">
+                            <label for="affecter" class="form-label">Est-ce que ce courrier doit être affecté ?</label>
+                            <select name="affecter" id="affecter" class="form-control @error('affecter') is-invalid @enderror">
+                                <option value="0" {{ old('affecter') == '0' ? 'selected' : '' }}>Non (Pas encore affecté)</option>
+                                <option value="1" {{ old('affecter') == '1' ? 'selected' : '' }}>Oui (À affecter)</option>
+                            </select>
+                            @error('affecter')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <!-- Boutons d'action -->
@@ -134,4 +143,6 @@
         </div>
     </div>
 </div>
+
+
 @endsection
