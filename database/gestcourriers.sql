@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3307
--- Généré le : mer. 14 jan. 2026 à 07:48
+-- Généré le : mer. 14 jan. 2026 à 10:46
 -- Version du serveur : 11.4.9-MariaDB
 -- Version de PHP : 8.3.28
 
@@ -156,7 +156,7 @@ CREATE TABLE IF NOT EXISTS `agent_imputation` (
   PRIMARY KEY (`id`),
   KEY `agent_imputation_imputation_id_foreign` (`imputation_id`),
   KEY `agent_imputation_agent_id_foreign` (`agent_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `agent_imputation`
@@ -164,7 +164,8 @@ CREATE TABLE IF NOT EXISTS `agent_imputation` (
 
 INSERT INTO `agent_imputation` (`id`, `imputation_id`, `agent_id`, `created_at`, `updated_at`) VALUES
 (2, 2, 1, NULL, NULL),
-(3, 3, 10, NULL, NULL);
+(3, 3, 10, NULL, NULL),
+(4, 4, 11, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -268,15 +269,15 @@ CREATE TABLE IF NOT EXISTS `courriers` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `courriers_reference_unique` (`reference`),
   KEY `courriers_assigne_a_foreign` (`assigne_a`(250))
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `courriers`
 --
 
 INSERT INTO `courriers` (`id`, `affecter`, `reference`, `type`, `objet`, `description`, `date_courrier`, `expediteur_nom`, `expediteur_contact`, `destinataire_nom`, `destinataire_contact`, `statut`, `assigne_a`, `chemin_fichier`, `created_at`, `updated_at`) VALUES
-(2, 1, '0210', 'Outgoing', 'info', NULL, '2025-12-01', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'affecté', NULL, NULL, '2025-12-01 15:55:11', '2026-01-06 16:42:11'),
-(3, 0, '1010', 'Outgoing', 'Information', NULL, '2025-12-03', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-03 16:37:56', '2025-12-03 16:37:56'),
+(2, 1, '0210', 'Outgoing', 'info', NULL, '2025-12-01', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, '1768382360_Document_2025-11-27_121019.pdf', '2025-12-01 15:55:11', '2026-01-14 09:19:20'),
+(3, 0, '1010', 'Outgoing', 'Information', NULL, '2025-12-03', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, '1768382499_Document_2025-11-27_121019.pdf', '2025-12-03 16:37:56', '2026-01-14 09:21:39'),
 (4, 0, '2134', 'Outgoing', 'Information', NULL, '2025-12-04', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-04 07:57:30', '2025-12-04 17:05:58'),
 (6, 1, '203', 'Incoming', 'Information', NULL, '2025-12-04', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-04 07:58:40', '2026-01-06 16:20:52'),
 (7, 1, '10425', 'Incoming', 'travail a faire', NULL, '2025-12-05', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'affecté', NULL, NULL, '2025-12-05 08:24:02', '2026-01-06 16:32:01'),
@@ -289,8 +290,12 @@ INSERT INTO `courriers` (`id`, `affecter`, `reference`, `type`, `objet`, `descri
 (14, 0, '11121', 'Outgoing', 'TAF', NULL, '2025-12-11', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-11 12:21:08', '2025-12-11 12:21:08'),
 (15, 0, '001', 'Outgoing', 'TAF', NULL, '2025-12-11', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-11 12:21:38', '2025-12-11 12:21:38'),
 (16, 0, '1111111011002025', 'Incoming', 'TAF', 'tpo', '2025-12-11', 'SAPH', '0707584396', 'S/D GUDEF', '1223566', 'reçu', 'COUL', NULL, '2025-12-11 14:01:42', '2025-12-11 14:01:42'),
-(17, 0, '123588996', 'Incoming', 'bnh', 'hgfiuluoioiu', '2025-12-11', 'h,njkll', '014535536', 'bkjlkml', '254966', 'reçu', NULL, NULL, '2025-12-11 16:13:59', '2025-12-11 16:13:59'),
-(18, 1, '24A', 'Incoming', 'Bon pour Travaux', 'Appréciation du Directeur', '2025-12-12', 'DMGE', '0584365858', 'DSESF', '254966', 'reçu', 'KOFFI', '243 ADJAME DALLAS 25 juin 2025 VERSION 1.docx', '2025-12-12 09:08:13', '2026-01-06 16:21:27');
+(17, 0, '123588996', 'Incoming', 'bnh', 'hgfiuluoioiu', '2025-12-11', 'h,njkll', '014535536', 'bkjlkml', '254966', 'reçu', NULL, '1768384181_CNI COUOLIBALY SIE YACOUBA (1).pdf', '2025-12-11 16:13:59', '2026-01-14 09:49:41'),
+(18, 1, '24A', 'Incoming', 'Bon pour Travaux', 'Appréciation du Directeur', '2025-12-12', 'DMGE', '0584365858', 'DSESF', '254966', 'reçu', 'KOFFI', '1768382020_CNI COUOLIBALY SIE YACOUBA (1).pdf', '2025-12-12 09:08:13', '2026-01-14 09:13:40'),
+(19, 1, '12345859', 'Incoming', 'TAF', 'VOIR DEMAIN', '2026-01-12', 'CABINET DGI', '0707584396', 'DSESF', NULL, 'reçu', NULL, 'documents/VzULWwqZZuLpUYgBhfV5wTxvLGqkb2FYAWpzBjXa.pdf', '2026-01-14 08:39:50', '2026-01-14 08:39:50'),
+(20, 1, '101', 'Outgoing', 'Information', 'dfghghgh', '2026-01-13', 'SAPH', '0707584396', 'DSESF', NULL, 'reçu', NULL, 'documents/hlgzqgQeaNvRJl94K7IX3zkkZFhIczQQtyoFIWyY.pdf', '2026-01-14 08:44:42', '2026-01-14 08:44:42'),
+(21, 1, '322332', 'Incoming', 'Information', 'nafata parles trop', '2026-01-12', 'BNI', '0584365858', 'DSESF', NULL, 'en_traitement', NULL, '1768381087_CNI COUOLIBALY SIE YACOUBA.pdf', '2026-01-14 08:58:07', '2026-01-14 08:58:07'),
+(22, 0, '2103', 'Outgoing', 'TAF', 'hjkjjk', '2026-01-14', 'non sp12écifié', '0707584396', 'Direction Générale', NULL, 'reçu', NULL, '1768384155_CNI COUOLIBALY SIE YACOUBA (1).pdf', '2026-01-14 09:49:15', '2026-01-14 09:49:15');
 
 -- --------------------------------------------------------
 
@@ -415,7 +420,7 @@ CREATE TABLE IF NOT EXISTS `imputations` (
   PRIMARY KEY (`id`),
   KEY `imputations_courrier_id_foreign` (`courrier_id`),
   KEY `imputations_user_id_foreign` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `imputations`
@@ -423,7 +428,8 @@ CREATE TABLE IF NOT EXISTS `imputations` (
 
 INSERT INTO `imputations` (`id`, `courrier_id`, `user_id`, `niveau`, `instructions`, `observations`, `documents_annexes`, `date_imputation`, `date_traitement`, `echeancier`, `statut`, `created_at`, `updated_at`) VALUES
 (2, 17, 1, 'primaire', 'ghujkiki', 'approche', '\"[]\"', '2026-01-13', NULL, '2026-01-17', 'en_attente', '2026-01-13 17:04:06', '2026-01-13 17:04:06'),
-(3, 18, 1, 'primaire', 'travail à faire', 'urgent', '\"[]\"', '2026-01-13', NULL, '2026-01-15', 'en_attente', '2026-01-13 17:04:55', '2026-01-13 17:04:55');
+(3, 18, 1, 'primaire', 'travail à faire', 'urgent', '\"[]\"', '2026-01-13', NULL, '2026-01-15', 'en_attente', '2026-01-13 17:04:55', '2026-01-13 17:04:55'),
+(4, 21, 1, 'primaire', 'fates vite', NULL, '\"[\\\"imputations\\\\\\/annexes\\\\\\/NDUIgx2ggt7VAG32aEGrZBRMghfRzVvY0jk8g6wZ.pdf\\\"]\"', '2026-01-14', NULL, '2026-01-15', 'en_attente', '2026-01-14 10:02:49', '2026-01-14 10:02:49');
 
 -- --------------------------------------------------------
 
