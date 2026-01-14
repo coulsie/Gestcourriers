@@ -104,7 +104,7 @@ class ReponseNotificationController extends Controller
             }
 
             // Ajoutez 'notification' dans le compact
-            return view('reponses.create', compact('id_notification', 'agent_id', 'notification'));
+            return view('reponsesNotifications.create', compact('id_notification', 'agent_id', 'notification'));
         }
 
 }

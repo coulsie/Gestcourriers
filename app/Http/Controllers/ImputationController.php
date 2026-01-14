@@ -34,14 +34,15 @@ class ImputationController extends Controller
         return view('Imputations.create', compact('courriers', 'agents', 'services'));
     }
 
+
+
     public function show(Imputation $imputation)
     {
-        // Chargement des relations nécessaires
-        $imputation->load(['courrier', 'agents.service', 'auteur']);
+        // Charger les relations et les réponses triées par date
+        $imputation->load(['courrier', 'agents.service', 'auteur', 'reponses.agent']);
 
         return view('Imputations.show', compact('imputation'));
     }
-
 
 
     /**
@@ -128,7 +129,7 @@ class ImputationController extends Controller
         }
 
 
-        
+
     public function edit(Imputation $imputation)
     {
         // Chargement des données nécessaires pour les listes de choix

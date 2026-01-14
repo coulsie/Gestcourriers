@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+use Illuminate\Database\Eloquent\Relations\HasMany; // <-- AJOUTER CETTE LIGNE
 class Imputation extends Model
 {
     use HasFactory;
@@ -42,7 +43,7 @@ class Imputation extends Model
         'echeancier'      => 'date',
         'documents_annexes' => 'array', // Utile si vous stockez plusieurs chemins en JSON
     ];
-    
+
 
     /**
      * Relation avec le Courrier (Le document associé).
@@ -68,5 +69,13 @@ class Imputation extends Model
     public function assignedAgents(): BelongsToMany
     {
         return $this->belongsToMany(Agent::class, 'agent_imputation');
-}
+     }
+
+     public function reponses(): HasMany
+    {
+        // Vérifiez que le modèle Reponse existe bien
+        return $this->hasMany(Reponse::class);
+    }
+
+
 }

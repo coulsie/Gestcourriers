@@ -30,49 +30,47 @@ class ReponseController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        $request->validate([
-            'imputation_id' => 'required|exists:imputations,id',
-            'contenu' => 'required|string|min:10',
-            'fichiers.*' => 'nullable|file|mimes:pdf,doc,docx,jpg,png|max:5120',
-        ]);
+        {
+            $request->validate([
+                'imputation_id' => 'required|exists:imputations,id',
+                'contenu' => 'required|string|min:5',
+                'pourcentage_avancement' => 'required|integer|min:0|max:100',
+            ]);
 
-        try {
-          return \Illuminate\Support\Facades\DB::transaction(function () use ($request) {
-                $agent = auth::user()->agent; // On récupère l'agent lié à l'user connecté
-
-                // 1. Gestion des fichiers
-                $paths = [];
-                if ($request->hasFile('fichiers')) {
-                    foreach ($request->file('fichiers') as $file) {
-                        $paths[] = $file->store('reponses/fichiers', 'public');
+            try {
+                DB::transaction(function () use ($request) {
+                    // 1. Stockage fichiers
+                    $filePaths = [];
+                    if ($request->hasFile('fichiers')) {
+                        foreach ($request->file('fichiers') as $file) {
+                            $filePaths[] = $file->store('reponses/annexes', 'public');
+                        }
                     }
-                }
 
-                // 2. Création de la réponse
-                $reponse = Reponse::create([
-                    'imputation_id' => $request->imputation_id,
-                    'agent_id' => $agent->id,
-                    'contenu' => $request->contenu,
-                    'fichiers_joints' => $paths,
-                    'pourcentage_avancement' => $request->pourcentage_avancement,
-                ]);
+                    // 2. Création réponse
+                    Reponse::create([
+                        'imputation_id' => $request->imputation_id,
+                        'agent_id' => auth::user()->agent->id,
+                        'contenu' => $request->contenu,
+                        'fichiers_joints' => $filePaths,
+                        'date_reponse' => now(),
+                        'pourcentage_avancement' => $request->pourcentage_avancement,
+                    ]);
 
-                // 3. Mise à jour automatique du statut de l'imputation
-                $imputation = Imputation::find($request->imputation_id);
-                if ($request->pourcentage_avancement == 100) {
-                    $imputation->update(['statut' => 'termine', 'date_traitement' => now()]);
-                } else {
-                    $imputation->update(['statut' => 'en_cours']);
-                }
+                    // 3. Mise à jour statut imputation
+                    $imputation = Imputation::find($request->imputation_id);
+                    if ($request->pourcentage_avancement == 100) {
+                        $imputation->update(['statut' => 'termine', 'date_traitement' => now()]);
+                    } else {
+                        $imputation->update(['statut' => 'en_cours']);
+                    }
+                });
 
-                return redirect()->back()->with('success', 'Votre réponse a été transmise.');
-            });
-        } catch (\Exception $e) {
-            return back()->with('error', 'Erreur : ' . $e->getMessage());
+                return back()->with('success', 'Réponse enregistrée avec succès.');
+            } catch (\Exception $e) {
+                return back()->with('error', 'Erreur : ' . $e->getMessage());
+            }
         }
-    }
-
     /**
      * Display the specified resource.
      */

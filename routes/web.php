@@ -7,7 +7,7 @@ use App\Http\Controllers\{
     CourrierAffectationController, DirectionController, ServiceController,
     PresenceController, AbsenceController, TypeAbsenceController,
     EtatAgentsController, NotificationTacheController, AnnonceController,
-    ReponseNotificationController, AgentServiceController, ImputationController
+    ReponseNotificationController, AgentServiceController, ImputationController, ReponseController
 };
 
 use App\Http\Controllers\Auth\PasswordSetupController;
@@ -98,7 +98,7 @@ Route::middleware(['auth', 'force.password'])->group(function () {
 
     Route::resource('courriers', CourrierController::class);
     Route::resource('courriers.affectations', AffectationController::class)->shallow();
-
+    
     Route::put('/affectations/{affectation}/status', [AffectationController::class, 'updateStatus'])->name('affectations.updateStatus');
     Route::resource('affectations', AffectationController::class);
 
@@ -125,7 +125,10 @@ Route::middleware(['auth', 'force.password'])->group(function () {
     });
     Route::resource('notifications', NotificationTacheController::class)->parameters(['notifications' => 'id_notification']);
 
-    Route::prefix('reponses')->name('reponses.')->group(function () {
+
+    Route::post('/reponses/store', [ReponseController::class, 'store'])->name('reponses.store')->middleware('auth');
+
+    Route::prefix('reponsesNotifications')->name('reponsesnotifications.')->group(function () {
         Route::get('/create/{id_notification}', [ReponseNotificationController::class, 'create'])->name('create');
         Route::post('/store', [ReponseNotificationController::class, 'store'])->name('store');
     });

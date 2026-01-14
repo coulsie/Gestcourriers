@@ -172,6 +172,89 @@
                     </div>
                 </div>
             </div>
+            <!-- SECTION RÉPONSES ET ACTIONS -->
+<div class="row mt-4">
+    <div class="col-lg-12">
+        <div class="card shadow-lg border-0 rounded-3">
+            <div class="card-header bg-dark text-white py-3">
+                <h5 class="mb-0 fw-bold"><i class="fas fa-comments me-2"></i>Traitement & Réponses</h5>
+            </div>
+            <div class="card-body p-4">
+
+                <!-- Liste des réponses existantes -->
+                <div class="timeline mb-4">
+                    @forelse($imputation->reponses as $reponse)
+                        <div class="p-3 mb-3 rounded-3 shadow-sm border-start border-4 {{ $reponse->agent_id == auth()->user()->agent->id ? 'border-primary bg-primary-subtle' : 'border-secondary bg-light' }}">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="fw-bold"><i class="fas fa-user-edit me-2"></i>{{ $reponse->agent->first_name }} {{ $reponse->agent->last_name }}</span>
+                                <span class="small text-muted">{{ $reponse->date_reponse->format('d/m/Y à H:i') }}</span>
+                            </div>
+                            <p class="mb-2 text-dark">{{ $reponse->contenu }}</p>
+
+                            @if($reponse->fichiers_joints)
+                                <div class="mt-2">
+                                    @foreach($reponse->fichiers_joints as $file)
+                                        <a href="{{ asset('storage/' . $file) }}" target="_blank" class="btn btn-xs btn-outline-danger py-1 px-2 small">
+                                            <i class="fas fa-file-pdf me-1"></i> Document joint
+                                        </a>
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
+                    @empty
+                        <div class="text-center py-3 text-muted italic">
+                            <i class="fas fa-info-circle me-1"></i> Aucune réponse n'a encore été enregistrée pour ce dossier.
+                        </div>
+                    @endforelse
+                </div>
+
+                <hr class="my-4">
+
+                <!-- Formulaire de réponse pour l'agent connecté -->
+                @if($imputation->statut != 'termine')
+                <div class="bg-white p-4 rounded-3 border border-primary shadow-sm">
+                    <h6 class="fw-bold text-primary mb-3"><i class="fas fa-reply me-2"></i>Envoyer une réponse / Compte-rendu</h6>
+                    <form action="{{ route('reponses.store') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <input type="hidden" name="imputation_id" value="{{ $imputation->id }}">
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small">Votre message *</label>
+                            <textarea name="contenu" class="form-control border-primary shadow-sm" rows="4" placeholder="Décrivez l'état d'avancement ou le résultat du traitement..." required></textarea>
+                        </div>
+
+                        <div class="row align-items-end">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-bold small text-success">Avancement (%)</label>
+                                <select name="pourcentage_avancement" class="form-select border-success fw-bold">
+                                    <option value="25">25% (Débuté)</option>
+                                    <option value="50">50% (En cours)</option>
+                                    <option value="75">75% (Presque fini)</option>
+                                    <option value="100">100% (Terminé)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-5 mb-3">
+                                <label class="form-label fw-bold small">Joindre des justificatifs (PDF/JPG)</label>
+                                <input type="file" name="fichiers[]" class="form-control shadow-sm" multiple>
+                            </div>
+                            <div class="col-md-3 mb-3 d-grid">
+                                <button type="submit" class="btn btn-primary fw-bold shadow">
+                                    <i class="fas fa-paper-plane me-2"></i>TRANSMETTRE
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                @else
+                    <div class="alert alert-success text-center fw-bold">
+                        <i class="fas fa-check-double me-2"></i> Ce dossier est clôturé. Aucune autre réponse n'est requise.
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
+</div>
+
         </div>
     </div>
 </div>
