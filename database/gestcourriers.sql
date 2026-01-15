@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3307
--- Généré le : jeu. 15 jan. 2026 à 12:55
+-- Généré le : jeu. 15 jan. 2026 à 16:41
 -- Version du serveur : 11.4.9-MariaDB
 -- Version de PHP : 8.3.28
 
@@ -156,7 +156,16 @@ CREATE TABLE IF NOT EXISTS `agent_imputation` (
   PRIMARY KEY (`id`),
   KEY `agent_imputation_imputation_id_foreign` (`imputation_id`),
   KEY `agent_imputation_agent_id_foreign` (`agent_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `agent_imputation`
+--
+
+INSERT INTO `agent_imputation` (`id`, `imputation_id`, `agent_id`, `created_at`, `updated_at`) VALUES
+(24, 22, 1, NULL, NULL),
+(26, 23, 11, NULL, NULL),
+(25, 23, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -252,7 +261,7 @@ CREATE TABLE IF NOT EXISTS `courriers` (
   `expediteur_contact` varchar(255) DEFAULT NULL,
   `destinataire_nom` varchar(255) NOT NULL DEFAULT 'Valeur par défaut',
   `destinataire_contact` varchar(255) DEFAULT NULL,
-  `statut` enum('reçu','en_traitement','traité','archivé','affecté') NOT NULL DEFAULT 'reçu',
+  `statut` enum('reçu','affecté','archivé') NOT NULL DEFAULT 'reçu',
   `assigne_a` varchar(255) DEFAULT NULL,
   `chemin_fichier` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -283,10 +292,10 @@ INSERT INTO `courriers` (`id`, `affecter`, `reference`, `type`, `objet`, `descri
 (16, 0, '1111111011002025', 'Incoming', 'TAF', 'tpo', '2025-12-11', 'SAPH', '0707584396', 'S/D GUDEF', '1223566', 'affecté', 'COUL', NULL, '2025-12-11 14:01:42', '2026-01-15 08:26:14'),
 (17, 0, '123588996', 'Incoming', 'bnh', 'hgfiuluoioiu', '2025-12-11', 'h,njkll', '014535536', 'bkjlkml', '254966', 'affecté', NULL, '1768384181_CNI COUOLIBALY SIE YACOUBA (1).pdf', '2025-12-11 16:13:59', '2026-01-15 07:26:06'),
 (18, 1, '24A', 'Incoming', 'Bon pour Travaux', 'Appréciation du Directeur', '2025-12-12', 'DMGE', '0584365858', 'DSESF', '254966', 'affecté', 'KOFFI', '1768382020_CNI COUOLIBALY SIE YACOUBA (1).pdf', '2025-12-12 09:08:13', '2026-01-14 13:03:59'),
-(19, 1, '12345859', 'Incoming', 'TAF', 'VOIR DEMAIN', '2026-01-12', 'CABINET DGI', '0707584396', 'DSESF', NULL, 'reçu', NULL, 'documents/VzULWwqZZuLpUYgBhfV5wTxvLGqkb2FYAWpzBjXa.pdf', '2026-01-14 08:39:50', '2026-01-14 08:39:50'),
+(19, 1, '12345859', 'Incoming', 'TAF', 'VOIR DEMAIN', '2026-01-12', 'CABINET DGI', '0707584396', 'DSESF', NULL, 'affecté', NULL, 'documents/VzULWwqZZuLpUYgBhfV5wTxvLGqkb2FYAWpzBjXa.pdf', '2026-01-14 08:39:50', '2026-01-15 15:56:55'),
 (20, 1, '101', 'Outgoing', 'Information', 'dfghghgh', '2026-01-13', 'SAPH', '0707584396', 'DSESF', NULL, 'affecté', NULL, 'documents/hlgzqgQeaNvRJl94K7IX3zkkZFhIczQQtyoFIWyY.pdf', '2026-01-14 08:44:42', '2026-01-15 12:49:50'),
-(21, 1, '322332', 'Incoming', 'Information', 'nafata parles trop', '2026-01-12', 'BNI', '0584365858', 'DSESF', NULL, 'en_traitement', NULL, '1768381087_CNI COUOLIBALY SIE YACOUBA.pdf', '2026-01-14 08:58:07', '2026-01-14 08:58:07'),
-(22, 0, '2103', 'Outgoing', 'TAF', 'hjkjjk', '2026-01-14', 'non sp12écifié', '0707584396', 'Direction Générale', NULL, 'affecté', NULL, '1768384155_CNI COUOLIBALY SIE YACOUBA (1).pdf', '2026-01-14 09:49:15', '2026-01-14 16:16:41');
+(21, 1, '322332', 'Incoming', 'Information', 'nafata parles trop', '2026-01-12', 'BNI', '0584365858', 'DSESF', NULL, 'reçu', NULL, '1768381087_CNI COUOLIBALY SIE YACOUBA.pdf', '2026-01-14 08:58:07', '2026-01-15 13:52:20'),
+(22, 0, '2103', 'Outgoing', 'TAF', 'hjkjjk', '2026-01-14', 'non sp12écifié', '0707584396', 'Direction Générale', NULL, 'affecté', NULL, '1768384155_CNI COUOLIBALY SIE YACOUBA (1).pdf', '2026-01-14 09:49:15', '2026-01-15 13:47:16');
 
 -- --------------------------------------------------------
 
@@ -411,7 +420,15 @@ CREATE TABLE IF NOT EXISTS `imputations` (
   PRIMARY KEY (`id`),
   KEY `imputations_courrier_id_foreign` (`courrier_id`),
   KEY `imputations_user_id_foreign` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `imputations`
+--
+
+INSERT INTO `imputations` (`id`, `courrier_id`, `user_id`, `niveau`, `instructions`, `observations`, `documents_annexes`, `date_imputation`, `date_traitement`, `echeancier`, `statut`, `created_at`, `updated_at`) VALUES
+(22, 22, 1, 'primaire', 'travail essai', NULL, '\"[\\\"1768484836_Note au MFB_ Objectif de recettes TOFE Aout 2025.pdf\\\"]\"', '2026-01-15', NULL, '2026-01-16', 'en_attente', '2026-01-15 13:47:16', '2026-01-15 13:47:16'),
+(23, 19, 1, 'primaire', 'taf', NULL, '\"[\\\"1768492615_Note de service_DEMANDE D\'INFORMATIONS COMITE COUT SDEEF.pdf\\\"]\"', '2026-01-15', NULL, '2026-01-17', 'en_attente', '2026-01-15 15:56:55', '2026-01-15 15:56:55');
 
 -- --------------------------------------------------------
 
