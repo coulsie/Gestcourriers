@@ -74,7 +74,7 @@ class CourrierController extends Controller
             'affecter'             => 'required|boolean',
             'chemin_fichier'       => 'nullable|file|mimes:pdf,jpg,png|max:10240',
         ]);
-
+             $validatedData['statut'] = 'reçu';
         // 2. Gestion du téléchargement du fichier (Nouveau Courrier)
         if ($request->hasFile('chemin_fichier')) {
             $file = $request->file('chemin_fichier');

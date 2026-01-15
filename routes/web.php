@@ -7,7 +7,7 @@ use App\Http\Controllers\{
     CourrierAffectationController, DirectionController, ServiceController,
     PresenceController, AbsenceController, TypeAbsenceController,
     EtatAgentsController, NotificationTacheController, AnnonceController,
-    ReponseNotificationController, AgentServiceController, ImputationController,
+    ReponseNotificationController, AgentServiceController, ImputationController,StatistiqueController,
     ReponseController
 };
 use App\Http\Controllers\Auth\PasswordSetupController;
@@ -33,6 +33,15 @@ Route::middleware(['auth'])->group(function () {
     // --- CONFIGURATION INITIALE & MOT DE PASSE ---
     Route::get('/password/setup', [PasswordSetupController::class, 'show'])->name('password.setup');
     Route::post('/password/setup', [PasswordSetupController::class, 'update'])->name('password.setup.update');
+
+    // Route pour les statistiques générales des courriers
+    Route::get('/statistiques', [StatistiqueController::class, 'index'])
+        ->name('statistiques.index');
+
+    // Route pour le tableau de bord détaillé (Imputations, Réponses, Performance)
+    Route::get('/statistiques/dashboard', [StatistiqueController::class, 'dashboard'])
+        ->name('statistiques.dashboard');
+
 
     /*
     |----------------------------------------------------------------------

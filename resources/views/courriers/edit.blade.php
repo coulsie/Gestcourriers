@@ -100,7 +100,7 @@
                             <div class="col-md-4 mb-3">
                                 <label for="statut" class="form-label fw-bold">{{ __('Statut actuel') }}</label>
                                 <select name="statut" id="statut" class="form-select border-primary-subtle">
-                                    @foreach(['Reçu', 'Affecté', 'En_Traitement', 'Traité', 'Archivé'] as $statut)
+                                    @foreach(['Reçu', 'Affecté','Archivé'] as $statut)
                                         <option value="{{ $statut }}" {{ old('statut', $courrier->statut) == $statut ? 'selected' : '' }}>{{ $statut }}</option>
                                     @endforeach
                                 </select>

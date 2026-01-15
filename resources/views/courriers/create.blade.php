@@ -55,8 +55,6 @@
                                     <select id="statut" class="form-select border-primary @error('statut') is-invalid @enderror" name="statut" required>
                                         <option value="reçu" {{ old('statut') == 'reçu' ? 'selected' : '' }}>Reçu</option>
                                         <option value="en_traitement" {{ old('statut') == 'en_traitement' ? 'selected' : '' }}>En traitement</option>
-                                        <option value="traité" {{ old('statut') == 'traité' ? 'selected' : '' }}>Traité</option>
-                                        <option value="archivé" {{ old('statut') == 'archivé' ? 'selected' : '' }}>Archivé</option>
                                     </select>
                                 </div>
                             </div>

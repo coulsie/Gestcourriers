@@ -125,13 +125,16 @@
                     </thead>
                     <tbody>
                         @foreach($donnees as $ligne)
-                        <tr class="presence-row">
+                            <tr class="presence-row">
                             <td class="date-cell" data-date="{{ $ligne->created_at->format('Y-m-d') }}">
                                 <span class="fw-bold">{{ $ligne->created_at->format('d/m/Y') }}</span>
                             </td>
                             <td class="agent-name">
-                                <div class="text-dark fw-semibold">{{ $ligne->agent->first_name }} {{ $ligne->agent->last_name }}</div>
-                                <small class="text-muted">{{ $ligne->agent->matricule }}</small>
+                                {{-- Correction ici : On utilise $ligne au lieu de $presence et on ajoute le ? pour la sécurité --}}
+                                <div class="text-dark fw-semibold">
+                                    {{ $ligne->agent?->first_name }} {{ $ligne->agent?->last_name }}
+                                </div>
+                                <small class="text-muted">{{ $ligne->agent?->matricule }}</small>
                             </td>
                             <td>
                                 <div class="small"><i class="far fa-clock text-primary"></i> {{ $ligne->heure_arrivee->format('H:i') }}</div>

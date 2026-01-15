@@ -68,6 +68,8 @@
                                     <a class="collapse-item" href="{{ route('agents.index') }}">Ressources Humaines</a>
                                     <a class="collapse-item" href="{{ route('imputations.index') }}">Imputations</a>
                                     <a class="collapse-item" href="{{ route('imputations.mes_imputations') }}">Mes Imputations</a>
+                                    <a class="collapse-item" href="{{ route('statistiques.index') }}">Statistiques</a>
+                                    <a class="collapse-item" href="{{ route('statistiques.dashboard') }}">dashboard imputations</a>
                                     <div class="collapse-divider"></div>
                                     <h6 class="collapse-header">Configurations:</h6>
                                     <a class="collapse-item" href="{{ route('typeabsences.index') }}">Paramétrage Absence</a>
