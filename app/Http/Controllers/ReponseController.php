@@ -36,19 +36,30 @@ class ReponseController extends Controller
 
     public function store(Request $request)
 {
+// TEMPORAIRE : Pour tester si les fichiers arrivent
+    // Si cela affiche "array:0 []", c'est que votre formulaire HTML est mal configuré
+
+
     $request->validate([
         'imputation_id' => 'required|exists:imputations,id',
         'contenu' => 'required|string',
         'pourcentage_avancement' => 'required|integer',
+        'fichiers.*' => 'nullable|file'
 
     ]);
 
-    $filePaths = [];
+
+
     if ($request->hasFile('fichiers')) {
-        foreach ($request->file('fichiers') as $file) {
-            $filePaths[] = $file->store('reponses', 'public');
+    foreach ($request->file('fichiers') as $file) {
+        if ($file->isValid()) {
+            // Laravel s'occupe de créer le dossier 'reponses' dans storage/app/public
+            $path = $file->store('reponses', 'public');
+            $filePaths[] = $path;
         }
     }
+    }
+
 
     $reponse = new Reponse();
     $reponse->imputation_id = $request->imputation_id;

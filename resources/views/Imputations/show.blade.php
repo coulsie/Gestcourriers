@@ -9,7 +9,7 @@
     </div>
 @endif
 <div class="container-fluid py-4">
-    <div class="row justify-content-center">
+     <div class="row justify-content-center">
         <div class="col-lg-11">
             <!-- En-tête Dynamique avec Dégradé -->
             <div class="card border-0 shadow-lg mb-4 overflow-hidden">
@@ -210,7 +210,7 @@
                                 @if(is_array($files))
                                     <div class="mt-2">
                                         @foreach($files as $file)
-                                            <a href="{{ asset('storage/' . $file) }}" target="_blank" class="btn btn-xs btn-outline-danger py-1 px-2 small">
+                                            <a href="{{ asset('reponses/' . $file) }}" target="_blank" class="btn btn-xs btn-outline-danger py-1 px-2 small">
                                                 <i class="fas fa-file-pdf me-1"></i> Document joint
                                             </a>
                                         @endforeach
@@ -266,9 +266,16 @@
                     </form>
                 </div>
                 @else
-                    <div class="alert alert-success text-center fw-bold">
-                        <i class="fas fa-check-double me-2"></i> Ce dossier est clôturé. Aucune autre réponse n'est requise.
+                    <div class="alert alert-success border-0 shadow-sm rounded-4 p-4 mb-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-check-circle fa-2x me-3"></i>
+                            <h5 class="fw-bold mb-0">Ce dossier est clôturé. Aucune autre réponse n'est requise.</h5>
+                        </div>
+                        <a href="{{ url()->previous() }}" class="btn btn-success rounded-pill px-4">
+                            <i class="fas fa-chevron-left me-2"></i>Retourner au suivi
+                        </a>
                     </div>
+
                 @endif
             </div>
         </div>
