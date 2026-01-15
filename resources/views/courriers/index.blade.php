@@ -1,166 +1,161 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row">
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
         <div class="col-md-12">
-            <div class="card shadow-sm">
-                <!-- En-tête avec bouton Scanner et Nouveau -->
+            <div class="card border-0 shadow-lg">
+                <!-- En-tête -->
                 <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center py-3">
-                    <h5 class="mb-0"><i class="fas fa-envelope-open-text me-2"></i>{{ __('Liste des Courriers') }}</h5>
-                    <div class="d-flex gap-2">
-                        <button type="button" class="btn btn-warning btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#scanModal">
-                            <i class="fas fa-camera"></i> {{ __('Scanner') }}
-                        </button>
-                        <a href="{{ route('courriers.create') }}" class="btn btn-light btn-sm fw-bold shadow-sm text-success">
-                            <i class="fas fa-plus-circle"></i> {{ __('Nouveau Courrier') }}
-                        </a>
-                    </div>
+                    <h4 class="mb-0 fw-bold"><i class="fas fa-envelope-open-text me-2"></i>{{ __('Gestion des Courriers') }}</h4>
+                    <a href="{{ route('courriers.create') }}" class="btn btn-warning btn-lg fw-bold shadow-sm">
+                        <i class="fas fa-plus-circle me-1"></i> {{ __('Nouveau Courrier') }}
+                    </a>
                 </div>
 
                 <div class="card-body bg-light">
-                    @if (session('success'))
-                        <div class="alert alert-success border-0 shadow-sm" role="alert">
-                            <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
-                        </div>
-                    @endif
-
-                    <div class="table-responsive rounded shadow-sm bg-white p-2">
-                        <table class="table table-hover align-middle">
-                            <thead class="table-primary text-primary">
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Référence</th>
-                                    <th>Type</th>
-                                    <th>Objet</th>
-                                    <th>Statut</th>
-                                    <th>Date</th>
-                                    <th>Expéditeur</th>
-                                    <th class="text-center">Actions / Documents</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($courriers as $courrier)
-                                <tr>
-                                    <td class="fw-bold text-muted">{{ $courrier->id }}</td>
-                                    <td><span class="badge bg-success text-white">{{ $courrier->reference }}</span></td>
-                                    <td>
-                                        @if($courrier->type == 'Incoming')
-                                            <span class="text-primary fw-bold"><i class="fas fa-arrow-down"></i> Entrant</span>
-                                        @else
-                                            <span class="text-orange fw-bold" style="color: #fd7e14;"><i class="fas fa-arrow-up"></i> Sortant</span>
-                                        @endif
-                                    </td>
-                                    <td class="text-truncate" style="max-width: 150px;">{{ $courrier->objet }}</td>
-                                    <td>
-                                        @php
-                                            $color = match(strtolower($courrier->statut)) {
-                                                'affecté', 'affecte' => 'success',
-                                                'reçu', 'recu'       => 'danger',
-                                                'en_traitement'      => 'warning',
-                                                'traité', 'traite'   => 'info',
-                                                'archivé', 'archive' => 'secondary',
-                                                default              => 'dark',
-                                            };
-                                        @endphp
-                                        <span class="badge bg-{{ $color }} text-white rounded-pill">{{ $courrier->statut }}</span>
-                                    </td>
-                                    <td class="text-nowrap">{{ $courrier->date_courrier->format('d/m/Y') }}</td>
-                                    <td><small class="fw-bold">{{ $courrier->expediteur_nom }}</small></td>
-                                    <td class="text-center">
-                                        <!-- Groupe de boutons Actions -->
-                                        <div class="d-flex gap-1 justify-content-center mb-2">
-                                            <a href="{{ route('courriers.show', $courrier->id) }}" class="btn btn-outline-info btn-sm" title="Voir"><i class="fa fa-eye"></i></a>
-
-                                            <!-- NOUVELLE ACTION : IMPUTATION -->
-                                            
-
-                                            <a href="{{ route('imputations.create', ['courrier_id' => $courrier->id]) }}"
-                                            class="btn btn-primary btn-sm">
-                                            <i class="fa fa-share-nodes"></i> Imputer
+                    <div class="table-responsive rounded bg-white shadow-sm">
+                        <form action="{{ route('courriers.index') }}" method="GET">
+                            <table class="table table-hover align-middle mb-0" style="font-size: 1.1rem;">
+                                <thead class="table-primary text-primary">
+                                    <tr class="text-uppercase" style="font-size: 0.9rem;">
+                                        <th>ID</th>
+                                        <th>Référence</th>
+                                        <th>Type</th>
+                                        <th>Objet</th>
+                                        <th>Statut</th>
+                                        <th>Date</th>
+                                        <th class="text-center">Actions & Imputation</th>
+                                    </tr>
+                                    <tr class="bg-light">
+                                        <td></td>
+                                        <td><input type="text" name="reference" class="form-control" placeholder="Réf..." value="{{ request('reference') }}" onchange="this.form.submit()"></td>
+                                        <td>
+                                            <select name="type" class="form-select fw-bold" onchange="this.form.submit()">
+                                                <option value="">Tous</option>
+                                                <option value="Incoming" {{ request('type') == 'Incoming' ? 'selected' : '' }}>Entrant</option>
+                                                <option value="Outgoing" {{ request('type') == 'Outgoing' ? 'selected' : '' }}>Sortant</option>
+                                            </select>
+                                        </td>
+                                        <td></td>
+                                        <td>
+                                            <select name="statut" class="form-select fw-bold" onchange="this.form.submit()">
+                                                <option value="">Tous</option>
+                                                @foreach(['affecté', 'reçu', 'en_traitement', 'traité'] as $st)
+                                                    <option value="{{ $st }}" {{ request('statut') == $st ? 'selected' : '' }}>{{ ucfirst($st) }}</option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                        <td colspan="2" class="text-center">
+                                            <a href="{{ route('courriers.index') }}" class="btn btn-sm btn-secondary rounded-pill">
+                                                <i class="fas fa-sync-alt me-1"></i> Réinitialiser
                                             </a>
+                                        </td>
+                                    </tr>
+                                </thead>
+                                <tbody class="fw-bold">
+                                    @forelse ($courriers as $courrier)
+                                    <tr>
+                                        <td class="text-muted small">#{{ $courrier->id }}</td>
+                                        <!-- RÉFÉRENCE : ÉCRITURE BLANCHE -->
+                                        <td><span class="badge bg-success px-3 py-2 fs-6 shadow-sm text-white">{{ $courrier->reference }}</span></td>
 
+                                        <td>
+                                            @if($courrier->type == 'Incoming')
+                                                <span class="text-primary"><i class="fas fa-arrow-circle-down"></i> ENTRANT</span>
+                                            @else
+                                                <span class="text-warning"><i class="fas fa-arrow-circle-up"></i> SORTANT</span>
+                                            @endif
+                                        </td>
 
-                                            <a href="{{ route('courriers.edit', $courrier->id) }}" class="btn btn-outline-warning btn-sm" title="Modifier"><i class="fa fa-edit"></i></a>
+                                        <td class="text-dark" style="max-width: 250px;">{{ Str::limit($courrier->objet, 50) }}</td>
 
-                                            <form action="{{ route('courriers.destroy', $courrier->id) }}" method="POST" class="d-inline">
-                                                @csrf @method('DELETE')
-                                                <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Supprimer ?')"><i class="fa fa-trash"></i></button>
-                                            </form>
-                                        </div>
+                                        <!-- STATUT : ÉCRITURE BLANCHE -->
+                                        <td>
+                                            @php
+                                                $color = match(strtolower($courrier->statut)) {
+                                                    'affecté', 'affecte' => 'success',
+                                                    'reçu', 'recu'       => 'danger',
+                                                    'en_traitement'      => 'warning',
+                                                    'traité', 'traite'   => 'info',
+                                                    default              => 'secondary',
+                                                };
+                                            @endphp
+                                            <span class="badge bg-{{ $color }} px-3 py-2 rounded-pill shadow-sm text-white text-uppercase" style="font-size: 0.85rem;">
+                                                {{ $courrier->statut }}
+                                            </span>
+                                        </td>
 
-                                        <!-- Section Document -->
-                                        <div class="text-center pt-2 border-top">
+                                        <td class="text-nowrap">{{ $courrier->date_courrier->format('d/m/Y') }}</td>
+
+                                        <td class="text-center">
+                                            <div class="d-flex justify-content-center gap-2">
+                                                <a href="{{ route('courriers.show', $courrier->id) }}" class="btn btn-info btn-lg text-white shadow-sm" title="Consulter">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+
+                                                <a href="{{ route('imputations.create', ['courrier_id' => $courrier->id]) }}"
+                                                   class="btn btn-primary btn-lg shadow-sm text-white"
+                                                   title="Imputer (Transférer)">
+                                                    <i class="fas fa-file-export"></i>
+                                                </a>
+
+                                                <a href="{{ route('courriers.edit', $courrier->id) }}" class="btn btn-warning btn-lg text-white shadow-sm" title="Modifier">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+
+                                                <form action="{{ route('courriers.destroy', $courrier->id) }}" method="POST" class="d-inline">
+                                                    @csrf @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-lg shadow-sm text-white" onclick="return confirm('Supprimer ?')">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+
                                             @if($courrier->chemin_fichier)
-                                                <div class="btn-group btn-group-sm w-100">
-                                                    <a href="{{ asset('Documents/' . $courrier->chemin_fichier) }}" target="_blank" class="btn btn-dark shadow-sm">
-                                                        <i class="fas fa-file-pdf"></i> Ouvrir
-                                                    </a>
-                                                    <a href="{{ asset('Documents/' . $courrier->chemin_fichier) }}" download class="btn btn-outline-dark shadow-sm">
-                                                        <i class="fas fa-download"></i>
+                                                <div class="mt-2">
+                                                    <a href="{{ asset('Documents/' . $courrier->chemin_fichier) }}" target="_blank" class="btn btn-sm btn-outline-danger fw-bold border-2">
+                                                        <i class="fas fa-file-pdf"></i> VOIR LE PDF
                                                     </a>
                                                 </div>
-                                            @else
-                                                <span class="badge bg-light text-muted fw-normal">Aucun document</span>
                                             @endif
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                        </td>
+                                    </tr>
+                                    @empty
+                                    <tr>
+                                        <td colspan="7" class="text-center py-5 fs-4 text-muted">Aucun courrier trouvé.</td>
+                                    </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </form>
                     </div>
+<!-- LIGNE DE PAGINATION PERSONNALISÉE -->
+                <div class="d-flex justify-content-between align-items-center mt-4 px-3 pb-3">
+                    <div class="text-muted fw-bold">
+                        Affichage de {{ $courriers->firstItem() }} à {{ $courriers->lastItem() }} sur {{ $courriers->total() }}
+                    </div>
+
+                    <ul class="pagination mb-0 shadow-sm">
+                        {{-- Lien Précédent --}}
+                        <li class="page-item {{ $courriers->onFirstPage() ? 'disabled' : '' }}">
+                            <a class="page-link fw-bold px-4 py-2" href="{{ $courriers->appends(request()->query())->previousPageUrl() }}" style="border-radius: 50px 0 0 50px;">
+                                <i class="fas fa-chevron-left me-1"></i> Précédent
+                            </a>
+                        </li>
+
+                        {{-- Lien Suivant --}}
+                        <li class="page-item {{ !$courriers->hasMorePages() ? 'disabled' : '' }}">
+                            <a class="page-link fw-bold px-4 py-2" href="{{ $courriers->appends(request()->query())->nextPageUrl() }}" style="border-radius: 0 50px 50px 0;">
+                                Suivant <i class="fas fa-chevron-right ms-1"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<!-- Modal de Scan (Intégré pour 2026) -->
-<div class="modal fade" id="scanModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title"><i class="fas fa-camera me-2"></i>Numérisation rapide</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body text-center bg-dark">
-                <video id="video" style="width: 100%; max-height: 400px;" autoplay></video>
-                <canvas id="canvas" style="display:none;"></canvas>
-                <img id="photo-preview" src="" class="img-fluid" style="display:none;">
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="btn-capture" class="btn btn-primary">Capturer</button>
-                <button type="button" id="btn-confirm" class="btn btn-success" style="display:none;">Utiliser ce scan</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    // Logique simplifiée du scanner (comme vu précédemment)
-    const video = document.getElementById('video');
-    const canvas = document.getElementById('canvas');
-    const photoPreview = document.getElementById('photo-preview');
-    const btnCapture = document.getElementById('btn-capture');
-    const btnConfirm = document.getElementById('btn-confirm');
-
-    document.getElementById('scanModal').addEventListener('shown.bs.modal', async () => {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
-        video.srcObject = stream;
-    });
-
-    btnCapture.addEventListener('click', () => {
-        canvas.width = video.videoWidth; canvas.height = video.videoHeight;
-        canvas.getContext('2d').drawImage(video, 0, 0);
-        photoPreview.src = canvas.toDataURL('image/jpeg');
-        video.style.display = 'none'; photoPreview.style.display = 'block';
-        btnCapture.style.display = 'none'; btnConfirm.style.display = 'inline-block';
-    });
-
-    btnConfirm.addEventListener('click', () => {
-        localStorage.setItem('scanned_image', photoPreview.src);
-        window.location.href = "{{ route('courriers.create') }}?from_scan=true";
-    });
-</script>
 @endsection

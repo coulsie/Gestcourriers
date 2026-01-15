@@ -15,11 +15,30 @@ class CourrierController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        $courriers = Courrier::all(); // Récupère tous les courriers
-        return view('courriers.index', compact('courriers')); // Renvoie vers une vue
+    public function index(Request $request)
+{
+    $query = Courrier::query();
+
+    // Filtre Référence
+    if ($request->filled('reference')) {
+        $query->where('reference', 'like', '%' . $request->reference . '%');
     }
+
+    // Filtre Type
+    if ($request->filled('type')) {
+        $query->where('type', $request->type);
+    }
+
+    // Filtre Statut
+    if ($request->filled('statut')) {
+        $query->where('statut', $request->statut);
+    }
+
+    $courriers = $query->orderBy('id', 'desc')->paginate(15);
+
+    return view('courriers.index', compact('courriers'));
+}
+
 
     /**
      * Afficher le formulaire de création d'un nouveau courrier.
