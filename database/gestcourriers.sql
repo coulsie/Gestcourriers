@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3307
--- Généré le : mer. 14 jan. 2026 à 10:46
+-- Généré le : jeu. 15 jan. 2026 à 08:31
 -- Version du serveur : 11.4.9-MariaDB
 -- Version de PHP : 8.3.28
 
@@ -156,16 +156,21 @@ CREATE TABLE IF NOT EXISTS `agent_imputation` (
   PRIMARY KEY (`id`),
   KEY `agent_imputation_imputation_id_foreign` (`imputation_id`),
   KEY `agent_imputation_agent_id_foreign` (`agent_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `agent_imputation`
 --
 
 INSERT INTO `agent_imputation` (`id`, `imputation_id`, `agent_id`, `created_at`, `updated_at`) VALUES
-(2, 2, 1, NULL, NULL),
-(3, 3, 10, NULL, NULL),
-(4, 4, 11, NULL, NULL);
+(11, 10, 1, NULL, NULL),
+(15, 13, 1, NULL, NULL),
+(14, 12, 1, NULL, NULL),
+(16, 14, 1, NULL, NULL),
+(17, 15, 1, NULL, NULL),
+(18, 16, 1, NULL, NULL),
+(20, 18, 1, NULL, NULL),
+(19, 17, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -276,26 +281,26 @@ CREATE TABLE IF NOT EXISTS `courriers` (
 --
 
 INSERT INTO `courriers` (`id`, `affecter`, `reference`, `type`, `objet`, `description`, `date_courrier`, `expediteur_nom`, `expediteur_contact`, `destinataire_nom`, `destinataire_contact`, `statut`, `assigne_a`, `chemin_fichier`, `created_at`, `updated_at`) VALUES
-(2, 1, '0210', 'Outgoing', 'info', NULL, '2025-12-01', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, '1768382360_Document_2025-11-27_121019.pdf', '2025-12-01 15:55:11', '2026-01-14 09:19:20'),
-(3, 0, '1010', 'Outgoing', 'Information', NULL, '2025-12-03', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, '1768382499_Document_2025-11-27_121019.pdf', '2025-12-03 16:37:56', '2026-01-14 09:21:39'),
+(2, 1, '0210', 'Outgoing', 'info', NULL, '2025-12-01', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'affecté', NULL, '1768382360_Document_2025-11-27_121019.pdf', '2025-12-01 15:55:11', '2026-01-14 12:21:26'),
+(3, 0, '1010', 'Outgoing', 'Information', NULL, '2025-12-03', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'affecté', NULL, '1768382499_Document_2025-11-27_121019.pdf', '2025-12-03 16:37:56', '2026-01-15 07:13:25'),
 (4, 0, '2134', 'Outgoing', 'Information', NULL, '2025-12-04', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-04 07:57:30', '2025-12-04 17:05:58'),
-(6, 1, '203', 'Incoming', 'Information', NULL, '2025-12-04', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-04 07:58:40', '2026-01-06 16:20:52'),
+(6, 1, '203', 'Incoming', 'Information', NULL, '2025-12-04', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'affecté', NULL, NULL, '2025-12-04 07:58:40', '2026-01-15 07:36:55'),
 (7, 1, '10425', 'Incoming', 'travail a faire', NULL, '2025-12-05', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'affecté', NULL, NULL, '2025-12-05 08:24:02', '2026-01-06 16:32:01'),
-(8, 0, '275', 'Incoming', 'travail a faire', NULL, '2025-12-08', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-08 11:09:26', '2025-12-08 11:09:26'),
+(8, 0, '275', 'Incoming', 'travail a faire', NULL, '2025-12-08', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'affecté', NULL, NULL, '2025-12-08 11:09:26', '2026-01-15 07:03:34'),
 (9, 0, '21', 'Incoming', 'TAF', NULL, '2025-12-10', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-10 14:31:11', '2025-12-10 14:31:11'),
-(10, 0, '20', 'Outgoing', 'TAF', NULL, '2025-12-10', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-10 14:41:14', '2025-12-10 14:41:14'),
+(10, 0, '20', 'Outgoing', 'TAF', NULL, '2025-12-10', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'affecté', NULL, NULL, '2025-12-10 14:41:14', '2026-01-14 17:39:28'),
 (11, 0, '77', 'Outgoing', 'Avoir', NULL, '2025-12-11', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-11 09:07:18', '2025-12-11 09:07:18'),
 (12, 0, '10', 'Outgoing', 'travail a faire', NULL, '2025-12-11', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-11 09:33:41', '2025-12-11 09:33:41'),
-(13, 1, '281', 'Incoming', 'impots', NULL, '2025-12-11', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-11 10:37:07', '2026-01-06 16:26:20'),
-(14, 0, '11121', 'Outgoing', 'TAF', NULL, '2025-12-11', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-11 12:21:08', '2025-12-11 12:21:08'),
+(13, 1, '281', 'Incoming', 'impots', NULL, '2025-12-11', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'affecté', NULL, NULL, '2025-12-11 10:37:07', '2026-01-14 13:53:19'),
+(14, 0, '11121', 'Outgoing', 'TAF', NULL, '2025-12-11', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'affecté', NULL, NULL, '2025-12-11 12:21:08', '2026-01-15 07:44:59'),
 (15, 0, '001', 'Outgoing', 'TAF', NULL, '2025-12-11', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-11 12:21:38', '2025-12-11 12:21:38'),
-(16, 0, '1111111011002025', 'Incoming', 'TAF', 'tpo', '2025-12-11', 'SAPH', '0707584396', 'S/D GUDEF', '1223566', 'reçu', 'COUL', NULL, '2025-12-11 14:01:42', '2025-12-11 14:01:42'),
-(17, 0, '123588996', 'Incoming', 'bnh', 'hgfiuluoioiu', '2025-12-11', 'h,njkll', '014535536', 'bkjlkml', '254966', 'reçu', NULL, '1768384181_CNI COUOLIBALY SIE YACOUBA (1).pdf', '2025-12-11 16:13:59', '2026-01-14 09:49:41'),
-(18, 1, '24A', 'Incoming', 'Bon pour Travaux', 'Appréciation du Directeur', '2025-12-12', 'DMGE', '0584365858', 'DSESF', '254966', 'reçu', 'KOFFI', '1768382020_CNI COUOLIBALY SIE YACOUBA (1).pdf', '2025-12-12 09:08:13', '2026-01-14 09:13:40'),
+(16, 0, '1111111011002025', 'Incoming', 'TAF', 'tpo', '2025-12-11', 'SAPH', '0707584396', 'S/D GUDEF', '1223566', 'affecté', 'COUL', NULL, '2025-12-11 14:01:42', '2026-01-15 08:26:14'),
+(17, 0, '123588996', 'Incoming', 'bnh', 'hgfiuluoioiu', '2025-12-11', 'h,njkll', '014535536', 'bkjlkml', '254966', 'affecté', NULL, '1768384181_CNI COUOLIBALY SIE YACOUBA (1).pdf', '2025-12-11 16:13:59', '2026-01-15 07:26:06'),
+(18, 1, '24A', 'Incoming', 'Bon pour Travaux', 'Appréciation du Directeur', '2025-12-12', 'DMGE', '0584365858', 'DSESF', '254966', 'affecté', 'KOFFI', '1768382020_CNI COUOLIBALY SIE YACOUBA (1).pdf', '2025-12-12 09:08:13', '2026-01-14 13:03:59'),
 (19, 1, '12345859', 'Incoming', 'TAF', 'VOIR DEMAIN', '2026-01-12', 'CABINET DGI', '0707584396', 'DSESF', NULL, 'reçu', NULL, 'documents/VzULWwqZZuLpUYgBhfV5wTxvLGqkb2FYAWpzBjXa.pdf', '2026-01-14 08:39:50', '2026-01-14 08:39:50'),
-(20, 1, '101', 'Outgoing', 'Information', 'dfghghgh', '2026-01-13', 'SAPH', '0707584396', 'DSESF', NULL, 'reçu', NULL, 'documents/hlgzqgQeaNvRJl94K7IX3zkkZFhIczQQtyoFIWyY.pdf', '2026-01-14 08:44:42', '2026-01-14 08:44:42'),
+(20, 1, '101', 'Outgoing', 'Information', 'dfghghgh', '2026-01-13', 'SAPH', '0707584396', 'DSESF', NULL, 'affecté', NULL, 'documents/hlgzqgQeaNvRJl94K7IX3zkkZFhIczQQtyoFIWyY.pdf', '2026-01-14 08:44:42', '2026-01-14 16:56:59'),
 (21, 1, '322332', 'Incoming', 'Information', 'nafata parles trop', '2026-01-12', 'BNI', '0584365858', 'DSESF', NULL, 'en_traitement', NULL, '1768381087_CNI COUOLIBALY SIE YACOUBA.pdf', '2026-01-14 08:58:07', '2026-01-14 08:58:07'),
-(22, 0, '2103', 'Outgoing', 'TAF', 'hjkjjk', '2026-01-14', 'non sp12écifié', '0707584396', 'Direction Générale', NULL, 'reçu', NULL, '1768384155_CNI COUOLIBALY SIE YACOUBA (1).pdf', '2026-01-14 09:49:15', '2026-01-14 09:49:15');
+(22, 0, '2103', 'Outgoing', 'TAF', 'hjkjjk', '2026-01-14', 'non sp12écifié', '0707584396', 'Direction Générale', NULL, 'affecté', NULL, '1768384155_CNI COUOLIBALY SIE YACOUBA (1).pdf', '2026-01-14 09:49:15', '2026-01-14 16:16:41');
 
 -- --------------------------------------------------------
 
@@ -420,16 +425,21 @@ CREATE TABLE IF NOT EXISTS `imputations` (
   PRIMARY KEY (`id`),
   KEY `imputations_courrier_id_foreign` (`courrier_id`),
   KEY `imputations_user_id_foreign` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `imputations`
 --
 
 INSERT INTO `imputations` (`id`, `courrier_id`, `user_id`, `niveau`, `instructions`, `observations`, `documents_annexes`, `date_imputation`, `date_traitement`, `echeancier`, `statut`, `created_at`, `updated_at`) VALUES
-(2, 17, 1, 'primaire', 'ghujkiki', 'approche', '\"[]\"', '2026-01-13', NULL, '2026-01-17', 'en_attente', '2026-01-13 17:04:06', '2026-01-13 17:04:06'),
-(3, 18, 1, 'primaire', 'travail à faire', 'urgent', '\"[]\"', '2026-01-13', NULL, '2026-01-15', 'en_attente', '2026-01-13 17:04:55', '2026-01-13 17:04:55'),
-(4, 21, 1, 'primaire', 'fates vite', NULL, '\"[\\\"imputations\\\\\\/annexes\\\\\\/NDUIgx2ggt7VAG32aEGrZBRMghfRzVvY0jk8g6wZ.pdf\\\"]\"', '2026-01-14', NULL, '2026-01-15', 'en_attente', '2026-01-14 10:02:49', '2026-01-14 10:02:49');
+(17, 14, 1, 'primaire', 'Cabinet urgent', NULL, '\"[\\\"1768463099_CNI COUOLIBALY SIE YACOUBA.pdf\\\"]\"', '2026-01-15', NULL, '2026-01-16', 'termine', '2026-01-15 07:44:59', '2026-01-15 07:51:46'),
+(10, 22, 1, 'primaire', 'travail à realiser dans le delai imparti. extration de données deéclaration 2025 TEE DMICRO', NULL, '\"[\\\"1768407401_Document_2025-11-27_121019.pdf\\\"]\"', '2026-01-14', NULL, '2026-01-16', 'termine', '2026-01-14 16:16:41', '2026-01-14 16:29:06'),
+(12, 10, 1, 'primaire', 'taf pour demain', NULL, '\"[\\\"1768412368_CNI COUOLIBALY SIE YACOUBA.pdf\\\"]\"', '2026-01-14', NULL, '2026-01-16', 'termine', '2026-01-14 17:39:28', '2026-01-15 06:55:54'),
+(13, 8, 1, 'primaire', 'Seminaire bilan 2ème Trimestre 2026', NULL, '\"[\\\"1768460614_CNI COUOLIBALY SIE YACOUBA (1).pdf\\\"]\"', '2026-01-15', NULL, '2026-01-16', 'termine', '2026-01-15 07:03:34', '2026-01-15 07:09:39'),
+(14, 3, 1, 'primaire', 'taf122', NULL, '\"[\\\"1768461205_Bienvenue.jpg\\\"]\"', '2026-01-15', NULL, '2026-01-23', 'termine', '2026-01-15 07:13:25', '2026-01-15 07:14:25'),
+(15, 17, 1, 'primaire', 'gilles & co', NULL, '\"[\\\"1768461966_CNI COUOLIBALY SIE YACOUBA.pdf\\\"]\"', '2026-01-15', NULL, '2026-01-17', 'termine', '2026-01-15 07:26:06', '2026-01-15 07:27:00'),
+(16, 6, 1, 'primaire', 'yao koffi romuald', NULL, '\"[\\\"1768462615_CNI COUOLIBALY SIE YACOUBA.pdf\\\"]\"', '2026-01-15', NULL, '2026-01-17', 'termine', '2026-01-15 07:36:55', '2026-01-15 07:37:24'),
+(18, 16, 1, 'primaire', 'essai1', NULL, '\"[]\"', '2026-01-15', NULL, '2026-01-16', 'termine', '2026-01-15 08:26:14', '2026-01-15 08:26:56');
 
 -- --------------------------------------------------------
 
@@ -673,7 +683,40 @@ CREATE TABLE IF NOT EXISTS `reponses` (
   PRIMARY KEY (`id`),
   KEY `reponses_imputation_id_foreign` (`imputation_id`),
   KEY `reponses_agent_id_foreign` (`agent_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `reponses`
+--
+
+INSERT INTO `reponses` (`id`, `imputation_id`, `agent_id`, `contenu`, `fichiers_joints`, `date_reponse`, `pourcentage_avancement`, `created_at`, `updated_at`) VALUES
+(1, 2, 1, 'travail en cours mais d\'extration de données', '[\"reponses\\/annexes\\/emHF6kgmcpkNtnk9lrTdlr8WYM94z64TUOd9z6Vx.jpg\"]', '2026-01-14 12:48:52', 50, '2026-01-14 12:48:52', '2026-01-14 12:48:52'),
+(2, 7, 1, 'ok travail fait \r\nreponse ci-joint', '[\"reponses\\/annexes\\/W2csXCPajVf14mxfB4NbAEOmJ17XJPsfm1L1wZWS.pdf\"]', '2026-01-14 13:06:17', 100, '2026-01-14 13:06:17', '2026-01-14 13:06:17'),
+(3, 8, 1, 'ok travail effectue et reponses jointes', '\"[\\\"1768399723_Document_2025-11-27_121019.pdf\\\"]\"', '2026-01-14 14:08:43', 25, '2026-01-14 14:08:43', '2026-01-14 14:08:43'),
+(4, 9, 1, 'reponses voir fichier joint stat tEE DMICRO 2025', '[\"reponses\\/ggk0npj0DqGYqGMCswoWYdd9tkUl94918dZtvxIe.pdf\"]', '2026-01-14 15:29:12', 25, '2026-01-14 15:29:12', '2026-01-14 15:29:12'),
+(5, 9, 1, 'reponses en fichier joint', '[\"reponses\\/6ZlkUvkFA51KtPNHOYPj812Nz5M08jjh9afZNmdq.pdf\"]', '2026-01-14 15:34:37', 25, '2026-01-14 15:34:37', '2026-01-14 15:34:37'),
+(6, 9, 1, 'hjkkklklklllll', '[\"reponses\\/4GIPLgsqp8u9OuiumjTwwKAZOzcMroB7TS03JwPR.pdf\",\"reponses\\/keZ8bR5kvUsrtQLzisk4DjvzcyvEwGPRu7OrMqC9.pdf\"]', '2026-01-14 15:37:52', 25, '2026-01-14 15:37:52', '2026-01-14 15:37:52'),
+(7, 10, 1, 'Veuillez M. le directeur la reponse à votre requête.\r\nCi-joint le fichier', '[\"reponses\\/9fRs3wwQQcigaWcpS0SjsMhXwhlOuUb97uJqPUPY.pdf\",\"reponses\\/vdHgwV0HGox2xkIB3U2AfdxjkGgOHugmx7OvxhDv.pdf\"]', '2026-01-14 16:18:23', 25, '2026-01-14 16:18:23', '2026-01-14 16:18:23'),
+(8, 10, 1, 'reponses ci-joint', '[\"reponses\\/5Qhrv3F1GDsmre4S1KygZVLldKq5izUiyOviv1zO.pdf\"]', '2026-01-14 16:23:02', 25, '2026-01-14 16:23:02', '2026-01-14 16:23:02'),
+(9, 10, 1, 'si', '[\"reponses\\/5vJ14Nepl1KAY2VAGZwcJ8I1RYczQeOrM077HSvO.pdf\"]', '2026-01-14 16:23:57', 25, '2026-01-14 16:23:57', '2026-01-14 16:23:57'),
+(10, 10, 1, 'vue', '[\"reponses\\/TnQ4bFVX5PbH8wIIWl1MAKN8MkrjMByscie3cBja.pdf\"]', '2026-01-14 16:29:06', 100, '2026-01-14 16:29:06', '2026-01-14 16:29:06'),
+(11, 11, 1, 'REPONSES RAPIDE', '[\"reponses\\/1768410151_CNI_COUOLIBALY_SIE_YACOUBA_(1).pdf\"]', '2026-01-14 17:02:31', 25, '2026-01-14 17:02:31', '2026-01-14 17:02:31'),
+(12, 11, 1, 'REPONSES', '[\"reponses\\/1768410190_CNI_COUOLIBALY_SIE_YACOUBA_(1).pdf\"]', '2026-01-14 17:03:10', 75, '2026-01-14 17:03:10', '2026-01-14 17:03:10'),
+(13, 11, 1, 'REPONDU', '[\"reponses\\/jnF4hJZfZdd6e22FnQ1ixtaF3Ms3zs3oYc391rwg.pdf\"]', '2026-01-14 17:11:40', 25, '2026-01-14 17:11:40', '2026-01-14 17:11:40'),
+(14, 11, 1, 'NGF', '[\"reponses\\/FRNDQ2v237VVoGOv18Vahkezt6v2DIIRaZHW6s7F.pdf\"]', '2026-01-14 17:12:58', 50, '2026-01-14 17:12:58', '2026-01-14 17:12:58'),
+(15, 11, 1, 'bn', '[\"reponses\\/1768411531_CNI_COUOLIBALY_SIE_YACOUBA.pdf\"]', '2026-01-14 17:25:31', 75, '2026-01-14 17:25:31', '2026-01-14 17:25:31'),
+(16, 11, 1, 'reponses', '[\"reponses\\/UEOVQuWIIBRlLWzbjAcpUgH1OYOwCPZycvUwMXfY.pdf\"]', '2026-01-14 17:36:28', 25, '2026-01-14 17:36:28', '2026-01-14 17:36:28'),
+(17, 12, 1, 'reponses', '[\"reponses\\/JJIh95yOLMGsK56EZRZiDJ1p4Rj761xzIC4DmBxe.pdf\"]', '2026-01-14 17:40:13', 50, '2026-01-14 17:40:13', '2026-01-14 17:40:13'),
+(18, 12, 1, 'vue', '[\"reponses\\/uiFB8uJZINieGt2Sk4WRGy8QaNg0Czq0qkAypuCE.pdf\"]', '2026-01-14 17:54:55', 25, '2026-01-14 17:54:55', '2026-01-14 17:54:55'),
+(19, 12, 1, 'reponse', '[\"reponses\\/TtPITjRWhzbo8HgtRDEbxWLMQic7c612dcNakA2c.pdf\"]', '2026-01-14 18:07:45', 20, '2026-01-14 18:07:45', '2026-01-14 18:07:45'),
+(20, 12, 1, 'reponses', '[\"reponses\\/N0S5wvlzcftgLBx5MMCsjmtTaLax6p4w7gw4v5wq.pdf\"]', '2026-01-14 18:21:10', 20, '2026-01-14 18:21:10', '2026-01-14 18:21:10'),
+(21, 12, 1, 'reponse1', '[\"reponses\\/9ClJe3XzxX7pU59XGifHjIuuimxMRG8BovqNeJZh.pdf\"]', '2026-01-15 06:55:54', 100, '2026-01-15 06:55:54', '2026-01-15 06:55:54'),
+(22, 13, 1, 'reponses rapide ci-joint fichier', '[]', '2026-01-15 07:09:39', 100, '2026-01-15 07:09:39', '2026-01-15 07:09:39'),
+(23, 14, 1, 'reponses vrai', '[\"reponses\\/lttqqJrKV4sk8c8ODsdws0l2HTrs1mOUiZJWoC5T.pdf\"]', '2026-01-15 07:14:25', 100, '2026-01-15 07:14:25', '2026-01-15 07:14:25'),
+(24, 15, 1, 'rep oui', '[\"reponses\\/EG3tQV4U9eYx0SIQUwMEenKdEXMXyBird0lyNdi9.jpg\"]', '2026-01-15 07:27:00', 100, '2026-01-15 07:27:00', '2026-01-15 07:27:00'),
+(25, 16, 1, 'rep non', '[\"reponses\\/h25UsIwQMkl2aScdIXUlFyFinWibEySoFMXjgT0U.jpg\"]', '2026-01-15 07:37:24', 100, '2026-01-15 07:37:24', '2026-01-15 07:37:24'),
+(26, 17, 1, 'rep urgente ci joint fichier', '[\"reponses\\/1768463506_Bienvenue.jpg\"]', '2026-01-15 07:51:46', 100, '2026-01-15 07:51:46', '2026-01-15 07:51:46'),
+(27, 18, 1, 'rep1', '[\"reponses\\/pmvIcRG3DCHOZ1K8S8PilDnsOoOXYsyjbEeZYzQ5.jpg\"]', '2026-01-15 08:26:56', 100, '2026-01-15 08:26:56', '2026-01-15 08:26:56');
 
 -- --------------------------------------------------------
 
