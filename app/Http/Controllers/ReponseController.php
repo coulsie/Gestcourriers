@@ -48,17 +48,19 @@ class ReponseController extends Controller
 
     ]);
 
+  $filePaths = [];
+            if ($request->hasFile('fichiers')) {
+                foreach ($request->file('fichiers') as $file) {
+                    // Génération d'un nom unique avec timestamp
+                    $fileName = time() . '_' . $file->getClientOriginalName();
 
+                    // Déplacement physique vers public/documents/imputations/annexes
+                    $file->move(public_path('reponses'), $fileName);
 
-    if ($request->hasFile('fichiers')) {
-    foreach ($request->file('fichiers') as $file) {
-        if ($file->isValid()) {
-            // Laravel s'occupe de créer le dossier 'reponses' dans storage/app/public
-            $path = $file->store('reponses', 'public');
-            $filePaths[] = $path;
-        }
-    }
-    }
+                    // On ajoute le nom du fichier au tableau
+                    $filePaths[] = $fileName;
+                }
+            }
 
 
     $reponse = new Reponse();
