@@ -230,9 +230,15 @@
                             </div>
 
                             <div class="mt-3 p-3 bg-white rounded-3 border border-success d-flex justify-content-between align-items-center shadow-sm">
-                                <span class="fw-bold text-success"><i class="fas fa-file-pdf me-2"></i>Document_Final_Signé.pdf</span>
-                                <a href="{{ asset('archives/final'.($reponse->document_final_signe)) }}" target="_blank" class="btn btn-sm btn-success rounded-pill px-4 fw-bold">
-                                    <i class="fas fa-eye me-1"></i> Consulter l'archive
+                                <span class="fw-bold text-success">
+                                    <i class="fas fa-file-signature me-2"></i> Document Final Signé
+                                </span>
+
+                                {{-- On utilise asset() car le chemin en base est "archives/final/nom.pdf" --}}
+                                <a href="{{ asset($reponse->document_final_signe) }}"
+                                target="_blank"
+                                class="btn btn-sm btn-success rounded-pill px-4 fw-bold">
+                                    <i class="fas fa-eye me-1"></i> Visualiser l'acte
                                 </a>
                             </div>
                         </div>

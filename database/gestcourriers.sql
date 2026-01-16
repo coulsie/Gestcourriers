@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3307
--- Généré le : jeu. 15 jan. 2026 à 16:41
+-- Généré le : ven. 16 jan. 2026 à 11:29
 -- Version du serveur : 11.4.9-MariaDB
 -- Version de PHP : 8.3.28
 
@@ -50,7 +50,6 @@ CREATE TABLE IF NOT EXISTS `absences` (
 INSERT INTO `absences` (`id`, `agent_id`, `type_absence_id`, `date_debut`, `date_fin`, `approuvee`, `document_justificatif`, `created_at`, `updated_at`) VALUES
 (7, 3, 3, '2025-12-27', '2026-01-04', 1, 'justifications/GjJd4adVOBhh2uhnnPgogl0hNBc4ePRorSKuhYwB.pdf', '2026-01-11 11:21:46', '2026-01-11 11:23:39'),
 (8, 1, 3, '2025-12-28', '2026-01-03', 1, 'justifications/51oyoXJu37O0tyJGW0OyHeuTXCGKOsPweqcaKRNy.pdf', '2026-01-11 11:25:14', '2026-01-11 11:26:27'),
-(10, 2, 2, '2025-12-28', '2025-12-29', 1, 'justifications/gM5V9dvuLbdKczgWAgpLPgEEdJJwL2hA6LaHkL83.pdf', '2026-01-11 11:44:25', '2026-01-11 12:29:24'),
 (12, 5, 1, '2025-12-29', '2026-01-14', 1, 'justifications/Ad66RzAjEiHforVNQJ9gGtRFnFxMswSeW1VnrlQv.png', '2026-01-11 11:58:34', '2026-01-11 11:58:34'),
 (13, 8, 2, '2025-12-26', '2025-12-29', 1, 'justifications/Oy0Nk9XnaBCgeUamBxwc7Guo8LcEOkTJHH6qZvjd.pdf', '2026-01-11 12:14:42', '2026-01-11 12:14:42'),
 (14, 4, 2, '2025-12-29', '2025-12-30', 1, 'justifications/FCIAjc95k1eAhuluCweVxY4hpDnUf7jh6xRHEuZf.jpg', '2026-01-11 12:20:56', '2026-01-11 12:20:56');
@@ -156,7 +155,7 @@ CREATE TABLE IF NOT EXISTS `agent_imputation` (
   PRIMARY KEY (`id`),
   KEY `agent_imputation_imputation_id_foreign` (`imputation_id`),
   KEY `agent_imputation_agent_id_foreign` (`agent_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `agent_imputation`
@@ -165,7 +164,14 @@ CREATE TABLE IF NOT EXISTS `agent_imputation` (
 INSERT INTO `agent_imputation` (`id`, `imputation_id`, `agent_id`, `created_at`, `updated_at`) VALUES
 (24, 22, 1, NULL, NULL),
 (26, 23, 11, NULL, NULL),
-(25, 23, 1, NULL, NULL);
+(25, 23, 1, NULL, NULL),
+(27, 24, 1, NULL, NULL),
+(28, 25, 1, NULL, NULL),
+(29, 25, 11, NULL, NULL),
+(31, 27, 1, NULL, NULL),
+(30, 26, 1, NULL, NULL),
+(32, 28, 1, NULL, NULL),
+(33, 29, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -280,22 +286,22 @@ INSERT INTO `courriers` (`id`, `affecter`, `reference`, `type`, `objet`, `descri
 (3, 0, '1010', 'Outgoing', 'Information', NULL, '2025-12-03', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'affecté', NULL, '1768382499_Document_2025-11-27_121019.pdf', '2025-12-03 16:37:56', '2026-01-15 07:13:25'),
 (4, 0, '2134', 'Outgoing', 'Information', NULL, '2025-12-04', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-04 07:57:30', '2025-12-04 17:05:58'),
 (6, 1, '203', 'Incoming', 'Information', NULL, '2025-12-04', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'affecté', NULL, NULL, '2025-12-04 07:58:40', '2026-01-15 07:36:55'),
-(7, 1, '10425', 'Incoming', 'travail a faire', NULL, '2025-12-05', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'affecté', NULL, NULL, '2025-12-05 08:24:02', '2026-01-06 16:32:01'),
+(7, 1, '10425', 'Incoming', 'travail a faire', NULL, '2025-12-05', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'archivé', NULL, NULL, '2025-12-05 08:24:02', '2026-01-16 11:11:28'),
 (8, 0, '275', 'Incoming', 'travail a faire', NULL, '2025-12-08', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'affecté', NULL, NULL, '2025-12-08 11:09:26', '2026-01-15 07:03:34'),
 (9, 0, '21', 'Incoming', 'TAF', NULL, '2025-12-10', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-10 14:31:11', '2025-12-10 14:31:11'),
 (10, 0, '20', 'Outgoing', 'TAF', NULL, '2025-12-10', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'affecté', NULL, NULL, '2025-12-10 14:41:14', '2026-01-14 17:39:28'),
 (11, 0, '77', 'Outgoing', 'Avoir', NULL, '2025-12-11', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-11 09:07:18', '2025-12-11 09:07:18'),
-(12, 0, '10', 'Outgoing', 'travail a faire', NULL, '2025-12-11', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-11 09:33:41', '2025-12-11 09:33:41'),
+(12, 0, '10', 'Outgoing', 'travail a faire', NULL, '2025-12-11', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'archivé', NULL, NULL, '2025-12-11 09:33:41', '2026-01-16 10:53:57'),
 (13, 1, '281', 'Incoming', 'impots', NULL, '2025-12-11', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'affecté', NULL, NULL, '2025-12-11 10:37:07', '2026-01-15 12:42:59'),
 (14, 0, '11121', 'Outgoing', 'TAF', NULL, '2025-12-11', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'affecté', NULL, NULL, '2025-12-11 12:21:08', '2026-01-15 12:37:59'),
-(15, 0, '001', 'Outgoing', 'TAF', NULL, '2025-12-11', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'reçu', NULL, NULL, '2025-12-11 12:21:38', '2025-12-11 12:21:38'),
+(15, 0, '001', 'Outgoing', 'TAF', NULL, '2025-12-11', 'non spécifié', NULL, 'Valeur par défaut', NULL, 'archivé', NULL, NULL, '2025-12-11 12:21:38', '2026-01-16 11:06:38'),
 (16, 0, '1111111011002025', 'Incoming', 'TAF', 'tpo', '2025-12-11', 'SAPH', '0707584396', 'S/D GUDEF', '1223566', 'affecté', 'COUL', NULL, '2025-12-11 14:01:42', '2026-01-15 08:26:14'),
 (17, 0, '123588996', 'Incoming', 'bnh', 'hgfiuluoioiu', '2025-12-11', 'h,njkll', '014535536', 'bkjlkml', '254966', 'affecté', NULL, '1768384181_CNI COUOLIBALY SIE YACOUBA (1).pdf', '2025-12-11 16:13:59', '2026-01-15 07:26:06'),
 (18, 1, '24A', 'Incoming', 'Bon pour Travaux', 'Appréciation du Directeur', '2025-12-12', 'DMGE', '0584365858', 'DSESF', '254966', 'affecté', 'KOFFI', '1768382020_CNI COUOLIBALY SIE YACOUBA (1).pdf', '2025-12-12 09:08:13', '2026-01-14 13:03:59'),
-(19, 1, '12345859', 'Incoming', 'TAF', 'VOIR DEMAIN', '2026-01-12', 'CABINET DGI', '0707584396', 'DSESF', NULL, 'affecté', NULL, 'documents/VzULWwqZZuLpUYgBhfV5wTxvLGqkb2FYAWpzBjXa.pdf', '2026-01-14 08:39:50', '2026-01-15 15:56:55'),
-(20, 1, '101', 'Outgoing', 'Information', 'dfghghgh', '2026-01-13', 'SAPH', '0707584396', 'DSESF', NULL, 'affecté', NULL, 'documents/hlgzqgQeaNvRJl94K7IX3zkkZFhIczQQtyoFIWyY.pdf', '2026-01-14 08:44:42', '2026-01-15 12:49:50'),
+(19, 1, '12345859', 'Incoming', 'TAF', 'VOIR DEMAIN', '2026-01-12', 'CABINET DGI', '0707584396', 'DSESF', NULL, 'archivé', NULL, 'documents/VzULWwqZZuLpUYgBhfV5wTxvLGqkb2FYAWpzBjXa.pdf', '2026-01-14 08:39:50', '2026-01-16 09:41:03'),
+(20, 1, '101', 'Outgoing', 'Information', 'dfghghgh', '2026-01-13', 'SAPH', '0707584396', 'DSESF', NULL, 'archivé', NULL, 'documents/hlgzqgQeaNvRJl94K7IX3zkkZFhIczQQtyoFIWyY.pdf', '2026-01-14 08:44:42', '2026-01-16 11:16:08'),
 (21, 1, '322332', 'Incoming', 'Information', 'nafata parles trop', '2026-01-12', 'BNI', '0584365858', 'DSESF', NULL, 'reçu', NULL, '1768381087_CNI COUOLIBALY SIE YACOUBA.pdf', '2026-01-14 08:58:07', '2026-01-15 13:52:20'),
-(22, 0, '2103', 'Outgoing', 'TAF', 'hjkjjk', '2026-01-14', 'non sp12écifié', '0707584396', 'Direction Générale', NULL, 'affecté', NULL, '1768384155_CNI COUOLIBALY SIE YACOUBA (1).pdf', '2026-01-14 09:49:15', '2026-01-15 13:47:16');
+(22, 0, '2103', 'Outgoing', 'TAF', 'hjkjjk', '2026-01-14', 'non sp12écifié', '0707584396', 'Direction Générale', NULL, 'archivé', NULL, '1768384155_CNI COUOLIBALY SIE YACOUBA (1).pdf', '2026-01-14 09:49:15', '2026-01-16 11:23:13');
 
 -- --------------------------------------------------------
 
@@ -420,15 +426,21 @@ CREATE TABLE IF NOT EXISTS `imputations` (
   PRIMARY KEY (`id`),
   KEY `imputations_courrier_id_foreign` (`courrier_id`),
   KEY `imputations_user_id_foreign` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `imputations`
 --
 
 INSERT INTO `imputations` (`id`, `courrier_id`, `user_id`, `niveau`, `instructions`, `observations`, `documents_annexes`, `date_imputation`, `date_traitement`, `echeancier`, `statut`, `created_at`, `updated_at`) VALUES
-(22, 22, 1, 'primaire', 'travail essai', NULL, '\"[\\\"1768484836_Note au MFB_ Objectif de recettes TOFE Aout 2025.pdf\\\"]\"', '2026-01-15', NULL, '2026-01-16', 'en_attente', '2026-01-15 13:47:16', '2026-01-15 13:47:16'),
-(23, 19, 1, 'primaire', 'taf', NULL, '\"[\\\"1768492615_Note de service_DEMANDE D\'INFORMATIONS COMITE COUT SDEEF.pdf\\\"]\"', '2026-01-15', NULL, '2026-01-17', 'en_attente', '2026-01-15 15:56:55', '2026-01-15 15:56:55');
+(22, 22, 1, 'primaire', 'travail essai', NULL, '\"[\\\"1768484836_Note au MFB_ Objectif de recettes TOFE Aout 2025.pdf\\\"]\"', '2026-01-15', NULL, '2026-01-16', 'termine', '2026-01-15 13:47:16', '2026-01-16 10:04:55'),
+(23, 19, 1, 'primaire', 'taf', NULL, '\"[\\\"1768492615_Note de service_DEMANDE D\'INFORMATIONS COMITE COUT SDEEF.pdf\\\"]\"', '2026-01-15', NULL, '2026-01-17', 'termine', '2026-01-15 15:56:55', '2026-01-16 09:04:08'),
+(24, 7, 1, 'primaire', 'vd', NULL, '\"[\\\"1768560104_Note au MFB_ Objectif de recettes TOFE Aout 2025.pdf\\\"]\"', '2026-01-16', NULL, '2026-01-18', 'termine', '2026-01-16 10:41:44', '2026-01-16 10:42:09'),
+(25, 12, 1, 'primaire', 'cs', NULL, '\"[\\\"1768560510_Note au MFB_ Objectif de recettes TOFE Aout 2025.pdf\\\"]\"', '2026-01-16', NULL, '2026-01-18', 'termine', '2026-01-16 10:48:30', '2026-01-16 10:49:20'),
+(26, 15, 1, 'primaire', 'fd', NULL, '\"[\\\"1768561384_Note au MFB_ Objectif de recettes TOFE Aout 2025.pdf\\\"]\"', '2026-01-16', NULL, '2026-01-20', 'termine', '2026-01-16 11:03:04', '2026-01-16 11:03:57'),
+(27, 7, 1, 'primaire', 'rep11', NULL, '\"[\\\"1768561851_Note de service_DEMANDE D\'INFORMATIONS COMITE COUT SDEEF.pdf\\\"]\"', '2026-01-16', NULL, '2026-01-18', 'termine', '2026-01-16 11:10:51', '2026-01-16 11:11:18'),
+(28, 20, 1, 'primaire', 'sds', NULL, '\"[\\\"1768562119_Note_Service_Objectifs de recettes r\\\\u00e9vis\\\\u00e9s 2025 N\'GUESSAN.pdf\\\"]\"', '2026-01-16', NULL, '2026-01-17', 'termine', '2026-01-16 11:15:19', '2026-01-16 11:15:44'),
+(29, 22, 1, 'primaire', 'kklkl', NULL, '\"[\\\"1768562548_Note au MFB_ Objectif de recettes TOFE Aout 2025.pdf\\\"]\"', '2026-01-16', NULL, '2026-01-17', 'termine', '2026-01-16 11:22:28', '2026-01-16 11:23:04');
 
 -- --------------------------------------------------------
 
@@ -482,7 +494,7 @@ CREATE TABLE IF NOT EXISTS `migrations` (
   `migration` varchar(255) NOT NULL,
   `batch` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `migrations`
@@ -524,7 +536,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (33, '2026_01_09_222247_add_document_justificatif_to_absences_table', 33),
 (34, '2026_01_13_083901_update_user_role_in_users_table', 34),
 (35, '2026_01_13_151143_create_imputations_table', 35),
-(36, '2026_01_13_175520_create_reponses_table', 36);
+(36, '2026_01_13_175520_create_reponses_table', 36),
+(37, '2026_01_16_083954_add_validation_fields_to_reponses_table', 37);
 
 -- --------------------------------------------------------
 
@@ -661,6 +674,9 @@ INSERT INTO `presences` (`id`, `agent_id`, `heure_arrivee`, `heure_depart`, `sta
 DROP TABLE IF EXISTS `reponses`;
 CREATE TABLE IF NOT EXISTS `reponses` (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `validation` enum('en_attente','acceptee','rejetee') NOT NULL DEFAULT 'en_attente',
+  `document_final_signe` varchar(191) DEFAULT NULL,
+  `date_approbation` timestamp NULL DEFAULT NULL,
   `imputation_id` bigint(20) UNSIGNED NOT NULL,
   `agent_id` bigint(20) UNSIGNED NOT NULL,
   `contenu` text NOT NULL,
@@ -672,43 +688,51 @@ CREATE TABLE IF NOT EXISTS `reponses` (
   PRIMARY KEY (`id`),
   KEY `reponses_imputation_id_foreign` (`imputation_id`),
   KEY `reponses_agent_id_foreign` (`agent_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `reponses`
 --
 
-INSERT INTO `reponses` (`id`, `imputation_id`, `agent_id`, `contenu`, `fichiers_joints`, `date_reponse`, `pourcentage_avancement`, `created_at`, `updated_at`) VALUES
-(1, 2, 1, 'travail en cours mais d\'extration de données', '[\"reponses\\/annexes\\/emHF6kgmcpkNtnk9lrTdlr8WYM94z64TUOd9z6Vx.jpg\"]', '2026-01-14 12:48:52', 50, '2026-01-14 12:48:52', '2026-01-14 12:48:52'),
-(2, 7, 1, 'ok travail fait \r\nreponse ci-joint', '[\"reponses\\/annexes\\/W2csXCPajVf14mxfB4NbAEOmJ17XJPsfm1L1wZWS.pdf\"]', '2026-01-14 13:06:17', 100, '2026-01-14 13:06:17', '2026-01-14 13:06:17'),
-(3, 8, 1, 'ok travail effectue et reponses jointes', '\"[\\\"1768399723_Document_2025-11-27_121019.pdf\\\"]\"', '2026-01-14 14:08:43', 25, '2026-01-14 14:08:43', '2026-01-14 14:08:43'),
-(4, 9, 1, 'reponses voir fichier joint stat tEE DMICRO 2025', '[\"reponses\\/ggk0npj0DqGYqGMCswoWYdd9tkUl94918dZtvxIe.pdf\"]', '2026-01-14 15:29:12', 25, '2026-01-14 15:29:12', '2026-01-14 15:29:12'),
-(5, 9, 1, 'reponses en fichier joint', '[\"reponses\\/6ZlkUvkFA51KtPNHOYPj812Nz5M08jjh9afZNmdq.pdf\"]', '2026-01-14 15:34:37', 25, '2026-01-14 15:34:37', '2026-01-14 15:34:37'),
-(6, 9, 1, 'hjkkklklklllll', '[\"reponses\\/4GIPLgsqp8u9OuiumjTwwKAZOzcMroB7TS03JwPR.pdf\",\"reponses\\/keZ8bR5kvUsrtQLzisk4DjvzcyvEwGPRu7OrMqC9.pdf\"]', '2026-01-14 15:37:52', 25, '2026-01-14 15:37:52', '2026-01-14 15:37:52'),
-(7, 10, 1, 'Veuillez M. le directeur la reponse à votre requête.\r\nCi-joint le fichier', '[\"reponses\\/9fRs3wwQQcigaWcpS0SjsMhXwhlOuUb97uJqPUPY.pdf\",\"reponses\\/vdHgwV0HGox2xkIB3U2AfdxjkGgOHugmx7OvxhDv.pdf\"]', '2026-01-14 16:18:23', 25, '2026-01-14 16:18:23', '2026-01-14 16:18:23'),
-(8, 10, 1, 'reponses ci-joint', '[\"reponses\\/5Qhrv3F1GDsmre4S1KygZVLldKq5izUiyOviv1zO.pdf\"]', '2026-01-14 16:23:02', 25, '2026-01-14 16:23:02', '2026-01-14 16:23:02'),
-(9, 10, 1, 'si', '[\"reponses\\/5vJ14Nepl1KAY2VAGZwcJ8I1RYczQeOrM077HSvO.pdf\"]', '2026-01-14 16:23:57', 25, '2026-01-14 16:23:57', '2026-01-14 16:23:57'),
-(10, 10, 1, 'vue', '[\"reponses\\/TnQ4bFVX5PbH8wIIWl1MAKN8MkrjMByscie3cBja.pdf\"]', '2026-01-14 16:29:06', 100, '2026-01-14 16:29:06', '2026-01-14 16:29:06'),
-(11, 11, 1, 'REPONSES RAPIDE', '[\"reponses\\/1768410151_CNI_COUOLIBALY_SIE_YACOUBA_(1).pdf\"]', '2026-01-14 17:02:31', 25, '2026-01-14 17:02:31', '2026-01-14 17:02:31'),
-(12, 11, 1, 'REPONSES', '[\"reponses\\/1768410190_CNI_COUOLIBALY_SIE_YACOUBA_(1).pdf\"]', '2026-01-14 17:03:10', 75, '2026-01-14 17:03:10', '2026-01-14 17:03:10'),
-(13, 11, 1, 'REPONDU', '[\"reponses\\/jnF4hJZfZdd6e22FnQ1ixtaF3Ms3zs3oYc391rwg.pdf\"]', '2026-01-14 17:11:40', 25, '2026-01-14 17:11:40', '2026-01-14 17:11:40'),
-(14, 11, 1, 'NGF', '[\"reponses\\/FRNDQ2v237VVoGOv18Vahkezt6v2DIIRaZHW6s7F.pdf\"]', '2026-01-14 17:12:58', 50, '2026-01-14 17:12:58', '2026-01-14 17:12:58'),
-(15, 11, 1, 'bn', '[\"reponses\\/1768411531_CNI_COUOLIBALY_SIE_YACOUBA.pdf\"]', '2026-01-14 17:25:31', 75, '2026-01-14 17:25:31', '2026-01-14 17:25:31'),
-(16, 11, 1, 'reponses', '[\"reponses\\/UEOVQuWIIBRlLWzbjAcpUgH1OYOwCPZycvUwMXfY.pdf\"]', '2026-01-14 17:36:28', 25, '2026-01-14 17:36:28', '2026-01-14 17:36:28'),
-(17, 12, 1, 'reponses', '[\"reponses\\/JJIh95yOLMGsK56EZRZiDJ1p4Rj761xzIC4DmBxe.pdf\"]', '2026-01-14 17:40:13', 50, '2026-01-14 17:40:13', '2026-01-14 17:40:13'),
-(18, 12, 1, 'vue', '[\"reponses\\/uiFB8uJZINieGt2Sk4WRGy8QaNg0Czq0qkAypuCE.pdf\"]', '2026-01-14 17:54:55', 25, '2026-01-14 17:54:55', '2026-01-14 17:54:55'),
-(19, 12, 1, 'reponse', '[\"reponses\\/TtPITjRWhzbo8HgtRDEbxWLMQic7c612dcNakA2c.pdf\"]', '2026-01-14 18:07:45', 20, '2026-01-14 18:07:45', '2026-01-14 18:07:45'),
-(20, 12, 1, 'reponses', '[\"reponses\\/N0S5wvlzcftgLBx5MMCsjmtTaLax6p4w7gw4v5wq.pdf\"]', '2026-01-14 18:21:10', 20, '2026-01-14 18:21:10', '2026-01-14 18:21:10'),
-(21, 12, 1, 'reponse1', '[\"reponses\\/9ClJe3XzxX7pU59XGifHjIuuimxMRG8BovqNeJZh.pdf\"]', '2026-01-15 06:55:54', 100, '2026-01-15 06:55:54', '2026-01-15 06:55:54'),
-(22, 13, 1, 'reponses rapide ci-joint fichier', '[]', '2026-01-15 07:09:39', 100, '2026-01-15 07:09:39', '2026-01-15 07:09:39'),
-(23, 14, 1, 'reponses vrai', '[\"reponses\\/lttqqJrKV4sk8c8ODsdws0l2HTrs1mOUiZJWoC5T.pdf\"]', '2026-01-15 07:14:25', 100, '2026-01-15 07:14:25', '2026-01-15 07:14:25'),
-(24, 15, 1, 'rep oui', '[\"reponses\\/EG3tQV4U9eYx0SIQUwMEenKdEXMXyBird0lyNdi9.jpg\"]', '2026-01-15 07:27:00', 100, '2026-01-15 07:27:00', '2026-01-15 07:27:00'),
-(25, 16, 1, 'rep non', '[\"reponses\\/h25UsIwQMkl2aScdIXUlFyFinWibEySoFMXjgT0U.jpg\"]', '2026-01-15 07:37:24', 100, '2026-01-15 07:37:24', '2026-01-15 07:37:24'),
-(26, 17, 1, 'rep urgente ci joint fichier', '[\"reponses\\/1768463506_Bienvenue.jpg\"]', '2026-01-15 07:51:46', 100, '2026-01-15 07:51:46', '2026-01-15 07:51:46'),
-(27, 18, 1, 'rep1', '[\"reponses\\/pmvIcRG3DCHOZ1K8S8PilDnsOoOXYsyjbEeZYzQ5.jpg\"]', '2026-01-15 08:26:56', 100, '2026-01-15 08:26:56', '2026-01-15 08:26:56'),
-(28, 19, 1, 'rep1', '[\"reponses\\/pgpw3NHb6FLQw6hFI6R53o4PIUXanB8muDwG3BbZ.pdf\"]', '2026-01-15 12:38:37', 100, '2026-01-15 12:38:37', '2026-01-15 12:38:37'),
-(29, 20, 1, 'rep12', '[\"reponses\\/LQeKA1VS8Au0OS5loQ5ZLXcPP6Om4BlqXNFMeIEH.pdf\"]', '2026-01-15 12:43:47', 100, '2026-01-15 12:43:47', '2026-01-15 12:43:47'),
-(30, 21, 1, 'rep 123', '[\"1768481414_Projet de Note du DSESF au DG_S\\u00e9minaire Loi de r\\u00e8glement 18 20 d\\u00e9c 2024.pdf\"]', '2026-01-15 12:50:14', 100, '2026-01-15 12:50:14', '2026-01-15 12:50:14');
+INSERT INTO `reponses` (`id`, `validation`, `document_final_signe`, `date_approbation`, `imputation_id`, `agent_id`, `contenu`, `fichiers_joints`, `date_reponse`, `pourcentage_avancement`, `created_at`, `updated_at`) VALUES
+(1, 'en_attente', NULL, NULL, 2, 1, 'travail en cours mais d\'extration de données', '[\"reponses\\/annexes\\/emHF6kgmcpkNtnk9lrTdlr8WYM94z64TUOd9z6Vx.jpg\"]', '2026-01-14 12:48:52', 50, '2026-01-14 12:48:52', '2026-01-14 12:48:52'),
+(2, 'en_attente', NULL, NULL, 7, 1, 'ok travail fait \r\nreponse ci-joint', '[\"reponses\\/annexes\\/W2csXCPajVf14mxfB4NbAEOmJ17XJPsfm1L1wZWS.pdf\"]', '2026-01-14 13:06:17', 100, '2026-01-14 13:06:17', '2026-01-14 13:06:17'),
+(3, 'en_attente', NULL, NULL, 8, 1, 'ok travail effectue et reponses jointes', '\"[\\\"1768399723_Document_2025-11-27_121019.pdf\\\"]\"', '2026-01-14 14:08:43', 25, '2026-01-14 14:08:43', '2026-01-14 14:08:43'),
+(4, 'en_attente', NULL, NULL, 9, 1, 'reponses voir fichier joint stat tEE DMICRO 2025', '[\"reponses\\/ggk0npj0DqGYqGMCswoWYdd9tkUl94918dZtvxIe.pdf\"]', '2026-01-14 15:29:12', 25, '2026-01-14 15:29:12', '2026-01-14 15:29:12'),
+(5, 'en_attente', NULL, NULL, 9, 1, 'reponses en fichier joint', '[\"reponses\\/6ZlkUvkFA51KtPNHOYPj812Nz5M08jjh9afZNmdq.pdf\"]', '2026-01-14 15:34:37', 25, '2026-01-14 15:34:37', '2026-01-14 15:34:37'),
+(6, 'en_attente', NULL, NULL, 9, 1, 'hjkkklklklllll', '[\"reponses\\/4GIPLgsqp8u9OuiumjTwwKAZOzcMroB7TS03JwPR.pdf\",\"reponses\\/keZ8bR5kvUsrtQLzisk4DjvzcyvEwGPRu7OrMqC9.pdf\"]', '2026-01-14 15:37:52', 25, '2026-01-14 15:37:52', '2026-01-14 15:37:52'),
+(7, 'en_attente', NULL, NULL, 10, 1, 'Veuillez M. le directeur la reponse à votre requête.\r\nCi-joint le fichier', '[\"reponses\\/9fRs3wwQQcigaWcpS0SjsMhXwhlOuUb97uJqPUPY.pdf\",\"reponses\\/vdHgwV0HGox2xkIB3U2AfdxjkGgOHugmx7OvxhDv.pdf\"]', '2026-01-14 16:18:23', 25, '2026-01-14 16:18:23', '2026-01-14 16:18:23'),
+(8, 'en_attente', NULL, NULL, 10, 1, 'reponses ci-joint', '[\"reponses\\/5Qhrv3F1GDsmre4S1KygZVLldKq5izUiyOviv1zO.pdf\"]', '2026-01-14 16:23:02', 25, '2026-01-14 16:23:02', '2026-01-14 16:23:02'),
+(9, 'en_attente', NULL, NULL, 10, 1, 'si', '[\"reponses\\/5vJ14Nepl1KAY2VAGZwcJ8I1RYczQeOrM077HSvO.pdf\"]', '2026-01-14 16:23:57', 25, '2026-01-14 16:23:57', '2026-01-14 16:23:57'),
+(10, 'en_attente', NULL, NULL, 10, 1, 'vue', '[\"reponses\\/TnQ4bFVX5PbH8wIIWl1MAKN8MkrjMByscie3cBja.pdf\"]', '2026-01-14 16:29:06', 100, '2026-01-14 16:29:06', '2026-01-14 16:29:06'),
+(11, 'en_attente', NULL, NULL, 11, 1, 'REPONSES RAPIDE', '[\"reponses\\/1768410151_CNI_COUOLIBALY_SIE_YACOUBA_(1).pdf\"]', '2026-01-14 17:02:31', 25, '2026-01-14 17:02:31', '2026-01-14 17:02:31'),
+(12, 'en_attente', NULL, NULL, 11, 1, 'REPONSES', '[\"reponses\\/1768410190_CNI_COUOLIBALY_SIE_YACOUBA_(1).pdf\"]', '2026-01-14 17:03:10', 75, '2026-01-14 17:03:10', '2026-01-14 17:03:10'),
+(13, 'en_attente', NULL, NULL, 11, 1, 'REPONDU', '[\"reponses\\/jnF4hJZfZdd6e22FnQ1ixtaF3Ms3zs3oYc391rwg.pdf\"]', '2026-01-14 17:11:40', 25, '2026-01-14 17:11:40', '2026-01-14 17:11:40'),
+(14, 'en_attente', NULL, NULL, 11, 1, 'NGF', '[\"reponses\\/FRNDQ2v237VVoGOv18Vahkezt6v2DIIRaZHW6s7F.pdf\"]', '2026-01-14 17:12:58', 50, '2026-01-14 17:12:58', '2026-01-14 17:12:58'),
+(15, 'en_attente', NULL, NULL, 11, 1, 'bn', '[\"reponses\\/1768411531_CNI_COUOLIBALY_SIE_YACOUBA.pdf\"]', '2026-01-14 17:25:31', 75, '2026-01-14 17:25:31', '2026-01-14 17:25:31'),
+(16, 'en_attente', NULL, NULL, 11, 1, 'reponses', '[\"reponses\\/UEOVQuWIIBRlLWzbjAcpUgH1OYOwCPZycvUwMXfY.pdf\"]', '2026-01-14 17:36:28', 25, '2026-01-14 17:36:28', '2026-01-14 17:36:28'),
+(17, 'en_attente', NULL, NULL, 12, 1, 'reponses', '[\"reponses\\/JJIh95yOLMGsK56EZRZiDJ1p4Rj761xzIC4DmBxe.pdf\"]', '2026-01-14 17:40:13', 50, '2026-01-14 17:40:13', '2026-01-14 17:40:13'),
+(18, 'en_attente', NULL, NULL, 12, 1, 'vue', '[\"reponses\\/uiFB8uJZINieGt2Sk4WRGy8QaNg0Czq0qkAypuCE.pdf\"]', '2026-01-14 17:54:55', 25, '2026-01-14 17:54:55', '2026-01-14 17:54:55'),
+(19, 'en_attente', NULL, NULL, 12, 1, 'reponse', '[\"reponses\\/TtPITjRWhzbo8HgtRDEbxWLMQic7c612dcNakA2c.pdf\"]', '2026-01-14 18:07:45', 20, '2026-01-14 18:07:45', '2026-01-14 18:07:45'),
+(20, 'en_attente', NULL, NULL, 12, 1, 'reponses', '[\"reponses\\/N0S5wvlzcftgLBx5MMCsjmtTaLax6p4w7gw4v5wq.pdf\"]', '2026-01-14 18:21:10', 20, '2026-01-14 18:21:10', '2026-01-14 18:21:10'),
+(21, 'en_attente', NULL, NULL, 12, 1, 'reponse1', '[\"reponses\\/9ClJe3XzxX7pU59XGifHjIuuimxMRG8BovqNeJZh.pdf\"]', '2026-01-15 06:55:54', 100, '2026-01-15 06:55:54', '2026-01-15 06:55:54'),
+(22, 'en_attente', NULL, NULL, 13, 1, 'reponses rapide ci-joint fichier', '[]', '2026-01-15 07:09:39', 100, '2026-01-15 07:09:39', '2026-01-15 07:09:39'),
+(23, 'en_attente', NULL, NULL, 14, 1, 'reponses vrai', '[\"reponses\\/lttqqJrKV4sk8c8ODsdws0l2HTrs1mOUiZJWoC5T.pdf\"]', '2026-01-15 07:14:25', 100, '2026-01-15 07:14:25', '2026-01-15 07:14:25'),
+(24, 'en_attente', NULL, NULL, 15, 1, 'rep oui', '[\"reponses\\/EG3tQV4U9eYx0SIQUwMEenKdEXMXyBird0lyNdi9.jpg\"]', '2026-01-15 07:27:00', 100, '2026-01-15 07:27:00', '2026-01-15 07:27:00'),
+(25, 'en_attente', NULL, NULL, 16, 1, 'rep non', '[\"reponses\\/h25UsIwQMkl2aScdIXUlFyFinWibEySoFMXjgT0U.jpg\"]', '2026-01-15 07:37:24', 100, '2026-01-15 07:37:24', '2026-01-15 07:37:24'),
+(26, 'en_attente', NULL, NULL, 17, 1, 'rep urgente ci joint fichier', '[\"reponses\\/1768463506_Bienvenue.jpg\"]', '2026-01-15 07:51:46', 100, '2026-01-15 07:51:46', '2026-01-15 07:51:46'),
+(27, 'en_attente', NULL, NULL, 18, 1, 'rep1', '[\"reponses\\/pmvIcRG3DCHOZ1K8S8PilDnsOoOXYsyjbEeZYzQ5.jpg\"]', '2026-01-15 08:26:56', 100, '2026-01-15 08:26:56', '2026-01-15 08:26:56'),
+(28, 'en_attente', NULL, NULL, 19, 1, 'rep1', '[\"reponses\\/pgpw3NHb6FLQw6hFI6R53o4PIUXanB8muDwG3BbZ.pdf\"]', '2026-01-15 12:38:37', 100, '2026-01-15 12:38:37', '2026-01-15 12:38:37'),
+(29, 'en_attente', NULL, NULL, 20, 1, 'rep12', '[\"reponses\\/LQeKA1VS8Au0OS5loQ5ZLXcPP6Om4BlqXNFMeIEH.pdf\"]', '2026-01-15 12:43:47', 100, '2026-01-15 12:43:47', '2026-01-15 12:43:47'),
+(30, 'en_attente', NULL, NULL, 21, 1, 'rep 123', '[\"1768481414_Projet de Note du DSESF au DG_S\\u00e9minaire Loi de r\\u00e8glement 18 20 d\\u00e9c 2024.pdf\"]', '2026-01-15 12:50:14', 100, '2026-01-15 12:50:14', '2026-01-15 12:50:14'),
+(31, 'acceptee', 'archives/final/iZX8WVHBtV2SeiV2QSq6vdSvoccctAKUzHVRrq2j.pdf', '2026-01-16 09:41:03', 23, 1, 'rep1', '[\"1768554248_Projet de Note du DSESF au DG_S\\u00e9minaire Loi de r\\u00e8glement 18 20 d\\u00e9c 2024.pdf\",\"1768554248_Note_Service_Objectifs de recettes r\\u00e9vis\\u00e9s 2025 N\'GUESSAN.pdf\"]', '2026-01-16 09:04:08', 100, '2026-01-16 09:04:08', '2026-01-16 09:41:03'),
+(32, 'en_attente', NULL, NULL, 22, 1, 'rep', '[\"1768557895_Projet de Note du DSESF au DG_S\\u00e9minaire Loi de r\\u00e8glement 18 20 d\\u00e9c 2024.pdf\"]', '2026-01-16 10:04:55', 100, '2026-01-16 10:04:55', '2026-01-16 10:04:55'),
+(33, 'acceptee', 'archives/final/1768560149_FINAL_Projet de Note du DSESF au DG_Séminaire Loi de règlement 18 20 déc 2024.pdf', '2026-01-16 10:42:29', 24, 1, 'rep1', '[\"1768560129_Projet de Note du DSESF au DG_S\\u00e9minaire Loi de r\\u00e8glement 18 20 d\\u00e9c 2024.pdf\",\"1768560129_Note_Service_Objectifs de recettes r\\u00e9vis\\u00e9s 2025 N\'GUESSAN.pdf\"]', '2026-01-16 10:42:09', 100, '2026-01-16 10:42:09', '2026-01-16 10:42:29'),
+(34, 'acceptee', 'archives/final/1768560837_FINAL_Projet de Note du DSESF au DG_Séminaire Loi de règlement 18 20 déc 2024.pdf', '2026-01-16 10:53:57', 25, 1, 'sd', '[\"1768560560_Projet de Note du DSESF au DG_S\\u00e9minaire Loi de r\\u00e8glement 18 20 d\\u00e9c 2024.pdf\",\"1768560560_Note de service_DEMANDE D\'INFORMATIONS COMITE COUT SDEEF.pdf\"]', '2026-01-16 10:49:20', 100, '2026-01-16 10:49:20', '2026-01-16 10:53:57'),
+(35, 'acceptee', 'archives/final/1768561598_FINAL_Note de service_DEMANDE D\'INFORMATIONS COMITE COUT SDEEF.pdf', '2026-01-16 11:06:38', 26, 1, 'reponses tardives', '[\"1768561437_Projet de Note du DSESF au DG_S\\u00e9minaire Loi de r\\u00e8glement 18 20 d\\u00e9c 2024.pdf\",\"1768561437_Projet de Note du DSESF au DG_S\\u00e9minaire Loi de r\\u00e8glement 18 20 d\\u00e9c 2024.pdf\"]', '2026-01-16 11:03:57', 100, '2026-01-16 11:03:57', '2026-01-16 11:06:38'),
+(36, 'acceptee', 'archives/final/1768561888_FINAL_Note au MFB_ Objectif de recettes TOFE Aout 2025.pdf', '2026-01-16 11:11:28', 27, 1, 'oui', '[\"1768561878_Projet de Note du DSESF au DG_S\\u00e9minaire Loi de r\\u00e8glement 18 20 d\\u00e9c 2024.pdf\",\"1768561878_Note_Service_Objectifs de recettes r\\u00e9vis\\u00e9s 2025 N\'GUESSAN.pdf\"]', '2026-01-16 11:11:18', 100, '2026-01-16 11:11:18', '2026-01-16 11:11:28'),
+(37, 'acceptee', 'archives/final/1768562168_FINAL_Projet de Note du DSESF au DG_Séminaire Loi de règlement 18 20 déc 2024.pdf', '2026-01-16 11:16:08', 28, 1, 'ddd', '[\"1768562144_Projet de Note du DSESF au DG_S\\u00e9minaire Loi de r\\u00e8glement 18 20 d\\u00e9c 2024.pdf\"]', '2026-01-16 11:15:44', 100, '2026-01-16 11:15:44', '2026-01-16 11:16:08'),
+(38, 'acceptee', 'archives/final/1768562593_FINAL_Projet de Note du DSESF au DG_Séminaire Loi de règlement 18 20 déc 2024.pdf', '2026-01-16 11:23:13', 29, 1, 'ras', '[\"1768562584_Projet de Note du DSESF au DG_S\\u00e9minaire Loi de r\\u00e8glement 18 20 d\\u00e9c 2024.pdf\",\"1768562584_Projet de Note du DSESF au DG_S\\u00e9minaire Loi de r\\u00e8glement 18 20 d\\u00e9c 2024.pdf\"]', '2026-01-16 11:23:04', 100, '2026-01-16 11:23:04', '2026-01-16 11:23:13');
 
 -- --------------------------------------------------------
 

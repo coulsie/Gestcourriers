@@ -48,7 +48,7 @@ class ReponseController extends Controller
 
         ]);
 
-    $filePaths = [];
+                $filePaths = [];
                 if ($request->hasFile('fichiers')) {
                     foreach ($request->file('fichiers') as $file) {
                         // Génération d'un nom unique avec timestamp
@@ -80,35 +80,56 @@ class ReponseController extends Controller
         return redirect()->route('imputations.show', $request->imputation_id)->with('success', 'Enregistré !');
     }
 
+public function valider(Request $request, $id)
+{
+    // 1. Récupération de la réponse
+    $reponse = \App\Models\Reponse::findOrFail($id);
 
-    public function valider(Request $request, Reponse $reponse)
-    {
-        $request->validate([
-            'document_final' => 'required|file|mimes:pdf|max:10240',
-        ]);
+    // 2. Validation du fichier
+    $request->validate([
+        'document_final' => 'required|file|mimes:pdf|max:10240',
+    ]);
 
-        // 1. Enregistrement du document signé produit
-        if ($request->hasFile('document_final')) {
-            $path = $request->file('document_final')->store('archives/final', 'public');
+    if ($request->hasFile('document_final')) {
+        $file = $request->file('document_final');
 
-            $reponse->update([
-                'validation' => 'acceptee',
-                'document_final_signe' => $path,
-                'date_approbation' => now(),
-            ]);
+        // 3. Gestion du fichier (Logique public/archives/final)
+        $fileName = time() . '_FINAL_' . $file->getClientOriginalName();
+        $file->move(public_path('archives/final'), $fileName);
+
+        // 4. MISE À JOUR MANUELLE (Plus fiable que update())
+        $reponse->validation = 'acceptee';
+        $reponse->document_final_signe = 'archives/final/' . $fileName;
+        $reponse->date_approbation = now();
+
+        // On force l'enregistrement dans MariaDB
+        $reponse->save();
+
+        // 5. Mise à jour de l'Imputation parente
+        if ($reponse->imputation_id) {
+            $imputation = \App\Models\Imputation::find($reponse->imputation_id);
+            if ($imputation) {
+                $imputation->statut = 'termine';
+                $imputation->save();
+
+                // 6. Mise à jour du Courrier lié
+                if ($imputation->courrier_id) {
+                    $courrier = \App\Models\Courrier::find($imputation->courrier_id);
+                    if ($courrier) {
+                        $courrier->statut = 'archivé';
+                        $courrier->save();
+                    }
+                }
+            }
         }
 
-        // 2. Archivage du Courrier et de l'Imputation
-        $reponse->imputation->update(['statut' => 'termine']);
-        $reponse->imputation->courrier->update([
-            'statut' => 'archivé',
-            'archived_at' => now()
-        ]);
-
-        return back()->with('success', 'Réponse acceptée, document signé archivé et dossier clôturé.');
+        return back()->with('success', 'Dossier validé, document enregistré et base de données mise à jour !');
     }
 
-    
+    return back()->with('error', 'Échec de la validation : fichier manquant.');
+}
+
+
     public function show(Reponse $reponse)
     {
         //
