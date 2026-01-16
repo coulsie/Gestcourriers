@@ -73,8 +73,8 @@
                                     <div class="collapse-divider"></div>
                                     <h6 class="collapse-header">Configurations:</h6>
                                     <a class="collapse-item" href="{{ route('typeabsences.index') }}">Paramétrage Absence</a>
-                                    <a class="collapse-item" href="{{ route('notifications.index') }}">Toutes les notifications</a>
-                                    <a class="collapse-item" href="{{ route('notifications.create') }}">Créer une notification</a>
+                                     <!--<a class="collapse-item" href="{{ route('notifications.index') }}">Toutes les notifications</a>-->
+                                   <!-- <a class="collapse-item" href="{{ route('notifications.create') }}">Créer une notification</a> -->
                                 </div>
                             </div>
 
@@ -121,8 +121,9 @@
 
                             <div class="collapse-divider"></div>
                             <h6 class="collapse-header">Communications:</h6>
-                            <a class="collapse-item" href="{{ route('notifications.index2') }}">Mes notifications</a>
-                            <a class="collapse-item" href="{{ route('notifications.index3') }}">xnotifications</a>
+                            <!-- <a class="collapse-item" href="{{ route('notifications.index2') }}">Mes notifications</a> -->
+                            <!-- <a class="collapse-item" href="{{ route('notifications.index3') }}">xnotifications</a> -->
+                            <a class="collapse-item" href="{{ route('imputations.mes_imputations') }}">Mes Imputations</a>
 
                         </div>
                     </div>
@@ -173,8 +174,8 @@
                         <a class="collapse-item" href="{{ route('typeabsences.index') }}">Parametrage Absence</a>
                         <a class="collapse-item" href="{{ route('agents.par.service') }}">Agents par Service</a>
                         <a class="collapse-item" href="{{ route('agents.par.service.recherche') }}">Recherche Agents</a>
-                         <a class="collapse-item" href="{{ route('notifications.index') }}">Notifications de tâches</a>
-                         <a class="collapse-item" href="{{ route('presences.etat') }}">État des Présences</a>
+                        <!-- <a class="collapse-item" href="{{ route('notifications.index') }}">Notifications de tâches</a> -->
+                        <a class="collapse-item" href="{{ route('presences.etat') }}">État des Présences</a>
 
                         <!-- <a class="collapse-item" href="">Dons</a> -->
                     </div>

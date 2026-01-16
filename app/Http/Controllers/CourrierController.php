@@ -223,7 +223,8 @@ class CourrierController extends Controller
         }
 
         // Récupérer les courriers avec pagination optionnelle (ici on prend 10 par page)
-        $courriers = $query->orderBy('date_courrier', 'desc')->paginate(25);
+        $courriers = $query->orderBy('date_courrier', 'desc')->paginate(15);
+       
 
         // Passer les résultats et les anciennes valeurs de recherche à la vue
         return view('courriers.RechercheAffichage', [
