@@ -42,6 +42,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/statistiques/dashboard', [StatistiqueController::class, 'dashboard'])
         ->name('statistiques.dashboard');
 
+    Route::post('/reponses/{reponse}/valider', [ReponseController::class, 'valider'])
+        ->name('reponses.valider');
 
     /*
     |----------------------------------------------------------------------
@@ -81,6 +83,8 @@ Route::middleware(['auth'])->group(function () {
         });
         Route::resource('imputations', ImputationController::class);
         Route::post('/reponses/store', [ReponseController::class, 'store'])->name('reponses.store');
+
+
 
         // --- GESTION DES COURRIERS & AFFECTATIONS ---
         Route::prefix('courriers')->name('courriers.')->group(function () {

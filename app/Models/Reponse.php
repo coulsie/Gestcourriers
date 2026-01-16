@@ -13,13 +13,16 @@ class Reponse extends Model
         'contenu',
         'fichiers_joints',
         'date_reponse',
-        'pourcentage_avancement'
+        'pourcentage_avancement',
+        'validation',
+        'document_final_signe',
+        'date_approbation',
     ];
 
     protected $casts = [
         'fichiers_joints' => 'array', // Convertit automatiquement le tableau en JSON pour MariaDB
         'date_reponse' => 'datetime'
-         
+
     ];
 
 

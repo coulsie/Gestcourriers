@@ -180,7 +180,9 @@
                     </div>
                 </div>
             </div>
-            <!-- SECTION RÉPONSES ET ACTIONS -->
+
+
+<!-- SECTION RÉPONSES ET ACTIONS -->
 <div class="row mt-4">
     <div class="col-lg-12">
         <div class="card shadow-lg border-0 rounded-3">
@@ -188,6 +190,54 @@
                 <h5 class="mb-0 fw-bold"><i class="fas fa-comments me-2"></i>Traitement & Réponses</h5>
             </div>
             <div class="card-body p-4">
+
+                <!-- BLOC DE VALIDATION (Manager) -->
+                @foreach($imputation->reponses->where('validation', 'en_attente')->where('pourcentage_avancement', 100) as $reponse)
+                    <div class="alert alert-warning border-0 shadow-sm rounded-4 p-4 mb-4 border-start border-5 border-warning">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                            <div>
+                                <h5 class="fw-bold text-warning-emphasis mb-1"><i class="fas fa-gavel me-2"></i>Validation de la réponse finale</h5>
+                                <p class="mb-0">Agent : <strong>{{ $reponse->agent->first_name }} {{ $reponse->agent->last_name }}</strong> | Le dossier est prêt pour archivage.</p>
+                            </div>
+
+                            {{-- Formulaire pour accepter et joindre le document signé --}}
+                            <form action="{{ route('reponses.valider', $reponse->id) }}" method="POST" enctype="multipart/form-data" class="d-flex align-items-end gap-2 bg-white p-3 rounded-3 shadow-sm border">
+                                @csrf
+                                <div>
+                                    <label class="small fw-bold d-block mb-1 text-dark">Document final signé (PDF)</label>
+                                    <input type="file" name="document_final" class="form-control form-control-sm" accept=".pdf" required>
+                                </div>
+                                <button type="submit" class="btn btn-success fw-bold px-4 btn-sm shadow-sm">
+                                    <i class="fas fa-check-double me-2"></i> ACCEPTER & ARCHIVER
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                @endforeach
+                <!-- 2. BLOC D'ARCHIVE DÉFINITIF (S'affiche une fois validé) -->
+                @foreach($imputation->reponses->where('validation', 'acceptee') as $reponse)
+                    <div class="card border-success bg-success-subtle mb-4 rounded-4 shadow-sm border-start border-5">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <span class="badge bg-success mb-2 px-3 py-2"><i class="fas fa-lock me-1"></i> ARCHIVÉ DÉFINITIVEMENT</span>
+                                    <h6 class="fw-bold mb-1">{{ $reponse->agent->first_name }} {{ $reponse->agent->last_name }}</h6>
+                                    <p class="small text-dark mb-2">{{ $reponse->contenu }}</p>
+                                </div>
+                                <div class="text-center">
+                                    <i class="fas fa-file-signature fa-3x text-success opacity-50"></i>
+                                </div>
+                            </div>
+
+                            <div class="mt-3 p-3 bg-white rounded-3 border border-success d-flex justify-content-between align-items-center shadow-sm">
+                                <span class="fw-bold text-success"><i class="fas fa-file-pdf me-2"></i>Document_Final_Signé.pdf</span>
+                                <a href="{{ asset('archives/final'.($reponse->document_final_signe)) }}" target="_blank" class="btn btn-sm btn-success rounded-pill px-4 fw-bold">
+                                    <i class="fas fa-eye me-1"></i> Consulter l'archive
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
 
                 <!-- Liste des réponses existantes -->
                 <div class="timeline mb-4">
