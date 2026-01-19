@@ -22,14 +22,34 @@ class PresenceController extends Controller
 
 
 
-   public function index(): View
-    {
-        // Récupère toutes les présences et les passe à la vue 'presences.index'
-        // $presences = Presence::latest()->paginate(10);//Prière utiliser un datatable pour gérer la paginantion
-        $presences = Presence::with('agent')->get();
-        // dd($presences );die;
-        return view('presences.index', compact('presences'));
+    public function index(Request $request)
+{
+    $query = Presence::with('agent');
+
+    // Filtre par nom ou prénom de l'agent
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->whereHas('agent', function($q) use ($search) {
+            $q->where('name', 'like', "%{$search}%")
+              ->orWhere('last_name', 'like', "%{$search}%")
+              ->orWhere('first_name', 'like', "%{$search}%");
+        });
     }
+
+    // Filtre par statut
+    if ($request->filled('statut')) {
+        $query->where('statut', $request->statut);
+    }
+
+    // Filtre par date exacte
+    if ($request->filled('date')) {
+        $query->whereDate('heure_arrivee', $request->date);
+    }
+
+    $presences = $query->orderBy('heure_arrivee', 'desc')->paginate(10);
+
+    return view('presences.index', compact('presences'));
+}
 
     /**
      * Affiche le formulaire de création d'une nouvelle ressource (présence).

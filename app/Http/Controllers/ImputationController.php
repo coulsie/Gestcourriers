@@ -16,14 +16,49 @@ use Illuminate\Support\Facades\Log;
 
 class ImputationController extends Controller
 {
-        public function index()
-    {
-        $imputations = Imputation::with(['courrier', 'agents.service', 'auteur'])
-                        ->latest()
-                        ->paginate(10);
+     public function index(Request $request)
+{
+    // 1. Initialisation de la requête avec toutes les relations nécessaires
+    $query = Imputation::with(['courrier', 'agents.service', 'auteur']);
 
-        return view('Imputations.index', compact('imputations'));
+    // 2. Filtre par recherche (Référence ou Objet du courrier)
+    if ($request->filled('search')) {
+        $query->whereHas('courrier', function($q) use ($request) {
+            $q->where('reference', 'like', "%{$request->search}%")
+              ->orWhere('objet', 'like', "%{$request->search}%");
+        });
     }
+
+    // 3. Filtre par Niveau (primaire, secondaire, tertiaire)
+    if ($request->filled('niveau')) {
+        $query->where('niveau', $request->niveau);
+    }
+
+    // 4. Filtre par Statut (en_attente, en_cours, termine)
+    if ($request->filled('statut')) {
+        $query->where('statut', $request->statut);
+    }
+
+    // 5. Filtre par Agent assigné
+    if ($request->filled('agent_id')) {
+        $query->whereHas('agents', function($q) use ($request) {
+            $q->where('agents.id', $request->agent_id);
+        });
+    }
+
+    // 6. Tri par date de création décroissante et pagination
+    // appends(request()->query()) permet de garder les filtres actifs lors du changement de page
+    $imputations = $query->latest()->paginate(15)->appends($request->query());
+
+    // 7. Récupérer la liste de tous les agents pour remplir le menu déroulant du filtre
+    $allAgents = Agent::orderBy('last_name')->get();
+
+    // 8. Retour à la vue avec les deux variables
+    return view('Imputations.index', compact('imputations', 'allAgents'));
+}
+
+
+
     /**
      * Affiche le formulaire d'imputation pour un courrier spécifique.
      */

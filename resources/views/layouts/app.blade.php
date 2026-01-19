@@ -32,6 +32,28 @@
         <!-- Sidebar -->
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
+        <li class="nav-item">
+                <a class="nav-link" href="{{ route('home') }}">Tableau de bord</a>
+            </li>
+
+            <!-- INSÉREZ VOTRE CODE ICI -->
+            @can('manage-users')
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('users.index') }}">
+                        <i class="fas fa-users-cog me-2"></i> Gestion des Utilisateurs
+                    </a>
+                </li>
+            @endcan
+            
+
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('profile.show') }}">
+                    <i class="fas fa-user-circle me-2"></i> Mon Profil
+                </a>
+            </li>
+
+
+
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="">
                 <div class="sidebar-brand-icon rotate-n-15">

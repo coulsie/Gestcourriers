@@ -7,11 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Service;
+use Spatie\Permission\Traits\HasRoles; 
 
 
 class Agent extends Model
 {
     use HasFactory;
+    use HasRoles;
 
     /**
      * Les attributs qui peuvent être massivement assignés (Mass Assignable).
@@ -99,7 +101,7 @@ class Agent extends Model
         public function notificationtaches() {
             return $this->hasMany(NotificationTache::class);
         }
-        
+
                 public function imputations()
         {
             return $this->belongsToMany(Imputation::class, 'agent_imputation');

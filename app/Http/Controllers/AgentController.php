@@ -24,13 +24,50 @@ class AgentController extends Controller
     /**
      * Affiche la liste de tous les agents.
      */
-    public function index(): View
-    {
-        // Récupère tous les agents avec leurs relations (service, user) pour optimiser les requêtes
-        $agents = Agent::with(['service', 'user'])->get();
+public function index(Request $request)
+{
+    // 1. Initialiser la requête avec les relations nécessaires pour éviter le problème N+1
+    $query = Agent::with(['service', 'user']);
 
-        return view('agents.index', compact('agents'));
+    // 2. Filtre Recherche (Nom, Prénom ou Matricule)
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function($q) use ($search) {
+            $q->where('last_name', 'LIKE', "%{$search}%")
+              ->orWhere('first_name', 'LIKE', "%{$search}%")
+              ->orWhere('matricule', 'LIKE', "%{$search}%");
+        });
     }
+
+    // 3. Filtre par Service
+    if ($request->filled('service')) {
+        $query->where('service_id', $request->service);
+    }
+
+    // 4. Filtre par État du Compte (Accès Système)
+    if ($request->filled('account')) {
+        if ($request->account === 'active') {
+            // A un compte utilisateur lié
+            $query->has('user');
+        } elseif ($request->account === 'none') {
+            // N'a pas de compte utilisateur
+            $query->doesntHave('user');
+        }
+    }
+
+    // 5. Pagination avec conservation des filtres (withQueryString)
+    // C'est ici que l'erreur est corrigée en utilisant paginate() au lieu de get()
+    $agents = $query->orderBy('last_name', 'asc')->paginate(15)->withQueryString();
+
+    // 6. Récupérer les services pour le menu déroulant du filtre
+    $services = \App\Models\Service::orderBy('name')->get();
+
+    return view('agents.index', compact('agents', 'services'));
+}
+
+
+
+
 
     /**
      * Affiche le formulaire de création d'un nouvel agent.
@@ -149,7 +186,7 @@ public function store(Request $request)
         'Contact_personne_a_prevenir' => 'nullable|string|max:191',
         'autres_champs' => 'nullable',
         'user_id' => 'nullable|exists:users,id',
-        
+
         // Ajoutez vos autres champs ici...
     ]);
 

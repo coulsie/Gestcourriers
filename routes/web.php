@@ -8,7 +8,7 @@ use App\Http\Controllers\{
     PresenceController, AbsenceController, TypeAbsenceController,
     EtatAgentsController, NotificationTacheController, AnnonceController,
     ReponseNotificationController, AgentServiceController, ImputationController,StatistiqueController,
-    ReponseController
+    ReponseController,PasswordController
 };
 use App\Http\Controllers\Auth\PasswordSetupController;
 
@@ -44,6 +44,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/reponses/{reponse}/valider', [ReponseController::class, 'valider'])
         ->name('reponses.valider');
+         // --- GESTION DES UTILISATEURS (Accès Restreint) ---
+    // On protège ces routes pour que seuls les hauts gradés puissent gérer les comptes
+
 
     /*
     |----------------------------------------------------------------------
@@ -64,11 +67,20 @@ Route::middleware(['auth'])->group(function () {
             Route::match(['put', 'post'], '/update', [ProfileController::class, 'update'])->name('update');
         });
 
-        // --- ADMINISTRATION (ADMIN ONLY) ---
-        Route::middleware(['admin'])->prefix('admin')->group(function () {
-            Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
-            Route::resource('users', UserController::class);
+        Route::middleware(['can:manage-users'])->group(function () {
+        Route::resource('users', UserController::class);
+        // Cette ligne crée automatiquement :
+        // users.index (Liste), users.create (Formulaire), users.store (Enregistrement)
+        // users.edit (Modif), users.update, users.destroy (Suppression)
         });
+
+
+         
+            Route::post('/users/{user}/upgrade', [UserController::class, 'upgradeUser'])
+                ->name('users.upgrade')
+                ->middleware('auth');
+        // --- ADMINISTRATION (ADMIN ONLY) ---
+
 
         // --- GESTION DES AGENTS ---
         Route::prefix('agents')->group(function () {

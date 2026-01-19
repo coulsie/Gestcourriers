@@ -1,18 +1,25 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-md-10">
-            <div class="card shadow-sm border-primary">
-                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">{{ __('Modifier le Courrier') }}</h5>
-                    <span class="badge bg-light text-primary">#{{ $courrier->reference }}</span>
+            {{-- Card principale avec bordure renforcée --}}
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header d-flex justify-content-between align-items-center py-3"
+                     style="background: linear-gradient(135deg, #0d6efd 0%, #0a46a3 100%);">
+                    <h4 class="mb-0 text-white fw-bold">
+                        <i class="fas fa-edit me-2 text-warning"></i>{{ __('Modifier le Courrier') }}
+                    </h4>
+                    <span class="badge bg-white text-primary fw-bold shadow-sm px-3 py-2">
+                        REF: {{ $courrier->reference }}
+                    </span>
                 </div>
 
-                <div class="card-body bg-light-subtle">
+                <div class="card-body bg-light p-4">
                     @if ($errors->any())
-                        <div class="alert alert-danger border-0 shadow-sm">
+                        <div class="alert alert-danger border-start border-5 border-danger shadow-sm bg-white small">
+                            <h6 class="alert-heading fw-bold text-danger"><i class="fas fa-exclamation-triangle me-2"></i>Attention !</h6>
                             <ul class="mb-0">
                                 @foreach ($errors->all() as $error)
                                     <li>{{ $error }}</li>
@@ -21,132 +28,122 @@
                         </div>
                     @endif
 
-                    {{-- AJOUT DE enctype POUR LE FICHIER --}}
                     <form method="POST" action="{{ route('courriers.update', $courrier->id) }}" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
 
-                        <!-- Section 1: Informations Générales -->
-                        <h6 class="text-primary border-bottom pb-2 mb-3"><i class="fas fa-info-circle me-2"></i>Informations Générales</h6>
-
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <label for="reference" class="form-label fw-bold">{{ __('Référence') }} <span class="text-danger">*</span></label>
-                                <input id="reference" type="text" class="form-control border-primary-subtle @error('reference') is-invalid @enderror" name="reference" value="{{ old('reference', $courrier->reference) }}" required>
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                <label for="type" class="form-label fw-bold">{{ __('Type') }} <span class="text-danger">*</span></label>
-                                <select id="type" class="form-select border-primary-subtle @error('type') is-invalid @enderror" name="type" required>
-                                    <option value="Incoming" {{ old('type', $courrier->type) == 'Incoming' ? 'selected' : '' }}>📩 Entrant</option>
-                                    <option value="Outgoing" {{ old('type', $courrier->type) == 'Outgoing' ? 'selected' : '' }}>📤 Sortant</option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                <label for="date_courrier" class="form-label fw-bold">{{ __('Date du Courrier') }} <span class="text-danger">*</span></label>
-                                <input id="date_courrier" type="date" class="form-control border-primary-subtle @error('date_courrier') is-invalid @enderror" name="date_courrier" value="{{ old('date_courrier', $courrier->date_courrier ? $courrier->date_courrier->format('Y-m-d') : '') }}" required>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-12 mb-3">
-                                <label for="objet" class="form-label fw-bold">{{ __('Objet') }} <span class="text-danger">*</span></label>
-                                <input id="objet" type="text" class="form-control border-primary-subtle @error('objet') is-invalid @enderror" name="objet" value="{{ old('objet', $courrier->objet) }}" required>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-12 mb-3">
-                                <label for="description" class="form-label fw-bold">{{ __('Description') }}</label>
-                                <textarea id="description" class="form-control border-primary-subtle @error('description') is-invalid @enderror" name="description" rows="3">{{ old('description', $courrier->description) }}</textarea>
-                            </div>
-                        </div>
-
-                        <!-- Section 2: Expéditeur et Destinataire -->
-                        <div class="row mt-4">
-                            <div class="col-md-6">
-                                <div class="p-3 border rounded bg-white shadow-sm h-100">
-                                    <h5 class="text-info border-bottom pb-2 mb-3">{{ __('Expéditeur') }}</h5>
-                                    <div class="mb-3">
-                                        <label for="expediteur_nom" class="form-label">{{ __('Nom') }} <span class="text-danger">*</span></label>
-                                        <input id="expediteur_nom" type="text" class="form-control @error('expediteur_nom') is-invalid @enderror" name="expediteur_nom" value="{{ old('expediteur_nom', $courrier->expediteur_nom) }}" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="expediteur_contact" class="form-label">{{ __('Contact') }}</label>
-                                        <input id="expediteur_contact" type="text" class="form-control @error('expediteur_contact') is-invalid @enderror" name="expediteur_contact" value="{{ old('expediteur_contact', $courrier->expediteur_contact) }}">
-                                    </div>
+                        <!-- Section 1: Informations Générales (Couleur Bleue Renforcée) -->
+                        <div class="p-3 mb-4 bg-white rounded-3 shadow-sm border-top border-4 border-primary">
+                            <h6 class="text-primary fw-bold mb-3 text-uppercase small">
+                                <i class="fas fa-info-circle me-2"></i>1. Informations Générales
+                            </h6>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold small text-dark">{{ __('Référence') }} <span class="text-danger">*</span></label>
+                                    <input type="text" name="reference" class="form-control border-2 border-primary fw-bold" value="{{ old('reference', $courrier->reference) }}" required>
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="p-3 border rounded bg-white shadow-sm h-100">
-                                    <h5 class="text-success border-bottom pb-2 mb-3">{{ __('Destinataire') }}</h5>
-                                    <div class="mb-3">
-                                        <label for="destinataire_nom" class="form-label">{{ __('Nom') }} <span class="text-danger">*</span></label>
-                                        <input id="destinataire_nom" type="text" class="form-control @error('destinataire_nom') is-invalid @enderror" name="destinataire_nom" value="{{ old('destinataire_nom', $courrier->destinataire_nom) }}" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="destinataire_contact" class="form-label">{{ __('Contact') }}</label>
-                                        <input id="destinataire_contact" type="text" class="form-control @error('destinataire_contact') is-invalid @enderror" name="destinataire_contact" value="{{ old('destinataire_contact', $courrier->destinataire_contact) }}">
-                                    </div>
+
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold small text-dark">{{ __('Type de Courrier') }} <span class="text-danger">*</span></label>
+                                    <select name="type" class="form-select border-2 border-primary fw-bold" required>
+                                        <option value="Incoming" {{ old('type', $courrier->type) == 'Incoming' ? 'selected' : '' }}>📩 Entrant</option>
+                                        <option value="Outgoing" {{ old('type', $courrier->type) == 'Outgoing' ? 'selected' : '' }}>📤 Sortant</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold small text-dark">{{ __('Date du Courrier') }} <span class="text-danger">*</span></label>
+                                    <input type="date" name="date_courrier" class="form-control border-2 border-primary" value="{{ old('date_courrier', $courrier->date_courrier ? $courrier->date_courrier->format('Y-m-d') : '') }}" required>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label class="form-label fw-bold small text-dark">{{ __('Objet') }} <span class="text-danger">*</span></label>
+                                    <input type="text" name="objet" class="form-control border-2 fw-bold" value="{{ old('objet', $courrier->objet) }}" required style="background-color: #fff9e6; border-color: #ffc107 !important;">
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label class="form-label fw-bold small text-dark">{{ __('Description détaillée') }}</label>
+                                    <textarea name="description" class="form-control border-2" rows="2">{{ old('description', $courrier->description) }}</textarea>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Section 3: Statut, Affectation et Fichier -->
-                        <h6 class="text-primary border-bottom pb-2 mb-3 mt-4"><i class="fas fa-tasks me-2"></i>Traitement & Document</h6>
-
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <label for="statut" class="form-label fw-bold">{{ __('Statut actuel') }}</label>
-                                <select name="statut" id="statut" class="form-select border-primary-subtle">
-                                    @foreach(['Reçu', 'Affecté','Archivé'] as $statut)
-                                        <option value="{{ $statut }}" {{ old('statut', $courrier->statut) == $statut ? 'selected' : '' }}>{{ $statut }}</option>
-                                    @endforeach
-                                </select>
+                        <!-- Section 2: Acteurs (Couleurs Info/Success Renforcées) -->
+                        <div class="row g-3 mt-2 mb-4">
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm h-100 border-start border-4 border-info">
+                                    <div class="card-header py-2 bg-info text-dark fw-bold small"><i class="fas fa-paper-plane me-2"></i>EXPÉDITEUR</div>
+                                    <div class="card-body p-3">
+                                        <div class="mb-2">
+                                            <label class="form-label small fw-bold mb-0">Nom complet</label>
+                                            <input type="text" name="expediteur_nom" class="form-control form-control-sm border-2" value="{{ old('expediteur_nom', $courrier->expediteur_nom) }}" required>
+                                        </div>
+                                        <div>
+                                            <label class="form-label small fw-bold mb-0">Contact</label>
+                                            <input type="text" name="expediteur_contact" class="form-control form-control-sm border-2" value="{{ old('expediteur_contact', $courrier->expediteur_contact) }}">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-
-                            <div class="col-md-4 mb-3">
-                                <label for="affecter" class="form-label fw-bold">{{ __('Affectation') }}</label>
-                                <select name="affecter" id="affecter" class="form-select border-primary-subtle">
-                                    <option value="0" {{ old('affecter', $courrier->affecter) == 0 ? 'selected' : '' }}>Non affecté</option>
-                                    <option value="1" {{ old('affecter', $courrier->affecter) == 1 ? 'selected' : '' }}>À affecter</option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                <label for="assigne_a" class="form-label fw-bold">{{ __('Assigné à') }}</label>
-                                <input id="assigne_a" type="text" class="form-control border-primary-subtle" name="assigne_a" value="{{ old('assigne_a', $courrier->assigne_a) }}">
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm h-100 border-start border-4 border-success">
+                                    <div class="card-header py-2 bg-success text-white fw-bold small"><i class="fas fa-user-tie me-2"></i>DESTINATAIRE</div>
+                                    <div class="card-body p-3">
+                                        <div class="mb-2">
+                                            <label class="form-label small fw-bold mb-0">Nom / Service</label>
+                                            <input type="text" name="destinataire_nom" class="form-control form-control-sm border-2" value="{{ old('destinataire_nom', $courrier->destinataire_nom) }}" required>
+                                        </div>
+                                        <div>
+                                            <label class="form-label small fw-bold mb-0">Contact</label>
+                                            <input type="text" name="destinataire_contact" class="form-control form-control-sm border-2" value="{{ old('destinataire_contact', $courrier->destinataire_contact) }}">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="row mt-3">
-                            <div class="col-md-12">
-                                <div class="p-3 border rounded bg-white shadow-sm">
-                                    <label for="chemin_fichier" class="form-label fw-bold">{{ __('Document Joint (PDF, Image)') }}</label>
+                        <!-- Section 3: Traitement & Document (Couleur Orange/Sombre) -->
+                        <div class="p-3 mb-4 bg-white rounded-3 shadow-sm border-start border-4 border-warning">
+                            <h6 class="text-warning fw-bold mb-3 text-uppercase small">
+                                <i class="fas fa-tasks me-2"></i>3. Traitement & Document
+                            </h6>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold small">{{ __('Statut actuel') }}</label>
+                                    <select name="statut" class="form-select border-2 border-warning fw-bold">
+                                        @foreach(['Reçu', 'Affecté','Archivé'] as $statut)
+                                            <option value="{{ $statut }}" {{ old('statut', $courrier->statut) == $statut ? 'selected' : '' }}>{{ $statut }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold small">{{ __('Affectation') }}</label>
+                                    <input type="text" name="affecter" class="form-control border-2" value="{{ old('affecter', $courrier->affecter) }}" placeholder="Service ou agent">
+                                </div>
 
-                                    @if($courrier->chemin_fichier)
-                                        <div class="mb-2 d-flex align-items-center">
-                                            <span class="text-muted me-2 small">Fichier actuel :</span>
-                                            <a href="{{ asset('Documents/' . $courrier->chemin_fichier) }}" target="_blank" class="btn btn-sm btn-outline-primary">
-                                                <i class="fas fa-file-pdf"></i> {{ $courrier->chemin_fichier }}
+                                {{-- Section Fichier Centrée --}}
+                                <div class="col-md-12 mt-3 text-center p-3 bg-light rounded border border-2 border-dashed">
+                                    <label class="form-label fw-bold small d-block"><i class="fas fa-file-upload me-2"></i>Remplacer la pièce jointe</label>
+                                    <div class="d-flex justify-content-center">
+                                        <input type="file" name="pj" class="form-control form-control-sm w-50 border-secondary">
+                                    </div>
+                                    @if($courrier->pj)
+                                        <div class="mt-2 small">
+                                            <span class="text-muted small">Fichier actuel :</span>
+                                            <a href="{{ asset('storage/' . $courrier->pj) }}" target="_blank" class="badge bg-secondary text-decoration-none">
+                                                <i class="fas fa-paperclip me-1"></i>Voir le document
                                             </a>
                                         </div>
                                     @endif
-
-                                    <input type="file" name="chemin_fichier" id="chemin_fichier" class="form-control @error('chemin_fichier') is-invalid @enderror">
-                                    <div class="form-text">Laissez vide pour conserver le document actuel. Max: 10MB.</div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Boutons d'action -->
-                        <div class="d-flex justify-content-end mt-4 pt-3 border-top">
-                            <a href="{{ route('courriers.index') }}" class="btn btn-outline-secondary me-2">
-                                <i class="fas fa-times"></i> {{ __('Annuler') }}
-                            </a>
-                            <button type="submit" class="btn btn-primary px-4">
-                                <i class="fas fa-save me-1"></i> {{ __('Mettre à jour le Courrier') }}
+                        {{-- Boutons d'Action --}}
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <a href="{{ route('courriers.index') }}" class="btn btn-outline-secondary px-4 fw-bold shadow-sm">Annuler</a>
+                            <button type="submit" class="btn btn-primary px-5 fw-bold shadow">
+                                <i class="fas fa-save me-2 text-warning"></i> Enregistrer les modifications
                             </button>
                         </div>
                     </form>
@@ -155,4 +152,13 @@
         </div>
     </div>
 </div>
+
+<style>
+    .border-2 { border-width: 2px !important; }
+    .border-dashed { border-style: dashed !important; }
+    .form-control:focus, .form-select:focus {
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+        border-color: #0d6efd !important;
+    }
+</style>
 @endsection
