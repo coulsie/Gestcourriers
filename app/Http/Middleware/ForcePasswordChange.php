@@ -7,25 +7,21 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 
-
-class ForcePasswordChange
+class ForcePasswordChange 
 {
     /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * Gère la requête entrante.
      */
-        public function handle(Request $request, Closure $next)
-        
-        {
-            // On vérifie si l'utilisateur est connecté via la Façade Auth
-            if (Auth::check() && Auth::user()->must_change_password) {
-                
-                if (!$request->is('password/setup*')) {
-                    return redirect()->route('password.setup');
-                }
-            }
+    public function handle(Request $request, Closure $next): Response
+    {
+        $user = Auth::user();
 
-            return $next($request);
+        // Si l'utilisateur est connecté ET doit changer son MDP
+        // ET qu'il n'est pas déjà sur la page de changement de MDP
+        if ($user && $user->must_change_password && !$request->is('password/setup*')) {
+            return redirect()->route('password.setup');
         }
+
+        return $next($request);
+    }
 }

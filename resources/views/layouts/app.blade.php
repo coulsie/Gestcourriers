@@ -87,6 +87,7 @@
                                 <div class="bg-white py-2 collapse-inner rounded">
                                     <h6 class="collapse-header">Utilisateurs & RH:</h6>
                                     <a class="collapse-item" href="{{ route('agents.nouveau') }}">Compte Utilisateur</a>
+                                    <a class="collapse-item" href="{{ route('users.index') }}">Liste Utilisateur</a>
                                     <a class="collapse-item" href="{{ route('agents.index') }}">Ressources Humaines</a>
                                     <a class="collapse-item" href="{{ route('imputations.index') }}">Imputations</a>
                                     <a class="collapse-item" href="{{ route('imputations.mes_imputations') }}">Mes Imputations</a>
@@ -143,7 +144,7 @@
 
                             <div class="collapse-divider"></div>
                             <h6 class="collapse-header">Communications:</h6>
-                            
+
                             <a class="collapse-item" href="{{ route('imputations.mes_imputations') }}">Mes Imputations</a>
 
                         </div>

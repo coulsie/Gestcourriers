@@ -1,18 +1,22 @@
-#!/usr/bin/env php
 <?php
 
-use Illuminate\Foundation\Application;
-use Symfony\Component\Console\Input\ArgvInput;
+use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));
 
-// Register the Composer autoloader...
+// Détermine si l'application est en mode maintenance...
+if (file_exists($maintenance = __DIR__.'/storage/framework/maintenance.php')) {
+    require $maintenance;
+}
+
+// Enregistre l'autoloader de Composer...
 require __DIR__.'/vendor/autoload.php';
 
-// Bootstrap Laravel and handle the command...
-/** @var Application $app */
+// On récupère l'instance de l'application
 $app = require_once __DIR__.'/bootstrap/app.php';
 
-$status = $app->handleCommand(new ArgvInput);
+// On exécute la commande
+$status = $app->handleCommand(new Symfony\Component\Console\Input\ArgvInput);
 
 exit($status);

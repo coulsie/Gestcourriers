@@ -70,6 +70,7 @@ class UserController extends Controller
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
             'password' => Hash::make($validatedData['password']), // Hachage sécurisé du mot de passe
+            'must_change_password' => true
 
         ]);
 

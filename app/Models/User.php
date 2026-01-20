@@ -40,6 +40,7 @@ class User extends Authenticatable
         'password_changed_at',
         'bio',
         'profile_picture',
+        'must_change_password',
 
     ];
 
@@ -68,6 +69,7 @@ class User extends Authenticatable
     }
     protected $casts = [
         'role' => \App\Enums\UserRole::class,
+        'must_change_password' => 'boolean',
     ];
 
     public function affectations(): HasMany

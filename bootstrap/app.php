@@ -3,7 +3,6 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use App\Http\Controllers\Auth\PasswordSetupController;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -12,12 +11,18 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // C'est ici que vous ajoutez votre alias
+        // 1. Désactivation du CSRF sur le login pour régler votre erreur 419
+        $middleware->validateCsrfTokens(except: [
+            'login',
+            'logout'
+        ]);
+
+        // 2. Enregistrement de l'alias de votre middleware
         $middleware->alias([
             'force.password' => \App\Http\Middleware\ForcePasswordChange::class,
         ]);
-    }) // Ne pas mettre de point-virgule ici si vous continuez l'enchaînement
+    })
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })
-    ->create(); // Le point-virgule final doit être ici
+    ->create();

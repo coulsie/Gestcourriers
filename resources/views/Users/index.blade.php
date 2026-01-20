@@ -72,12 +72,25 @@
                             </td>
                             <td class="text-center">
                                 <div class="btn-group shadow-sm">
+                                    <!-- Voir -->
                                     <a href="{{ route('users.show', $user->id) }}" class="btn btn-sm btn-info text-white" title="Voir les détails">
                                         <i class="fas fa-eye"></i>
                                     </a>
+
+                                    <!-- Modifier -->
                                     <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-warning text-white" title="Modifier l'utilisateur">
                                         <i class="fas fa-edit"></i>
                                     </a>
+
+                                    <!-- Réinitialiser Password (NOUVEAU) -->
+                                    <form action="{{ route('users.reset_password', $user->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Générer un nouveau mot de passe provisoire pour cet utilisateur ?')">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-secondary text-white" title="Réinitialiser le mot de passe">
+                                            <i class="fas fa-key"></i>
+                                        </button>
+                                    </form>
+
+                                    <!-- Supprimer -->
                                     @can('manage-users')
                                     <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="d-inline">
                                         @csrf
