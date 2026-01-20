@@ -44,7 +44,7 @@
                     </a>
                 </li>
             @endcan
-            
+
 
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('profile.show') }}">
@@ -143,8 +143,7 @@
 
                             <div class="collapse-divider"></div>
                             <h6 class="collapse-header">Communications:</h6>
-                            <!-- <a class="collapse-item" href="{{ route('notifications.index2') }}">Mes notifications</a> -->
-                            <!-- <a class="collapse-item" href="{{ route('notifications.index3') }}">xnotifications</a> -->
+                            
                             <a class="collapse-item" href="{{ route('imputations.mes_imputations') }}">Mes Imputations</a>
 
                         </div>

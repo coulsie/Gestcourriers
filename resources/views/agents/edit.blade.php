@@ -96,67 +96,61 @@
 
                             {{-- SECTION 2: CARRIÈRE & AFFECTATION (ÉMÉRAUDE) - COMPACTE --}}
                            {{-- SECTION 2: CARRIÈRE & AFFECTATION (ÉMÉRAUDE) - COMPACTE & RÉDUITE --}}
-                            <div class="col-md-12">
-                                <div class="p-3 bg-white border-start border-5 border-emerald rounded shadow-sm">
-                                    <h6 class="text-white fw-bold mb-3 text-uppercase p-2 rounded bg-emerald shadow-sm">
-                                        <i class="fas fa-briefcase me-2 text-warning"></i> 2. Affectation & Carrière Professionnelle
-                                    </h6>
+                            <{{-- SECTION 2: CARRIÈRE & AFFECTATION (ÉMÉRAUDE) --}}
+<div class="col-md-12">
+    <div class="p-3 bg-white border-start border-5 border-emerald rounded shadow-sm" style="border-left-color: #059669 !important;">
+        <h6 class="text-white fw-bold mb-3 text-uppercase p-2 rounded shadow-sm" style="background-color: #059669;">
+            <i class="fas fa-briefcase me-2 text-warning"></i> 2. Affectation & Carrière Professionnelle
+        </h6>
 
-                                    <div class="row g-3">
-                                        {{-- Ligne 1 : Service et Grade --}}
-                                        <div class="col-md-4">
-                                            <label class="form-label fw-bold text-dark small text-uppercase mb-1">Service d'Affectation *</label>
-                                            <input type="text" name="service" class="form-control form-control-sm border-2 shadow-sm fw-bold" value="{{ old('service', $agent->service) }}" required>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label fw-bold text-dark small text-uppercase mb-1">Grade / Titre *</label>
-                                            <input type="text" name="grade" class="form-control form-control-sm border-2 shadow-sm" value="{{ old('grade', $agent->grade) }}">
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label fw-bold text-dark small text-uppercase mb-1">Échelon</label>
-                                            <input type="text" name="echelon" class="form-control form-control-sm border-2 shadow-sm" value="{{ old('echelon', $agent->echelon) }}">
-                                        </div>
+        <div class="row g-3">
+            {{-- Champ Status (Obligatoire) --}}
+            <div class="col-md-4">
+                <label class="form-label fw-bold text-dark fs-6 mb-1">STATUS / TITRE *</label>
+                <select name="status" class="form-select border-2 shadow-sm fw-bold @error('status') is-invalid @enderror" required>
+                    <option value="">-- Choisir --</option>
+                    @php
+                        $statuses = ['Agent','Chef de service','Sous-directeur','Directeur','Conseiller Technique','Conseiller Spécial'];
+                    @endphp
+                    @foreach($statuses as $status)
+                        <option value="{{ $status }}" {{ old('status', $agent->status) == $status ? 'selected' : '' }}>{{ $status }}</option>
+                    @endforeach
+                </select>
+            </div>
 
-                                        {{-- Ligne 2 : Dates et Détails --}}
-                                        <div class="col-md-3">
-                                            <label class="form-label fw-bold text-dark small text-uppercase mb-1">Date Prise Service</label>
-                                            <input type="date" name="date_prise_service" class="form-control form-control-sm border-2 shadow-sm" value="{{ old('date_prise_service', $agent->date_prise_service) }}">
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label fw-bold text-dark small text-uppercase mb-1">Ancienneté</label>
-                                            <input type="text" name="anciennete" class="form-control form-control-sm border-2 shadow-sm bg-light" value="{{ old('anciennete', $agent->anciennete) }}" readonly>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-bold text-dark small text-uppercase mb-1">Observations / Note de service</label>
-                                            <input type="text" name="observation" class="form-control form-control-sm border-2 shadow-sm" value="{{ old('observation', $agent->observation) }}" placeholder="Référence de l'acte...">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {{-- Ajoutez ceci dans la Section 2 après le Service d'Affectation --}}
-                        <div class="col-md-5">
-                            <label class="form-label fw-bold text-dark fs-6 text-uppercase mb-1">
-                                <i class="fas fa-user-shield me-1 text-emerald"></i> Niveau d'Accès (Rôle) *
-                            </label>
-                            <div class="input-group shadow-sm">
-                                <span class="input-group-text bg-emerald text-white border-success">
-                                    <i class="fas fa-users-cog small"></i>
-                                </span>
-                                <select name="role" class="form-select border-2 fs-5 fw-bold @error('role') is-invalid @enderror" required>
-                                    <option value="" disabled>Choisir un rôle...</option>
-                                    @foreach(\App\Enums\UserRole::cases() as $role)
-                                        <option value="{{ $role->value }}"
-                                            {{ old('old_role', $agent->hasRole($role->value) ? $role->value : '') == $role->value ? 'selected' : '' }}>
-                                            {{ str_replace('_', ' ', strtoupper($role->name)) }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            @error('role')
-                                <div class="text-danger small fw-bold mt-1">{{ $message }}</div>
-                            @enderror
-                        </div>
+            {{-- Champ Service (Obligatoire) --}}
+            <div class="col-md-4">
+                <label class="form-label fw-bold text-dark fs-6 mb-1">SERVICE D'AFFECTATION *</label>
+                <select name="service_id" class="form-select border-2 shadow-sm fw-bold @error('service_id') is-invalid @enderror" required>
+                    <option value="">-- Choisir le service --</option>
+                    @foreach($services ?? [] as $service)
+                        <option value="{{ $service->id }}" {{ old('service_id', $agent->service_id) == $service->id ? 'selected' : '' }}>
+                            {{ $service->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
 
+            {{-- Grade --}}
+            <div class="col-md-4">
+                <label class="form-label fw-bold text-dark fs-6 mb-1">GRADE</label>
+                <input type="text" name="Grade" class="form-control border-2 shadow-sm" value="{{ old('Grade', $agent->Grade) }}">
+            </div>
+
+            {{-- Email Professionnel (Login) --}}
+            <div class="col-md-6">
+                <label class="form-label fw-bold text-dark fs-6 mb-1">EMAIL PROFESSIONNEL *</label>
+                <input type="email" name="email" class="form-control border-2 shadow-sm bg-light" value="{{ old('email', $agent->user->email ?? '') }}" required>
+            </div>
+
+            {{-- Date de Prise de Service --}}
+            <div class="col-md-6">
+                <label class="form-label fw-bold text-dark fs-6 mb-1">DATE DE PRISE DE SERVICE</label>
+                <input type="date" name="Date_Prise_de_service" class="form-control border-2 shadow-sm" value="{{ old('Date_Prise_de_service', $agent->Date_Prise_de_service) }}">
+            </div>
+        </div>
+    </div>
+</div>
                             {{-- SECTION 3: CONTACTS & URGENCE (AMBRE) --}}
                             <div class="col-md-12">
                                 <div class="p-4 bg-white border-start border-5 border-amber rounded shadow-sm">

@@ -38,18 +38,19 @@
                             </div>
                         </div>
 
-                        <!-- Rôle -->
+                        <!-- Rôle (Ajouté) -->
                         <div class="mb-4">
-                            <label for="role" class="form-label fw-bolder text-primary small text-uppercase">Type d'accès (Rôle)</label>
+                            <label for="role" class="form-label fw-bolder text-primary small text-uppercase">Rôle / Privilège Système</label>
                             <div class="input-group border border-primary rounded">
-                                <span class="input-group-text bg-primary text-white border-0"><i class="fas fa-shield-alt"></i></span>
-                                <select name="old_role" class="form-select fw-bold @error('old_role') is-invalid @enderror" required>
-                                    <option value="" disabled selected>-- Sélectionner un rôle --</option>
-                                    <option value="superviseur" class="text-dark">Superviseur</option>
-                                    <option value="directeur" class="text-dark">Directeur</option>
-                                    <option value="sous_directeur" class="text-dark">Sous-Directeur</option>
-                                    <option value="chef_de_service" class="text-dark">Chef de Service</option>
-                                    <option value="agent" class="text-dark">Agent</option>
+                                <span class="input-group-text bg-primary text-white border-0"><i class="fas fa-user-shield"></i></span>
+                                <select name="role" class="form-select @error('role') is-invalid @enderror" required>
+                                    <option value="" selected disabled>Choisir un rôle...</option>
+                                    {{-- Récupération dynamique des rôles en 2026 --}}
+                                    @foreach(\Spatie\Permission\Models\Role::all() as $role)
+                                        <option value="{{ $role->name }}" {{ old('role') == $role->name ? 'selected' : '' }}>
+                                            {{ ucfirst($role->name) }}
+                                        </option>
+                                    @endforeach
                                 </select>
                                 @error('role') <span class="invalid-feedback px-2">{{ $message }}</span> @enderror
                             </div>

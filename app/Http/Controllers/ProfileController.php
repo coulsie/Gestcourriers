@@ -35,13 +35,13 @@ class ProfileController extends Controller
         ]);
 
         // 3. Mettre à jour les attributs de l'utilisateur
-        $user = auth()->user();
+        $user = auth::user();
 
         if ($user) {
             $user->update($validatedData);
         }
-        
-       
+
+
         // 4. Rediriger l'utilisateur vers une autre page (généralement la page d'affichage du profil)
         // avec un message de succès flashé dans la session.
         return redirect()->route('profile.show')->with('status', 'Votre profil a été mis à jour avec succès !');

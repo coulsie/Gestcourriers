@@ -6,11 +6,23 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 
 class UserController extends Controller
 {
-    /**
+
+    public function __construct()
+    {
+        // Seuls ceux qui ont la permission 'voir-utilisateurs' accèdent à la liste
+        $this->middleware('can:voir-utilisateurs')->only('index');
+
+        // Seuls ceux qui ont la permission 'manage-users' peuvent créer/modifier/supprimer
+        $this->middleware('can:manage-users')->except(['index', 'show']);
+    }
+
+/**
      * Affiche une liste de tous les utilisateurs.
      *
      * @return \Illuminate\View\View
@@ -48,7 +60,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users', // Email unique dans la table 'users'
             'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|string|in:user,admin',  // 'confirmed' role'
+            'role' => 'required|exists:roles,name',
             'bio' => 'nullable|string',
         ]);
 
@@ -58,7 +70,7 @@ class UserController extends Controller
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
             'password' => Hash::make($validatedData['password']), // Hachage sécurisé du mot de passe
-            'role'=> $validatedData['role'],
+
         ]);
 
         // 3. Redirection vers la liste des utilisateurs avec un message de succès
@@ -104,7 +116,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             // Règle d'unicité qui ignore l'ID de l'utilisateur actuel lors de la vérification
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'role'=> 'required|string',
+
         ]);
 
         // Mise à jour de l'instance du modèle

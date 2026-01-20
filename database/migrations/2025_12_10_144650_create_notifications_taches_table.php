@@ -14,50 +14,25 @@ class CreateNotificationsTachesTable extends Migration
     public function up()
     {
         Schema::create('notifications_taches', function (Blueprint $table) {
+        $table->id('id_notification');
+        $table->unsignedBigInteger('id_agent');
+        $table->string('titre');
+        $table->text('description');
 
-            // id_notification (INT Clé Primaire)
-            $table->id('id_notification'); // Laravel utilise 'id()' pour créer une PK auto-incrémentée nommée id_notification
+        // Gardez une seule définition pour date_creation
+        $table->timestamp('date_creation')->useCurrent();
 
-            // id_agent_assigne (INT Clé Étrangère)
-            // Si vous avez une table 'users' ou 'agents', vous pouvez ajouter la contrainte de clé étrangère
-            $table->foreignId('id_agent')
-                  ->constrained('agents') // Remplacez 'users' par le nom de votre table d'agents si nécessaire
-                  ->onDelete('cascade');
+        $table->timestamp('date_echeance')->nullable();
+        $table->string('suivi_par', 100);
+        $table->enum('priorite', ['Faible', 'Moyenne', 'Élevée', 'Urgent'])->default('Moyenne');
+        $table->enum('statut', ['Non lu', 'En cours', 'Complétée', 'Annulée'])->default('Non lu');
+        $table->string('lien_action', 512)->nullable();
+        $table->timestamp('date_lecture')->nullable();
+        $table->timestamp('date_completion')->nullable();
 
-            // titre (VARCHAR(255))
-            $table->string('titre', 255);
-
-            // description (TEXT)
-            $table->text('description');
-
-            // date_creation (DATETIME)
-            // Laravel inclut timestamps() par défaut, mais nous pouvons être explicites :
-            $table->timestamp('date_creation')->useCurrent();
-
-            // date_echeance (DATETIME nullable)
-            $table->timestamp('date_creation')->nullable();
-            $table->timestamp('date_echeance')->nullable();
-
-            $table->string('suivi_par', 100);
-            // priorite (ENUM)
-            $table->enum('priorite', ['Faible', 'Moyenne', 'Élevée', 'Urgent'])->default('Moyenne');
-
-            // statut (ENUM)
-            $table->enum('statut', ['Non lu', 'En cours', 'Complétée', 'Annulée'])->default('Non lu');
-
-            // lien_action (VARCHAR(512) nullable)
-            $table->string('lien_action', 512)->nullable();
-
-            // date_lecture (DATETIME nullable)
-            $table->timestamp('date_lecture')->nullable();
-
-            // date_completion (DATETIME nullable)
-            $table->timestamp('date_completion')->nullable();
-
-            // Optionnel: Laravel gère 'created_at' et 'updated_at' par défaut avec $table->timestamps();
-            // Comme nous avons déjà date_creation et d'autres dates spécifiques,
-            // nous n'ajoutons pas la ligne $table->timestamps(); si vous ne voulez pas de la colonne updated_at.
-        });
+        // Note: Si vous utilisez Laravel 12 (2026), vous pouvez aussi utiliser $table->timestamps();
+        // Mais si vous préférez vos noms personnalisés, restez comme ceci.
+    });
     }
 
     /**

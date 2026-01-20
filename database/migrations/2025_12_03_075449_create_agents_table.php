@@ -22,6 +22,7 @@ return new class extends Migration
             $table->enum('sexe', ['Male', 'Female'])->nullable(); // Adjust 'name' if needed for column order
             $table->date('date_of_birth')->nullable();
             $table->string('place_birth')->nullable();
+            
             $table->string('Photo');
             $table->string('email')->unique();
             $table->string('phone_number')->nullable();

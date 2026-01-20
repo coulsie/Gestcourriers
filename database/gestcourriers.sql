@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3307
--- Généré le : ven. 16 jan. 2026 à 11:29
+-- Généré le : mar. 20 jan. 2026 à 07:42
 -- Version du serveur : 11.4.9-MariaDB
 -- Version de PHP : 8.3.28
 
@@ -121,14 +121,14 @@ CREATE TABLE IF NOT EXISTS `agents` (
   UNIQUE KEY `agents_email_professionnel_unique` (`email_professionnel`),
   KEY `agents_service_id_foreign` (`service_id`),
   KEY `agents_user_id_foreign` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `agents`
 --
 
 INSERT INTO `agents` (`id`, `email_professionnel`, `matricule`, `first_name`, `last_name`, `status`, `sexe`, `date_of_birth`, `place_birth`, `photo`, `email`, `phone_number`, `address`, `Emploi`, `Grade`, `Date_Prise_de_service`, `Personne_a_prevenir`, `Contact_personne_a_prevenir`, `service_id`, `user_id`, `created_at`, `updated_at`) VALUES
-(1, 'coulsie@live.fr', '287688C', 'Sié Yacouba', 'COULIBALY', 'Agent', 'Male', '1972-12-04', 'PLATEAU', '1768237714_Photo identite COULIBALY Sié Yacouba 287 688C.JPG', 'coulsie@gmail.com', '0707584396', '08 BP 2359 ABIDJAN 08', 'Inspecteur Principal Informatique', 'A6', '2025-07-08', 'COULIBALY Youssef Kiyali', '0143677424', 1, 1, '2025-12-04 13:36:01', '2026-01-12 17:08:34'),
+(1, 'coulsie@live.fr', '287688C', 'Sié Yacouba', 'COULIBALY', 'Agent', 'Male', '1972-12-04', 'PLATEAU', '1768237714_Photo identite COULIBALY Sié Yacouba 287 688C.JPG', 'coulsie@gmail.com', '0707584396', '08 BP 2359 ABIDJAN 08', 'Inspecteur Principal Informatique', 'A5', '2025-07-08', 'COULIBALY Youssef Kiyali', '0143677424', 1, 1, '2025-12-04 13:36:01', '2026-01-19 15:44:35'),
 (3, NULL, '421263X', 'SIAKOURI', 'Justine', 'Agent', 'Male', NULL, NULL, '1768237839_Photo identite COULIBALY Sié Yacouba 287 688C.JPG', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 14, NULL, '2025-12-09 15:58:42', '2026-01-12 17:10:39'),
 (4, 'vb@10klhg', '100600A', 'KOMIAN', 'Anselm', 'Chef de service', 'Male', NULL, NULL, '1768237929_Photo identite COULIBALY Sié Yacouba 287 688C.JPG', 'coulsie@live.fr', NULL, NULL, NULL, NULL, NULL, 'amoin', '010124578', 13, NULL, '2025-12-12 14:43:58', '2026-01-12 17:12:09'),
 (5, 'vb@gmail.com', '100501F', 'KONAN', 'Aya', 'Chef de service', 'Female', '1968-01-05', NULL, NULL, 'konan@aya25', NULL, NULL, NULL, NULL, NULL, 'aurore', '125849637', 7, NULL, '2025-12-12 21:48:34', '2026-01-12 15:11:14'),
@@ -137,7 +137,9 @@ INSERT INTO `agents` (`id`, `email_professionnel`, `matricule`, `first_name`, `l
 (8, 'sylva@gmail.com', '100222A', 'KOFFI', 'Sylvanus', 'Chef de service', 'Male', '1987-12-04', 'YAMOUSSOUKRO', NULL, 'sylvanus@yahoo.fr', '0584365858', '01BP4125', 'Ingenieur statiticien economiste', 'A5', '2007-01-01', 'Koffi rita', '55525666', 5, NULL, '2025-12-13 16:31:12', '2026-01-12 15:11:14'),
 (9, 'assa@gouv.ci', '102030kj', 'ASSAHORE', 'Didier', 'Agent', 'Female', '1987-01-01', 'BOUAKE', '1768236879_Photo identite COULIBALY Sié Yacouba 287 688C.JPG', NULL, '4578963215', '08 BP 2359', 'Technicien superieur en statistique', 'B3', '2017-06-01', 'Koffi rita', '12555', 12, NULL, '2026-01-12 16:54:39', '2026-01-12 16:54:39'),
 (10, 'roussou@dgi.gouv.ci', '291264E', 'Rosine Générosa Epse DJE', 'OUSSOU', 'Agent', 'Female', '1976-01-21', NULL, '1768309488_Photo_2026-01-13_114214.jpg', 'oussou.ge@gmail.com', '0707728488', NULL, 'ATTACHE DE DIRECTION', 'A3', '2011-04-12', NULL, NULL, 2, 5, '2026-01-13 13:02:51', '2026-01-13 13:04:48'),
-(11, 'nafikone@dgi.gouv.ci', '410702H', 'Nafata', 'KONE', 'Agent', 'Female', '1982-07-21', 'MARCORY', '1768315144_Photo_2026-01-13_143311.jpg', 'nafie410@gmail.com', '0707188674', 'Bassam Mockeyville', 'Contrôleur des Impôts', 'B3', '2014-11-03', 'KONE Dieudoné', '0747234646', 1, 6, '2026-01-13 14:38:30', '2026-01-13 14:50:04');
+(11, 'nafikone@dgi.gouv.ci', '410702H', 'Nafata', 'KONE', 'Agent', 'Female', '1982-07-21', 'MARCORY', '1768315144_Photo_2026-01-13_143311.jpg', 'nafie410@gmail.com', '0707188674', 'Bassam Mockeyville', 'Contrôleur des Impôts', 'B3', '2014-11-03', 'KONE Dieudoné', '0747234646', 1, 6, '2026-01-13 14:38:30', '2026-01-13 14:50:04'),
+(14, 'coulsie@hotmail.com', '300100Q', 'Coulibaly', 'Pedatchin Kignelman', 'Agent', 'Male', NULL, NULL, 'photos_agents/RY3QTuBIe617OHBa3wKsIUL8BTEIeLuVkifzUB55.jpg', 'peda@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 10, '2026-01-19 13:29:19', '2026-01-19 13:29:19'),
+(15, 'kouta@gmail.com', '300101Q', 'Kitani', 'Penawelefa', 'Agent', 'Male', NULL, NULL, '1768830090_Photo identite COULIBALY Sié Yacouba 287 688C.JPG', 'kita@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 6, 11, '2026-01-19 13:41:30', '2026-01-19 13:41:30');
 
 -- --------------------------------------------------------
 
@@ -213,6 +215,14 @@ CREATE TABLE IF NOT EXISTS `cache` (
   `expiration` int(11) NOT NULL,
   PRIMARY KEY (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `cache`
+--
+
+INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
+('laravel-cache-boost.roster.scan', 'a:2:{s:6:\"roster\";O:21:\"Laravel\\Roster\\Roster\":3:{s:13:\"\0*\0approaches\";O:29:\"Illuminate\\Support\\Collection\":2:{s:8:\"\0*\0items\";a:0:{}s:28:\"\0*\0escapeWhenCastingToString\";b:0;}s:11:\"\0*\0packages\";O:32:\"Laravel\\Roster\\PackageCollection\":2:{s:8:\"\0*\0items\";a:7:{i:0;O:22:\"Laravel\\Roster\\Package\":6:{s:9:\"\0*\0direct\";b:1;s:13:\"\0*\0constraint\";s:5:\"^12.0\";s:10:\"\0*\0package\";E:37:\"Laravel\\Roster\\Enums\\Packages:LARAVEL\";s:14:\"\0*\0packageName\";s:17:\"laravel/framework\";s:10:\"\0*\0version\";s:7:\"12.47.0\";s:6:\"\0*\0dev\";b:0;}i:1;O:22:\"Laravel\\Roster\\Package\":6:{s:9:\"\0*\0direct\";b:0;s:13:\"\0*\0constraint\";s:7:\"v0.3.10\";s:10:\"\0*\0package\";E:37:\"Laravel\\Roster\\Enums\\Packages:PROMPTS\";s:14:\"\0*\0packageName\";s:15:\"laravel/prompts\";s:10:\"\0*\0version\";s:6:\"0.3.10\";s:6:\"\0*\0dev\";b:0;}i:2;O:22:\"Laravel\\Roster\\Package\":6:{s:9:\"\0*\0direct\";b:0;s:13:\"\0*\0constraint\";s:6:\"v0.5.2\";s:10:\"\0*\0package\";E:33:\"Laravel\\Roster\\Enums\\Packages:MCP\";s:14:\"\0*\0packageName\";s:11:\"laravel/mcp\";s:10:\"\0*\0version\";s:5:\"0.5.2\";s:6:\"\0*\0dev\";b:1;}i:3;O:22:\"Laravel\\Roster\\Package\":6:{s:9:\"\0*\0direct\";b:1;s:13:\"\0*\0constraint\";s:5:\"^1.24\";s:10:\"\0*\0package\";E:34:\"Laravel\\Roster\\Enums\\Packages:PINT\";s:14:\"\0*\0packageName\";s:12:\"laravel/pint\";s:10:\"\0*\0version\";s:6:\"1.27.0\";s:6:\"\0*\0dev\";b:1;}i:4;O:22:\"Laravel\\Roster\\Package\":6:{s:9:\"\0*\0direct\";b:1;s:13:\"\0*\0constraint\";s:5:\"^1.41\";s:10:\"\0*\0package\";E:34:\"Laravel\\Roster\\Enums\\Packages:SAIL\";s:14:\"\0*\0packageName\";s:12:\"laravel/sail\";s:10:\"\0*\0version\";s:6:\"1.52.0\";s:6:\"\0*\0dev\";b:1;}i:5;O:22:\"Laravel\\Roster\\Package\":6:{s:9:\"\0*\0direct\";b:1;s:13:\"\0*\0constraint\";s:7:\"^11.5.3\";s:10:\"\0*\0package\";E:37:\"Laravel\\Roster\\Enums\\Packages:PHPUNIT\";s:14:\"\0*\0packageName\";s:15:\"phpunit/phpunit\";s:10:\"\0*\0version\";s:7:\"11.5.48\";s:6:\"\0*\0dev\";b:1;}i:6;O:22:\"Laravel\\Roster\\Package\":6:{s:9:\"\0*\0direct\";b:0;s:13:\"\0*\0constraint\";s:0:\"\";s:10:\"\0*\0package\";E:41:\"Laravel\\Roster\\Enums\\Packages:TAILWINDCSS\";s:14:\"\0*\0packageName\";s:11:\"tailwindcss\";s:10:\"\0*\0version\";s:6:\"4.1.17\";s:6:\"\0*\0dev\";b:1;}}s:28:\"\0*\0escapeWhenCastingToString\";b:0;}s:21:\"\0*\0nodePackageManager\";E:43:\"Laravel\\Roster\\Enums\\NodePackageManager:NPM\";}s:9:\"timestamp\";i:1768835219;}', 1768921619),
+('laravel-cache-spatie.permission.cache', 'a:3:{s:5:\"alias\";a:4:{s:1:\"a\";s:2:\"id\";s:1:\"b\";s:4:\"name\";s:1:\"c\";s:10:\"guard_name\";s:1:\"r\";s:5:\"roles\";}s:11:\"permissions\";a:3:{i:0;a:4:{s:1:\"a\";i:1;s:1:\"b\";s:16:\"publier articles\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:2:{i:0;i:1;i:1;i:2;}}i:1;a:4:{s:1:\"a\";i:2;s:1:\"b\";s:17:\"modifier articles\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:2:{i:0;i:1;i:1;i:2;}}i:2;a:4:{s:1:\"a\";i:3;s:1:\"b\";s:18:\"supprimer articles\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:2;}}}s:5:\"roles\";a:2:{i:0;a:3:{s:1:\"a\";i:1;s:1:\"b\";s:6:\"editor\";s:1:\"c\";s:3:\"web\";}i:1;a:3:{s:1:\"a\";i:2;s:1:\"b\";s:5:\"admin\";s:1:\"c\";s:3:\"web\";}}}', 1768922681);
 
 -- --------------------------------------------------------
 
@@ -438,7 +448,7 @@ INSERT INTO `imputations` (`id`, `courrier_id`, `user_id`, `niveau`, `instructio
 (24, 7, 1, 'primaire', 'vd', NULL, '\"[\\\"1768560104_Note au MFB_ Objectif de recettes TOFE Aout 2025.pdf\\\"]\"', '2026-01-16', NULL, '2026-01-18', 'termine', '2026-01-16 10:41:44', '2026-01-16 10:42:09'),
 (25, 12, 1, 'primaire', 'cs', NULL, '\"[\\\"1768560510_Note au MFB_ Objectif de recettes TOFE Aout 2025.pdf\\\"]\"', '2026-01-16', NULL, '2026-01-18', 'termine', '2026-01-16 10:48:30', '2026-01-16 10:49:20'),
 (26, 15, 1, 'primaire', 'fd', NULL, '\"[\\\"1768561384_Note au MFB_ Objectif de recettes TOFE Aout 2025.pdf\\\"]\"', '2026-01-16', NULL, '2026-01-20', 'termine', '2026-01-16 11:03:04', '2026-01-16 11:03:57'),
-(27, 7, 1, 'primaire', 'rep11', NULL, '\"[\\\"1768561851_Note de service_DEMANDE D\'INFORMATIONS COMITE COUT SDEEF.pdf\\\"]\"', '2026-01-16', NULL, '2026-01-18', 'termine', '2026-01-16 11:10:51', '2026-01-16 11:11:18'),
+(27, 7, 1, 'primaire', 'rep11', NULL, '[\"1768836379_CNI_COUOLIBALY_SIE_YACOUBA_(1).pdf\"]', '2026-01-16', NULL, '2026-01-18', 'termine', '2026-01-16 11:10:51', '2026-01-19 15:26:19'),
 (28, 20, 1, 'primaire', 'sds', NULL, '\"[\\\"1768562119_Note_Service_Objectifs de recettes r\\\\u00e9vis\\\\u00e9s 2025 N\'GUESSAN.pdf\\\"]\"', '2026-01-16', NULL, '2026-01-17', 'termine', '2026-01-16 11:15:19', '2026-01-16 11:15:44'),
 (29, 22, 1, 'primaire', 'kklkl', NULL, '\"[\\\"1768562548_Note au MFB_ Objectif de recettes TOFE Aout 2025.pdf\\\"]\"', '2026-01-16', NULL, '2026-01-17', 'termine', '2026-01-16 11:22:28', '2026-01-16 11:23:04');
 
@@ -494,7 +504,7 @@ CREATE TABLE IF NOT EXISTS `migrations` (
   `migration` varchar(255) NOT NULL,
   `batch` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `migrations`
@@ -537,7 +547,46 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (34, '2026_01_13_083901_update_user_role_in_users_table', 34),
 (35, '2026_01_13_151143_create_imputations_table', 35),
 (36, '2026_01_13_175520_create_reponses_table', 36),
-(37, '2026_01_16_083954_add_validation_fields_to_reponses_table', 37);
+(37, '2026_01_16_083954_add_validation_fields_to_reponses_table', 37),
+(38, '2026_01_19_144843_rename_role_to_old_role_in_users_table', 38),
+(39, '2026_01_19_144019_create_permission_tables', 39);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `model_has_permissions`
+--
+
+DROP TABLE IF EXISTS `model_has_permissions`;
+CREATE TABLE IF NOT EXISTS `model_has_permissions` (
+  `permission_id` bigint(20) UNSIGNED NOT NULL,
+  `model_type` varchar(191) NOT NULL,
+  `model_id` bigint(20) UNSIGNED NOT NULL,
+  PRIMARY KEY (`permission_id`,`model_id`,`model_type`),
+  KEY `model_has_permissions_model_id_model_type_index` (`model_id`,`model_type`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `model_has_roles`
+--
+
+DROP TABLE IF EXISTS `model_has_roles`;
+CREATE TABLE IF NOT EXISTS `model_has_roles` (
+  `role_id` bigint(20) UNSIGNED NOT NULL,
+  `model_type` varchar(191) NOT NULL,
+  `model_id` bigint(20) UNSIGNED NOT NULL,
+  PRIMARY KEY (`role_id`,`model_id`,`model_type`),
+  KEY `model_has_roles_model_id_model_type_index` (`model_id`,`model_type`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `model_has_roles`
+--
+
+INSERT INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
+(2, 'App\\Models\\User', 1);
 
 -- --------------------------------------------------------
 
@@ -601,6 +650,32 @@ INSERT INTO `password_reset_tokens` (`email`, `token`, `created_at`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `permissions`
+--
+
+DROP TABLE IF EXISTS `permissions`;
+CREATE TABLE IF NOT EXISTS `permissions` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(191) NOT NULL,
+  `guard_name` varchar(191) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `permissions_name_guard_name_unique` (`name`,`guard_name`) USING HASH
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `permissions`
+--
+
+INSERT INTO `permissions` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VALUES
+(1, 'publier articles', 'web', '2026-01-19 15:17:59', '2026-01-19 15:17:59'),
+(2, 'modifier articles', 'web', '2026-01-19 15:17:59', '2026-01-19 15:17:59'),
+(3, 'supprimer articles', 'web', '2026-01-19 15:17:59', '2026-01-19 15:17:59');
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `presences`
 --
 
@@ -616,7 +691,7 @@ CREATE TABLE IF NOT EXISTS `presences` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `presences_agent_id_foreign` (`agent_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=362 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=419 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `presences`
@@ -663,7 +738,64 @@ INSERT INTO `presences` (`id`, `agent_id`, `heure_arrivee`, `heure_depart`, `sta
 (358, 5, '2026-01-06 08:00:00', NULL, 'Absence justifiée', 'Justifié par autorisation.', '2026-01-06 00:00:00', '2026-01-12 10:26:27'),
 (359, 5, '2026-01-07 08:00:00', NULL, 'Absence justifiée', 'Justifié par autorisation.', '2026-01-07 00:00:00', '2026-01-12 10:26:27'),
 (360, 5, '2026-01-08 08:00:00', NULL, 'Absence justifiée', 'Justifié par autorisation.', '2026-01-08 00:00:00', '2026-01-12 10:26:27'),
-(361, 5, '2026-01-09 08:00:00', NULL, 'Absence justifiée', 'Justifié par autorisation.', '2026-01-09 00:00:00', '2026-01-12 10:26:27');
+(361, 5, '2026-01-09 08:00:00', NULL, 'Absence justifiée', 'Justifié par autorisation.', '2026-01-09 00:00:00', '2026-01-12 10:26:27'),
+(362, 1, '2026-01-12 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-12 00:00:00', '2026-01-19 17:10:57'),
+(363, 3, '2026-01-12 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-12 00:00:00', '2026-01-19 17:10:57'),
+(364, 4, '2026-01-12 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-12 00:00:00', '2026-01-19 17:10:57'),
+(365, 6, '2026-01-12 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-12 00:00:00', '2026-01-19 17:10:57'),
+(366, 7, '2026-01-12 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-12 00:00:00', '2026-01-19 17:10:57'),
+(367, 8, '2026-01-12 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-12 00:00:00', '2026-01-19 17:10:57'),
+(368, 9, '2026-01-12 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-12 00:00:00', '2026-01-19 17:10:57'),
+(369, 10, '2026-01-12 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-12 00:00:00', '2026-01-19 17:10:57'),
+(370, 11, '2026-01-12 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-12 00:00:00', '2026-01-19 17:10:57'),
+(371, 14, '2026-01-12 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-12 00:00:00', '2026-01-19 17:10:57'),
+(372, 15, '2026-01-12 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-12 00:00:00', '2026-01-19 17:10:57'),
+(373, 1, '2026-01-13 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-13 00:00:00', '2026-01-19 17:10:57'),
+(374, 3, '2026-01-13 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-13 00:00:00', '2026-01-19 17:10:57'),
+(375, 4, '2026-01-13 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-13 00:00:00', '2026-01-19 17:10:57'),
+(376, 6, '2026-01-13 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-13 00:00:00', '2026-01-19 17:10:57'),
+(377, 7, '2026-01-13 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-13 00:00:00', '2026-01-19 17:10:57'),
+(378, 8, '2026-01-13 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-13 00:00:00', '2026-01-19 17:10:57'),
+(379, 9, '2026-01-13 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-13 00:00:00', '2026-01-19 17:10:57'),
+(380, 10, '2026-01-13 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-13 00:00:00', '2026-01-19 17:10:57'),
+(381, 11, '2026-01-13 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-13 00:00:00', '2026-01-19 17:10:57'),
+(382, 14, '2026-01-13 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-13 00:00:00', '2026-01-19 17:10:57'),
+(383, 15, '2026-01-13 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-13 00:00:00', '2026-01-19 17:10:57'),
+(384, 1, '2026-01-14 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-14 00:00:00', '2026-01-19 17:10:57'),
+(385, 3, '2026-01-14 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-14 00:00:00', '2026-01-19 17:10:57'),
+(386, 4, '2026-01-14 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-14 00:00:00', '2026-01-19 17:10:57'),
+(387, 6, '2026-01-14 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-14 00:00:00', '2026-01-19 17:10:57'),
+(388, 7, '2026-01-14 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-14 00:00:00', '2026-01-19 17:10:57'),
+(389, 8, '2026-01-14 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-14 00:00:00', '2026-01-19 17:10:57'),
+(390, 9, '2026-01-14 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-14 00:00:00', '2026-01-19 17:10:57'),
+(391, 10, '2026-01-14 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-14 00:00:00', '2026-01-19 17:10:57'),
+(392, 11, '2026-01-14 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-14 00:00:00', '2026-01-19 17:10:57'),
+(393, 14, '2026-01-14 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-14 00:00:00', '2026-01-19 17:10:57'),
+(394, 15, '2026-01-14 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-14 00:00:00', '2026-01-19 17:10:57'),
+(395, 1, '2026-01-15 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-15 00:00:00', '2026-01-19 17:10:57'),
+(396, 3, '2026-01-15 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-15 00:00:00', '2026-01-19 17:10:57'),
+(397, 4, '2026-01-15 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-15 00:00:00', '2026-01-19 17:10:57'),
+(398, 5, '2026-01-15 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-15 00:00:00', '2026-01-19 17:10:57'),
+(399, 6, '2026-01-15 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-15 00:00:00', '2026-01-19 17:10:57'),
+(400, 7, '2026-01-15 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-15 00:00:00', '2026-01-19 17:10:57'),
+(401, 8, '2026-01-15 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-15 00:00:00', '2026-01-19 17:10:57'),
+(402, 9, '2026-01-15 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-15 00:00:00', '2026-01-19 17:10:57'),
+(403, 10, '2026-01-15 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-15 00:00:00', '2026-01-19 17:10:57'),
+(404, 11, '2026-01-15 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-15 00:00:00', '2026-01-19 17:10:57'),
+(405, 14, '2026-01-15 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-15 00:00:00', '2026-01-19 17:10:57'),
+(406, 15, '2026-01-15 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-15 00:00:00', '2026-01-19 17:10:57'),
+(407, 1, '2026-01-16 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-16 00:00:00', '2026-01-19 17:10:57'),
+(408, 3, '2026-01-16 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-16 00:00:00', '2026-01-19 17:10:57'),
+(409, 4, '2026-01-16 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-16 00:00:00', '2026-01-19 17:10:57'),
+(410, 5, '2026-01-16 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-16 00:00:00', '2026-01-19 17:10:57'),
+(411, 6, '2026-01-16 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-16 00:00:00', '2026-01-19 17:10:57'),
+(412, 7, '2026-01-16 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-16 00:00:00', '2026-01-19 17:10:57'),
+(413, 8, '2026-01-16 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-16 00:00:00', '2026-01-19 17:10:57'),
+(414, 9, '2026-01-16 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-16 00:00:00', '2026-01-19 17:10:57'),
+(415, 10, '2026-01-16 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-16 00:00:00', '2026-01-19 17:10:57'),
+(416, 11, '2026-01-16 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-16 00:00:00', '2026-01-19 17:10:57'),
+(417, 14, '2026-01-16 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-16 00:00:00', '2026-01-19 17:10:57'),
+(418, 15, '2026-01-16 08:00:00', NULL, 'Absent', 'Absent (hebdomadaire).', '2026-01-16 00:00:00', '2026-01-19 17:10:57');
 
 -- --------------------------------------------------------
 
@@ -769,6 +901,56 @@ INSERT INTO `reponse_notifications` (`id`, `id_notification`, `agent_id`, `messa
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `roles`
+--
+
+DROP TABLE IF EXISTS `roles`;
+CREATE TABLE IF NOT EXISTS `roles` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(191) NOT NULL,
+  `guard_name` varchar(191) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `roles_name_guard_name_unique` (`name`,`guard_name`) USING HASH
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `roles`
+--
+
+INSERT INTO `roles` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VALUES
+(1, 'editor', 'web', '2026-01-19 15:17:59', '2026-01-19 15:17:59'),
+(2, 'admin', 'web', '2026-01-19 15:17:59', '2026-01-19 15:17:59');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `role_has_permissions`
+--
+
+DROP TABLE IF EXISTS `role_has_permissions`;
+CREATE TABLE IF NOT EXISTS `role_has_permissions` (
+  `permission_id` bigint(20) UNSIGNED NOT NULL,
+  `role_id` bigint(20) UNSIGNED NOT NULL,
+  PRIMARY KEY (`permission_id`,`role_id`),
+  KEY `role_has_permissions_role_id_foreign` (`role_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `role_has_permissions`
+--
+
+INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
+(1, 1),
+(1, 2),
+(2, 1),
+(2, 2),
+(3, 2);
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `services`
 --
 
@@ -863,7 +1045,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `role` varchar(191) NOT NULL,
+  `old_role` varchar(191) NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) NOT NULL,
   `must_change_password` tinyint(1) NOT NULL DEFAULT 0,
@@ -874,16 +1056,18 @@ CREATE TABLE IF NOT EXISTS `users` (
   `profile_picture` varchar(191) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_email_unique` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `role`, `email_verified_at`, `password`, `must_change_password`, `remember_token`, `created_at`, `updated_at`, `bio`, `profile_picture`) VALUES
-(1, 'Coulibaly Sie Yacouba', 'coulsie@gmail.com', 'directeur', NULL, '$2y$12$WAjiSLgNkjOq52FJwCm5dO0HMHY8HyP1aA5dMArsLqFT.kvZTzvvy', 0, 'LlzUSHOwWyD5neqebsxnUyXKLJewGsZbnhUQ8Up0nsQDfLuh3vULnJz9PZRo', '2025-11-17 17:37:48', '2025-11-17 17:37:48', NULL, NULL),
+INSERT INTO `users` (`id`, `name`, `email`, `old_role`, `email_verified_at`, `password`, `must_change_password`, `remember_token`, `created_at`, `updated_at`, `bio`, `profile_picture`) VALUES
+(1, 'Coulibaly Sie Yacouba', 'coulsie@gmail.com', 'superviseur', NULL, '$2y$12$WAjiSLgNkjOq52FJwCm5dO0HMHY8HyP1aA5dMArsLqFT.kvZTzvvy', 0, 'LlzUSHOwWyD5neqebsxnUyXKLJewGsZbnhUQ8Up0nsQDfLuh3vULnJz9PZRo', '2025-11-17 17:37:48', '2025-11-17 17:37:48', NULL, NULL),
 (5, 'Mme DJE', 'roussou@dgi.gouv.ci', 'chef_de_service', NULL, '$2y$12$fKc77kSkJLCrCqdH5Z/x3uGijMJLyszTM4/iUjDcQfJgYp/hGvPG.', 0, NULL, '2026-01-13 13:02:51', '2026-01-13 13:02:51', NULL, 'photos_agents/7ppiDfHIS3Zv8A6VVlvelLmb2YLDatUt4BsXT2Nz.jpg'),
-(6, 'nafi kone', 'nafikone@dgi.gouv.ci', 'directeur', NULL, '$2y$12$Q3WWtwkM6TjYJucHx6TNWet4spgYHsANhszcxpc4dfpsf39vUwAuq', 0, NULL, '2026-01-13 14:38:30', '2026-01-13 14:38:30', NULL, 'photos_agents/XbfkwHmUFPB9p0FRJ68go4zdDCDwDUVokNe6iSVa.jpg');
+(6, 'nafi kone', 'nafikone@dgi.gouv.ci', 'directeur', NULL, '$2y$12$Q3WWtwkM6TjYJucHx6TNWet4spgYHsANhszcxpc4dfpsf39vUwAuq', 0, NULL, '2026-01-13 14:38:30', '2026-01-13 14:38:30', NULL, 'photos_agents/XbfkwHmUFPB9p0FRJ68go4zdDCDwDUVokNe6iSVa.jpg'),
+(10, 'Coulibaly Pedatchin Kignelman', 'coulsie@hotmail.com', 'agent', NULL, '$2y$12$s9Pi9BnHaOF7s7Bbqz/T2.2NbMOc8H3pq/4NztG30QQucDkWtm7U6', 0, NULL, '2026-01-19 13:29:19', '2026-01-19 13:29:19', NULL, 'photos_agents/RY3QTuBIe617OHBa3wKsIUL8BTEIeLuVkifzUB55.jpg'),
+(11, 'Kitani Penawelefa', 'kouta@gmail.com', 'chef_de_service', NULL, '$2y$12$/RbUc3jn9bldfAGmTEEWze3UAN1K5zIZF4q8Ju3IWHe4uMMPo2fIu', 0, NULL, '2026-01-19 13:41:30', '2026-01-19 13:41:30', NULL, NULL);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

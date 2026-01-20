@@ -46,7 +46,7 @@ class PresenceController extends Controller
         $query->whereDate('heure_arrivee', $request->date);
     }
 
-    $presences = $query->orderBy('heure_arrivee', 'desc')->paginate(10);
+    $presences = $query->orderBy('heure_arrivee', 'desc')->paginate(15);
 
     return view('presences.index', compact('presences'));
 }

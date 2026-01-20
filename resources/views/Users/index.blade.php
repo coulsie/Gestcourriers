@@ -9,7 +9,6 @@
                 <i class="fas fa-users me-2"></i>Gestion des Utilisateurs
             </h1>
 
-            {{-- Bouton pour aller à la page de création --}}
             <a href="{{ route('users.create') }}" class="btn btn-success shadow-sm fw-bold">
                 <i class="fas fa-user-plus me-1"></i> Ajouter un utilisateur
             </a>
@@ -36,25 +35,34 @@
                 </thead>
                 <tbody>
                     @forelse ($users as $user)
-                        @php
-                            // Définition des couleurs de badge par rôle (Enum Laravel 12)
-                            $roleColor = match($user->role->value ?? $user->role) {
-                                'Directeur' => 'bg-danger',
-                                'Superviseur' => 'bg-primary',
-                                'Agent' => 'bg-info',
-                                default => 'bg-secondary',
-                            };
-                        @endphp
                         <tr class="opacity-transition">
                             <td class="fw-bold px-3">#{{ $user->id }}</td>
                             <td>
                                 <div class="fw-bold text-dark">{{ $user->name }}</div>
                             </td>
+
                             <td>
-                                <span class="badge {{ $roleColor }} text-white px-3 py-2 shadow-sm">
-                                    <i class="fas fa-shield-alt me-1 small"></i> {{ strtoupper($user->role->value ?? $user->role) }}
-                                </span>
+                                @forelse($user->getRoleNames() as $role)
+                                    @php
+                                        $roleColor = match($role) {
+                                            'admin' => 'bg-danger',
+                                            'directeur' => 'bg-danger',
+                                            'superviseur' => 'bg-primary',
+                                            'utilisateur' => 'bg-info',
+                                            'agent' => 'bg-info',
+                                            default => 'bg-secondary',
+                                        };
+                                    @endphp
+                                    {{-- Ajout de text-white ici pour l'écriture en blanc --}}
+                                    <span class="badge {{ $roleColor }} text-white px-2 py-1 shadow-sm text-uppercase">
+                                        <i class="fas fa-user-tag me-1" style="font-size: 0.65rem;"></i>
+                                        {{ $role }}
+                                    </span>
+                                @empty
+                                    <span class="badge bg-light text-dark border italic">Aucun rôle</span>
+                                @endforelse
                             </td>
+
                             <td class="text-secondary">{{ $user->email }}</td>
                             <td>
                                 <span class="text-dark fw-medium">
@@ -70,6 +78,15 @@
                                     <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-warning text-white" title="Modifier l'utilisateur">
                                         <i class="fas fa-edit"></i>
                                     </a>
+                                    @can('manage-users')
+                                    <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')" title="Supprimer">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                    @endcan
                                 </div>
                             </td>
                         </tr>
@@ -84,13 +101,18 @@
                 </tbody>
             </table>
         </div>
+
+        <div class="mt-4">
+            {{ $users->links() }}
+        </div>
     </div>
 </div>
 
 <style>
     .opacity-transition { transition: all 0.2s; }
     .opacity-transition:hover { background-color: rgba(248, 249, 250, 1); }
-    .badge { font-size: 0.75rem; letter-spacing: 0.5px; }
+    .badge { font-size: 0.7rem; letter-spacing: 0.5px; border-radius: 50px; border: none; }
     .btn-group .btn { border-radius: 4px; margin: 0 2px; }
+    .table thead th { border-bottom: none; font-size: 0.85rem; text-transform: uppercase; }
 </style>
 @endsection

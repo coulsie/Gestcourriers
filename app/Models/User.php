@@ -11,14 +11,19 @@ use App\Models\Affectation;
 use App\Models\Agent;
 use App\Models\user;
 use App\Models\NotificationTache;
+use Spatie\Permission\Traits\HasRoles; // <--- Importation
+
+
 
 
 
 class User extends Authenticatable
 {
+    use HasRoles;
+
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
-    use Notifiable;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -48,7 +53,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-  
+
     /**
      * Get the attributes that should be cast.
      *

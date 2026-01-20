@@ -38,4 +38,13 @@ class Direction extends Model
     {
         return $this->belongsTo(Agent::class, 'head_id');
     }
-}
+
+
+
+
+
+    }
+
+
+
+

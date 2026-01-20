@@ -247,19 +247,17 @@ public function store(Request $request)
 {
     // 1. VALIDATION
     $validatedData = $request->validate([
-        'name' => 'required|string|max:255',
+        // 'name' et 'password' retirés car générés automatiquement
         'email' => 'required|email|max:191|unique:users,email',
-        'password' => 'required|string|min:3|confirmed',
-        'role' => 'required',
         'matricule' => 'required|string|unique:agents,matricule',
         'first_name' => 'required|string',
         'last_name' => 'required|string',
         'service_id' => 'required|exists:services,id',
         'status' => 'required',
-        'email_professionnel' => 'nullable',
+        'email_professionnel' => 'nullable|email',
         'sexe' => 'nullable',
-        'date_of_birth' => 'nullable',
-        'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validation stricte de l'image
+        'date_of_birth' => 'nullable|date',
+        'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         'phone_number' => 'nullable',
         'Emploi' => 'nullable',
         'Grade' => 'nullable',
@@ -269,40 +267,60 @@ public function store(Request $request)
         'address' => 'nullable',
         'place_birth' => 'nullable',
         'adresse' => 'nullable',
+        'role' => 'required|exists:roles,name',
     ]);
 
     try {
         \Illuminate\Support\Facades\DB::beginTransaction();
 
-        // 2. GESTION DE LA PHOTO
-        $photoPath = null;
-        if ($request->hasFile('photo') && $request->file('photo')->isValid()) {
-            // Stockage dans storage/app/public/photos_agents
-            $photoPath = $request->file('photo')->store('photos_agents', 'public');
+        // 2. FORMATAGE DU NOM ET PRÉNOM
+        // Nom en MAJUSCULES, Prénom avec 1ère lettre en Majuscule
+        $lastNameUpper = strtoupper($request->last_name);
+        $firstNameCap = ucwords(strtolower($request->first_name));
+        $fullName = $firstNameCap . ' ' . $lastNameUpper;
+
+        // 3. GESTION DE LA PHOTO
+
+
+            // 2. Gestion de la photo
+        if ($request->hasFile('photo')) {
+            $file = $request->file('photo');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+
+            // On déplace le fichier dans public/agents_photos
+            $file->move(public_path('agents_photos'), $fileName);
+
+            // Crucial : On écrase l'objet UploadedFile par la chaîne de caractères du nom
+            $validated['photo'] = $fileName;
+        } else {
+            // Si pas de photo, on s'assure que la valeur est nulle
+            $validated['photo'] = null;
         }
 
-        // 3. CRÉATION DU COMPTE UTILISATEUR
+        // 4. CRÉATION DU COMPTE UTILISATEUR
         $user = \App\Models\User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => \Illuminate\Support\Facades\Hash::make($request->password),
-            'role' => $request->role,
-            'must_change_password' => $request->has('must_change_password'),
-            'profile_picture' => $photoPath, // Enregistre aussi le chemin ici si la colonne existe
+            'name' => $fullName, // Fusion Prénom + NOM
+            'email' => $request->email, // Email professionnel comme Login
+            'password' => \Illuminate\Support\Facades\Hash::make($request->matricule), // Matricule comme mot de passe
+            'must_change_password' => true, // Recommandé pour forcer le changement
+
         ]);
 
-        // 4. CRÉATION DE L'AGENT AVEC LA PHOTO
+        // Attribution du rôle Spatie
+        $user->assignRole($request->role);
+
+        // 5. CRÉATION DE L'AGENT
         $agent = \App\Models\Agent::create([
             'user_id' => $user->id,
             'email' => $request->email_personnel,
-            'email_professionnel' => $request->email_professionnel,
+            'email_professionnel' => $request->email, // Utilise l'email de connexion
             'matricule' => $request->matricule,
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
+            'first_name' => $firstNameCap,
+            'last_name' => $lastNameUpper,
             'status' => $request->status,
             'sexe' => $request->sexe,
             'date_of_birth' => $request->date_of_birth,
-            'photo' => $photoPath, // <--- C'est cette ligne qui insère le chemin en base
+            'photo' => $fileName,
             'phone_number' => $request->phone_number,
             'Emploi' => $request->Emploi,
             'Grade' => $request->Grade,
@@ -313,23 +331,20 @@ public function store(Request $request)
             'address' => $request->address,
             'place_birth' => $request->place_birth,
             'adresse' => $request->adresse,
-
         ]);
 
         \Illuminate\Support\Facades\DB::commit();
 
-        return redirect()->route('agents.index')->with('success', 'Agent et compte utilisateur créés avec succès !');
+        return redirect()->route('agents.index')->with('success', "Compte créé pour $fullName. Login: {$request->email} | MDP: {$request->matricule}");
 
     } catch (\Exception $e) {
         \Illuminate\Support\Facades\DB::rollBack();
 
-        // En cas d'échec, on supprime la photo si elle a été physiquement enregistrée
-        if ($photoPath) {
-            \Illuminate\Support\Facades\Storage::disk('public')->delete($photoPath);
+        if ($fileName) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($fileName);
         }
 
-        // Débogage : affiche l'erreur exacte (ex: colonne 'photo' manquante dans $fillable)
-        dd("Erreur lors de l'enregistrement : " . $e->getMessage());
+        return back()->withInput()->with('error', "Erreur lors de l'enregistrement : " . $e->getMessage());
     }
 }
 

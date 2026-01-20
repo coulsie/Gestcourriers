@@ -100,8 +100,8 @@
                     <tr class="{{ $rowColor }} opacity-transition">
                         <td class="fw-bold px-3">#{{ $presence->id }}</td>
                         <td>
-                            <div class="fw-bold text-uppercase text-dark">{{ $presence->agent->name ?? 'Inconnu' }}</div>
-                            <div class="small text-secondary">{{ $presence->agent->first_name ?? '' }}</div>
+                            <div class="fw-bold text-uppercase text-dark">{{ $presence->agent->name ?? '' }}</div>
+                            <div class="small text-secondary">{{ $presence->agent->last_name ?? '' }} {{ $presence->agent->first_name ?? '' }}</div>
                         </td>
                         <td><span class="text-dark fw-medium">{{ \Carbon\Carbon::parse($presence->heure_arrivee)->format('d/m/Y H:i') }}</span></td>
                         <td>

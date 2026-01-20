@@ -74,6 +74,7 @@
                         </div>
 
                         {{-- Détails d'Affectation (BLEU) --}}
+                      
                         <div class="col-md-6">
                             <div class="h-100 p-4 border-start border-5 border-primary bg-light rounded shadow-sm">
                                 <h5 class="text-primary fw-bold mb-4 border-bottom border-2 pb-2 text-uppercase">
@@ -81,15 +82,23 @@
                                 </h5>
                                 <p class="mb-2"><strong>Service :</strong>
                                     @if($agent->service)
-                                        <span class="badge bg-primary text-white">{{ $agent->service->name }}</span>
+                                        <span class="badge bg-primary text-white px-2 py-1">{{ $agent->service->name }}</span>
                                         <small class="d-block text-muted ms-4">Direction : {{ $agent->service->direction->name ?? 'N/A' }}</small>
                                     @else
                                         <span class="text-danger fw-bold">Non affecté</span>
                                     @endif
                                 </p>
-                                <p class="mb-2"><strong>Emploi/Poste :</strong> <span class="text-dark">{{ $agent->Emploi }}</span></p>
-                                <p class="mb-2"><strong>Grade :</strong> <span class="badge bg-secondary">{{ $agent->Grade }}</span></p>
-                                <p class="mb-0"><strong>Prise de service :</strong> <span class="text-dark fw-bold">{{ $agent->Date_Prise_de_service }}</span></p>
+                                <p class="mb-2"><strong>Emploi/Poste :</strong> <span class="text-dark fw-bold">{{ $agent->Emploi }}</span></p>
+
+                                {{-- GRADE MODIFIÉ : Écriture blanche sur couleur (Emerald/Success) --}}
+                                <p class="mb-2">
+                                    <strong>Grade :</strong>
+                                    <span class="badge px-3 py-2 text-white shadow-sm" style="background-color: #059669; font-size: 0.9rem; border-radius: 8px;">
+                                        <i class="fas fa-medal me-1"></i> {{ $agent->Grade ?? 'N/A' }}
+                                    </span>
+                                </p>
+
+                                <p class="mb-0"><strong>Prise de service :</strong> <span class="text-dark fw-bold">{{ \Carbon\Carbon::parse($agent->Date_Prise_de_service)->format('d/m/Y') }}</span></p>
                             </div>
                         </div>
 

@@ -1,3 +1,4 @@
+{{-- Fichier : resources/views/agents/index.blade.php --}}
 @extends('layouts.app')
 
 @section('content')
@@ -11,7 +12,7 @@
                     <h5 class="m-0 font-weight-bold text-white">
                         <i class="fas fa-users-cog me-2 text-warning"></i> ANNUAIRE DU PERSONNEL (2026)
                     </h5>
-                    <a href="{{ route('agents.create') }}" class="btn btn-warning btn-sm fw-bold px-4 shadow hover-elevate text-dark">
+                    <a href="{{ route('agents.nouveau') }}" class="btn btn-warning btn-sm fw-bold px-4 shadow hover-elevate text-dark">
                         <i class="fas fa-plus-circle me-1"></i> NOUVEL AGENT
                     </a>
                 </div>
@@ -71,6 +72,7 @@
                                 <tr>
                                     <th class="py-3 px-4">Matricule</th>
                                     <th>Nom & Prénoms</th>
+                                    <th>Statut / Titre</th> {{-- Nouvelle Colonne Status --}}
                                     <th>Service</th>
                                     <th class="text-center">Accès Système</th>
                                     <th class="text-center">Actions</th>
@@ -90,6 +92,25 @@
                                                     <span class="text-primary fw-bold">{{ $agent->first_name }}</span>
                                                 </div>
                                             </div>
+                                        </td>
+                                        {{-- Colonne Status avec coloration dynamique --}}
+                                        {{-- Colonne Status avec coloration dynamique et texte en blanc --}}
+                                        <td>
+                                            @php
+                                                // Définition des couleurs de fond selon le titre
+                                                $statusColor = match($agent->status) {
+                                                    'Directeur', 'Conseiller Spécial' => 'bg-danger',
+                                                    'Sous-directeur', 'Conseiller Technique' => 'bg-warning',
+                                                    'Chef de service' => 'bg-primary',
+                                                    'Agent' => 'bg-secondary',
+                                                    default => 'bg-dark',
+                                                };
+                                            @endphp
+
+                                            {{-- On force text-white pour l'écriture en blanc et shadow-sm pour le relief --}}
+                                            <span class="badge {{ $statusColor }} text-white px-3 py-2 shadow-sm fw-bold text-uppercase w-100" style="font-size: 0.75rem; border: none;">
+                                                <i class="fas fa-user-tag me-1"></i> {{ $agent->status ?? 'Non défini' }}
+                                            </span>
                                         </td>
                                         <td>
                                             @if($agent->service)
@@ -113,25 +134,28 @@
                                         </td>
                                         <td class="text-center">
                                             <div class="btn-group shadow-sm border rounded bg-white p-1">
-                                                <a href="{{ route('agents.show', $agent->id) }}" class="btn btn-sm btn-info text-white mx-1 rounded" title="Consulter">
+                                                <a href="{{ route('agents.show', $agent->id) }}" class="btn btn-sm btn-outline-primary border-0 px-2" title="Voir détails">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
-                                                <a href="{{ route('agents.edit', $agent->id) }}" class="btn btn-sm btn-warning text-white mx-1 rounded" title="Modifier">
+                                                <a href="{{ route('agents.edit', $agent->id) }}" class="btn btn-sm btn-outline-warning border-0 px-2" title="Modifier">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
+                                                @can('manage-users')
                                                 <form action="{{ route('agents.destroy', $agent->id) }}" method="POST" class="d-inline">
                                                     @csrf @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger text-white mx-1 rounded" onclick="return confirm('Supprimer cet agent ?')" title="Supprimer">
-                                                        <i class="fas fa-trash-alt"></i>
+                                                    <button class="btn btn-sm btn-outline-danger border-0 px-2" onclick="return confirm('Confirmer la suppression ?')" title="Supprimer">
+                                                        <i class="fas fa-trash"></i>
                                                     </button>
                                                 </form>
+                                                @endcan
                                             </div>
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="text-center py-5 bg-light text-muted fw-bold">
-                                            <i class="fas fa-search fa-3x mb-3"></i><br>AUCUN AGENT TROUVÉ
+                                        <td colspan="6" class="text-center py-5">
+                                            <img src="{{ asset('img/no-data.svg') }}" style="width: 100px; opacity: 0.5;" alt=""><br>
+                                            <span class="text-muted mt-3 d-block fw-bold">Aucun agent trouvé.</span>
                                         </td>
                                     </tr>
                                 @endforelse
@@ -140,7 +164,7 @@
                     </div>
 
                     <!-- PAGINATION -->
-                    <div class="mt-4">
+                    <div class="mt-4 d-flex justify-content-center">
                         {{ $agents->appends(request()->query())->links() }}
                     </div>
                 </div>
@@ -150,16 +174,9 @@
 </div>
 
 <style>
-    /* Couleurs Renforcées */
-    .bg-primary { background-color: #0d6efd !important; }
-    .text-primary { color: #0d6efd !important; }
-    .avatar-circle { width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
-
-    /* Hover effects */
-    .table-hover tbody tr:hover { background-color: rgba(13, 110, 253, 0.05) !important; cursor: pointer; transition: 0.3s; }
-    .btn-group .btn:hover { transform: scale(1.1); transition: 0.2s; }
-
-    /* Inputs */
-    .form-control:focus, .form-select:focus { border-color: #0d6efd; box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1); }
+    .avatar-circle { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .badge { font-size: 0.8rem; letter-spacing: 0.5px; }
+    .table thead th { border: none; }
+    .hover-elevate:hover { transform: translateY(-2px); transition: 0.3s; }
 </style>
 @endsection

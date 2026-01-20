@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('presences', function (Blueprint $table) {
             $table->id(); // Utilise BigIncrements, par défaut une clé primaire auto-incrémentée
-            $table->foreign('agent_id')->references('id')->on('agents');
+            $table->foreignId('agent_id')->constrained('agents')->onDelete('cascade');
             $table->timestamp('heure_arrivee');
             $table->timestamp('heure_depart')->nullable(); // Rend la colonne facultative
             $table->enum('statut', ['Absent','Présent','En Retard'])->default('Présent'); // Define the enum column
