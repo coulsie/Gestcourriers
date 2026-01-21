@@ -12,7 +12,7 @@
                     <h5 class="m-0 font-weight-bold text-white">
                         <i class="fas fa-users-cog me-2 text-warning"></i> ANNUAIRE DU PERSONNEL (2026)
                     </h5>
-                    <a href="{{ route('agents.nouveau') }}" class="btn btn-warning btn-sm fw-bold px-4 shadow hover-elevate text-dark">
+                    <a href="{{ route('agents.create') }}" class="btn btn-warning btn-sm fw-bold px-4 shadow hover-elevate text-dark">
                         <i class="fas fa-plus-circle me-1"></i> NOUVEL AGENT
                     </a>
                 </div>

@@ -95,7 +95,7 @@ public function store(Request $request)
         'status' => 'required',
         'sexe' => 'nullable',
         'date_of_birth' => 'nullable|date',
-        'place_birth' => 'nullable|string|max:191',
+        'Place_birth' => 'nullable|string|max:191',
         'email_professionnel' => 'nullable|email|unique:agents,email_professionnel',
         'email' => 'nullable|email|unique:agents,email',
         'phone_number' => 'nullable|string|max:191',
@@ -136,14 +136,16 @@ public function store(Request $request)
 /**
      * Affiche les détails d'un agent spécifique.
      */
-    public function show(Agent $agent): View
-    {
-        // Charge les relations pour la vue détaillée (service, user)
-        $agent->load(['service.direction', 'user']);
+            public function show(Agent $agent): View
+        {
+            // Force le rechargement de TOUTES les colonnes depuis la base de données
+            $agent->refresh();
 
-        return view('agents.show', compact('agent'));
-    }
+            // Charge les relations
+            $agent->load(['service.direction', 'user']);
 
+            return view('agents.show', compact('agent'));
+        }
     /**
      * Affiche le formulaire d'édition d'un agent.
      */
@@ -164,6 +166,12 @@ public function store(Request $request)
      */
     public function update(Request $request, Agent $agent)
 {
+
+// On transforme en majuscules avant même la validation
+    $request->merge([
+        'last_name' => mb_strtoupper($request->last_name, 'UTF-8')
+    ]);
+
     // 1. Validation (on retire l'unique sur le matricule de l'agent actuel)
     $validated = $request->validate([
         'matricule' => 'required|string|max:191|unique:agents,matricule,' . $agent->id,
@@ -174,7 +182,7 @@ public function store(Request $request)
         'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         'sexe' => 'nullable',
         'date_of_birth' => 'nullable|date',
-        'place_birth' => 'nullable|string|max:191',
+        'Place_birth' => 'nullable|string|max:191',
         'email_professionnel' => ['nullable','email',Rule::unique('agents','email_professionnel')->ignore($agent->id)],
         'email' => ['nullable','email',Rule::unique('agents','email')->ignore($agent->id)],
         'phone_number' => 'nullable|string|max:191',
@@ -257,6 +265,7 @@ public function store(Request $request)
         'email_professionnel' => 'nullable|email',
         'sexe' => 'nullable',
         'date_of_birth' => 'nullable|date',
+        'Place_birth' => 'nullable|string|max:191',
         'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         'phone_number' => 'nullable',
         'Emploi' => 'nullable',
@@ -281,7 +290,7 @@ public function store(Request $request)
 
         // 3. GESTION DE LA PHOTO
 
-
+        $fileName = null;
             // 2. Gestion de la photo
         if ($request->hasFile('photo')) {
             $file = $request->file('photo');
@@ -329,7 +338,7 @@ public function store(Request $request)
             'Personne_a_prevenir' => $request->Personne_a_prevenir,
             'Contact_personne_a_prevenir' => $request->Contact_personne_a_prevenir,
             'address' => $request->address,
-            'place_birth' => $request->place_birth,
+            'Place_birth' => $request->place_birth,
             'adresse' => $request->adresse,
         ]);
 

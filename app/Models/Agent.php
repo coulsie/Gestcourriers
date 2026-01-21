@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Service;
-use Spatie\Permission\Traits\HasRoles; 
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Str; 
 
 
 class Agent extends Model
@@ -27,7 +29,7 @@ class Agent extends Model
         'status',
         'sexe',
         'date_of_birth',
-        'place_birth',
+        'Place_birth',
         'photo',
         'email',
         'phone_number',
@@ -107,4 +109,16 @@ class Agent extends Model
             return $this->belongsToMany(Imputation::class, 'agent_imputation');
         }
 
+        protected function firstName(): Attribute
+        {
+            return Attribute::make(
+                set: fn ($value) => Str::ucfirst(Str::lower($value)),
+            );
+        }
+                protected function lastName(): Attribute
+        {
+            return Attribute::make(
+                set: fn ($value) => mb_strtoupper($value, 'UTF-8'),
+            );
+        }
 }

@@ -29,7 +29,7 @@
                     <form action="{{ route('agents.update', $agent->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
-                       
+
                             <input type="hidden" name="matricule" value="{{ $agent->matricule }}">
 
                         <div class="row g-4">
@@ -79,8 +79,9 @@
                                             <input type="date" name="date_of_birth" class="form-control border-2 fs-5 shadow-sm" value="{{ old('date_of_birth', $agent->date_of_birth) }}">
                                         </div>
                                         <div class="col-md-4">
-                                            <label class="form-label fw-bold text-dark fs-5 mb-1">LIEU DE NAISSANCE</label>
-                                            <input type="text" name="place_birth" class="form-control border-2 fs-5 shadow-sm" value="{{ old('place_birth', $agent->place_birth) }}">
+                                            <label>LIEU DE NAISSANCE</label>
+                                            <input type="text" name="Place_birth" value="{{ old('Place_birth', $agent->Place_birth) }}" class="form-control">>
+                                            <!-- Dans votre formulaire d'édition -->
                                         </div>
                                         <div class="col-md-4">
                                             <label class="form-label fw-bold text-indigo fs-5 text-uppercase mb-1"><i class="fas fa-user-tie me-1"></i> Emploi / Fonction *</label>

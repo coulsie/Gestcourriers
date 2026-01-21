@@ -33,11 +33,20 @@
                                         </div>
                                         <div class="col-md-5">
                                             <label class="form-label fw-bold">Nom *</label>
-                                            <input type="text" name="last_name" class="form-control border-primary" required>
+                                            <input type="text"
+                                                name="last_name"
+                                                class="form-control border-primary text-uppercase"
+                                                style="text-transform: uppercase;"
+                                                oninput="this.value = this.value.toUpperCase()"
+                                                required>
                                         </div>
                                         <div class="col-md-5">
                                             <label class="form-label fw-bold">Prénom(s) *</label>
-                                            <input type="text" name="first_name" class="form-control border-primary" required>
+                                            <input type="text"
+                                                name="first_name"
+                                                class="form-control border-primary"
+                                                oninput="this.value = this.value.charAt(0).toUpperCase() + this.value.slice(1).toLowerCase()"
+                                                required>
                                         </div>
                                         <div class="col-md-3">
                                             <label class="form-label fw-bold">Sexe</label>

@@ -10,7 +10,7 @@
                 {{-- Header Sombre & Contrasté --}}
                 <div class="card-header bg-dark py-3 d-flex align-items-center justify-content-between border-bottom border-primary border-5">
                     <h5 class="mb-0 text-white fw-bold text-uppercase tracking-wider">
-                        <i class="fas fa-id-badge me-2 text-warning"></i> Profil de l'Agent : {{ $agent->first_name }} {{ $agent->last_name }}
+                        <i class="fas fa-id-badge me-2 text-warning"></i> Profil de l'Agent :  {{ $agent->last_name }} {{ $agent->first_name }}
                     </h5>
                     <div class="d-flex gap-2">
                         <a href="{{ route('agents.index') }}" class="btn btn-outline-light btn-sm fw-bold">
@@ -39,7 +39,7 @@
                         </div>
 
                         <div class="col-md-9 px-md-4">
-                            <h2 class="fw-bolder text-primary text-uppercase mb-1">{{ $agent->first_name }} {{ $agent->last_name }}</h2>
+                            <h2 class="fw-bolder text-primary text-uppercase mb-1">{{ $agent->last_name }} {{ $agent->first_name }} </h2>
                             <h5 class="text-secondary fw-bold mb-4">Matricule : <span class="badge bg-dark text-white px-3">{{ $agent->matricule }}</span></h5>
 
                             <div class="row g-3">
@@ -74,7 +74,7 @@
                         </div>
 
                         {{-- Détails d'Affectation (BLEU) --}}
-                      
+
                         <div class="col-md-6">
                             <div class="h-100 p-4 border-start border-5 border-primary bg-light rounded shadow-sm">
                                 <h5 class="text-primary fw-bold mb-4 border-bottom border-2 pb-2 text-uppercase">
@@ -98,7 +98,12 @@
                                     </span>
                                 </p>
 
-                                <p class="mb-0"><strong>Prise de service :</strong> <span class="text-dark fw-bold">{{ \Carbon\Carbon::parse($agent->Date_Prise_de_service)->format('d/m/Y') }}</span></p>
+                                <p class="mb-0">
+                                    <strong>Prise de service :</strong>
+                                    <span class="text-dark fw-bold">
+                                        {{ $agent->Date_Prise_de_service ? \Carbon\Carbon::parse($agent->Date_Prise_de_service)->format('d/m/Y') : '' }}
+                                    </span>
+                                </p>
                             </div>
                         </div>
 
@@ -109,7 +114,7 @@
                                     <i class="fas fa-birthday-cake me-2"></i> État Civil
                                 </h5>
                                 <p class="mb-2"><strong>Date de naissance :</strong> {{ $agent->date_of_birth }}</p>
-                                <p class="mb-0"><strong>Lieu de naissance :</strong> {{ $agent->place_birth }}</p>
+                                <p class="mb-0"><strong>Lieu de naissance :</strong> {{ $agent->Place_birth }}</p>
                             </div>
                         </div>
 
