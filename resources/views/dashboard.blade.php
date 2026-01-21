@@ -23,7 +23,7 @@
                                     <strong>{{ Str::limit($annonce->titre, 50) }}</strong> :
                                             {{ Str::limit($annonce->contenu, 100) }}
                                 </div>
-                            @endforeach 
+                            @endforeach
                         </div>
                     </div>
                     <!-- FIN Bande défilante -->
@@ -64,8 +64,8 @@
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                NOTIFICATIONS SANS REPONSE</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $notifsSansReponse ?? 0 }} </div>
+                                                IMPUTATIONS SANS REPONSE</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $imputationsSansReponse ?? 0 }} </div>
                                         </div>
                                         <div class="col-auto">
                                             <span class="fw-bold fs-2 text-gray-300">₣</span>
@@ -82,8 +82,8 @@
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                COURRIERS NON AFFECTES</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">1</div>
+                                                COURRIERS NON IMPUTES</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $courriersNonImputes ?? 0 }}</div>
                                         </div>
                                         <div class="col-auto">
                                             <span class="fw-bold fs-2 text-gray-300">₣</span>
@@ -102,7 +102,7 @@
                                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">TÂCHES NON EXECUTEES
                                             </div>
                                             <div class="row no-gutters align-items-center">
-                                        
+
                                                 <div class="col-auto">
                                                     {{-- On affiche une seule décimale pour la lisibilité --}}
                                                     <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">
@@ -112,10 +112,10 @@
                                                 <div class="col">
                                                     <div class="progress progress-sm mr-2">
                                                         {{-- Utilisation de la variable brute pour la largeur CSS --}}
-                                                        <div class="progress-bar bg-info" 
+                                                        <div class="progress-bar bg-info"
                                                             role="progressbar"
-                                                            style="width: {{ $pourcentageNonExecutees }}%" 
-                                                            aria-valuenow="{{ $pourcentageNonExecutees }}" 
+                                                            style="width: {{ $pourcentageNonExecutees }}%"
+                                                            aria-valuenow="{{ $pourcentageNonExecutees }}"
                                                             aria-valuemin="0"
                                                             aria-valuemax="100">
                                                         </div>

@@ -143,32 +143,30 @@ class UserController extends Controller
             return redirect()->route('users.index')->with('success', 'Utilisateur supprimé avec succès !');
         }
 
-    public function resetPassword(Request $request)
-        {
-            // 1. Validation des données entrantes
-            $request->validate([
-                'token' => 'required',
-                'email' => 'required|email',
-                'password' => 'required|min:8|confirmed',
-            ]);
+    public function resetPassword(Request $request, $id)
+    {
+        // 1. Trouver l'utilisateur et charger sa relation agent
+        $user = User::with('agent')->findOrFail($id);
 
-            // 2. Tentative de réinitialisation via le "Password Broker" de Laravel
-            $status = Password::broker()->reset(
-                $request->only('email', 'password', 'password_confirmation', 'token'),
-                function ($user, $password) {
-                    // Cette fonction définit comment le mot de passe est mis à jour
-                    $user->forceFill([
-                        'password' => Hash::make($password),
-                        'remember_token' => Str::random(60),
-                    ])->save();
-                }
-            );
-
-            // 3. Retourner une réponse selon le succès ou l'échec
-            return $status === Password::PASSWORD_RESET
-                ? redirect()->route('login')->with('status', __($status))
-                : back()->withErrors(['email' => [__($status)]]);
+        // 2. Vérification de l'existence de l'agent et du matricule
+        if (!$user->agent || !$user->agent->matricule) {
+            return back()->with('error', "Échec : Cet utilisateur n'a pas de matricule associé.");
         }
+
+        // 3. Mise à jour manuelle (on ignore le système de token/broker)
+        $user->password = Hash::make($user->agent->matricule);
+
+        // On force l'utilisateur à changer ce mot de passe à sa prochaine connexion
+        $user->must_change_password = true;
+
+        $user->save();
+
+        // 4. Retour avec un message de succès
+        return back()->with('success', "Le mot de passe de {$user->name} a été réinitialisé. Nouveau MDP : {$user->agent->matricule}");
+    }
+
+
+
 
         public function updatePassword(Request $request)
     {
