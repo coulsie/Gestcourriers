@@ -29,7 +29,7 @@
                     <form action="{{ route('agents.update', $agent->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
-                        {-- Champ caché pour satisfaire la validation du matricule --}}
+                       
                             <input type="hidden" name="matricule" value="{{ $agent->matricule }}">
 
                         <div class="row g-4">

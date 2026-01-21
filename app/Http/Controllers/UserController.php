@@ -9,6 +9,9 @@ use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -133,10 +136,53 @@ class UserController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy($id)
-    {
-        $user = User::findOrFail($id);
-        $user->delete();
+        {
+            $user = User::findOrFail($id);
+            $user->delete();
 
-        return redirect()->route('users.index')->with('success', 'Utilisateur supprimé avec succès !');
+            return redirect()->route('users.index')->with('success', 'Utilisateur supprimé avec succès !');
+        }
+
+    public function resetPassword(Request $request)
+        {
+            // 1. Validation des données entrantes
+            $request->validate([
+                'token' => 'required',
+                'email' => 'required|email',
+                'password' => 'required|min:8|confirmed',
+            ]);
+
+            // 2. Tentative de réinitialisation via le "Password Broker" de Laravel
+            $status = Password::broker()->reset(
+                $request->only('email', 'password', 'password_confirmation', 'token'),
+                function ($user, $password) {
+                    // Cette fonction définit comment le mot de passe est mis à jour
+                    $user->forceFill([
+                        'password' => Hash::make($password),
+                        'remember_token' => Str::random(60),
+                    ])->save();
+                }
+            );
+
+            // 3. Retourner une réponse selon le succès ou l'échec
+            return $status === Password::PASSWORD_RESET
+                ? redirect()->route('login')->with('status', __($status))
+                : back()->withErrors(['email' => [__($status)]]);
+        }
+
+        public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        $user = auth::user();
+        $user->update([
+            'password' => Hash::make($request->password),
+            'must_change_password' => false, // On désactive le flag
+        ]);
+
+        return redirect()->route('home')->with('success', "Mot de passe mis à jour avec succès !");
     }
+
 }

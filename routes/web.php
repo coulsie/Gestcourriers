@@ -18,11 +18,20 @@ use App\Http\Controllers\Auth\PasswordSetupController;
 |--------------------------------------------------------------------------
 */
 
+
+
+
+
 Route::get('/', function () {
     return view('welcome-login');
 })->middleware('guest'); // Redirige vers home si déjà connecté
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+});
+
 Auth::routes();
+
 
 /*
 |--------------------------------------------------------------------------

@@ -20,6 +20,7 @@ use Spatie\Permission\Traits\HasRoles; // <--- Importation
 class User extends Authenticatable
 {
     use HasRoles;
+    use Notifiable;
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
