@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Service;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Support\Str; 
+use Illuminate\Support\Str;
 
 
 class Agent extends Model
@@ -121,4 +121,8 @@ class Agent extends Model
                 set: fn ($value) => mb_strtoupper($value, 'UTF-8'),
             );
         }
+
+
+
+
 }

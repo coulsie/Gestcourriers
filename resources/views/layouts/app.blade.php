@@ -191,6 +191,8 @@
 
                         <a class="collapse-item" href="{{ route('presences.index') }}">Enrégistrement Pointages</a>
                         <a class="collapse-item" href="{{ route('presences.monPointage') }}">Mon Pointage </a>
+                        <a class="collapse-item" href="{{ route('presences.listeFiltree') }}">Liste de présence </a>
+
                         <a class="collapse-item" href="{{ route('presences.validation-hebdo') }}">Validation hebdomadaire</a>
                         <a class="collapse-item" href="{{ route('rapports.presences.periodique') }}">Rapport Périodique</a>
                         <a class="collapse-item" href="{{ route('absences.index') }}">Congés et Permissions</a>

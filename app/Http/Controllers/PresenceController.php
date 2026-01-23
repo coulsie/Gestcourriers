@@ -515,4 +515,57 @@ public function monHistorique(Request $request)
     return view('presences.mon_historique', compact('mesPresences'));
 }
 
+
+
+public function listeFiltree(Request $request)
+{
+    // 1. Chargement des relations en cascade (Eager Loading)
+    // On s'assure de récupérer l'agent, son service et la direction rattachée au service
+    $query = Presence::with(['agent.service.direction']);
+
+    // 2. FILTRE : Période (Strictement pour l'année 2026)
+    if ($request->filled('date_debut') && $request->filled('date_fin')) {
+        $query->whereBetween('heure_arrivee', [
+            $request->date_debut . ' 00:00:00',
+            $request->date_fin . ' 23:59:59'
+        ]);
+    }
+
+    // 3. FILTRE : Statut (Présent, Absent, En Retard)
+    if ($request->filled('statut')) {
+        $query->where('statut', $request->statut);
+    }
+
+    // 4. FILTRE : Direction (Via la relation hiérarchique)
+    if ($request->filled('direction_id')) {
+        $query->whereHas('agent.service', function($q) use ($request) {
+            $q->where('direction_id', $request->direction_id);
+        });
+    }
+
+    // 5. FILTRE : Service
+    if ($request->filled('service_id')) {
+        $query->whereHas('agent', function($q) use ($request) {
+            $q->where('service_id', $request->service_id);
+        });
+    }
+
+    // 6. TRI ALPHABÉTIQUE ET SÉLECTION SÉCURISÉE
+    // On utilise join pour le tri, mais select('presences.*') pour que Laravel
+    // puisse reconstruire les relations sans conflit de colonnes 'id'
+    $directionTri = $request->get('sort_agent', 'asc');
+
+    $query->join('agents', 'presences.agent_id', '=', 'agents.id')
+          ->select('presences.*')
+          ->orderBy('agents.last_name', $directionTri);
+
+    // 7. Exécution de la pagination
+    $resultats = $query->paginate(25)->withQueryString();
+
+    // 8. Récupération des listes pour les menus déroulants des filtres
+    $directions = \App\Models\Direction::orderBy('name')->get();
+    $services = \App\Models\Service::orderBy('name')->get();
+
+    return view('presences.liste_filtree', compact('resultats', 'directions', 'services'));
+}
 }

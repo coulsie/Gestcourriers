@@ -68,7 +68,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/mon-pointage', [PresenceController::class, 'monPointage'])->name('presences.monPointage');
     Route::post('/mon-pointage/enregistrer', [PresenceController::class, 'enregistrerPointage'])->name('presences.enregistrerPointage');
     Route::get('/mon-historique', [PresenceController::class, 'monHistorique'])->name('presences.monHistorique');
-
+   // Route pour la vue liste_filtree.blade.php
+    Route::get('/presences/liste-filtree', [PresenceController::class, 'listeFiltree'])
+         ->name('presences.listeFiltree');
 
     /*
     |--------------------------------------------------------------------------
