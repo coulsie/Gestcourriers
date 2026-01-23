@@ -499,14 +499,18 @@ public function monHistorique(Request $request)
         $query->where('statut', $request->statut);
     }
 
-    // FILTRE : Par Date
-    if ($request->filled('date')) {
-        $query->whereDate('heure_arrivee', $request->date);
+    // FILTRE : Par Période (Date Début et Date Fin)
+    if ($request->filled('date_debut') && $request->filled('date_fin')) {
+        $query->whereBetween('heure_arrivee', [$request->date_debut . ' 00:00:00', $request->date_fin . ' 23:59:59']);
+    } elseif ($request->filled('date_debut')) {
+        $query->whereDate('heure_arrivee', '>=', $request->date_debut);
+    } elseif ($request->filled('date_fin')) {
+        $query->whereDate('heure_arrivee', '<=', $request->date_fin);
     }
 
     $mesPresences = $query->orderBy('heure_arrivee', 'desc')
                           ->paginate(15)
-                          ->withQueryString(); // Garde les filtres actifs lors du changement de page
+                          ->withQueryString();
 
     return view('presences.mon_historique', compact('mesPresences'));
 }
