@@ -179,12 +179,30 @@
                             </td>
 
                             <!-- Actions -->
-                            <td class="text-center">
-                                <div class="btn-group">
-                                    <a href="{{ route('imputations.show', $imputation->id) }}" class="btn btn-outline-secondary px-3 py-2"><i class="fas fa-eye fa-lg"></i></a>
-                                    <a href="{{ route('imputations.edit', $imputation->id) }}" class="btn btn-outline-primary px-3 py-2"><i class="fas fa-edit fa-lg"></i></a>
+                            
+                            <td class="text-center pe-4">
+                                <div class="btn-group shadow-sm">
+                                    <!-- Bouton Voir/Traiter -->
+                                    <a href="{{ route('imputations.show', $imputation->id) }}" class="btn btn-sm btn-info text-white" title="Voir les détails">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+
+                                    <!-- Bouton Modifier -->
+                                    <a href="{{ route('imputations.edit', $imputation->id) }}" class="btn btn-sm btn-warning text-white" title="Modifier l'imputation">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+
+                                    <!-- Bouton Supprimer avec Confirmation -->
+                                    <form action="{{ route('imputations.destroy', $imputation->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette imputation ? Cette action est irréversible.');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger" title="Supprimer l'imputation">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </form>
                                 </div>
                             </td>
+
                         </tr>
                         @empty
                         <tr>

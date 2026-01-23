@@ -15,26 +15,41 @@ class CourrierController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+ public function index(Request $request)
 {
     $query = Courrier::query();
 
-    // Filtre Référence
-    if ($request->filled('reference')) {
-        $query->where('reference', 'like', '%' . $request->reference . '%');
+    // 1. Recherche globale (Num Enreg, Référence, ou Nom Expéditeur)
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function($q) use ($search) {
+            $q->where('num_enregistrement', 'like', "%{$search}%")
+              ->orWhere('reference', 'like', "%{$search}%")
+              ->orWhere('expediteur_nom', 'like', "%{$search}%");
+        });
     }
 
-    // Filtre Type
+    // 2. Filtre par Type
     if ($request->filled('type')) {
         $query->where('type', $request->type);
     }
 
-    // Filtre Statut
+    // 3. Filtre par Statut
     if ($request->filled('statut')) {
         $query->where('statut', $request->statut);
     }
 
-    $courriers = $query->orderBy('id', 'desc')->paginate(15);
+    // 4. Filtre par Plage de Dates (Date de début et Date de fin)
+    if ($request->filled('date_debut')) {
+        $query->whereDate('date_courrier', '>=', $request->date_debut);
+    }
+
+    if ($request->filled('date_fin')) {
+        $query->whereDate('date_courrier', '<=', $request->date_fin);
+    }
+
+    // 5. Tri et Pagination (avec conservation des paramètres de recherche)
+    $courriers = $query->orderBy('id', 'desc')->paginate(15)->withQueryString();
 
     return view('courriers.index', compact('courriers'));
 }
@@ -56,45 +71,50 @@ class CourrierController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        // 1. Validation des données
-        $validatedData = $request->validate([
-            'reference'            => 'required|unique:courriers|max:255',
-            'type'                 => 'required',
-            'objet'                => 'required',
-            'description'          => 'nullable|string',
-            'date_courrier'        => 'nullable|date',
-            'expediteur_nom'       => 'required|string|max:255',
-            'expediteur_contact'   => 'nullable|string|max:255',
-            'destinataire_nom'     => 'required|string|max:255',
-            'destinataire_contact' => 'nullable|string|max:255',
-            'assigne_a'            => 'nullable|string|max:255',
-            'statut'               => 'required|string',
-            'affecter'             => 'required|boolean',
-            'chemin_fichier'       => 'nullable|file|mimes:pdf,jpg,png|max:10240',
-        ]);
-             $validatedData['statut'] = 'reçu';
-        // 2. Gestion du téléchargement du fichier (Nouveau Courrier)
-        if ($request->hasFile('chemin_fichier')) {
-            $file = $request->file('chemin_fichier');
+   public function store(Request $request)
+{
+    // 1. Validation des données
+    $validatedData = $request->validate([
+        'reference'            => 'required|unique:courriers|max:255',
+        'type'                 => 'required',
+        'objet'                => 'required',
+        'description'          => 'nullable|string',
+        'date_courrier'        => 'nullable|date',
+        'expediteur_nom'       => 'required|string|max:255',
+        'expediteur_contact'   => 'nullable|string|max:255',
+        'destinataire_nom'     => 'required|string|max:255',
+        'destinataire_contact' => 'nullable|string|max:255',
+        'assigne_a'            => 'nullable|string|max:255',
+        'statut'               => 'required|string',
+        'chemin_fichier'       => 'nullable|file|mimes:pdf,jpg,png|max:10240',
+    ]);
 
-            // Générer un nom unique
-            $fileName = time() . '_' . $file->getClientOriginalName();
+    // Préparation des données additionnelles
+    $validatedData['num_enregistrement'] = 'REG-' . date('Y') . '-' . strtoupper(uniqid());
+    $validatedData['statut'] = 'reçu';
+    $validatedData['affecter'] = 0;
+    $validatedData['assigne_a'] = $request->input('assigne_a', 'Non assigné');
 
-            // Déplacer vers public/Documents
-            $file->move(public_path('Documents'), $fileName);
+    // 2. Gestion du fichier : Enregistrement dans public/Documents/courriers
+    if ($request->hasFile('chemin_fichier')) {
+        $file = $request->file('chemin_fichier');
+        $fileName = time() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
 
-            // Enregistrer le nom du fichier dans le tableau des données
-            $validatedData['chemin_fichier'] = $fileName;
-        }
+        // MODIFICATION ICI : Ajout de /courriers au chemin
+        $destinationPath = public_path('Documents/courriers');
 
-        // 3. Création du courrier en base de données
-        Courrier::create($validatedData);
+        // Déplacement du fichier
+        $file->move($destinationPath, $fileName);
 
-        // 4. Redirection
-        return redirect()->route('courriers.index')->with('success', 'Courrier créé avec succès.');
+        $validatedData['chemin_fichier'] = $fileName;
     }
+
+    // 3. Sauvegarde en base de données (NE PAS OUBLIER CETTE LIGNE)
+    \App\Models\Courrier::create($validatedData);
+
+    return redirect()->route('courriers.index')->with('success', 'Courrier enregistré avec succès.');
+}
+
 
     /**
      * Afficher le courrier spécifié.
@@ -126,57 +146,60 @@ class CourrierController extends Controller
      * @param  \App\Models\Courrier  $courrier
      * @return \Illuminate\Http\Response
      */
-        public function update(Request $request, Courrier $courrier)
-    {
-        // 1. Validation des données (on exclut la référence actuelle de la règle unique)
-        $validatedData = $request->validate([
-            'reference'            => 'required|max:255|unique:courriers,reference,' . $courrier->id,
-            'type'                 => 'required',
-            'objet'                => 'required',
-            'description'          => 'nullable|string',
-            'date_courrier'        => 'nullable|date',
-            'expediteur_nom'       => 'required|string|max:255',
-            'expediteur_contact'   => 'nullable|string|max:255',
-            'destinataire_nom'     => 'required|string|max:255',
-            'destinataire_contact' => 'nullable|string|max:255',
-            'assigne_a'            => 'nullable|string|max:255',
-            'statut'               => 'required|string',
-            'affecter'             => 'required|boolean',
-            'chemin_fichier'       => 'nullable|file|mimes:pdf,jpg,png|max:10240',
-        ]);
+public function update(Request $request, Courrier $courrier)
+{
+    // 1. Validation des données
+    $validatedData = $request->validate([
+        'reference'            => 'required|max:255|unique:courriers,reference,' . $courrier->id,
+        'type'                 => 'required',
+        'objet'                => 'required',
+        'description'          => 'nullable|string',
+        'date_courrier'        => 'nullable|date',
+        'expediteur_nom'       => 'required|string|max:255',
+        'expediteur_contact'   => 'nullable|string|max:255',
+        'destinataire_nom'     => 'required|string|max:255',
+        'destinataire_contact' => 'nullable|string|max:255',
+        'assigne_a'            => 'nullable|string|max:255',
+        'statut'               => 'required|string',
+        'affecter'             => 'nullable',
+        'chemin_fichier'       => 'nullable|file|mimes:pdf,jpg,png|max:10240',
+    ]);
 
-        // 2. Gestion du fichier (Mise à jour)
-        if ($request->hasFile('chemin_fichier')) {
+    // Force la valeur binaire pour affecter
+    $validatedData['affecter'] = $request->has('affecter') ? 1 : 0;
 
-            // --- ÉTAPE A : Supprimer l'ancien fichier du dossier public/Documents s'il existe ---
-            if ($courrier->chemin_fichier) {
-                $ancienPath = public_path('Documents/' . $courrier->chemin_fichier);
-                if (file_exists($ancienPath)) {
-                    unlink($ancienPath);
-                }
+    // 2. Gestion du fichier (Mise à jour)
+    if ($request->hasFile('chemin_fichier')) {
+
+        // --- CORRECTION DU CHEMIN : Ajout de /courriers ---
+        $destinationPath = public_path('Documents/courriers');
+
+        // Supprimer l'ancien fichier s'il existe
+        if ($courrier->chemin_fichier) {
+            $ancienPath = $destinationPath . '/' . $courrier->chemin_fichier;
+            if (file_exists($ancienPath)) {
+                unlink($ancienPath);
             }
-
-            // --- ÉTAPE B : Stocker le nouveau fichier ---
-            $file = $request->file('chemin_fichier');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('Documents'), $fileName);
-
-            // --- ÉTAPE C : Mettre à jour le nom dans le tableau de validation ---
-            $validatedData['chemin_fichier'] = $fileName;
-
-        } else {
-            // Si aucun nouveau fichier n'est envoyé, on garde l'ancien nom de fichier
-            // (On retire 'chemin_fichier' de la validation pour ne pas écraser par NULL)
-            unset($validatedData['chemin_fichier']);
         }
 
-        // 3. Mise à jour de la base de données
-        $courrier->update($validatedData);
+        $file = $request->file('chemin_fichier');
+        // Nettoyage du nom de fichier (remplacement des espaces)
+        $fileName = time() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
 
-        // 4. Redirection
-        return redirect()->route('courriers.index')
-                        ->with('success', 'Courrier mis à jour avec succès.');
+        // Déplacement dans le bon dossier
+        $file->move($destinationPath, $fileName);
+
+        // Mise à jour du nom dans le tableau pour la base de données
+        $validatedData['chemin_fichier'] = $fileName;
     }
+
+    // 3. Mise à jour de la base de données
+    $courrier->update($validatedData);
+
+    return redirect()->route('courriers.index')
+                    ->with('success', 'Courrier et document mis à jour avec succès.');
+}
+
     /**
      * Supprimer le courrier spécifié de la base de données.
      *
@@ -224,7 +247,7 @@ class CourrierController extends Controller
 
         // Récupérer les courriers avec pagination optionnelle (ici on prend 10 par page)
         $courriers = $query->orderBy('date_courrier', 'desc')->paginate(15);
-       
+
 
         // Passer les résultats et les anciennes valeurs de recherche à la vue
         return view('courriers.RechercheAffichage', [

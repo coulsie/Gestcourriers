@@ -20,7 +20,7 @@
                 <div class="card-body bg-white border-bottom shadow-sm py-3">
                     <form action="{{ route('courriers.index') }}" method="GET" class="row g-2 align-items-end">
                         <div class="col-md-2">
-                            <label class="small fw-bold text-muted text-uppercase">Référence / Nom</label>
+                            <label class="small fw-bold text-muted text-uppercase">N° Enreg / Réf / Nom</label>
                             <input type="text" name="search" class="form-control form-control-sm border-primary" placeholder="Rechercher..." value="{{ request('search') }}">
                         </div>
                         <div class="col-md-2">
@@ -29,6 +29,7 @@
                                 <option value="">Tous les types</option>
                                 <option value="Incoming" {{ request('type') == 'Incoming' ? 'selected' : '' }}>📩 Entrant</option>
                                 <option value="Outgoing" {{ request('type') == 'Outgoing' ? 'selected' : '' }}>📤 Sortant</option>
+                                <option value="Information" {{ request('type') == 'Information' ? 'selected' : '' }}>ℹ️ Information</option>
                             </select>
                         </div>
                         <div class="col-md-2">
@@ -40,7 +41,6 @@
                                 @endforeach
                             </select>
                         </div>
-                        {{-- FILTRE PAR DATE --}}
                         <div class="col-md-2">
                             <label class="small fw-bold text-muted text-uppercase">Du (Date)</label>
                             <input type="date" name="date_debut" class="form-control form-control-sm border-primary" value="{{ request('date_debut') }}">
@@ -66,10 +66,12 @@
                             <thead class="bg-dark text-white shadow-sm" style="background-color: #1e293b !important;">
                                 <tr class="text-uppercase small fw-black">
                                     <th class="ps-3 py-3">ID</th>
+                                    <th>N° Enreg.</th> <!-- Nouvelle Colonne -->
                                     <th>Référence</th>
                                     <th>Type</th>
                                     <th>Expéditeur</th>
                                     <th>Objet du Courrier</th>
+                                    <th>Document</th>
                                     <th>Destinataire</th>
                                     <th>Statut</th>
                                     <th>Date</th>
@@ -81,7 +83,10 @@
                                 @forelse ($courriers as $courrier)
                                 <tr class="border-bottom">
                                     <td class="ps-3 text-muted fw-bold small">#{{ $courrier->id }}</td>
-                                    <td style="min-width: 140px;">
+                                    <td class="fw-bold text-primary small">
+                                        {{ $courrier->num_enregistrement ?? '---' }}
+                                    </td>
+                                    <td style="min-width: 120px;">
                                         <span class="badge w-100 py-2 shadow-sm border border-2 border-success text-success bg-white fw-black">
                                             {{ $courrier->reference }}
                                         </span>
@@ -89,12 +94,26 @@
                                     <td>
                                         @if($courrier->type == 'Incoming')
                                             <span class="badge w-100 py-2 text-white bg-primary border-primary small">ENTRANT</span>
-                                        @else
+                                        @elseif($courrier->type == 'Outgoing')
                                             <span class="badge w-100 py-2 text-white bg-warning border-warning small">SORTANT</span>
+                                        @else
+                                            <span class="badge w-100 py-2 text-white bg-info border-info small">INFO</span>
                                         @endif
                                     </td>
                                     <td class="fw-bold text-indigo small">{{ Str::limit($courrier->expediteur_nom, 20) }}</td>
                                     <td class="text-dark fw-bold small" style="max-width: 200px;">{{ Str::limit($courrier->objet, 45) }}</td>
+                                    <td>
+                                        @if($courrier->chemin_fichier)
+                                            <a href="{{ asset('Documents/courriers/' . $courrier->chemin_fichier) }}"
+                                            target="_blank"
+                                            class="btn btn-sm btn-outline-danger shadow-sm fw-bold"
+                                            title="Voir le document PDF">
+                                                <i class="fas fa-file-pdf me-1"></i> PDF
+                                            </a>
+                                        @else
+                                            <span class="badge bg-light text-muted border">Aucun fichier</span>
+                                        @endif
+                                    </td>
                                     <td class="fw-bold text-dark small">{{ Str::limit($courrier->destinataire_nom, 20) }}</td>
                                     <td>
                                         @php
@@ -109,23 +128,21 @@
                                             {{ $courrier->statut }}
                                         </span>
                                     </td>
-                                    <td class="text-nowrap fw-bold text-secondary small">{{ $courrier->date_courrier->format('d/m/Y') }}</td>
+                                    <td class="text-nowrap fw-bold text-secondary small">
+                                        {{ $courrier->date_courrier ? $courrier->date_courrier->format('d/m/Y') : '---' }}
+                                    </td>
                                     <td class="text-center py-3">
                                         <div class="btn-group shadow-sm">
                                             <a href="{{ route('courriers.show', $courrier->id) }}" class="btn btn-sm btn-info text-white"><i class="fas fa-eye"></i></a>
-                                            <a href="{{ route('imputations.create', ['courrier_id' => $courrier->id]) }}" class="btn btn-sm btn-primary text-white"><i class="fas fa-file-signature"></i></a>
                                             <a href="{{ route('courriers.edit', $courrier->id) }}" class="btn btn-sm btn-warning text-white"><i class="fas fa-edit"></i></a>
-                                            <form action="{{ route('courriers.destroy', $courrier->id) }}" method="POST" class="d-inline">
-                                                @csrf @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger text-white" onclick="return confirm('Supprimer ?')"><i class="fas fa-trash-alt"></i></button>
-                                            </form>
                                         </div>
                                     </td>
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="9" class="text-center py-5 bg-light fw-bold text-muted">
-                                        <i class="fas fa-search me-2"></i> Aucun courrier ne correspond à vos critères.
+                                    <td colspan="10" class="text-center py-5 text-muted">
+                                        <i class="fas fa-folder-open fa-3x mb-3 opacity-25"></i><br>
+                                        {{ __('Aucun courrier trouvé pour cette recherche.') }}
                                     </td>
                                 </tr>
                                 @endforelse
@@ -133,15 +150,9 @@
                         </table>
                     </div>
                 </div>
+                <!-- Pagination ici si nécessaire -->
             </div>
         </div>
     </div>
 </div>
-
-<style>
-    .fw-black { font-weight: 900 !important; }
-    .text-indigo { color: #4e73df; }
-    .form-control-sm, .form-select-sm { border-width: 2px; }
-    .form-control-sm:focus { box-shadow: none; border-color: #f59e0b; }
-</style>
 @endsection

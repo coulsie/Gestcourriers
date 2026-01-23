@@ -57,7 +57,7 @@ public function index(Request $request)
 
     // 5. Pagination avec conservation des filtres (withQueryString)
     // C'est ici que l'erreur est corrigée en utilisant paginate() au lieu de get()
-    $agents = $query->orderBy('last_name', 'asc')->paginate(15)->withQueryString();
+    $agents = $query->orderBy('last_name', 'asc')->paginate(25)->withQueryString();
 
     // 6. Récupérer les services pour le menu déroulant du filtre
     $services = \App\Models\Service::orderBy('name')->get();

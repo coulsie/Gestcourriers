@@ -38,6 +38,7 @@ class Courrier extends Model
         'assigne_a',
         'chemin_fichier',
         'affecter',
+        'num_enregistrement', // Ajoutez cette ligne
     ];
 
     /**
@@ -83,7 +84,7 @@ class Courrier extends Model
     {
         return $this->hasOne(Affectation::class)->latestOfMany();
     }
-    
+
 
     protected function type(): Attribute
     {

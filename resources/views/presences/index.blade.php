@@ -72,8 +72,23 @@
             <thead class="bg-dark text-white">
                 <tr>
                     <th class="py-3 px-3">ID</th>
-                    <th>Nom & Prénoms</th>
-                    <th>Arrivée</th>
+
+                    <!-- Tri sur le Nom -->
+                    <th>
+                        <a href="{{ request()->fullUrlWithQuery(['sort' => 'nom', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}" class="text-white text-decoration-none">
+                            Nom & Prénoms
+                            <i class="fas fa-sort{{ request('sort') === 'nom' ? (request('direction') === 'asc' ? '-up' : '-down') : '' }} ms-1"></i>
+                        </a>
+                    </th>
+
+                    <!-- Tri sur l'Arrivée -->
+                    <th>
+                        <a href="{{ request()->fullUrlWithQuery(['sort' => 'heure_arrivee', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}" class="text-white text-decoration-none">
+                            Arrivée
+                            <i class="fas fa-sort{{ request('sort') === 'heure_arrivee' ? (request('direction') === 'asc' ? '-up' : '-down') : '' }} ms-1"></i>
+                        </a>
+                    </th>
+
                     <th>Départ</th>
                     <th>Statut</th>
                     <th class="text-center">Actions</th>

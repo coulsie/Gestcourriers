@@ -60,16 +60,23 @@
                                             </div>
                                         </td>
                                         <td>
+                                            <!-- Type d'absence avec fallback sécurisé -->
                                             <span class="badge bg-info-subtle text-info border border-info-subtle px-2 py-1 mb-1">
-                                                {{ $absence->typeAbsence->nom ?? $absence->typeAbsence->nom_type }}
+                                                {{ $absence->typeAbsence->nom ?? ($absence->typeAbsence->nom_type ?? 'Non défini') }}
                                             </span>
                                             <br>
+
                                             @if($absence->document_justificatif)
-                                                <a href="{{ asset('storage/' . $absence->document_justificatif) }}" target="_blank" class="text-success small text-decoration-none">
-                                                    <i class="fas fa-paperclip me-1"></i>Voir le scan
+                                                {{-- Lien mis à jour pour pointer vers public/JustificatifAbsences --}}
+                                                <a href="{{ asset('JustificatifAbsences/' . $absence->document_justificatif) }}"
+                                                target="_blank"
+                                                class="text-success small text-decoration-none fw-bold">
+                                                    <i class="fas fa-file-pdf me-1"></i>Voir le scan
                                                 </a>
                                             @else
-                                                <small class="text-danger small italic"><i class="fas fa-times-circle me-1"></i>Sans document</small>
+                                                <small class="text-muted small italic">
+                                                    <i class="fas fa-times-circle me-1 text-danger"></i>Sans justificatif
+                                                </small>
                                             @endif
                                         </td>
                                         <td class="text-center">

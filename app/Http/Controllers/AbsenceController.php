@@ -23,7 +23,7 @@ class AbsenceController extends Controller
         // Renvoie les données à une vue Blade (par ex. resources/views/absences/index.blade.php)
         return view('Absences.index', compact('absences'));
     }
-  
+
 
     public function create()
     {
@@ -34,7 +34,7 @@ class AbsenceController extends Controller
         $typeAbsences = TypeAbsence::all();
 
         // 3. Envoyer les deux variables à la vue
-        return view('absences.create', compact('agents', 'typeAbsences'));
+        return view('Absences.create', compact('agents', 'typeAbsences'));
     }
 
     /**
@@ -49,7 +49,7 @@ class AbsenceController extends Controller
         'date_fin' => 'required|date|after_or_equal:date_debut',
         'document_justificatif' => 'nullable|file|mimes:pdf,jpg,png|max:2048',
         // On retire 'approuvee' de la validation stricte ou on utilise 'boolean'
-        'approuvee' => 'nullable', 
+        'approuvee' => 'nullable',
     ]);
 
     // FORCE LA VALEUR : Si la case n'est pas cochée, on met 0
@@ -57,8 +57,16 @@ class AbsenceController extends Controller
 
     // Gestion du fichier (comme vu précédemment)
     if ($request->hasFile('document_justificatif')) {
-        $path = $request->file('document_justificatif')->store('justifications', 'public');
-        $validatedData['document_justificatif'] = $path;
+        $file = $request->file('document_justificatif');
+
+        // Générer un nom unique
+        $fileName = time() . '_' . $file->getClientOriginalName();
+
+        // Déplacer le fichier dans public/JustificatifAbsences
+        $file->move(public_path('JustificatifAbsences'), $fileName);
+
+        // Enregistrer seulement le nom du fichier en base de données
+        $validatedData['document_justificatif'] = $fileName;
     }
 
     Absence::create($validatedData);
@@ -69,7 +77,7 @@ class AbsenceController extends Controller
     /**
      * Met à jour la ressource spécifiée dans la base de données.
      */
-    
+
 
 public function update(Request $request, Absence $absence): RedirectResponse
 {
@@ -79,36 +87,43 @@ public function update(Request $request, Absence $absence): RedirectResponse
         'type_absence_id' => 'required|exists:type_absences,id',
         'date_debut' => 'required|date',
         'date_fin' => 'required|date|after_or_equal:date_debut',
-        'approuvee' => 'boolean',
-        'document_justificatif' => 'nullable|file|mimes:pdf,jpg,png|max:2048', // Règle pour le scan
+        'approuvee' => 'nullable', // Changé en nullable pour gérer la checkbox manuellement
+        'document_justificatif' => 'nullable|file|mimes:pdf,jpg,png|max:2048',
         'notes' => 'nullable|string',
     ]);
 
-    // 2. Gestion du document scanné
+    // Force la valeur booléenne pour la checkbox
+    $validatedData['approuvee'] = $request->has('approuvee') ? 1 : 0;
+
+    // 2. Gestion du document scanné (Logique identique au Store)
     if ($request->hasFile('document_justificatif')) {
-        
-        // Supprimer l'ancien fichier du disque s'il existe
-        if ($absence->document_justificatif) {
-            Storage::disk('public')->delete($absence->document_justificatif);
+
+        // --- ÉTAPE A : Supprimer l'ancien fichier s'il existe ---
+        if ($absence->document_justificatif && file_exists(public_path('JustificatifAbsences/' . $absence->document_justificatif))) {
+            unlink(public_path('JustificatifAbsences/' . $absence->document_justificatif));
         }
 
-        // Stocker le nouveau fichier
-        $path = $request->file('document_justificatif')->store('justifications', 'public');
-        
-        // Ajouter le nouveau chemin aux données à mettre à jour
-        $validatedData['document_justificatif'] = $path;
-        
-        // Mise à jour automatique du statut si un document est fourni
+        // --- ÉTAPE B : Stocker le nouveau fichier ---
+        $file = $request->file('document_justificatif');
+        $fileName = time() . '_' . $file->getClientOriginalName();
+
+        // Déplacement physique dans public/JustificatifAbsences
+        $file->move(public_path('JustificatifAbsences'), $fileName);
+
+        // Enregistrer le nom du fichier pour la base de données
+        $validatedData['document_justificatif'] = $fileName;
+
+        // Mise à jour automatique du statut
         $validatedData['statut'] = 'Justifiée';
     }
 
-    // 3. Mise à jour de l'instance du modèle avec les données validées
+    // 3. Mise à jour de l'instance
     $absence->update($validatedData);
 
     // 4. Redirection
-    return redirect()->route('absences.index')->with('success', 'Absence et justificatif mis à jour avec succès.');
+    return redirect()->route('absences.index')
+        ->with('success', 'L\'absence de l\'agent a été mise à jour avec succès.');
 }
-
     /**
      * Supprime la ressource spécifiée de la base de données.
      */

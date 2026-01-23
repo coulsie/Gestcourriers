@@ -65,6 +65,10 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('services', ServiceController::class);
     Route::get('/directions/{direction}/services', [DirectionController::class, 'getServices'])->name('directions.services');
 
+    Route::get('/mon-pointage', [PresenceController::class, 'monPointage'])->name('presences.monPointage');
+    Route::post('/mon-pointage/enregistrer', [PresenceController::class, 'enregistrerPointage'])->name('presences.enregistrerPointage');
+    Route::get('/mon-historique', [PresenceController::class, 'monHistorique'])->name('presences.monHistorique');
+
 
     /*
     |--------------------------------------------------------------------------
@@ -127,6 +131,12 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/stats', [PresenceController::class, 'stats'])->name('etatperiodique');
         });
         Route::get('/rapports/presences/periodique', [PresenceController::class, 'rapport'])->name('rapports.presences.periodique');
+
+        // Les routes pour l'interface Agent
+
+
+
+
 
         Route::resource('presences', PresenceController::class);
         Route::resource('absences', AbsenceController::class);

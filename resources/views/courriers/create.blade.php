@@ -97,15 +97,21 @@
                                         <i class="fas fa-file-import me-2 text-secondary"></i>{{ __('Documents & Pièces Jointes') }}
                                     </h6>
 
-                                    {{-- Champ de fichier centré avec largeur max --}}
+                                    {{-- Changement du name pour correspondre au contrôleur : chemin_fichier --}}
                                     <div class="w-100 mb-2" style="max-width: 450px;">
-                                        <input type="file" name="pj" class="form-control form-control-sm border-2 @error('pj') is-invalid @enderror"
-                                               style="border-color: #6c757d !important; background-color: #f8f9fa;">
+                                        <input type="file" name="chemin_fichier"
+                                            class="form-control form-control-sm border-2 @error('chemin_fichier') is-invalid @enderror"
+                                            style="border-color: #6c757d !important; background-color: #f8f9fa;">
+
+                                        {{-- Affichage de l'erreur si le fichier est invalide --}}
+                                        @error('chemin_fichier')
+                                            <div class="invalid-feedback fw-bold">{{ $message }}</div>
+                                        @enderror
                                     </div>
 
                                     <p class="text-muted mb-0" style="font-size: 0.75rem;">
                                         <i class="fas fa-shield-alt me-1 text-primary"></i>
-                                        Formats autorisés : <strong>PDF, JPG, PNG</strong> (Max 5Mo)
+                                        Formats autorisés : <strong>PDF, JPG, PNG</strong> (Max 10Mo)
                                     </p>
                                 </div>
                             </div>

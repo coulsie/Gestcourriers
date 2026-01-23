@@ -10,9 +10,9 @@
                     <div>
                         <h6 class="text-uppercase mb-1" style="letter-spacing: 1px; color: #ffc107;">Période de contrôle</h6>
                         <h4 class="mb-0">
-                            Semaine du 
-                            <span class="text-info">{{ \Carbon\Carbon::now()->subWeek()->startOfWeek()->locale('fr')->translatedFormat('d F') }}</span> 
-                            au 
+                            Semaine du
+                            <span class="text-info">{{ \Carbon\Carbon::now()->subWeek()->startOfWeek()->locale('fr')->translatedFormat('d F') }}</span>
+                            au
                             <span class="text-info">{{ \Carbon\Carbon::now()->subWeek()->endOfWeek()->subDays(2)->locale('fr')->translatedFormat('d F Y') }}</span>
                         </h4>
                     </div>
@@ -29,7 +29,7 @@
             <h5 class="mb-0"><i class="fas fa-calendar-exclamation me-2"></i>Absences journalières détectées</h5>
             <span class="badge bg-dark px-3 py-2">Traitement Hebdomadaire</span>
         </div>
-        
+
         <div class="card-body p-0">
             <form action="{{ route('presences.valider-hebdo') }}" method="POST">
                 @csrf
@@ -54,8 +54,8 @@
                                 <tr class="{{ $abs['est_justifie'] ? 'table-success-subtle' : '' }}">
                                     <td class="ps-4">
                                         <div class="form-check">
-                                            <input type="checkbox" name="absences[{{ $index }}][selected]" value="1" 
-                                                {{ $abs['est_justifie'] ? '' : 'checked' }} 
+                                            <input type="checkbox" name="absences[{{ $index }}][selected]" value="1"
+                                                {{ $abs['est_justifie'] ? '' : 'checked' }}
                                                 class="form-check-input abs-checkbox shadow-sm">
                                         </div>
                                         <input type="hidden" name="absences[{{ $index }}][agent_id]" value="{{ $abs['agent_id'] }}">
@@ -117,12 +117,12 @@
                             <div>
                                 <h6 class="fw-bold mb-1">Confirmation requise</h6>
                                 <p class="small mb-0 text-muted">
-                                    L'enregistrement sera daté du <strong>{{ \Carbon\Carbon::now()->locale('fr')->translatedFormat('l d F Y') }}</strong> pour les manques de la semaine passée.
+                                    L'enregistrement sera daté du <strong>{{ \Carbon\Carbon::now()->locale('fr')->translatedFormat('l d F Y') }}</strong> pour les abences de la semaine passée.
                                 </p>
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row g-3">
                         <div class="col-md-4">
                             <a href="{{ route('presences.index') }}" class="btn btn-outline-secondary w-100 py-2 fw-bold">
@@ -147,9 +147,43 @@
     .table-hover tbody tr:hover { background-color: #f8f9fa; }
 </style>
 
+@push('scripts')
 <script>
-    document.getElementById('selectAll').addEventListener('click', function() {
-        document.querySelectorAll('.abs-checkbox').forEach(cb => cb.checked = this.checked);
-    });
+document.addEventListener('DOMContentLoaded', function () {
+    const selectAll = document.getElementById('selectAll');
+    const form = document.querySelector('form[action*="valider-hebdo"]');
+
+    // 1. Gestion combinée du bouton "Tout sélectionner"
+    if (selectAll) {
+        selectAll.addEventListener('click', function() {
+            // Sélectionne toutes les cases à cocher des agents
+            const checkboxes = document.querySelectorAll('.abs-checkbox');
+            checkboxes.forEach(cb => {
+                cb.checked = this.checked;
+            });
+        });
+    }
+
+    // 2. Validation avant l'envoi du formulaire
+    if (form) {
+        form.addEventListener('submit', function (e) {
+            // On compte combien de cases sont cochées au moment du clic sur Valider
+            const checkedCount = document.querySelectorAll('.abs-checkbox:checked').length;
+
+            if (checkedCount === 0) {
+                e.preventDefault(); // Bloque l'envoi vers le contrôleur
+                alert('Attention : Veuillez cocher au moins une case pour enregistrer les absences.');
+            } else {
+                // Optionnel : Feedback visuel sur le bouton pour confirmer l'action
+                const submitBtn = this.querySelector('button[type="submit"]');
+                if (submitBtn) {
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Enregistrement en cours...';
+                    submitBtn.disabled = true;
+                }
+            }
+        });
+    }
+});
 </script>
+@endpush
 @endsection

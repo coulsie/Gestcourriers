@@ -98,104 +98,91 @@ class ImputationController extends Controller
     /**
      * Enregistre l'imputation dans la base de données.
      */
+public function store(Request $request)
+{
+    $request->validate([
+        'agent_ids' => 'required|array',
+        'instructions' => 'required|string',
+        'annexes.*' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:10240',
+        'echeancier' => 'nullable|date',
+        'observations' => 'nullable|string',
+        'statut' => 'required|string',
+        'courrier_id' => 'required|exists:courriers,id',
+        'date_imputation' => 'required|date',
+        'user_id' => 'required|exists:users,id',
+    ]);
 
-        public function store(Request $request)
-    {
-        $request->validate([
-            'agent_ids' => 'required|array',
-                'instructions' => 'required|string',
-                'annexes.*' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:10240',
-                'echeancier' => 'nullable|date',
-                'observations' => 'nullable|string',
-                'statut' => 'required|string',
-                'courrier_id' => 'required|exists:courriers,id',
-                'date_imputation' => 'required|date',
-                'niveau' => 'required|string',
-                'documents_annexes' => 'nullable',
-                'user_id' => 'required|exists:users,id',
-        ]);
+    try {
+        $user = auth::user();
 
-        try {
-            $user = auth::user();
+        // 1. RÉCUPÉRATION DU COURRIER ET DE SON CHEMIN_FICHIER
+        $courrier = \App\Models\Courrier::findOrFail($request->courrier_id);
+        $cheminFichierOriginal = $courrier->chemin_fichier;
 
-            // Détermination du niveau hiérarchique
-            $roleRaw = ($user->role instanceof \UnitEnum) ? $user->role->value : $user->role;
-            $roleValue = strtolower((string)$roleRaw);
-            $niveau = match($roleValue) {
-                'directeur'       => 'primaire',
-                'sous_directeur'  => 'secondaire',
-                'chef_de_service' => 'tertiaire',
-                default           => 'tertiaire',
-            };
+        // 2. DÉTERMINATION DU NIVEAU HIÉRARCHIQUE (LOGIQUE MISE À JOUR)
+        $agentStatus = $user->agent ? $user->agent->status : null;
+        $roleName = method_exists($user, 'getRoleNames') ? $user->getRoleNames()->first() : $user->role;
 
-            // 1. GESTION DES FICHIERS (Stockage direct dans public/documents)
-            $filePaths = [];
-            if ($request->hasFile('annexes')) {
-                foreach ($request->file('annexes') as $file) {
-                    // Génération d'un nom unique avec timestamp
-                    $fileName = time() . '_' . $file->getClientOriginalName();
+        // On nettoie la chaîne (minuscules, retrait des accents et espaces inutiles)
+        $valeurReference = mb_strtolower((string)($agentStatus ?? $roleName), 'UTF-8');
 
-                    // Déplacement physique vers public/documents/imputations/annexes
-                    $file->move(public_path('documents/imputations/annexes'), $fileName);
+        $niveau = match(true) {
+            // NIVEAU PRIMAIRE : Directeur (uniquement)
+            // On vérifie que 'directeur' est présent mais que 'sous' ne l'est pas
+            str_contains($valeurReference, 'directeur') && !str_contains($valeurReference, 'sous') => 'primaire',
 
-                    // On ajoute le nom du fichier au tableau
-                    $filePaths[] = $fileName;
-                }
+            // NIVEAU SECONDAIRE : Sous-directeur, Conseiller Technique, Conseiller Spécial
+            str_contains($valeurReference, 'sous-directeur') ||
+            str_contains($valeurReference, 'sous_directeur') ||
+            str_contains($valeurReference, 'conseiller') => 'secondaire',
+
+            // NIVEAU TERTIAIRE : Chef de service
+            str_contains($valeurReference, 'chef') => 'tertiaire',
+
+            // PAR DÉFAUT
+            default => 'tertiaire',
+        };
+
+        // 3. GESTION DES PIÈCES JOINTES
+        $filePaths = [];
+        if ($request->hasFile('annexes')) {
+            foreach ($request->file('annexes') as $file) {
+                $fileName = time() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
+                $file->move(public_path('documents/imputations/annexes'), $fileName);
+                $filePaths[] = $fileName;
             }
-
-            // 2. INSERTION DE L'IMPUTATION
-            $imputation = new \App\Models\Imputation();
-            $imputation->courrier_id = $request->courrier_id;
-            $imputation->user_id = $user->id;
-            $imputation->niveau = $niveau;
-            $imputation->instructions = $request->instructions;
-            $imputation->observations = $request->observations;
-            // Enregistrement des noms de fichiers sous format JSON
-            $imputation->documents_annexes = json_encode($filePaths);
-            $imputation->date_imputation = now()->format('Y-m-d');
-            $imputation->echeancier = $request->echeancier;
-            $imputation->statut = 'en_attente';
-
-            if ($imputation->save()) {
-                // Liaison des agents (Table pivot)
-                $imputation->agents()->sync($request->agent_ids);
-
-                // 3. MISE À JOUR DU STATUT DU COURRIER PARENT
-                $courrier = \App\Models\Courrier::find($request->courrier_id);
-                if ($courrier) {
-                    $courrier->update(['statut' => 'Affecté']);
-                }
-
-                return redirect()->route('imputations.index')->with('success', 'Imputation enregistrée et courrier marqué comme Affecté !');
-            } else {
-                dd("L'enregistrement a échoué. Vérifiez vos logs.");
-            }
-
-        } catch (\Exception $e) {
-            // Affiche l'erreur précise en cas de problème
-            dd("ERREUR DETECTEE : " . $e->getMessage());
         }
+
+        // 4. CRÉATION DE L'IMPUTATION
+        $imputation = new \App\Models\Imputation();
+        $imputation->courrier_id = $request->courrier_id;
+        $imputation->user_id = $user->id;
+        $imputation->niveau = $niveau;
+        $imputation->instructions = $request->instructions;
+        $imputation->observations = $request->observations;
+        $imputation->documents_annexes = json_encode($filePaths);
+        $imputation->chemin_fichier = $cheminFichierOriginal;
+        $imputation->date_imputation = $request->date_imputation;
+        $imputation->echeancier = $request->echeancier;
+        $imputation->statut = 'en_attente';
+
+        if ($imputation->save()) {
+            $imputation->agents()->sync($request->agent_ids);
+
+            // 5. MISE À JOUR DU STATUT DU COURRIER
+            $courrier->update([
+                'statut' => 'Affecté',
+                'affecter' => 1
+            ]);
+
+            return redirect()->route('imputations.index')
+                ->with('success', "Imputation (Niveau : " . ucfirst($niveau) . ") enregistrée avec succès !");
+        }
+
+    } catch (\Exception $e) {
+        return back()->withInput()->with('error', "Erreur : " . $e->getMessage());
     }
-
-
-
-        public function mesImputations()
-        {
-            $user = auth::user();
-            $agent = $user->agent;
-
-            if (!$agent) {
-                return back()->with('error', "Aucun profil agent associé.");
-            }
-
-            // Charger les relations pour éviter les erreurs N+1
-            $imputations = $agent->imputations()
-                ->with(['courrier', 'auteur', 'agents.service'])
-                ->latest()
-                ->paginate(10);
-
-            return view('Imputations.mes_imputations', compact('imputations'));
-        }
+}
 
 
 
@@ -307,16 +294,43 @@ public function destroy(Imputation $imputation)
     }
 }
 
+public function mesImputations()
+{
+    $user = auth::user();
 
-
-
-
-
-
-
-
-
+    // 1. Sécurité : Vérifier si l'utilisateur est connecté
+    if (!$user) {
+        return redirect()->route('login');
     }
+
+    // 2. Récupérer l'ID de l'agent de manière sécurisée (évite l'erreur "Undefined method id")
+    $agentId = $user->agent->id ?? null;
+
+    // 3. Construction de la requête
+    $imputations = \App\Models\Imputation::with(['courrier', 'auteur', 'agents'])
+        ->where(function($query) use ($agentId, $user) {
+            // Cas A : L'agent de l'utilisateur est dans la table pivot (destinataire)
+            if ($agentId) {
+                $query->whereHas('agents', function($q) use ($agentId) {
+                    $q->where('agents.id', $agentId);
+                });
+            }
+
+            // Cas B : L'utilisateur est l'auteur de l'imputation (expéditeur)
+            $query->orWhere('user_id', $user->id);
+        })
+        ->latest() // Équivalent à orderBy('created_at', 'desc')
+        ->paginate(15);
+
+    return view('Imputations.mes_imputations', compact('imputations'));
+}
+
+
+
+}
+
+
+
 
 
 

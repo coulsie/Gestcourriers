@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Horaire; // <--- AJOUTER CET IMPORT
 use Carbon\Carbon;      // <--- AJOUTER CET IMPORT
 use App\Models\Absence;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 
 class PresenceController extends Controller
@@ -22,31 +24,52 @@ class PresenceController extends Controller
 
 
 
-    public function index(Request $request)
+ public function index(Request $request)
 {
+    // 1. Initialisation avec la relation agent
     $query = Presence::with('agent');
 
-    // Filtre par nom ou prénom de l'agent
+    // 2. FILTRE : Recherche par nom ou prénom
     if ($request->filled('search')) {
         $search = $request->search;
         $query->whereHas('agent', function($q) use ($search) {
-            $q->where('name', 'like', "%{$search}%")
-              ->orWhere('last_name', 'like', "%{$search}%")
-              ->orWhere('first_name', 'like', "%{$search}%");
+            $q->where(function($subQuery) use ($search) {
+                $subQuery->where('last_name', 'like', "%{$search}%")
+                         ->orWhere('first_name', 'like', "%{$search}%");
+            });
         });
     }
 
-    // Filtre par statut
+    // 3. FILTRE : Par statut
     if ($request->filled('statut')) {
         $query->where('statut', $request->statut);
     }
 
-    // Filtre par date exacte
+    // 4. FILTRE : Par date exacte
     if ($request->filled('date')) {
         $query->whereDate('heure_arrivee', $request->date);
     }
 
-    $presences = $query->orderBy('heure_arrivee', 'desc')->paginate(15);
+    // 5. LOGIQUE DE TRI DYNAMIQUE
+    $sort = $request->get('sort', 'heure_arrivee'); // Colonne par défaut
+    $direction = $request->get('direction', 'desc'); // Ordre par défaut (plus récent en haut)
+
+    if ($sort === 'nom') {
+        // Pour trier par le nom de l'agent, une jointure est nécessaire
+        $query->join('agents', 'presences.agent_id', '=', 'agents.id')
+              ->select('presences.*') // Important pour garder les IDs de la table presences
+              ->orderBy('agents.last_name', $direction)
+              ->orderBy('agents.first_name', $direction);
+    } else {
+        // Tri sur les colonnes de la table presences (heure_arrivee, id, etc.)
+        // On vérifie que la colonne existe pour éviter les erreurs SQL
+        $allowedSorts = ['id', 'heure_arrivee', 'heure_depart', 'statut'];
+        $sortColumn = in_array($sort, $allowedSorts) ? $sort : 'heure_arrivee';
+        $query->orderBy($sortColumn, $direction);
+    }
+
+    // 6. Exécution avec pagination et conservation des paramètres d'URL
+    $presences = $query->paginate(30)->withQueryString();
 
     return view('presences.index', compact('presences'));
 }
@@ -66,70 +89,59 @@ class PresenceController extends Controller
     /**
      * Stocke une nouvelle ressource (présence) dans la base de données.
                             */
-         public function store(Request $request)
-        {
-            // 1. Définition de l'heure d'arrivée
-            $heureArrivee = $request->filled('heure_arrivee')
-                ? \Carbon\Carbon::parse($request->heure_arrivee)
-                : \Carbon\Carbon::now();
+public function store(Request $request)
+{
+    $request->validate([
+        'agent_id' => 'required|exists:agents,id',
+        'heure_arrivee' => 'nullable|date',
+    ]);
 
-            // 2. Récupération de l'horaire (on cherche en anglais car votre système est en anglais)
-            $jourQuery = $heureArrivee->format('l');
-            $horaireFixe = \App\Models\Horaire::where('jour', $jourQuery)->first();
+    $heureArrivee = $request->filled('heure_arrivee')
+        ? \Carbon\Carbon::parse($request->heure_arrivee)
+        : \Carbon\Carbon::now();
 
-            if (!$horaireFixe) {
-                return redirect()->back()->with('error', "Aucun horaire trouvé pour : $jourQuery");
-            }
+    // Traduction pour correspondre à l'insertion (ex: "Lundi")
+    $joursFr = [
+        'Monday' => 'Lundi', 'Tuesday' => 'Mardi', 'Wednesday' => 'Mercredi',
+        'Thursday' => 'Jeudi', 'Friday' => 'Vendredi', 'Saturday' => 'Samedi', 'Sunday' => 'Dimanche'
+    ];
+    $jourFr = $joursFr[$heureArrivee->format('l')];
 
-            // 3. CALCUL DES MINUTES (Correction de la logique)
-            // Heure d'arrivée en minutes depuis minuit
-            $minutesArrivee = ($heureArrivee->hour * 60) + $heureArrivee->minute;
+    // On cherche l'horaire
+    $horaireFixe = \App\Models\Horaire::where('jour', $jourFr)->first();
 
-            // Heure de début théorique (ex: 07:30)
-            $debutTheorique = \Carbon\Carbon::parse($horaireFixe->getRawOriginal('heure_debut'));
+    $statut = 'Présent';
+    $debugNote = "";
 
-            // On force la tolérance en entier (int) pour éviter les erreurs de calcul
-            $tolerance = (int) ($horaireFixe->tolerance_retard ?? 15);
+    if (!$horaireFixe) {
+        // C'est ce qui arrive actuellement !
+        $debugNote = "ERREUR : Aucun horaire configuré pour le jour $jourFr. ";
+    } else {
+        // Calcul des minutes
+        $minArrivee = ($heureArrivee->hour * 60) + $heureArrivee->minute;
 
-            $minutesLimite = ($debutTheorique->hour * 60) + $debutTheorique->minute + $tolerance;
+        // Comme c'est un type 'time', Carbon le parse très bien
+        $debutTheorique = \Carbon\Carbon::parse($horaireFixe->heure_debut);
+        $tolerance = (int)$horaireFixe->tolerance_retard;
 
-            // 4. Attribution du statut
-            // Si l'heure d'arrivée est INFÉRIEURE ou ÉGALE à la limite, il est Présent
-            $statut = ($minutesArrivee <= $minutesLimite) ? 'Présent' : 'En Retard';
+        $minLimite = ($debutTheorique->hour * 60) + $debutTheorique->minute + $tolerance;
 
-            // 5. Enregistrement
-            \App\Models\Presence::create([
-                'agent_id'      => $request->agent_id,
-                'heure_arrivee' => $heureArrivee,
-                'statut'        => $statut,
-                'notes'         => $request->notes,
-                'heure_depart'  => $request->heure_depart // Sera null si non rempli
-            ]);
-
-           // ... fin de l'enregistrement ...
-
-            return redirect()->route('presences.index')
-                            ->with('success', "Pointage enregistré ($statut) à " . $heureArrivee->format('H:i'));
-
+        if ($minArrivee > $minLimite) {
+            $statut = 'En Retard';
         }
-    // --- La méthode à introduire ---
-        // On la met en 'private' ou 'protected' car c'est un outil interne au contrôleur
+        $debugNote = "Calculé pour $jourFr (Limite: {$minLimite}m, Arrivée: {$minArrivee}m). ";
+    }
 
-        protected function verifierStatutArrivee()
-        {
-            // 1. Récupère le nom du jour (ex: "lundi") et met une majuscule
-            $nomJour = ucfirst(Carbon::now()->translatedFormat('l'));
+    \App\Models\Presence::create([
+        'agent_id'      => $request->agent_id,
+        'heure_arrivee' => $heureArrivee,
+        'statut'        => $statut,
+        'notes'         => $debugNote . ($request->notes ?? ''),
+        'heure_depart'  => $request->heure_depart ?: null
+    ]);
 
-            // 2. Cherche l'horaire en base
-            $horaireDuJour = Horaire::where('jour', $nomJour)->first();
-
-            // 3. Utilise la méthode estEnRetard() définie dans le modèle Horaire
-            if ($horaireDuJour && $horaireDuJour->estEnRetard(Carbon::now())) {
-                return 'En Retard';
-            }
-
-            return 'Présent';
-        }
+    return redirect()->route('presences.index')->with('success', "Pointage enregistré : $statut");
+}
 
     /**
      * Affiche la ressource (présence) spécifiée.
@@ -293,36 +305,36 @@ public function stats(Request $request)
     $agents = Agent::all();
     $absencesDetectees = [];
 
-    for ($date = $debutSemaine->copy(); $date <= $finSemaine; $date->addDay()) {
-        $jour = $date->format('Y-m-d');
+    foreach ($agents as $agent) {
+        $currentDate = $debutSemaine->copy();
+        while ($currentDate <= $finSemaine) {
+            $dateStr = $currentDate->toDateString();
 
-        foreach ($agents as $agent) {
-            // 1. Vérifier si présent dans la table 'presences'
-            $aPointe = Presence::where('agent_id', $agent->id)->whereDate('created_at', $jour)->exists();
+            // CRUCIAL : On ne l'ajoute que si AUCUN enregistrement n'existe dans 'presences'
+            // Cela fera disparaître la ligne dès que vous aurez cliqué sur "Valider"
+            $dejaValide = Presence::where('agent_id', $agent->id)
+                                 ->whereDate('heure_arrivee', $dateStr)
+                                 ->exists();
 
-            if (!$aPointe) {
-                // 2. Vérifier si une absence est validée dans la table 'absences' pour ce jour
-                $absenceValidee = \App\Models\Absence::where('agent_id', $agent->id)
-                    ->where('approuvee', true)
-                    ->whereDate('date_debut', '<=', $jour)
-                    ->whereDate('date_fin', '>=', $jour)
+            if (!$dejaValide) {
+                $justif = \App\Models\Absence::where('agent_id', $agent->id)
+                    ->whereDate('date_debut', '<=', $dateStr)
+                    ->whereDate('date_fin', '>=', $dateStr)
                     ->first();
 
                 $absencesDetectees[] = [
-                    'agent_id' => $agent->id,
-                    'nom' => $agent->last_name . ' ' . $agent->first_name,
-                    'date' => $jour,
-                    'est_justifie' => !is_null($absenceValidee),
-                    'motif' => $absenceValidee ? $absenceValidee->typeAbsence->libelle : 'Non justifié'
+                    'agent_id'     => $agent->id,
+                    'nom'          => $agent->last_name . ' ' . $agent->first_name,
+                    'date'         => $dateStr,
+                    'est_justifie' => !is_null($justif),
+                    'motif'        => $justif ? $justif->motif : null,
                 ];
             }
+            $currentDate->addDay();
         }
     }
     return view('presences.validation-hebdo', compact('absencesDetectees'));
 }
-
-
-
 
 
 public function storeValidationHebdo(Request $request)
@@ -330,38 +342,42 @@ public function storeValidationHebdo(Request $request)
     $absencesInput = $request->input('absences', []);
 
     foreach ($absencesInput as $data) {
-        if (isset($data['selected'])) {
+        if (isset($data['selected']) && $data['selected'] == "1") {
             $agentId = $data['agent_id'];
-            $dateSelectionnee = $data['date']; // Format attendu: YYYY-MM-DD
+            $dateAbsence = $data['date'];
 
-            // 1. Détecter si une autorisation d'absence existe
-            $absenceJustifiee = Absence::where('agent_id', $agentId)
-                ->whereDate('date_debut', '<=', $dateSelectionnee)
-                ->whereDate('date_fin', '>=', $dateSelectionnee)
-                ->exists();
+            // 1. Recherche du justificatif
+            $justificatif = \App\Models\Absence::where('agent_id', $agentId)
+                ->whereDate('date_debut', '<=', $dateAbsence)
+                ->whereDate('date_fin', '>=', $dateAbsence)
+                ->first();
 
-            $statut = $absenceJustifiee ? 'Absence justifiée' : 'Absent';
-            $note = $absenceJustifiee ? 'Justifié par autorisation.' : 'Absent (hebdomadaire).';
+            $statut = $justificatif ? 'Absence Justifiée' : 'Absent';
+            $note = $justificatif ? "Justifié: " . $justificatif->motif : "Absence hebdomadaire.";
 
-            // 2. Utilisation de DB::table pour un contrôle strict sur la date
-            // On cherche une ligne pour cet agent dont la date de created_at correspond au jour sélectionné
-            DB::table('presences')->updateOrInsert(
-                [
-                    'agent_id' => $agentId,
-                    // On utilise DATE() en SQL pour ignorer les heures/minutes/secondes
-                    'created_at' => DB::raw("DATE('$dateSelectionnee')")
-                ],
-                [
-                    'statut' => $statut,
-                    'notes' => $note,
-                    'heure_arrivee' => $dateSelectionnee . ' 08:00:00',
-                    'updated_at' => now(),
-                ]
-            );
+            try {
+                // 2. Insertion ou Mise à jour forcée (SQL brut)
+                DB::statement("
+                    INSERT INTO presences (agent_id, heure_arrivee, statut, notes, created_at, updated_at)
+                    VALUES (?, ?, ?, ?, NOW(), NOW())
+                    ON DUPLICATE KEY UPDATE
+                        statut = VALUES(statut),
+                        notes = VALUES(notes),
+                        updated_at = NOW()
+                ", [
+                    $agentId,
+                    $dateAbsence . ' 08:00:00',
+                    $statut,
+                    $note
+                ]);
+            } catch (\Exception $e) {
+                // Utilisation de la façade Log maintenant importée
+                Log::error("Erreur storeValidationHebdo : " . $e->getMessage());
+            }
         }
     }
 
-    return redirect()->route('presences.index')->with('success', 'Mise à jour effectuée sans doublons.');
+    return redirect()->route('presences.index')->with('success', 'Traitement terminé.');
 }
 
 
@@ -393,5 +409,106 @@ public function storeValidationHebdo(Request $request)
 
 // Fichier: app/Http/Controllers/PresenceController.php
 
+
+
+
+
+
+
+
+
+
+
+/**
+ * Vue pour que l'agent puisse pointer lui-même
+ */
+public function monPointage()
+{
+    $agentId = Auth::user()->agent->id; // On récupère l'ID agent lié à l'utilisateur connecté
+    $aujourdhui = Carbon::today();
+
+    // On cherche si un pointage existe aujourd'hui pour cet agent
+    $presence = Presence::where('agent_id', $agentId)
+                        ->whereDate('heure_arrivee', $aujourdhui)
+                        ->first();
+
+    return view('presences.self_pointage', compact('presence'));
+}
+
+/**
+ * Logique de clic unique (Arrivée ou Départ)
+ */
+public function enregistrerPointage()
+{
+    $agentId = Auth::user()->agent->id;
+    $maintenant = Carbon::now();
+    $aujourdhui = Carbon::today();
+
+    // 1. Vérifier si l'agent a déjà un pointage aujourd'hui
+    $presence = Presence::where('agent_id', $agentId)
+                        ->whereDate('heure_arrivee', $aujourdhui)
+                        ->first();
+
+    // CAS 1 : L'agent n'a pas encore pointé (ARRIVÉE)
+    if (!$presence) {
+        // --- DEBUT LOGIQUE DE RETARD EXISTANTE ---
+        $joursFr = ['Monday'=>'Lundi','Tuesday'=>'Mardi','Wednesday'=>'Mercredi','Thursday'=>'Jeudi','Friday'=>'Vendredi','Saturday'=>'Samedi','Sunday'=>'Dimanche'];
+        $jourFr = $joursFr[$maintenant->format('l')];
+        $horaireFixe = \App\Models\Horaire::where('jour', $jourFr)->first();
+
+        $statut = 'Présent';
+        if ($horaireFixe) {
+            $minArrivee = ($maintenant->hour * 60) + $maintenant->minute;
+            $debutTheorique = Carbon::parse($horaireFixe->heure_debut);
+            $minLimite = ($debutTheorique->hour * 60) + $debutTheorique->minute + (int)$horaireFixe->tolerance_retard;
+            if ($minArrivee > $minLimite) $statut = 'En Retard';
+        }
+        // --- FIN LOGIQUE DE RETARD ---
+
+        Presence::create([
+            'agent_id' => $agentId,
+            'heure_arrivee' => $maintenant,
+            'statut' => $statut,
+            'notes' => "Pointage automatique (Self-service)"
+        ]);
+
+
+        return redirect()->to(url()->previous())
+                        ->with('success', "Pointage enregistré avec succès !");
+    }
+
+    // CAS 2 : L'agent a pointé l'arrivée mais pas le départ (DÉPART)
+    if ($presence && is_null($presence->heure_depart)) {
+        $presence->update([
+            'heure_depart' => $maintenant
+        ]);
+        return back()->with('success', "Départ enregistré à " . $maintenant->format('H:i'));
+    }
+
+    // CAS 3 : L'agent a déjà fait ses deux pointages
+    return back()->with('error', "Vous avez déjà terminé vos pointages pour aujourd'hui.");
+}
+
+public function monHistorique(Request $request)
+{
+    $agent = Auth::user()->agent;
+    $query = Presence::where('agent_id', $agent->id);
+
+    // FILTRE : Par Statut
+    if ($request->filled('statut')) {
+        $query->where('statut', $request->statut);
+    }
+
+    // FILTRE : Par Date
+    if ($request->filled('date')) {
+        $query->whereDate('heure_arrivee', $request->date);
+    }
+
+    $mesPresences = $query->orderBy('heure_arrivee', 'desc')
+                          ->paginate(15)
+                          ->withQueryString(); // Garde les filtres actifs lors du changement de page
+
+    return view('presences.mon_historique', compact('mesPresences'));
+}
 
 }

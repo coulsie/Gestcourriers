@@ -39,9 +39,9 @@
                                 <label for="heure_arrivee" class="form-label fw-bold text-success">
                                     <i class="fas fa-sign-in-alt me-1"></i> Heure d'arrivée
                                 </label>
-                                <input type="datetime-local" 
-                                       name="heure_arrivee" 
-                                       id="heure_arrivee" 
+                                <input type="datetime-local"
+                                       name="heure_arrivee"
+                                       id="heure_arrivee"
                                        class="form-control border-success-subtle shadow-sm"
                                        value="{{ old('heure_arrivee') }}">
                                 <div class="form-text">Laissez vide pour l'heure actuelle</div>
@@ -52,10 +52,10 @@
                                 <label for="heure_depart" class="form-label fw-bold text-danger">
                                     <i class="fas fa-sign-out-alt me-1"></i> Heure de départ
                                 </label>
-                                <input id="heure_depart" 
-                                       type="datetime-local" 
-                                       class="form-control border-danger-subtle shadow-sm @error('heure_depart') is-invalid @enderror" 
-                                       name="heure_depart" 
+                                <input id="heure_depart"
+                                       type="datetime-local"
+                                       class="form-control border-danger-subtle shadow-sm @error('heure_depart') is-invalid @enderror"
+                                       name="heure_depart"
                                        value="{{ old('heure_depart') }}">
                                 @error('heure_depart')
                                     <div class="invalid-feedback"><strong>{{ $message }}</strong></div>
@@ -76,10 +76,10 @@
                         {{-- Section Notes : Couleur Gris --}}
                         <div class="mb-4">
                             <label for="notes" class="form-label fw-bold text-secondary">Notes / Commentaires</label>
-                            <textarea id="notes" 
-                                      class="form-control border-secondary-subtle @error('notes') is-invalid @enderror" 
-                                      name="notes" 
-                                      rows="3" 
+                            <textarea id="notes"
+                                      class="form-control border-secondary-subtle @error('notes') is-invalid @enderror"
+                                      name="notes"
+                                      rows="3"
                                       placeholder="Raison du retard ou observation particulière...">{{ old('notes') }}</textarea>
                             @error('notes')
                                 <div class="invalid-feedback"><strong>{{ $message }}</strong></div>
