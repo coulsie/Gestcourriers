@@ -273,5 +273,33 @@ public function update(Request $request, Courrier $courrier)
     }
 
 
+    
+    public function archives(Request $request)
+    {
+        $query = Courrier::where('statut', 'archivé');
+
+        // Filtre par période
+        if ($request->filled('date_debut') && $request->filled('date_fin')) {
+            $query->whereBetween('date_courrier', [$request->date_debut, $request->date_fin]);
+        }
+
+        // Filtres texte (Recherche partielle)
+        if ($request->filled('expediteur')) {
+            $query->where('expediteur_nom', 'like', '%' . $request->expediteur . '%');
+        }
+
+        if ($request->filled('destinataire')) {
+            $query->where('destinataire_nom', 'like', '%' . $request->destinataire . '%');
+        }
+
+        if ($request->filled('objet')) {
+            $query->where('objet', 'like', '%' . $request->objet . '%');
+        }
+
+        $courriers = $query->orderBy('date_courrier', 'desc')->paginate(15);
+
+        return view('courriers.archives', compact('courriers'));
+    }
+
 
 }

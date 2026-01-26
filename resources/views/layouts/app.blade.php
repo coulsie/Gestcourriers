@@ -2,586 +2,168 @@
 <html lang="fr">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <title>e-COURRIER - 2026</title>
 
-    <title>e-COURRIER - Tableau de bord</title>
-
-    <!-- Custom fonts for this template-->
-    <script src="{{ asset('template/vendor/jquery/jquery.min.js') }}"></script>
+    <!-- Fonts & Icons -->
     <link href="{{ asset('template/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
-    <!-- Custom styles for this template-->
+    <!-- Styles -->
     <link href="{{ asset('template/css/sb-admin-2.min.css') }}" rel="stylesheet">
-     <link href="{{ asset('template/vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
-
+    <link href="{{ asset('template/vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+    <script src="{{ asset('template/vendor/jquery/jquery.min.js') }}"></script>
 </head>
 
 <body id="page-top">
 
-    <!-- Page Wrapper -->
     <div id="wrapper">
 
         <!-- Sidebar -->
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-        <li class="nav-item">
-                <a class="nav-link" href="{{ route('home') }}">Tableau de bord</a>
-            </li>
-
-            <!-- INSÉREZ VOTRE CODE ICI -->
-            @can('manage-users')
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('users.index') }}">
-                        <i class="fas fa-users-cog me-2"></i> Gestion des Utilisateurs
-                    </a>
-                </li>
-            @endcan
-
-
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('profile.show') }}">
-                    <i class="fas fa-user-circle me-2"></i> Mon Profil
-                </a>
-            </li>
-
-
-
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('home') }}">
                 <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
+                    <i class="fas fa-envelope-open-text"></i>
                 </div>
                 <div class="sidebar-brand-text mx-3">e-COURRIER</div>
             </a>
 
-            <!-- Divider -->
             <hr class="sidebar-divider my-0">
 
-              <!-- Nav Item - Dashboard -->
-            <li class="nav-item active">
-                <a class="nav-link" href="">
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item {{ request()->routeIs('home') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('home') }}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Tableau de Bord</span></a>
+                    <span>Tableau de Bord</span>
+                </a>
             </li>
 
-                        <!-- CONTENU RÉSERVÉ À L'ADMINISTRATEUR -->
-                        <div class="sidebar-heading">
-                            Administration Système
-                        </div>
+            <hr class="sidebar-divider">
 
-                        <li class="nav-item">
-                            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAdmin"
-                                aria-expanded="true" aria-controls="collapseAdmin">
-                                <i class="fas fa-fw fa-lock"></i>
-                                <span>Gestion Système</span>
-                            </a>
-                            <div id="collapseAdmin" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                                <div class="bg-white py-2 collapse-inner rounded">
-                                    <h6 class="collapse-header">Utilisateurs & RH:</h6>
-                                    <a class="collapse-item" href="{{ route('agents.nouveau') }}">Compte Utilisateur</a>
-                                    <a class="collapse-item" href="{{ route('users.index') }}">Liste Utilisateur</a>
-                                    <a class="collapse-item" href="{{ route('agents.index') }}">Ressources Humaines</a>
-                                    <a class="collapse-item" href="{{ route('imputations.index') }}">Imputations</a>
-                                    <a class="collapse-item" href="{{ route('imputations.mes_imputations') }}">Mes Imputations</a>
-                                    <a class="collapse-item" href="{{ route('statistiques.index') }}">Statistiques</a>
-                                    <a class="collapse-item" href="{{ route('statistiques.dashboard') }}">dashboard imputations</a>
-                                    <div class="collapse-divider"></div>
-                                    <h6 class="collapse-header">Configurations:</h6>
-                                    <a class="collapse-item" href="{{ route('typeabsences.index') }}">Paramétrage Absence</a>
-                                     <!--<a class="collapse-item" href="{{ route('notifications.index') }}">Toutes les notifications</a>-->
-                                   <!-- <a class="collapse-item" href="{{ route('notifications.create') }}">Créer une notification</a> -->
-                                </div>
-                            </div>
+            <!-- SECTION COURRIERS -->
+            <div class="sidebar-heading">Opérations</div>
 
-                        </li>
-                          <!-- Nav Item - Pages Collapse Menu -->
-                        <li class="nav-item">
-                            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAnnonces"
-                                aria-expanded="true" aria-controls="collapseAnnonces">
-                                <i class="fas fa-fw fa-cog"></i>
-                                <span>Annonces</span>
-                            </a>
-                            <div id="collapseAnnonces" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                                <div class="bg-white py-2 collapse-inner rounded">
-                                    {{-- <h6 class="collapse-header">Listes Des Annonces:</h6> --}}
-                                    <a class="collapse-item" href="{{ route('annonces.index') }}">Afficher les Annonces</a>
-                                                                        {{-- <a class="collapse-item" href="cards.html">Cards</a> --}}
-                                </div>
-                            </div>
-                        </li>
-
-
-
-
-                <hr class="sidebar-divider">
-            <!-- Divider -->
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                Interface
-            </div>
-
-
-          <!-- Nav Item - Pages Collapse Menu -->
-
-                <!-- Nav Item - Administration Collapse Menu -->
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAdmin"
-                        aria-expanded="true" aria-controls="collapseAdmin">
-                        <i class="fas fa-fw fa-lock"></i>
-                        <span>Gestion utilisateur</span>
-                    </a>
-                    <div id="collapseAdmin" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                        <div class="bg-white py-2 collapse-inner rounded">
-
-                            <div class="collapse-divider"></div>
-                            <h6 class="collapse-header">Communications:</h6>
-
-                            <a class="collapse-item" href="{{ route('imputations.mes_imputations') }}">Mes Imputations</a>
-
-                        </div>
-                    </div>
-                </li>
-
-                <!-- Divider pour séparer l'admin des fonctions standards -->
-                <hr class="sidebar-divider">
-
-
-
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ route('courriers.index') }}" data-toggle="collapse" data-target="#collapseCourriers"
-                    aria-expanded="true" aria-controls="collapseCourriers">
-                    <i class="fas fa-fw fa-cog"></i>
-                    <span>Courriers</span>
+            <li class="nav-item {{ request()->routeIs('courriers.*') ? 'active' : '' }}">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCourriers" aria-expanded="true">
+                    <i class="fas fa-fw fa-envelope"></i>
+                    <span>Gestion Courriers</span>
                 </a>
-                <div id="collapseCourriers" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div id="collapseCourriers" class="collapse {{ request()->routeIs('courriers.*') ? 'show' : '' }}" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        {{-- <h6 class="collapse-header">Listes Des Courriers:</h6> --}}
-                        <a class="collapse-item" href="{{ route('courriers.index') }}">Listes des courriers</a>
-                        <a class="collapse-item" href="{{ route('courriers.create') }}">Ajouter un courrier</a>
+                        <a class="collapse-item" href="{{ route('courriers.index') }}">Liste des courriers</a>
+                        <a class="collapse-item" href="{{ route('courriers.create') }}">créer un courriers</a>
                         <a class="collapse-item" href="{{ route('courriers.RechercheAffichage') }}">Recherche avancée</a>
-                        <a class="collapse-item" href="{{ route('affectations.index') }}">Liste des affectations</a>
+                        <a class="collapse-item" href="{{ route('courriers.archives') }}">Archives</a>
+                        <a class="collapse-item" href="{{ route('imputations.mes_imputations') }}">Mes Imputations</a>
+                        <a class="collapse-item" href="{{ route('imputations.index') }}">Toutes les Imputations</a>
+                        <a class="collapse-item" href="{{ route('statistiques.index') }}">Statistiques</a>
+                        <a class="collapse-item" href="{{ route('statistiques.dashboard') }}">dashboard imputations</a>
 
-                        >
-                        {{-- <a class="collapse-item" href="cards.html">Cards</a> --}}
                     </div>
                 </div>
             </li>
 
-
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePaiements"
-                    aria-expanded="true" aria-controls="collapsePaiements">
-                    <i class="fas fa-fw fa-cog"></i>
-                    <span>Présences</span>
+            <!-- NOUVELLE SECTION : GESTION DES PRÉSENCES -->
+            <li class="nav-item {{ request()->routeIs('presences.*') ? 'active' : '' }}">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePresences" aria-expanded="true">
+                    <i class="fas fa-fw fa-user-check"></i>
+                    <span>Gestion Présences</span>
                 </a>
-                <div id="collapsePaiements" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div id="collapsePresences" class="collapse {{ request()->routeIs('presences.*') ? 'show' : '' }}" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        {{-- <h6 class="collapse-header">Cotisations mensuelles</h6> --}}
-
-                        <a class="collapse-item" href="{{ route('presences.index') }}">Enrégistrement Pointages</a>
-                        <a class="collapse-item" href="{{ route('presences.monPointage') }}">Mon Pointage </a>
+                        <h6 class="collapse-header">Pointage :</h6>
+                        <a class="collapse-item" href="{{ route('presences.index') }}">Liste des présences</a>
+                        <a class="collapse-item" href="{{ route('presences.monPointage') }}">Marquer Présence </a>
+                        <a class="collapse-item" href="{{ route('presences.monHistorique') }}">Mon Historique </a>
                         <a class="collapse-item" href="{{ route('presences.listeFiltree') }}">Liste de présence </a>
-
                         <a class="collapse-item" href="{{ route('presences.validation-hebdo') }}">Validation hebdomadaire</a>
                         <a class="collapse-item" href="{{ route('rapports.presences.periodique') }}">Rapport Périodique</a>
                         <a class="collapse-item" href="{{ route('absences.index') }}">Congés et Permissions</a>
-                        <a class="collapse-item" href="{{ route('typeabsences.index') }}">Parametrage Absence</a>
-                        <a class="collapse-item" href="{{ route('agents.par.service') }}">Agents par Service</a>
-                        <a class="collapse-item" href="{{ route('agents.par.service.recherche') }}">Recherche Agents</a>
+                        <a class="collapse-item" href="{{ route('typeabsences.index') }}">Autorisation d'Absence</a>                       
                         <!-- <a class="collapse-item" href="{{ route('notifications.index') }}">Notifications de tâches</a> -->
                         <a class="collapse-item" href="{{ route('presences.etat') }}">État des Présences</a>
 
-                        <!-- <a class="collapse-item" href="">Dons</a> -->
+                        <div class="dropdown-divider"></div>
+                        <h6 class="collapse-header">Rapports :</h6>
+                        <a class="collapse-item" href="#">Rapport Mensuel</a>
                     </div>
                 </div>
             </li>
 
+            <!-- SECTION ANNONCES -->
+            <li class="nav-item {{ request()->routeIs('annonces.*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('annonces.index') }}">
+                    <i class="fas fa-fw fa-bullhorn"></i>
+                    <span>Annonces</span>
+                </a>
+            </li>
 
+            <!-- SECTION ADMINISTRATION -->
+            @can('manage-users')
+            <hr class="sidebar-divider">
+            <div class="sidebar-heading text-warning">Administration Système</div>
 
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAdmin" aria-expanded="true">
+                    <i class="fas fa-fw fa-lock text-warning"></i>
+                    <span class="text-warning">Contrôle & RH</span>
+                </a>
+                <div id="collapseAdmin" class="collapse" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded border-left-warning shadow">
+                        <h6 class="collapse-header">Utilisateurs & RH:</h6>
+                        <a class="collapse-item font-weight-bold" href="{{ route('users.index') }}">Liste Utilisateurs</a>
+                        <a class="collapse-item" href="{{ route('agents.nouveau') }}">Nouveau Compte</a>
+                        <a class="collapse-item" href="{{ route('agents.index') }}">Ressources Humaines</a>
+                         <a class="collapse-item" href="{{ route('agents.par.service') }}">Agents par Service</a>
+                        <a class="collapse-item" href="{{ route('agents.par.service.recherche') }}">Recherche Agents</a>
+                        <div class="dropdown-divider"></div>
+                        <h6 class="collapse-header">Suivi & Stats:</h6>
+                        
+                        <a class="collapse-item" href="{{ route('statistiques.dashboard') }}">Dashboard Stats</a>
+                        <a class="collapse-item" href="{{ route('typeabsences.index') }}">Paramétrage Absence</a>
+                    </div>
+                </div>
+            </li>
+            @endcan
 
-            <!-- Divider -->
             <hr class="sidebar-divider">
 
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                Paramètres
-            </div>
-
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                    aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Connection</span>
+            <!-- PROFIL -->
+            <li class="nav-item {{ request()->routeIs('profile.show') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('profile.show') }}">
+                    <i class="fas fa-fw fa-user-circle"></i>
+                    <span>Mon Profil</span>
                 </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Écran de connexion:</h6>
-                        <a class="collapse-item" href="{{ route('login') }}">Se connecter</a>
-                        <a class="collapse-item" href="{{ route('register') }}">S'inscrire</a>
-                        <a class="collapse-item" href="{{ route('password.request') }}">Mot de passe oublié</a>
-                        <!-- <div class="collapse-divider"></div>
-                        <h6 class="collapse-header">Autres pages:</h6>
-                        <a class="collapse-item" href="404.html">404 Page</a>
-                        <a class="collapse-item" href="blank.html">Blank Page</a> -->
-                    </div>
-                </div>
+                
             </li>
 
-            <!-- Nav Item - Charts -->
-            <li class="nav-item">
-                <a class="nav-link" href="charts.html">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Graphiques</span></a>
-            </li>
-
-            <!-- Nav Item - Tables -->
-            <!-- <li class="nav-item">
-                <a class="nav-link" href="tables.html">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Tables</span></a>
-            </li> -->
-
-            <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
 
-            <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline">
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
 
-
-
         </ul>
-        <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
-
-            <!-- Main Content -->
             <div id="content">
-
-                <!-- Topbar -->
-                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-                    <!-- Sidebar Toggle (Topbar) -->
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>
-
-                    <!-- Topbar Search -->
-                    <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Rechercher..."
-                                aria-label="Search" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-success" type="button">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-
-                    <!-- Topbar Navbar -->
-                    <ul class="navbar-nav ml-auto">
-
-                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                        <li class="nav-item dropdown no-arrow d-sm-none">
-                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-search fa-fw"></i>
-                            </a>
-                            <!-- Dropdown - Messages -->
-                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
-                                aria-labelledby="searchDropdown">
-                                <form class="form-inline mr-auto w-100 navbar-search">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control bg-light border-0 small"
-                                            placeholder="Search for..." aria-label="Search"
-                                            aria-describedby="basic-addon2">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button">
-                                                <i class="fas fa-search fa-sm"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </li>
-
-                        <!-- Nav Item - Alerts -->
-                        <li class="nav-item dropdown no-arrow mx-1">
-                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-bell fa-fw"></i>
-                                <!-- Counter - Alerts -->
-                                <span class="badge badge-danger badge-counter">3+</span>
-                            </a>
-                            <!-- Dropdown - Alerts -->
-                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="alertsDropdown">
-                                <h6 class="dropdown-header">
-                                    Alerts Center
-                                </h6>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-primary">
-                                            <i class="fas fa-file-alt text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">December 12, 2019</div>
-                                        <span class="font-weight-bold">A new monthly report is ready to download!</span>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-success">
-                                            <i class="fas fa-donate text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">December 7, 2019</div>
-                                        $290.29 has been deposited into your account!
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-warning">
-                                            <i class="fas fa-exclamation-triangle text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">December 2, 2019</div>
-                                        Spending Alert: We've noticed unusually high spending for your account.
-                                    </div>
-                                </a>
-                                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
-                            </div>
-                        </li>
-
-                        <!-- Nav Item - Messages -->
-                        <li class="nav-item dropdown no-arrow mx-1">
-                            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-envelope fa-fw"></i>
-                                <!-- Counter - Messages -->
-                                <span class="badge badge-danger badge-counter">7</span>
-                            </a>
-                            <!-- Dropdown - Messages -->
-                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="messagesDropdown">
-                                <h6 class="dropdown-header">
-                                    Message Center
-                                </h6>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_1.svg"
-                                            alt="...">
-                                        <div class="status-indicator bg-success"></div>
-                                    </div>
-                                    <div class="font-weight-bold">
-                                        <div class="text-truncate">Hi there! I am wondering if you can help me with a
-                                            problem I've been having.</div>
-                                        <div class="small text-gray-500">Emily Fowler · 58m</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_2.svg"
-                                            alt="...">
-                                        <div class="status-indicator"></div>
-                                    </div>
-                                    <div>
-                                        <div class="text-truncate">I have the photos that you ordered last month, how
-                                            would you like them sent to you?</div>
-                                        <div class="small text-gray-500">Jae Chun · 1d</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_3.svg"
-                                            alt="...">
-                                        <div class="status-indicator bg-warning"></div>
-                                    </div>
-                                    <div>
-                                        <div class="text-truncate">Last month's report looks great, I am very happy with
-                                            the progress so far, keep up the good work!</div>
-                                        <div class="small text-gray-500">Morgan Alvarez · 2d</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60"
-                                            alt="...">
-                                        <div class="status-indicator bg-success"></div>
-                                    </div>
-                                    <div>
-                                        <div class="text-truncate">Am I a good boy? The reason I ask is because someone
-                                            told me that people say this to all dogs, even if they aren't good...</div>
-                                        <div class="small text-gray-500">Chicken the Dog · 2w</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
-                            </div>
-                        </li>
-
-                        <div class="topbar-divider d-none d-sm-block"></div>
-
-                        <!-- Nav Item - User Information -->
-                        <li class="nav-item dropdown no-arrow">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">
-                                {{ Auth::user() ? Auth::user()->name : 'Invité' }}
-                            </span>
-                                <img class="img-profile rounded-circle"
-                                    src="img/logo2.png">
-                            </a>
-                            <!-- Dropdown - User Information -->
-                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="{{ route('profile.edit') }}">
-                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Profil
-                                </a>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Paramètres
-                                </a>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Journal d'activité
-                                </a>
-
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="{{ route('logout') }}" data-toggle="modal" data-target="#logoutModal">
-                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Déconnexion
-                                </a>
-                            </div>
-                        </li>
-
-                    </ul>
-
-                </nav>
-                <!-- End of Topbar -->
-
-                <!-- Begin Page Content -->
+                @include('layouts.topbar')
+                
                 <div class="container-fluid">
-
                     @yield('content')
-
-                </div>
-                <!-- /.container-fluid -->
-
-            </div>
-            <!-- End of Main Content -->
-
-            <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Droit d'Auteur &copy; Votre site web 2025</span>
-                    </div>
-                </div>
-            </footer>
-            <!-- End of Footer -->
-
-        </div>
-        <!-- End of Content Wrapper -->
-
-    </div>
-    <!-- End of Page Wrapper -->
-
-    <!-- Bouton de défilement vers le haut-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-
-    <!-- Fenêtre modale de déconnexion-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Voulez-vous déconnecter?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Sélectionnez « Déconnexion » ci-dessous si vous souhaitez mettre fin à votre session actuelle.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Annuler</button>
-                    <a class="btn btn-primary" href="{{ route('logout') }}" onclick="event.preventDefault();
-                      document.getElementById('logout-form').submit();">
-                        Déconnexion
-                    </a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                        @csrf
-                    </form>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- JavaScript principal de Bootstrap-->
-    <script src="{{asset('template/vendor/jquery/jquery.min.js')}}"></script>
-    <script src="{{asset('template/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-
-    <!-- Plugin JavaScript principal -->
-    <script src="{{asset('template/vendor/jquery-easing/jquery.easing.min.js')}}"></script>
-
-    <!-- Scripts personnalisés pour toutes les pages-->
-    <script src="{{asset('template/js/sb-admin-2.min.js')}}"></script>
-
-    <!-- Plugins au niveau de la page -->
-    <script src="{{asset('template/vendor/chart.js/Chart.min.js')}}"></script>
-
-    <script src="{{asset('template/vendor/datatables/jquery.dataTables.min.js')}}"></script>
-    <script src="{{asset('template/vendor/datatables/dataTables.bootstrap4.min.js')}}"></script>
-
-    <!-- Scripts personnalisés au niveau de la page -->
-    <script src="{{asset('template/js/demo/chart-area-demo.js')}}"></script>
-    <script src="{{asset('template/js/demo/chart-pie-demo.js')}}"></script>
-    <script src="{{asset('template/js/demo/datatables-demo.js')}}"></script>
-
-
-
-
-
-    {{-- <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
-    <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
-
-    <!-- Page level plugins -->
-    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
-
-
-
-
-    <!-- Page level custom scripts -->
-    <script src="js/demo/datatables-demo.js"></script>
- --}}
-
+    <!-- Scripts -->
+    <script src="{{ asset('template/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('template/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+    <script src="{{ asset('template/js/sb-admin-2.min.js') }}"></script>
 </body>
-
 </html>

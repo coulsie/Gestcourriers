@@ -85,23 +85,46 @@
                             <tr class="courrier-row border-bottom">
                                 <td class="ps-3 ref-cell fw-bold text-primary">{{ $courrier->reference }}</td>
                                 <td class="type-cell">
-                                    <span class="badge border {{ $courrier->type === 'entrant' ? 'text-primary border-primary' : 'text-info border-info' }}">
-                                        {{ ucfirst($courrier->type) }}
+                                    @php
+                                        // Traduction et choix de la couleur
+                                        $typeBrut = strtolower($courrier->type);
+                                        $typeLabel = match($typeBrut) {
+                                            'incoming', 'entrant'    => '📩 Entrant',
+                                            'outgoing', 'sortant'    => '📤 Sortant',
+                                            'information', 'info'    => 'ℹ️ Information',
+                                            default                  => ucfirst($courrier->type),
+                                        };
+
+                                        $typeClass = match($typeBrut) {
+                                            'incoming', 'entrant'    => 'text-primary border-primary',
+                                            'outgoing', 'sortant'    => 'text-danger border-danger',
+                                            'information', 'info'    => 'text-info border-info',
+                                            default                  => 'text-secondary border-secondary',
+                                        };
+                                    @endphp
+
+                                    <span class="badge border fw-bold {{ $typeClass }}">
+                                        {{ $typeLabel }}
                                     </span>
                                 </td>
                                 <td class="objet-cell text-truncate" style="max-width: 200px;">{{ $courrier->objet }}</td>
                                 <td class="expediteur-cell text-secondary">{{ $courrier->expediteur_nom }}</td>
                                 <td class="statut-cell" data-statut="{{ $courrier->statut }}">
                                     @php
-                                        $badgeClass = match($courrier->statut) {
-                                            'reçu'    => 'bg-danger text-white',
-                                            'affecté' => 'bg-success text-white',
-                                            'archivé' => 'bg-secondary text-white',
-                                            default   => 'bg-dark text-white',
+                                        // On nettoie la valeur pour la comparaison (minuscules et sans espaces)
+                                        $statutNettoye = trim(mb_strtolower($courrier->statut, 'UTF-8'));
+
+                                        $badgeClass = match($statutNettoye) {
+                                            'reçu', 'recu'  => 'bg-danger text-white',    // Rouge
+                                            'affecté', 'affecte' => 'bg-success text-white', // Vert
+                                            'archivé', 'archive' => 'bg-secondary text-white', // Gris Ardoise
+                                            'en attente', 'pending' => 'bg-warning text-dark', // Jaune
+                                            default => 'bg-primary text-white', // Bleu par défaut (si rien ne correspond)
                                         };
                                     @endphp
-                                    <span class="badge {{ $badgeClass }} px-3 py-2 rounded-pill shadow-sm w-100">
-                                        {{ ucfirst($courrier->statut) }}
+                                    
+                                    <span class="badge {{ $badgeClass }} px-3 py-2 rounded-pill shadow-sm w-100 fw-bold">
+                                        {{ mb_convert_case($courrier->statut, MB_CASE_TITLE, "UTF-8") }}
                                     </span>
                                 </td>
                                 <td class="date-cell" data-date="{{ \Carbon\Carbon::parse($courrier->date_courrier)->format('Y-m-d') }}">

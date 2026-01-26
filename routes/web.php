@@ -113,12 +113,14 @@ Route::middleware(['auth'])->group(function () {
 
         // --- GESTION DES COURRIERS & AFFECTATIONS ---
         Route::prefix('courriers')->name('courriers.')->group(function () {
+            
             Route::get('/visualiser/{id}', [CourrierController::class, 'visualiserDocument'])->name('visualiser');
             Route::get('/recherche', [CourrierController::class, 'RechercheAffichage'])->name('RechercheAffichage');
             Route::get('/{id}/affecter', [CourrierAffectationController::class, 'create'])->name('affectation.create');
             Route::post('/{id}/affecter', [CourrierAffectationController::class, 'store'])->name('affectation.store');
             Route::get('/{courrier}/affectation', [CourrierAffectationController::class, 'show'])->name('affectation.show');
         });
+        Route::get('/courriers/archives', [CourrierController::class, 'archives'])->name('courriers.archives');
         Route::resource('courriers', CourrierController::class);
 
         Route::resource('affectations', AffectationController::class);

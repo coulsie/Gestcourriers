@@ -85,6 +85,9 @@ class Courrier extends Model
         return $this->hasOne(Affectation::class)->latestOfMany();
     }
 
+    public function imputation() {
+        return $this->belongsTo(Imputation::class);
+    }
 
     protected function type(): Attribute
     {

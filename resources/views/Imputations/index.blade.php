@@ -41,7 +41,7 @@
                         <option value="">Tous les agents</option>
                         @foreach($allAgents as $agent)
                             <option value="{{ $agent->id }}" {{ request('agent_id') == $agent->id ? 'selected' : '' }}>
-                                {{ strtoupper($agent->last_name) }}
+                                {{ strtoupper($agent->last_name) }}  {{$agent->first_name }}
                             </option>
                         @endforeach
                     </select>

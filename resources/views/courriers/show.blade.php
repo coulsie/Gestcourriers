@@ -1,191 +1,155 @@
-
-
-
 @extends('layouts.app')
 
 @section('content')
+<div class="container-fluid py-4 px-5">
+    <!-- Header avec Fil d'Ariane -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-dark mb-1"><i class="bi bi-envelope-paper shadow-sm p-2 rounded bg-white me-2"></i>Détails du Courrier</h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="{{ route('courriers.index') }}">Liste</a></li>
+                    <li class="breadcrumb-item active">{{ $courrier->reference }}</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{{ route('courriers.index') }}" class="btn btn-outline-secondary shadow-sm">
+                <i class="bi bi-arrow-left"></i> Retour
+            </a>
+            <button onclick="window.print()" class="btn btn-info text-white shadow-sm">
+                <i class="bi bi-printer"></i> Imprimer la fiche
+            </button>
+        </div>
+    </div>
 
-<div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-md-11">
-            <div class="card shadow-lg border-0 rounded-3 overflow-hidden">
-                <!-- En-tête avec dégradé -->
-                <div class="card-header bg-dark text-white py-3 d-flex justify-content-between align-items-center"
-                     style="background: linear-gradient(135deg, #0f172a 0%, #1e40af 100%);">
-                    <h4 class="mb-0 fw-bold">
-                        <i class="fas fa-file-alt me-2"></i>{{ __('Fiche Courrier') }} : <span class="text-warning">{{ $courrier->reference }}</span>
-                    </h4>
-                    <a href="{{ route('courriers.index') }}" class="btn btn-light btn-sm fw-bold shadow-sm">
-                        <i class="fas fa-arrow-left me-1"></i> {{ __('Retour à la liste') }}
-                    </a>
-                </div>
-
-                <div class="card-body bg-light-subtle p-4">
-                    <div class="row g-4">
-                        <!-- Colonne de gauche (Informations Générales) -->
-                        <div class="col-md-6">
-                            <div class="p-3 bg-white rounded-3 shadow-sm h-100 border-start border-4 border-primary">
-                                <h5 class="text-primary fw-bold mb-3">
-                                    <i class="fas fa-info-circle me-2"></i>{{ __('Détails de l\'enregistrement') }}
-                                </h5>
-                                <hr class="text-primary opacity-25">
-                                <ul class="list-unstyled">
-                                    <li class="mb-3"><strong>{{ __('N° Enregistrement') }}:</strong> <span class="text-primary fw-bold">{{ $courrier->num_enregistrement ?? 'N/A' }}</span></li>
-                                    <li class="mb-3"><strong>{{ __('Référence') }}:</strong> <span class="badge bg-secondary px-2 fs-6">{{ $courrier->reference }}</span></li>
-                                    <li class="mb-3"><strong>{{ __('Type') }}:</strong>
-                                        <span class="fw-bold {{ $courrier->type == 'Incoming' ? 'text-primary' : 'text-warning' }}">
-                                            {{ $courrier->type == 'Incoming' ? '📩 ENTRANT' : '📤 SORTANT' }}
-                                        </span>
-                                    </li>
-                                    <li class="mb-3"><strong>{{ __('Objet') }}:</strong> <span class="fw-bold text-dark">{{ $courrier->objet }}</span></li>
-                                    <li class="mb-3"><strong>{{ __('Date du Courrier') }}:</strong> {{ $courrier->date_courrier?->format('d/m/Y') ?? 'Date non définie' }}</li>
-
-                                    <li class="mb-3">
-                                        <strong>{{ __('Statut Actuel') }}:</strong>
-                                        @php
-                                            $badgeColor = match(strtolower($courrier->statut)) {
-                                                'reçu', 'recu' => 'bg-danger',
-                                                'affecté', 'affecte' => 'bg-success',
-                                                'archivé', 'archive' => 'bg-secondary',
-                                                default => 'bg-info',
-                                            };
-                                        @endphp
-                                        <span class="badge {{ $badgeColor }} rounded-pill px-3">
-                                            {{ strtoupper($courrier->statut) }}
-                                        </span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <!-- Colonne de droite (Expéditeur/Destinataire) -->
-                        <div class="col-md-6">
-                            <div class="p-3 bg-white rounded-3 shadow-sm h-100 border-start border-4 border-indigo" style="border-color: #6366f1 !important;">
-                                <h5 class="fw-bold mb-3" style="color: #6366f1;">
-                                    <i class="fas fa-users me-2"></i>{{ __('Intervenants') }}
-                                </h5>
-                                <hr style="color: #6366f1;" class="opacity-25">
-                                <div class="mb-4">
-                                    <h6 class="fw-bold text-uppercase small text-muted">{{ __('De (Expéditeur)') }}</h6>
-                                    <p class="mb-1 fw-bold"><i class="fas fa-user-edit me-2"></i>{{ $courrier->expediteur_nom }}</p>
-                                    <p class="text-muted small"><i class="fas fa-phone me-2"></i>{{ $courrier->expediteur_contact ?? 'N/A' }}</p>
-                                </div>
-                                <div>
-                                    <h6 class="fw-bold text-uppercase small text-muted">{{ __('À (Destinataire)') }}</h6>
-                                    <p class="mb-1 fw-bold"><i class="fas fa-user-check me-2"></i>{{ $courrier->destinataire_nom }}</p>
-                                    <p class="text-muted small"><i class="fas fa-phone me-2"></i>{{ $courrier->destinataire_contact ?? 'N/A' }}</p>
-                                </div>
-                                <div class="mt-3 pt-2 border-top">
-                                    <h6 class="fw-bold text-uppercase small text-muted">{{ __('Traitement') }}</h6>
-                                    <p class="mb-0"><i class="fas fa-user-tag me-2 text-primary"></i><strong>Assigné à :</strong> {{ $courrier->assigne_a ?? 'Non assigné' }}</p>
-                                </div>
-                            </div>
-                        </div>
+    <div class="row g-4">
+        <!-- COLONNE GAUCHE : INFOS -->
+        <div class="col-lg-4">
+            <!-- Statut Card -->
+            <div class="card border-0 shadow-sm mb-4 overflow-hidden">
+                <div class="card-body p-0">
+                    <div class="p-3 {{ $courrier->statut == 'pending' ? 'bg-warning text-dark' : 'bg-success text-white' }} text-center fw-bold">
+                        STATUT : {{ mb_convert_case($courrier->statut, MB_CASE_TITLE, "UTF-8") }}
                     </div>
-
-                   <!-- Fichier Joint et Aperçu -->
-<!-- Section Document Principal de l'Imputation -->
-<div class="row mt-4">
-    <div class="col-md-12">
-        <div class="card shadow-sm border-primary">
-            <div class="card-header bg-primary text-white py-3">
-                <h5 class="mb-0"><i class="fas fa-file-pdf me-2"></i>{{ __('Document d\'Imputation Principal') }}</h5>
+                </div>
             </div>
-            <div class="card-body bg-light">
-                @if($imputation->chemin_fichier)
+
+            <!-- Main Info Card -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3 text-primary border-bottom pb-2">Identifiants</h5>
+                    <div class="mb-3">
+                        <label class="text-muted small d-block">Référence interne</label>
+                        <span class="fw-bold h5 text-dark">{{ $courrier->reference }}</span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-muted small d-block">N° Enregistrement</label>
+                        <span class="badge bg-light text-dark border p-2 w-100 text-start">{{ $courrier->num_enregistrement ?? 'Non attribué' }}</span>
+                    </div>
                     <div class="row">
-                        <!-- Actions et Infos -->
-                        <div class="col-md-4">
-                            <div class="p-3 bg-white rounded border shadow-sm h-100 text-center">
-                                <i class="fas fa-file-pdf fa-4x text-danger mb-3"></i>
-                                <h6 class="fw-bold text-break">{{ $imputation->chemin_fichier }}</h6>
-                                <hr>
-                                <div class="d-grid gap-2">
-                                    <a href="{{ asset('documents/imputations/' . $imputation->chemin_fichier) }}"
-                                       target="_blank" class="btn btn-primary">
-                                        <i class="fas fa-external-link-alt me-2"></i>{{ __('Consulter en plein écran') }}
-                                    </a>
-                                    <a href="{{ asset('documents/imputations/' . $imputation->chemin_fichier) }}"
-                                       download class="btn btn-outline-success">
-                                        <i class="fas fa-download me-2"></i>{{ __('Télécharger') }}
-                                    </a>
-                                </div>
-                            </div>
+                        <div class="col-6">
+                            <label class="text-muted small d-block">Type</label>
+                            <span class="badge bg-primary-subtle text-primary p-2">{{ $courrier->type }}</span>
                         </div>
-
-                        <!-- Zone d'Aperçu -->
-                        <div class="col-md-8">
-                            <div class="rounded shadow-sm bg-secondary" style="height: 600px; border: 2px solid #dee2e6;">
-                                {{-- Utilisation de object pour une meilleure compatibilité des navigateurs en 2026 --}}
-                                <object data="{{ asset('documents/imputations/' . $imputation->chemin_fichier) }}" type="application/pdf" width="100%" height="100%">
-                                    <iframe src="{{ asset('documents/imputations/' . $imputation->chemin_fichier) }}#toolbar=0" width="100%" height="100%" style="border: none;">
-                                        <p>Votre navigateur ne supporte pas l'aperçu PDF.
-                                           <a href="{{ asset('documents/imputations/' . $imputation->chemin_fichier) }}">Téléchargez le fichier ici</a>.
-                                        </p>
-                                    </iframe>
-                                </object>
-                            </div>
+                        <div class="col-6">
+                            <label class="text-muted small d-block">Date</label>
+                            <span class="fw-semibold">{{ \Carbon\Carbon::parse($courrier->date_courrier)->format('d M Y') }}</span>
                         </div>
                     </div>
-                @else
-                    <div class="text-center py-5 bg-white border rounded">
-                        <i class="fas fa-file-circle-xmark fa-3x text-muted mb-3"></i>
-                        <h5 class="text-muted">Aucun fichier n'est rattaché à la colonne <code>chemin_fichier</code></h5>
-                        <p class="small text-secondary">Vérifiez l'enregistrement ID #{{ $imputation->id }} dans la table imputations.</p>
-                    </div>
-                @endif
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row mt-4">
-    <div class="col-md-12">
-        <div class="p-3 bg-white rounded-3 shadow-sm border border-info border-opacity-25" style="background-color: #f0faff;">
-            <h5 class="text-info fw-bold mb-3"><i class="fas fa-paperclip me-2"></i>{{ __('Documents Annexes joints') }}</h5>
-
-            @php
-                $annexes = json_decode($imputation->documents_annexes, true);
-            @endphp
-
-            @if(is_array($annexes) && count($annexes) > 0)
-                <div class="row g-3">
-                    @foreach($annexes as $fichier)
-                        <div class="col-md-3">
-                            <div class="card h-100 shadow-sm">
-                                <div class="card-body text-center p-2">
-                                    <i class="fas fa-file-alt fa-2x text-secondary mb-2"></i>
-                                    <p class="small text-truncate mb-2" title="{{ $fichier }}">{{ $fichier }}</p>
-                                    <div class="btn-group btn-group-sm w-100">
-                                        <a href="{{ asset('documents/imputations/annexes/' . $fichier) }}" target="_blank" class="btn btn-outline-primary">Voir</a>
-                                        <a href="{{ asset('documents/imputations/annexes/' . $fichier) }}" download class="btn btn-outline-success"><i class="fas fa-download"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
                 </div>
-            @else
-                <p class="text-muted small">Aucune annexe disponible.</p>
-            @endif
-        </div>
-    </div>
-</div>
+            </div>
 
-                    <!-- Description / Commentaires -->
-                    <div class="row mt-4">
-                        <div class="col-md-12">
-                            <div class="p-3 bg-white rounded-3 shadow-sm border">
-                                <h5 class="text-dark fw-bold mb-3"><i class="fas fa-align-left me-2 text-warning"></i>{{ __('Commentaires / Description') }}</h5>
-                                <div class="p-3 rounded bg-light border-start border-3 border-warning text-dark italic">
-                                    {{ $courrier->description ?? __('Aucune description disponible.') }}
-                                </div>
+            <!-- Contacts Card -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="row g-0">
+                        <div class="col-12 mb-4">
+                            <h6 class="text-uppercase text-danger fw-bold small"><i class="bi bi-person-up me-2"></i>Expéditeur</h6>
+                            <div class="p-3 rounded bg-danger-subtle border-start border-danger border-4">
+                                <strong class="d-block">{{ $courrier->expediteur_nom }}</strong>
+                                <span class="text-muted small">{{ $courrier->expediteur_contact }}</span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <h6 class="text-uppercase text-primary fw-bold small"><i class="bi bi-person-down me-2"></i>Destinataire</h6>
+                            <div class="p-3 rounded bg-primary-subtle border-start border-primary border-4">
+                                <strong class="d-block">{{ $courrier->destinataire_nom }}</strong>
+                                <span class="text-muted small">{{ $courrier->destinataire_contact }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- COLONNE DROITE : CONTENU ET FICHIER -->
+        <div class="col-lg-8">
+            <!-- Objet & Description -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="fw-bold text-dark">Objet : {{ $courrier->objet }}</h5>
+                    <hr>
+                    <p class="text-muted" style="white-space: pre-line;">
+                        {{ $courrier->description ?: 'Aucune description fournie.' }}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Zone Aperçu Document -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-file-earmark-pdf me-2"></i>Aperçu du document</h5>
+                    @if($courrier->chemin_fichier)
+                        <a href="{{ asset('documents/courriers/' . $courrier->chemin_fichier) }}" download class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-download"></i> Télécharger
+                        </a>
+                    @endif
+                </div>
+                <div class="card-body bg-light p-2">
+                    @if($courrier->chemin_fichier)
+                        @php
+                            $extension = pathinfo($courrier->chemin_fichier, PATHINFO_EXTENSION);
+                            $fileUrl = asset('documents/courriers/' . $courrier->chemin_fichier);
+                        @endphp
+
+                        <div class="rounded overflow-hidden shadow-inner bg-white" style="min-height: 600px;">
+                            @if(strtolower($extension) == 'pdf')
+                                <iframe src="{{ $fileUrl }}#toolbar=0" width="100%" height="700px" style="border: none;"></iframe>
+                            @elseif(in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'webp']))
+                                <div class="text-center p-4">
+                                    <img src="{{ $fileUrl }}" class="img-fluid rounded" alt="Document">
+                                </div>
+                            @else
+                                <div class="d-flex flex-column align-items-center justify-content-center" style="height: 400px;">
+                                    <i class="bi bi-file-earmark-zip h1 text-secondary"></i>
+                                    <p class="mt-3">Ce type de fichier ({{ $extension }}) ne peut pas être visualisé directement.</p>
+                                    <a href="{{ $fileUrl }}" class="btn btn-primary">Ouvrir le fichier</a>
+                                </div>
+                            @endif
+                        </div>
+                    @else
+                        <div class="text-center py-5">
+                            <i class="bi bi-file-earmark-x h1 text-muted"></i>
+                            <p class="text-muted mt-2">Aucune pièce jointe associée.</p>
+                        </div>
+                    @endif
+                </div>
+                <div class="card-footer bg-white text-end small text-muted">
+                    Dernière modification : {{ $courrier->updated_at->diffForHumans() }}
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<style>
+    .bg-primary-subtle { background-color: #e7f1ff; }
+    .bg-danger-subtle { background-color: #f8d7da; }
+    .shadow-inner { box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06); }
+    @media print {
+        .btn, .breadcrumb, .card-header button { display: none !important; }
+        .card { border: 1px solid #ddd !important; shadow: none !important; }
+    }
+</style>
 @endsection
