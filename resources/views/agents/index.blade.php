@@ -64,6 +64,48 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     @endif
+<!-- RÉSUMÉ DES EFFECTIFS 2026 -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm bg-primary text-white rounded-lg">
+            <div class="card-body d-flex align-items-center">
+                <div class="flex-grow-1">
+                    <h6 class="text-uppercase mb-1 small fw-bold">Effectif Total</h6>
+                    <h2 class="mb-0 fw-black">{{ $agents->total() }}</h2>
+                </div>
+                <div class="icon-shape bg-white text-primary rounded-circle shadow-sm p-3">
+                    <i class="fas fa-users fa-2x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm bg-success text-white rounded-lg">
+            <div class="card-body d-flex align-items-center">
+                <div class="flex-grow-1">
+                    <h6 class="text-uppercase mb-1 small fw-bold">Comptes Actifs</h6>
+                    <h2 class="mb-0 fw-black">{{ $agents->where('user_id', '!=', null)->count() }}</h2>
+                </div>
+                <div class="icon-shape bg-white text-success rounded-circle shadow-sm p-3">
+                    <i class="fas fa-user-check fa-2x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm bg-danger text-white rounded-lg">
+            <div class="card-body d-flex align-items-center">
+                <div class="flex-grow-1">
+                    <h6 class="text-uppercase mb-1 small fw-bold">Sans Accès Système</h6>
+                    <h2 class="mb-0 fw-black">{{ $agents->where('user_id', '==', null)->count() }}</h2>
+                </div>
+                <div class="icon-shape bg-white text-danger rounded-circle shadow-sm p-3">
+                    <i class="fas fa-user-slash fa-2x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
                     <!-- TABLEAU RENFORCÉ -->
                     <div class="table-responsive rounded shadow-sm border">

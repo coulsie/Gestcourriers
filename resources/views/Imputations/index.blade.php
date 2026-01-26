@@ -125,7 +125,7 @@
                             </td>
 
                             <!-- Échéancier -->
-                            <td class="fw-bold fs-5">
+                             <td class="fw-bold fs-5">
                                 @if($imputation->echeancier)
                                     @php
                                         $echeance = \Carbon\Carbon::parse($imputation->echeancier);
@@ -133,10 +133,15 @@
                                     @endphp
                                     <div class="{{ $isPast ? 'text-danger' : 'text-dark' }}">
                                         <i class="far fa-clock me-1"></i>{{ $echeance->format('d/m/Y') }}
-                                        @if($isPast) <br><span class="badge bg-danger text-uppercase fs-small mt-1">Hors Délai</span> @endif
+                                        @if($isPast)
+                                            <br>
+                                            <span class="badge bg-danger text-white text-uppercase mt-1 shadow-sm" style="font-size: 0.75rem;">
+                                                <i class="fas fa-exclamation-triangle me-1"></i> Hors Délai
+                                            </span>
+                                        @endif
                                     </div>
                                 @else
-                                    <span class="text-muted italic fs-6">Non défini</span>
+                                    <span class="text-muted small">N/A</span>
                                 @endif
                             </td>
 
@@ -179,7 +184,7 @@
                             </td>
 
                             <!-- Actions -->
-                            
+
                             <td class="text-center pe-4">
                                 <div class="btn-group shadow-sm">
                                     <!-- Bouton Voir/Traiter -->

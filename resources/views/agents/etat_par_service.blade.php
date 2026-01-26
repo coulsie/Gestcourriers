@@ -88,8 +88,9 @@
     {{-- Couleur dynamique selon le statut --}}
                                         @php
                                             $color = match($agent->status) {
-                                                'Chef de service' => 'danger',
+                                                'Chef de service' => 'success',
                                                 'Sous-directeur' => 'warning', // On retire text-dark ici
+                                                'Directeur'=> 'Danger',
                                                 default => 'info',            // On retire text-dark ici
                                             };
                                         @endphp
@@ -98,7 +99,7 @@
                                         <span class="badge bg-{{ $color }} text-white rounded-pill">
                                             {{ $agent->status }}
                                         </span>
-                                    </td>
+                                </td>
                                 <td>
                                     <div class="text-primary small fw-bold">{{ $agent->Grade }}</div>
                                     <div class="text-muted" style="font-size: 0.85rem;">{{ $agent->Emploi }}</div>

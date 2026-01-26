@@ -11,6 +11,7 @@ use App\Http\Controllers\{
     StatistiqueController, ReponseController, PostController
 };
 use App\Http\Controllers\Auth\PasswordSetupController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,7 +19,13 @@ use App\Http\Controllers\Auth\PasswordSetupController;
 |--------------------------------------------------------------------------
 */
 
+// Affichage du formulaire
+Route::get('forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])
+    ->name('password.request');
 
+// Traitement de l'envoi du mail
+Route::post('forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])
+    ->name('password.email');
 
 
 
@@ -113,7 +120,7 @@ Route::middleware(['auth'])->group(function () {
 
         // --- GESTION DES COURRIERS & AFFECTATIONS ---
         Route::prefix('courriers')->name('courriers.')->group(function () {
-            
+
             Route::get('/visualiser/{id}', [CourrierController::class, 'visualiserDocument'])->name('visualiser');
             Route::get('/recherche', [CourrierController::class, 'RechercheAffichage'])->name('RechercheAffichage');
             Route::get('/{id}/affecter', [CourrierAffectationController::class, 'create'])->name('affectation.create');

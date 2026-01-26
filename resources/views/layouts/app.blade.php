@@ -54,7 +54,7 @@
                 </a>
                 <div id="collapseCourriers" class="collapse {{ request()->routeIs('courriers.*') ? 'show' : '' }}" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="{{ route('courriers.index') }}">Liste des courriers</a>
+                        <a class="collapse-item" href="{{ route('courriers.index') }}">Enrégistrement courriers</a>
                         <a class="collapse-item" href="{{ route('courriers.create') }}">créer un courriers</a>
                         <a class="collapse-item" href="{{ route('courriers.RechercheAffichage') }}">Recherche avancée</a>
                         <a class="collapse-item" href="{{ route('courriers.archives') }}">Archives</a>
@@ -76,14 +76,14 @@
                 <div id="collapsePresences" class="collapse {{ request()->routeIs('presences.*') ? 'show' : '' }}" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Pointage :</h6>
-                        <a class="collapse-item" href="{{ route('presences.index') }}">Liste des présences</a>
+                        <a class="collapse-item" href="{{ route('presences.index') }}">Enrégistrement pointage</a>
                         <a class="collapse-item" href="{{ route('presences.monPointage') }}">Marquer Présence </a>
                         <a class="collapse-item" href="{{ route('presences.monHistorique') }}">Mon Historique </a>
                         <a class="collapse-item" href="{{ route('presences.listeFiltree') }}">Liste de présence </a>
                         <a class="collapse-item" href="{{ route('presences.validation-hebdo') }}">Validation hebdomadaire</a>
                         <a class="collapse-item" href="{{ route('rapports.presences.periodique') }}">Rapport Périodique</a>
                         <a class="collapse-item" href="{{ route('absences.index') }}">Congés et Permissions</a>
-                        <a class="collapse-item" href="{{ route('typeabsences.index') }}">Autorisation d'Absence</a>                       
+                        <a class="collapse-item" href="{{ route('typeabsences.index') }}">Autorisation d'Absence</a>
                         <!-- <a class="collapse-item" href="{{ route('notifications.index') }}">Notifications de tâches</a> -->
                         <a class="collapse-item" href="{{ route('presences.etat') }}">État des Présences</a>
 
@@ -122,7 +122,7 @@
                         <a class="collapse-item" href="{{ route('agents.par.service.recherche') }}">Recherche Agents</a>
                         <div class="dropdown-divider"></div>
                         <h6 class="collapse-header">Suivi & Stats:</h6>
-                        
+
                         <a class="collapse-item" href="{{ route('statistiques.dashboard') }}">Dashboard Stats</a>
                         <a class="collapse-item" href="{{ route('typeabsences.index') }}">Paramétrage Absence</a>
                     </div>
@@ -138,7 +138,8 @@
                     <i class="fas fa-fw fa-user-circle"></i>
                     <span>Mon Profil</span>
                 </a>
-                
+                <a class="collapse-item" href="{{ route('password.request') }}">{{ __('Mot de passe oublié ?') }}</a>
+
             </li>
 
             <hr class="sidebar-divider d-none d-md-block">
@@ -153,7 +154,7 @@
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
                 @include('layouts.topbar')
-                
+
                 <div class="container-fluid">
                     @yield('content')
                 </div>

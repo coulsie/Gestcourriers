@@ -98,13 +98,23 @@
                                     </div>
                                 </div>
                             </td>
-                            <td>
-                                <span class="badge {{ $agent->status == 'Chef de service' ? 'bg-danger' : 'bg-info' }} text-white mb-1">
-                                    {{ $agent->status }}
-                                </span>
-                                {{-- Si vous voulez aussi le grade en blanc, remplacez 'text-muted' par 'text-white' ci-dessous --}}
-                                <div class="text-muted small fw-bold">{{ $agent->Grade }}</div>
-                            </td>
+                            <td class="text-center">
+    {{-- Couleur dynamique selon le statut --}}
+                                        @php
+                                            $color = match($agent->status) {
+                                                'Chef de service' => 'success',
+                                                'Sous-directeur' => 'warning', // On retire text-dark ici
+                                                'Conseiller Technique'=> 'warning',
+                                                'Directeur'=> 'Danger',
+                                                default => 'info',            // On retire text-dark ici
+                                            };
+                                        @endphp
+
+                                        {{-- Ajout de la classe text-white pour forcer la couleur blanche --}}
+                                        <span class="badge bg-{{ $color }} text-white rounded-pill">
+                                            {{ $agent->status }}
+                                        </span>
+                                </td>
                             <td>
                                 <div class="small"><i class="fas fa-envelope text-muted me-2"></i>{{ $agent->email_professionnel }}</div>
                                 <div class="small mt-1"><i class="fas fa-phone text-muted me-2"></i>{{ $agent->phone_number }}</div>

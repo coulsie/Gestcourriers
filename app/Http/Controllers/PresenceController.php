@@ -14,6 +14,7 @@ use Carbon\Carbon;      // <--- AJOUTER CET IMPORT
 use App\Models\Absence;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Service;
 
 
 class PresenceController extends Controller
@@ -210,47 +211,47 @@ public function store(Request $request)
     }
 
 
-    public function statsPresences()
-        {
-            $annee = 2026;
+public function statsPresences(Request $request)
+{
+    $annee = $request->input('annee', 2026);
+    $mois = $request->input('mois');
+    $semaine = $request->input('semaine');
+    $service_id = $request->input('service_id');
 
-            // 1. Stats Journalières (30 derniers jours)
-            $journalier = Presence::select(
-                    DB::raw('DATE(heure_arrivee) as date'),
-                    DB::raw("COUNT(*) as total"),
-                    DB::raw("SUM(CASE WHEN statut = 'Présent' THEN 1 ELSE 0 END) as presents"),
-                    DB::raw("SUM(CASE WHEN statut = 'En Retard' THEN 1 ELSE 0 END) as retards"),
-                    DB::raw("SUM(CASE WHEN statut = 'Absent' THEN 1 ELSE 0 END) as absents")
-                )
-                ->whereYear('heure_arrivee', $annee)
-                ->groupBy('date')
-                ->orderBy('date', 'desc')
-                ->limit(30)
-                ->get();
+    $query = \App\Models\Presence::with(['agent.service'])
+        ->whereYear('heure_arrivee', $annee);
 
-            // 2. Stats Hebdomadaires
-            $hebdo = Presence::select(
-                    DB::raw('WEEK(heure_arrivee) as semaine'),
-                    DB::raw("COUNT(*) as total"),
-                    DB::raw("SUM(statut = 'Présent') as presents")
-                )
-                ->whereYear('heure_arrivee', $annee)
-                ->groupBy('semaine')
-                ->get();
+    if ($mois) $query->whereMonth('heure_arrivee', $mois);
+    if ($semaine) $query->whereRaw('WEEK(heure_arrivee, 1) = ?', [$semaine]);
 
-            // 3. Stats Mensuelles
-            $mensuel = Presence::select(
-                    DB::raw('MONTH(heure_arrivee) as mois'),
-                    DB::raw("COUNT(*) as total"),
-                    DB::raw("SUM(statut = 'Présent') as presents"),
-                    DB::raw("SUM(statut = 'En Retard') as retards")
-                )
-                ->whereYear('heure_arrivee', $annee)
-                ->groupBy('mois')
-                ->get();
+    // Filtrer par service uniquement si un ID est présent
+    if ($service_id) {
+        $query->whereHas('agent', function($q) use ($service_id) {
+            $q->where('service_id', $service_id);
+        });
+    }
 
-            return view('presences.etat', compact('journalier', 'hebdo', 'mensuel', 'annee'));
-        }
+    $presences = $query->orderBy('heure_arrivee', 'desc')->get();
+
+    $statsAgents = $presences->groupBy('agent_id')->map(function ($items) {
+        $agent = $items->first()->agent;
+        return [
+            'nom' => strtoupper($agent->last_name) . ' ' . ucfirst(strtolower($agent->first_name)),
+            'total' => $items->count(),
+            'presents' => $items->where('statut', 'Présent')->count(),
+            'retards' => $items->where('statut', 'En Retard')->count(),
+            'absents' => $items->where('statut', 'Absent')->count(),
+            'justifies' => $items->where('statut', 'Absence Justifiée')->count(),
+        ];
+    });
+
+    // Récupération des services (utilisez 'libelle' ou 'name' selon votre table)
+    $services = \App\Models\Service::all();
+
+    return view('presences.etat', compact('presences', 'statsAgents', 'annee', 'mois', 'semaine', 'services'));
+}
+
+
             public function agent()
             {
                 // Laravel cherchera par défaut la colonne agent_id dans la table presences

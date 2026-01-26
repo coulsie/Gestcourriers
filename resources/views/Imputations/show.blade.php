@@ -141,22 +141,32 @@
                             <h6 class="fw-bold text-dark mb-0">Pièces Jointes</h6>
                         </div>
                         <div class="card-body px-4 pb-4">
-                            @php
-                                $annexes = is_string($imputation->documents_annexes) ? json_decode($imputation->documents_annexes, true) : $imputation->documents_annexes;
-                            @endphp
                             <div class="list-group list-group-flush border rounded-3">
-                                @if(is_array($annexes))
-                                    @foreach($annexes as $file)
-                                        <a href="{{ asset('documents/imputations/annexes/' . $file) }}" target="_blank" class="list-group-item list-group-item-action d-flex align-items-center py-3">
-                                            <i class="fas fa-file-pdf text-danger fs-4 me-3"></i>
+                                    @if($imputation->documents_annexes)
+                                        {{-- On vérifie si c'est un fichier unique (votre nouveau format) --}}
+                                        <a href="{{ asset($imputation->documents_annexes) }}" target="_blank" class="list-group-item list-group-item-action d-flex align-items-center py-3">
+                                            @php
+                                                $extension = pathinfo($imputation->documents_annexes, PATHINFO_EXTENSION);
+                                                $icon = match($extension) {
+                                                    'pdf' => 'fa-file-pdf text-danger',
+                                                    'doc', 'docx' => 'fa-file-word text-primary',
+                                                    'jpg', 'png', 'jpeg' => 'fa-file-image text-success',
+                                                    default => 'fa-file-alt text-secondary'
+                                                };
+                                            @endphp
+                                            <i class="fas {{ $icon }} fs-4 me-3"></i>
                                             <div class="overflow-hidden">
-                                                <div class="text-dark fw-semibold small text-truncate">{{ basename($file) }}</div>
-                                                <small class="text-primary">Cliquer pour ouvrir</small>
+                                                <div class="text-dark fw-semibold small text-truncate">
+                                                    {{ basename($imputation->documents_annexes) }}
+                                                </div>
+                                                <small class="text-primary">Cliquer pour ouvrir le document annexe</small>
                                             </div>
                                         </a>
-                                    @endforeach
-                                @endif
-
+                                    @else
+                                        <div class="list-group-item text-center py-3 text-muted">
+                                            <i class="fas fa-info-circle me-1"></i> Aucun document annexe disponible.
+                                        </div>
+                                    @endif
                             </div>
                         </div>
                     </div>
