@@ -57,11 +57,17 @@
         <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <div class="d-flex flex-column align-items-end mr-3">
-                    <span class="text-gray-800 small font-weight-bold">{{ Auth::user()->name }}</span>
+                    @auth
+                        <span class="text-gray-800 small font-weight-bold">{{ Auth::user()->name }}</span>
+                    @endauth
                     <span class="text-gray-500 x-small" style="font-size: 10px;">Connecté</span>
                 </div>
                 <img class="img-profile rounded-circle border shadow-sm"
-                     src="https://ui-avatars.com{{ urlencode(Auth::user()->name) }}&background=4e73df&color=fff&bold=true">
+                @auth
+                    <img src="https://ui-avatars.com{{ urlencode(Auth::user()->name) }}&background=4e73df&color=fff&bold=true">
+                @else
+                    <img src="https://ui-avatars.comInvite&background=cccccc&color=fff">
+                @endauth
             </a>
 
             <!-- Menu déroulant Profil -->
