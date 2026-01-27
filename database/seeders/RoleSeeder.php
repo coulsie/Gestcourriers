@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -11,15 +10,34 @@ class RoleSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Créer les permissions
-        Permission::create(['name' => 'modifier articles']);
-        Permission::create(['name' => 'supprimer articles']);
+        // Nettoyer le cache des permissions (recommandé par Spatie)
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // 2. Créer les rôles et leur attribuer des permissions
-        $admin = Role::create(['name' => 'admin']);
-        $admin->givePermissionTo(Permission::all());
+        // 1. Liste des permissions (Ajoutez-en autant que vous voulez ici)
+        $permissions = [
+            'modifier articles',
+            'supprimer articles',
+            'voir-utilisateurs',
+            'gerer-roles',
+            'acceder-dashboard'
+        ];
 
-        $editor = Role::create(['name' => 'editeur']);
-        $editor->givePermissionTo('modifier articles');
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate(['name' => $permission]);
+        }
+
+        // 2. Créer les rôles et attribuer les permissions
+
+        // ADMIN : possède TOUT
+        $admin = Role::firstOrCreate(['name' => 'admin']);
+        $admin->syncPermissions(Permission::all());
+
+        // EDITEUR : modifier + dashboard
+        $editor = Role::firstOrCreate(['name' => 'editeur']);
+        $editor->syncPermissions(['modifier articles', 'acceder-dashboard']);
+
+        // RH : voir-utilisateurs + dashboard
+        $rh = Role::firstOrCreate(['name' => 'rh']);
+        $rh->syncPermissions(['voir-utilisateurs', 'acceder-dashboard']);
     }
 }

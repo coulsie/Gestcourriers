@@ -12,6 +12,7 @@ use App\Models\Agent;
 use App\Models\user;
 use App\Models\NotificationTache;
 use Spatie\Permission\Traits\HasRoles; // <--- Importation
+use App\Models\Role;
 
 
 
@@ -108,6 +109,9 @@ class User extends Authenticatable
             'id'                      // Clé locale sur Agent
         );
     }
-   
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
 
     }

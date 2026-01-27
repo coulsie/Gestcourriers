@@ -26,8 +26,26 @@
                 <thead class="bg-dark text-white">
                     <tr>
                         <th class="py-3 px-3">ID</th>
-                        <th>Utilisateur</th>
-                        <th>Rôle</th>
+                        <th>
+                            <a href="{{ route('users.index', ['sort' => 'name', 'direction' => request('direction') == 'asc' ? 'desc' : 'asc']) }}" class="text-white text-decoration-none">
+                                Utilisateur
+                                @if(request('sort') == 'name')
+                                    <i class="fas fa-sort-alpha-{{ request('direction') == 'asc' ? 'up' : 'down' }} ms-1"></i>
+                                @else
+                                    <i class="fas fa-sort ms-1" style="opacity: 0.5;"></i>
+                                @endif
+                            </a>
+                        </th>
+                        <th>
+                            <a href="{{ route('users.index', ['sort' => 'role', 'direction' => request('direction') == 'asc' ? 'desc' : 'asc']) }}" class="text-white text-decoration-none">
+                                Rôle
+                                @if(request('sort') == 'role')
+                                    <i class="fas fa-sort-amount-{{ request('direction') == 'asc' ? 'up' : 'down' }} ms-1"></i>
+                                @else
+                                    <i class="fas fa-sort ms-1" style="opacity: 0.5;"></i>
+                                @endif
+                            </a>
+                        </th>
                         <th>Email</th>
                         <th>Créé le</th>
                         <th class="text-center">Actions</th>
@@ -44,22 +62,29 @@
                             <td>
                                 @forelse($user->getRoleNames() as $role)
                                     @php
-                                        $roleColor = match($role) {
-                                            'admin' => 'bg-danger',
-                                            'directeur' => 'bg-danger',
-                                            'superviseur' => 'bg-primary',
-                                            'utilisateur' => 'bg-info',
-                                            'agent' => 'bg-info',
-                                            default => 'bg-secondary',
+                                        // Définition de couleurs distinctes par rôle
+                                        $roleColor = match(strtolower($role)) {
+                                            'admin'       => 'bg-danger',      // Rouge
+                                            'directeur'   => 'bg-dark',        // Noir
+                                            'superviseur' => 'bg-warning text-dark', // Jaune (écriture noire pour contraste)
+                                            'rh'          => 'bg-success',     // Vert
+                                            'utilisateur' => 'bg-primary',     // Bleu
+                                            'agent'       => 'bg-info',        // Cyan
+                                            'editeur'     => 'bg-purple',      // Violet (nécessite une classe custom ou style inline)
+                                            default       => 'bg-secondary',   // Gris
                                         };
+
+                                        // Correction spécifique pour le jaune (warning) qui nécessite du texte noir
+                                        $textColor = str_contains($roleColor, 'bg-warning') ? 'text-dark' : 'text-white';
                                     @endphp
-                                    {{-- Ajout de text-white ici pour l'écriture en blanc --}}
-                                    <span class="badge {{ $roleColor }} text-white px-2 py-1 shadow-sm text-uppercase">
+
+                                    <span class="badge {{ $roleColor }} {{ $textColor }} px-2 py-1 shadow-sm text-uppercase mb-1"
+                                        style="{{ $role === 'editeur' ? 'background-color: #6f42c1;' : '' }}">
                                         <i class="fas fa-user-tag me-1" style="font-size: 0.65rem;"></i>
                                         {{ $role }}
                                     </span>
                                 @empty
-                                    <span class="badge bg-light text-dark border italic">Aucun rôle</span>
+                                    <span class="badge bg-light text-dark border italic small">Aucun rôle</span>
                                 @endforelse
                             </td>
 
@@ -115,8 +140,15 @@
             </table>
         </div>
 
-        <div class="mt-4">
-            {{ $users->links() }}
+                {{-- Remplacez le bloc <div class="mt-4"> actuel par celui-ci --}}
+        <div class="d-flex justify-content-between align-items-center mt-4 px-2">
+            <div class="text-muted small">
+                Affichage de {{ $users->firstItem() }} à {{ $users->lastItem() }} sur {{ $users->total() }} utilisateurs
+            </div>
+            <div>
+                {{-- On force l'utilisation des flèches et du style Bootstrap --}}
+                {!! $users->links('pagination::bootstrap-5') !!}
+            </div>
         </div>
     </div>
 </div>

@@ -9,9 +9,9 @@
     <!-- Titre Stylisé -->
     <div class="d-none d-sm-inline-block mr-auto ml-md-3 my-2 my-md-0 mw-100">
         <h5 class="mb-0 fw-bold" style="letter-spacing: 1px;">
-            <span style="color: #4e73df;">Système de Gestion</span> 
+            <span style="color: #4e73df;">Système de Gestion</span>
             <span class="badge badge-primary px-3 py-2" style="background: linear-gradient(45deg, #4e73df, #224abe); border-radius: 8px shadow: 2px 2px 5px rgba(0,0,0,0.1);">
-                DSESF
+                Direction de la  Stratégie, des Etudes et Statistiques Fiscales
             </span>
         </h5>
     </div>
@@ -19,8 +19,8 @@
     <!-- Barre de Recherche Globale (Courriers, RH, Présences) -->
     <form class="d-none d-md-inline-block form-inline ml-auto mr-md-5 my-2 my-md-0 mw-100 navbar-search" action="{{ route('home') }}" method="GET">
         <div class="input-group">
-            <input type="text" name="search" class="form-control bg-light border-0 small" 
-                   placeholder="Rechercher (Courrier, Agent, Présence...)" 
+            <input type="text" name="search" class="form-control bg-light border-0 small"
+                   placeholder="Rechercher (Courrier, Agent, Présence...)"
                    aria-label="Search" aria-describedby="basic-addon2"
                    style="width: 350px; border-radius: 20px 0 0 20px !important;">
             <div class="input-group-append">
@@ -60,10 +60,10 @@
                     <span class="text-gray-800 small font-weight-bold">{{ Auth::user()->name }}</span>
                     <span class="text-gray-500 x-small" style="font-size: 10px;">Connecté</span>
                 </div>
-                <img class="img-profile rounded-circle border shadow-sm" 
+                <img class="img-profile rounded-circle border shadow-sm"
                      src="https://ui-avatars.com{{ urlencode(Auth::user()->name) }}&background=4e73df&color=fff&bold=true">
             </a>
-            
+
             <!-- Menu déroulant Profil -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                 <a class="dropdown-item" href="{{ route('profile.show') }}">

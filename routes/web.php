@@ -8,7 +8,7 @@ use App\Http\Controllers\{
     PresenceController, AbsenceController, TypeAbsenceController,
     EtatAgentsController, NotificationTacheController, AnnonceController,
     ReponseNotificationController, AgentServiceController, ImputationController,
-    StatistiqueController, ReponseController, PostController
+    StatistiqueController, ReponseController, PostController,RoleController
 };
 use App\Http\Controllers\Auth\PasswordSetupController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
@@ -18,7 +18,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 | 1. ACCÈS PUBLICS
 |--------------------------------------------------------------------------
 */
-
+Route::resource('users', \App\Http\Controllers\UserController::class);
 // Affichage du formulaire
 Route::get('forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])
     ->name('password.request');
@@ -56,6 +56,18 @@ Route::middleware(['auth'])->group(function () {
     // --- ADMINISTRATION & UTILISATEURS ---
     Route::middleware(['can:manage-users'])->group(function () {
         Route::post('/users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset_password');
+        
+        Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
+        Route::get('/roles/{id}/edit', [RoleController::class, 'edit'])->name('roles.edit');
+        Route::put('/roles/{id}', [RoleController::class, 'update'])->name('roles.update');
+        Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
+        Route::get('/roles/{id}/edit', [RoleController::class, 'edit'])->name('roles.edit');
+        Route::put('/roles/{id}', [RoleController::class, 'update'])->name('roles.update');
+        Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create');
+        Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
+
+
+
     });
 
     Route::middleware(['can:voir-utilisateurs'])->group(function () {

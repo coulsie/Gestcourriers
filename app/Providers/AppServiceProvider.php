@@ -23,20 +23,16 @@ class AppServiceProvider extends ServiceProvider
      */
 
 
+public function boot(): void
+{
+    // FORCE LE PASSAGE POUR TOUT LE MONDE (Test uniquement)
+    Gate::before(function ($user, $ability) {
+        return true;
+    });
 
-    public function boot(): void
-    {
-
-    
-    // Votre définition de Gate
-        Gate::define('manage-users', function (User $user) {
-            // Exemple : vérifie si l'utilisateur a le rôle admin
-            return $user->role === 'admin';
-        });
-
-        Gate::define('voir-utilisateurs', function (User $user) {
-            return $user->role === 'admin' || $user->role === 'rh';
-        });
-    }
-
+    // Gardez vos définitions en dessous si vous voulez
+    Gate::define('voir-utilisateurs', function (User $user) {
+        return true;
+    });
+}
 }

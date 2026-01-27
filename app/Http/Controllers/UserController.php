@@ -30,14 +30,34 @@ class UserController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function index()
-    {
-        // Récupère tous les utilisateurs de la base de données
-       $users = User::paginate(15);
 
-        // Retourne la vue index.blade.php en lui passant les utilisateurs
-        return view('Users.index', compact('users'));
+
+    public function index(Request $request)
+{
+    $sort = $request->get('sort', 'name');
+    $direction = $request->get('direction', 'asc');
+
+    $query = User::query();
+
+    if ($sort === 'role') {
+        // Sous-requête pour récupérer le nom du premier rôle lié
+        $query->addSelect(['first_role_name' => \App\Models\Role::select('name')
+            ->join('role_user', 'roles.id', '=', 'role_user.role_id')
+            ->whereColumn('role_user.user_id', 'users.id')
+            ->limit(1)
+        ])->orderBy('first_role_name', $direction);
+    } else {
+        $allowedSorts = ['id', 'name', 'email', 'created_at'];
+        $sort = in_array($sort, $allowedSorts) ? $sort : 'name';
+        $query->orderBy($sort, $direction);
     }
+
+    $users = $query->paginate(25)->withQueryString();
+
+    return view('Users.index', compact('users'));
+}
+
+
 
     /**
      * Affiche le formulaire de création d'un nouvel utilisateur.
@@ -99,11 +119,17 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\View\View
      */
-    public function edit($id)
-    {
-        $user = User::findOrFail($id);
-        return view('Users.edit', compact('user'));
-    }
+        public function edit($id)
+        {
+            // 1. Récupérer l'utilisateur à modifier
+            $user = User::findOrFail($id);
+
+            // 2. Récupérer TOUS les rôles existants pour pouvoir les afficher dans le formulaire
+            $allRoles = Role::all();
+
+            // 3. Envoyer les deux variables à la vue
+            return view('Users.edit', compact('user', 'allRoles'));
+        }
 
     /**
      * Met à jour l'utilisateur spécifié dans la base de données.
@@ -112,22 +138,29 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, $id)
-    {
-        $user = User::findOrFail($id);
 
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            // Règle d'unicité qui ignore l'ID de l'utilisateur actuel lors de la vérification
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
 
-        ]);
+public function update(Request $request, $id)
+{
+    $user = User::findOrFail($id);
 
-        // Mise à jour de l'instance du modèle
-        $user->update($validatedData);
+    $validatedData = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+        // Ajout de la validation pour les rôles
+        'roles' => 'nullable|array',
+        'roles.*' => 'exists:roles,id',
+    ]);
 
-        return redirect()->route('users.index')->with('success', 'Utilisateur mis à jour avec succès !');
-    }
+    // 1. Mise à jour des infos basiques (nom, email)
+    $user->update($validatedData);
+
+    // 2. Mise à jour de la table croisée (pivot)
+    // On utilise l'input 'roles' ou un tableau vide si rien n'est coché
+    $user->roles()->sync($request->input('roles', []));
+
+    return redirect()->route('users.index')->with('success', 'Utilisateur et rôles mis à jour avec succès !');
+}
 
     /**
      * Supprime l'utilisateur spécifié de la base de données.

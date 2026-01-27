@@ -60,16 +60,20 @@
                         {{-- La gestion des mots de passe se fait souvent dans un formulaire séparé pour des raisons de sécurité. --}}
 
                         {{-- Bouton de soumission --}}
-                        <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Mettre à jour l\'utilisateur') }}
-                                </button>
-                                <a href="{{ route('users.index') }}" class="btn btn-secondary">
-                                    {{ __('Annuler') }}
-                                </a>
-                            </div>
+                        <div style="margin-top: 20px;">
+                            <label><strong>Attribuer des rôles :</strong></label>
+                            @foreach($allRoles as $role)
+                                <div>
+                                    <input type="checkbox"
+                                        name="roles[]"
+                                        value="{{ $role->id }}"
+                                        {{ $user->roles->contains($role->id) ? 'checked' : '' }}>
+                                    <label>{{ $role->name }}</label>
+                                </div>
+                            @endforeach
                         </div>
+
+                        <button type="submit" style="margin-top: 20px;">Enregistrer</button>
                     </form>
                 </div>
             </div>

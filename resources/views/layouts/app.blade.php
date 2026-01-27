@@ -29,7 +29,7 @@
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-envelope-open-text"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">e-COURRIER</div>
+                <div class="sidebar-brand-text mx-3">e-DSESF</div>
             </a>
 
             <hr class="sidebar-divider my-0">
@@ -41,6 +41,37 @@
                     <span>Tableau de Bord</span>
                 </a>
             </li>
+
+            <hr class="sidebar-divider">
+ <!-- SECTION ADMINISTRATION -->
+            @can('manage-users')
+            <hr class="sidebar-divider">
+            <div class="sidebar-heading text-warning">Administration Système</div>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAdmin" aria-expanded="true">
+                    <i class="fas fa-fw fa-lock text-warning"></i>
+                    <span class="text-warning">Contrôle & RH</span>
+                </a>
+                <div id="collapseAdmin" class="collapse" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded border-left-warning shadow">
+                        <h6 class="collapse-header">Utilisateurs & RH:</h6>
+                        <a class="collapse-item font-weight-bold" href="{{ route('users.index') }}">Liste Utilisateurs</a>
+                        <a class="collapse-item font-weight-bold" href="{{ route('roles.index') }}">Gestion des Rôles & Permissions</a>
+
+                        <a class="collapse-item" href="{{ route('agents.nouveau') }}">Nouveau Compte</a>
+                        <a class="collapse-item" href="{{ route('agents.index') }}">Ressources Humaines</a>
+                         <a class="collapse-item" href="{{ route('agents.par.service') }}">Agents par Service</a>
+                        <a class="collapse-item" href="{{ route('agents.par.service.recherche') }}">Recherche Agents</a>
+                        <div class="dropdown-divider"></div>
+                        <h6 class="collapse-header">Suivi & Stats:</h6>
+
+                        <a class="collapse-item" href="{{ route('statistiques.dashboard') }}">Dashboard Stats</a>
+                        <a class="collapse-item" href="{{ route('typeabsences.index') }}">Paramétrage Absence</a>
+                    </div>
+                </div>
+            </li>
+            @endcan
 
             <hr class="sidebar-divider">
 
@@ -102,36 +133,7 @@
                 </a>
             </li>
 
-            <!-- SECTION ADMINISTRATION -->
-            @can('manage-users')
-            <hr class="sidebar-divider">
-            <div class="sidebar-heading text-warning">Administration Système</div>
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAdmin" aria-expanded="true">
-                    <i class="fas fa-fw fa-lock text-warning"></i>
-                    <span class="text-warning">Contrôle & RH</span>
-                </a>
-                <div id="collapseAdmin" class="collapse" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded border-left-warning shadow">
-                        <h6 class="collapse-header">Utilisateurs & RH:</h6>
-                        <a class="collapse-item font-weight-bold" href="{{ route('users.index') }}">Liste Utilisateurs</a>
-                        <a class="collapse-item" href="{{ route('agents.nouveau') }}">Nouveau Compte</a>
-                        <a class="collapse-item" href="{{ route('agents.index') }}">Ressources Humaines</a>
-                         <a class="collapse-item" href="{{ route('agents.par.service') }}">Agents par Service</a>
-                        <a class="collapse-item" href="{{ route('agents.par.service.recherche') }}">Recherche Agents</a>
-                        <div class="dropdown-divider"></div>
-                        <h6 class="collapse-header">Suivi & Stats:</h6>
-
-                        <a class="collapse-item" href="{{ route('statistiques.dashboard') }}">Dashboard Stats</a>
-                        <a class="collapse-item" href="{{ route('typeabsences.index') }}">Paramétrage Absence</a>
-                    </div>
-                </div>
-            </li>
-            @endcan
-
-            <hr class="sidebar-divider">
-
+           
             <!-- PROFIL -->
             <li class="nav-item {{ request()->routeIs('profile.show') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('profile.show') }}">
