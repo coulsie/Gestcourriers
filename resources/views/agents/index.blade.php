@@ -18,94 +18,102 @@
                 </div>
 
                 <div class="card-body bg-white">
-                    <!-- BARRE DE RECHERCHE ET FILTRES -->
-                    <div class="card mb-4 border-0 bg-light shadow-sm">
-                        <div class="card-body">
-                            <form action="{{ route('agents.index') }}" method="GET" class="row g-3">
-                                <!-- Recherche textuelle -->
-                                <div class="col-md-4">
-                                    <label class="form-label fw-bold text-primary small">RECHERCHER</label>
-                                    <div class="input-group border border-primary rounded">
-                                        <span class="input-group-text bg-primary text-white border-0"><i class="fas fa-search"></i></span>
-                                        <input type="text" name="search" class="form-control" placeholder="Nom, prénom ou matricule..." value="{{ request('search') }}">
+                    <!-- RÉSUMÉ DES EFFECTIFS 2026 -->
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <div class="card border-0 shadow-sm bg-primary text-white rounded-lg">
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="flex-grow-1">
+                                        <h6 class="text-uppercase mb-1 small fw-bold">Effectif Total</h6>
+                                        <h2 class="mb-0 fw-black">{{ $agents->total() }}</h2>
+                                    </div>
+                                    <div class="icon-shape bg-white text-primary rounded-circle shadow-sm p-3">
+                                        <i class="fas fa-users fa-2x"></i>
                                     </div>
                                 </div>
-                                <!-- Filtre Service -->
-                                <div class="col-md-3">
-                                    <label class="form-label fw-bold text-primary small">SERVICE</label>
-                                    <select name="service" class="form-select border-primary fw-bold">
-                                        <option value="">Tous les services</option>
-                                        @foreach($services as $service)
-                                            <option value="{{ $service->id }}" {{ request('service') == $service->id ? 'selected' : '' }}>{{ $service->name }}</option>
-                                        @endforeach
-                                    </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card border-0 shadow-sm bg-success text-white rounded-lg">
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="flex-grow-1">
+                                        <h6 class="text-uppercase mb-1 small fw-bold">Comptes Actifs</h6>
+                                        <h2 class="mb-0 fw-black">{{ $agents->where('user_id', '!=', null)->count() }}</h2>
+                                    </div>
+                                    <div class="icon-shape bg-white text-success rounded-circle shadow-sm p-3">
+                                        <i class="fas fa-user-check fa-2x"></i>
+                                    </div>
                                 </div>
-                                <!-- Filtre Accès -->
-                                <div class="col-md-3">
-                                    <label class="form-label fw-bold text-primary small">ÉTAT COMPTE</label>
-                                    <select name="account" class="form-select border-primary fw-bold">
-                                        <option value="">Tous les états</option>
-                                        <option value="active" {{ request('account') == 'active' ? 'selected' : '' }}>Avec compte actif</option>
-                                        <option value="none" {{ request('account') == 'none' ? 'selected' : '' }}>Sans compte</option>
-                                    </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card border-0 shadow-sm bg-danger text-white rounded-lg">
+                                <div class="card-body d-flex align-items-center">
+                                    <div class="flex-grow-1">
+                                        <h6 class="text-uppercase mb-1 small fw-bold">Sans Accès Système</h6>
+                                        <h2 class="mb-0 fw-black">{{ $agents->where('user_id', '==', null)->count() }}</h2>
+                                    </div>
+                                    <div class="icon-shape bg-white text-danger rounded-circle shadow-sm p-3">
+                                        <i class="fas fa-user-slash fa-2x"></i>
+                                    </div>
                                 </div>
-                                <!-- Boutons -->
-                                <div class="col-md-2 d-flex align-items-end gap-2">
-                                    <button type="submit" class="btn btn-primary w-100 fw-bold">FILTRER</button>
-                                    <a href="{{ route('agents.index') }}" class="btn btn-outline-dark w-100 fw-bold">RESET</a>
-                                </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
 
-                    @if (session('success'))
-                        <div class="alert alert-success border-start border-success border-5 shadow-sm alert-dismissible fade show" role="alert">
-                            <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    @endif
-<!-- RÉSUMÉ DES EFFECTIFS 2026 -->
-<div class="row mb-4">
-    <div class="col-md-4">
-        <div class="card border-0 shadow-sm bg-primary text-white rounded-lg">
-            <div class="card-body d-flex align-items-center">
-                <div class="flex-grow-1">
-                    <h6 class="text-uppercase mb-1 small fw-bold">Effectif Total</h6>
-                    <h2 class="mb-0 fw-black">{{ $agents->total() }}</h2>
-                </div>
-                <div class="icon-shape bg-white text-primary rounded-circle shadow-sm p-3">
-                    <i class="fas fa-users fa-2x"></i>
+<!-- BARRE DE RECHERCHE ET FILTRES RÉDUITE -->
+<div class="card mb-3 border-0 bg-light shadow-sm">
+    <div class="card-body py-2 px-3">
+        <form action="{{ route('agents.index') }}" method="GET" class="row gx-0 align-items-end">
+
+            <!-- Recherche textuelle (Élargie pour équilibrer) -->
+            <div class="col-md-4 pe-2">
+                <label class="form-label fw-bold text-primary mb-0 small" style="font-size: 0.7rem;">RECHERCHER</label>
+                <div class="input-group input-group-sm border border-primary rounded" style="height: 31px;">
+                    <span class="input-group-text bg-primary text-white border-0"><i class="fas fa-search fa-xs"></i></span>
+                    <input type="text" name="search" class="form-control border-0" placeholder="Nom, matricule..." value="{{ request('search') }}">
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card border-0 shadow-sm bg-success text-white rounded-lg">
-            <div class="card-body d-flex align-items-center">
-                <div class="flex-grow-1">
-                    <h6 class="text-uppercase mb-1 small fw-bold">Comptes Actifs</h6>
-                    <h2 class="mb-0 fw-black">{{ $agents->where('user_id', '!=', null)->count() }}</h2>
-                </div>
-                <div class="icon-shape bg-white text-success rounded-circle shadow-sm p-3">
-                    <i class="fas fa-user-check fa-2x"></i>
+
+            <!-- Filtre Service -->
+            <div class="col-md-2 pe-3">
+                <label class="form-label fw-bold text-primary mb-0 small" style="font-size: 0.7rem;">SERVICE</label>
+                <select name="service" class="form-select form-select-sm border-primary fw-bold"
+                        style="white-space: normal; height: 31px; line-height: 1.1; font-size: 0.75rem;">
+                    <option value="">Tous les services</option>
+                    @foreach($services as $service)
+                        <option value="{{ $service->id }}" {{ request('service') == $service->id ? 'selected' : '' }}>
+                            {{ $service->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Séparateur + Filtre ÉTAT COMPTE -->
+            <div class="col-md-3 ps-3 border-start border-2 border-primary-subtle">
+                <label class="form-label fw-bold text-primary mb-0 small" style="font-size: 0.7rem;">ÉTAT COMPTE</label>
+                <select name="account" class="form-select form-select-sm border-primary fw-bold" style="height: 31px; font-size: 0.75rem;">
+                    <option value="">Tous les états</option>
+                    <option value="active" {{ request('account') == 'active' ? 'selected' : '' }}>🟢 Actif</option>
+                    <option value="none" {{ request('account') == 'none' ? 'selected' : '' }}>🔴 Sans compte</option>
+                </select>
+            </div>
+
+            <!-- Boutons (Ajusté à col-md-3 pour remplir la ligne) -->
+            <div class="col-md-3 ps-3">
+                <div class="d-flex gap-1">
+                    <button type="submit" class="btn btn-primary btn-sm flex-grow-1 fw-bold shadow-sm" style="height: 31px;">
+                        <i class="fas fa-filter fa-xs me-1"></i> FILTRER
+                    </button>
+                    <a href="{{ route('agents.index') }}" class="btn btn-outline-dark btn-sm fw-bold shadow-sm d-flex align-items-center justify-content-center" style="height: 31px; width: 40px;" title="Reset">
+                        <i class="fas fa-sync-alt fa-xs"></i>
+                    </a>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card border-0 shadow-sm bg-danger text-white rounded-lg">
-            <div class="card-body d-flex align-items-center">
-                <div class="flex-grow-1">
-                    <h6 class="text-uppercase mb-1 small fw-bold">Sans Accès Système</h6>
-                    <h2 class="mb-0 fw-black">{{ $agents->where('user_id', '==', null)->count() }}</h2>
-                </div>
-                <div class="icon-shape bg-white text-danger rounded-circle shadow-sm p-3">
-                    <i class="fas fa-user-slash fa-2x"></i>
-                </div>
-            </div>
-        </div>
+        </form>
     </div>
 </div>
+
 
                     <!-- TABLEAU RENFORCÉ -->
                     <div class="table-responsive rounded shadow-sm border">

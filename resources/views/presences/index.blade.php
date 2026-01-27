@@ -66,7 +66,14 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
-
+    @if (session('error'))
+        <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i> {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+    
+    {{-- La table commence ensuite --}}
     <div class="table-responsive rounded shadow-sm">
         <table class="table table-hover align-middle border">
             <thead class="bg-dark text-white">

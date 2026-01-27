@@ -43,7 +43,7 @@
             </li>
 
             <hr class="sidebar-divider">
- <!-- SECTION ADMINISTRATION -->
+            <!-- SECTION ADMINISTRATION -->
             @can('manage-users')
             <hr class="sidebar-divider">
             <div class="sidebar-heading text-warning">Administration Système</div>
@@ -133,7 +133,7 @@
                 </a>
             </li>
 
-           
+
             <!-- PROFIL -->
             <li class="nav-item {{ request()->routeIs('profile.show') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('profile.show') }}">
@@ -158,6 +158,18 @@
                 @include('layouts.topbar')
 
                 <div class="container-fluid">
+                     @if (session('error'))
+                            <div class="alert alert-danger border-left-danger shadow animated--grow-in">
+                                <i class="fas fa-exclamation-triangle me-2"></i> {{ session('error') }}
+                            </div>
+                        @endif
+
+                        @if (session('success'))
+                            <div class="alert alert-success border-left-success shadow animated--grow-in">
+                                <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
+                            </div>
+                        @endif
+
                     @yield('content')
                 </div>
             </div>

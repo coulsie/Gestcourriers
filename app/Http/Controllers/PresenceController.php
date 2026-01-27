@@ -90,59 +90,67 @@ class PresenceController extends Controller
     /**
      * Stocke une nouvelle ressource (présence) dans la base de données.
                             */
-public function store(Request $request)
-{
-    $request->validate([
-        'agent_id' => 'required|exists:agents,id',
-        'heure_arrivee' => 'nullable|date',
-    ]);
+    public function store(Request $request)
+    {
+        $request->validate([
+            'agent_id' => 'required|exists:agents,id',
+            'heure_arrivee' => 'nullable|date',
+        ]);
 
-    $heureArrivee = $request->filled('heure_arrivee')
-        ? \Carbon\Carbon::parse($request->heure_arrivee)
-        : \Carbon\Carbon::now();
+        // 1. Déterminer l'heure et la date du pointage
+        $heureArrivee = $request->filled('heure_arrivee')
+            ? \Carbon\Carbon::parse($request->heure_arrivee)
+            : \Carbon\Carbon::now();
 
-    // Traduction pour correspondre à l'insertion (ex: "Lundi")
-    $joursFr = [
-        'Monday' => 'Lundi', 'Tuesday' => 'Mardi', 'Wednesday' => 'Mercredi',
-        'Thursday' => 'Jeudi', 'Friday' => 'Vendredi', 'Saturday' => 'Samedi', 'Sunday' => 'Dimanche'
-    ];
-    $jourFr = $joursFr[$heureArrivee->format('l')];
+        $dateJour = $heureArrivee->toDateString(); // Format YYYY-MM-DD
 
-    // On cherche l'horaire
-    $horaireFixe = \App\Models\Horaire::where('jour', $jourFr)->first();
+        // 2. VÉRIFICATION DE DOUBLON (Nouveau)
+        $dejaPointe = \App\Models\Presence::where('agent_id', $request->agent_id)
+            ->whereDate('heure_arrivee', $dateJour)
+            ->exists();
 
-    $statut = 'Présent';
-    $debugNote = "";
-
-    if (!$horaireFixe) {
-        // C'est ce qui arrive actuellement !
-        $debugNote = "ERREUR : Aucun horaire configuré pour le jour $jourFr. ";
-    } else {
-        // Calcul des minutes
-        $minArrivee = ($heureArrivee->hour * 60) + $heureArrivee->minute;
-
-        // Comme c'est un type 'time', Carbon le parse très bien
-        $debutTheorique = \Carbon\Carbon::parse($horaireFixe->heure_debut);
-        $tolerance = (int)$horaireFixe->tolerance_retard;
-
-        $minLimite = ($debutTheorique->hour * 60) + $debutTheorique->minute + $tolerance;
-
-        if ($minArrivee > $minLimite) {
-            $statut = 'En Retard';
+        if ($dejaPointe) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', "Attention : Cet agent a déjà effectué son pointage pour la journée du " . $heureArrivee->format('d/m/Y') . ".");
         }
-        $debugNote = "Calculé pour $jourFr (Limite: {$minLimite}m, Arrivée: {$minArrivee}m). ";
+
+        // 3. Logique des horaires (votre code existant)
+        $joursFr = [
+            'Monday' => 'Lundi', 'Tuesday' => 'Mardi', 'Wednesday' => 'Mercredi',
+            'Thursday' => 'Jeudi', 'Friday' => 'Vendredi', 'Saturday' => 'Samedi', 'Sunday' => 'Dimanche'
+        ];
+        $jourFr = $joursFr[$heureArrivee->format('l')];
+
+        $horaireFixe = \App\Models\Horaire::where('jour', $jourFr)->first();
+        $statut = 'Présent';
+        $debugNote = "";
+
+        if (!$horaireFixe) {
+            $debugNote = "ERREUR : Aucun horaire configuré pour le jour $jourFr. ";
+        } else {
+            $minArrivee = ($heureArrivee->hour * 60) + $heureArrivee->minute;
+            $debutTheorique = \Carbon\Carbon::parse($horaireFixe->heure_debut);
+            $tolerance = (int)$horaireFixe->tolerance_retard;
+            $minLimite = ($debutTheorique->hour * 60) + $debutTheorique->minute + $tolerance;
+
+            if ($minArrivee > $minLimite) {
+                $statut = 'En Retard';
+            }
+            $debugNote = "Calculé pour $jourFr (Limite: {$minLimite}m, Arrivée: {$minArrivee}m). ";
+        }
+
+        // 4. Création de l'enregistrement
+        \App\Models\Presence::create([
+            'agent_id'      => $request->agent_id,
+            'heure_arrivee' => $heureArrivee,
+            'statut'        => $statut,
+            'notes'         => $debugNote . ($request->notes ?? ''),
+            'heure_depart'  => $request->heure_depart ?: null
+        ]);
+
+        return redirect()->route('presences.index')->with('success', "Pointage enregistré : $statut");
     }
-
-    \App\Models\Presence::create([
-        'agent_id'      => $request->agent_id,
-        'heure_arrivee' => $heureArrivee,
-        'statut'        => $statut,
-        'notes'         => $debugNote . ($request->notes ?? ''),
-        'heure_depart'  => $request->heure_depart ?: null
-    ]);
-
-    return redirect()->route('presences.index')->with('success', "Pointage enregistré : $statut");
-}
 
     /**
      * Affiche la ressource (présence) spécifiée.
