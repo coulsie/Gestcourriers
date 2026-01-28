@@ -115,7 +115,7 @@
                         <a class="collapse-item" href="{{ route('rapports.presences.periodique') }}">Rapport Périodique</a>
                         <a class="collapse-item" href="{{ route('absences.index') }}">Congés et Permissions</a>
                         <a class="collapse-item" href="{{ route('typeabsences.index') }}">Autorisation d'Absence</a>
-                        <!-- <a class="collapse-item" href="{{ route('notifications.index') }}">Notifications de tâches</a> -->
+                        
                         <a class="collapse-item" href="{{ route('presences.etat') }}">État des Présences</a>
 
                         <div class="dropdown-divider"></div>

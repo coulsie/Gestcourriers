@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3307
--- Généré le : mer. 28 jan. 2026 à 08:13
+-- Généré le : mer. 28 jan. 2026 à 09:06
 -- Version du serveur : 11.4.9-MariaDB
 -- Version de PHP : 8.3.28
 
@@ -50,28 +50,6 @@ CREATE TABLE IF NOT EXISTS `absences` (
 INSERT INTO `absences` (`id`, `agent_id`, `type_absence_id`, `date_debut`, `date_fin`, `approuvee`, `document_justificatif`, `created_at`, `updated_at`) VALUES
 (3, 15, 3, '2026-01-01', '2026-12-31', 1, '1769004536_Document_2025-11-27_121019.pdf', '2026-01-21 14:08:56', '2026-01-21 14:08:56'),
 (2, 10, 2, '2026-01-13', '2026-01-15', 1, '1769004466_Document_2025-11-27_121019.pdf', '2026-01-21 13:50:03', '2026-01-21 14:07:46');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `affectations`
---
-
-DROP TABLE IF EXISTS `affectations`;
-CREATE TABLE IF NOT EXISTS `affectations` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `courrier_id` bigint(20) UNSIGNED NOT NULL,
-  `agent_id` bigint(20) UNSIGNED NOT NULL,
-  `statut` varchar(191) NOT NULL DEFAULT 'pending',
-  `commentaires` text DEFAULT NULL,
-  `date_affectation` timestamp NOT NULL DEFAULT current_timestamp(),
-  `date_traitement` timestamp NULL DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `affectations_courrier_id_foreign` (`courrier_id`),
-  KEY `affectations_user_id_foreign` (`agent_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -565,34 +543,6 @@ INSERT INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Structure de la table `notifications_taches`
---
-
-DROP TABLE IF EXISTS `notifications_taches`;
-CREATE TABLE IF NOT EXISTS `notifications_taches` (
-  `id_notification` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `agent_id` bigint(20) UNSIGNED NOT NULL,
-  `titre` varchar(191) NOT NULL,
-  `description` text NOT NULL,
-  `date_creation` timestamp NOT NULL DEFAULT current_timestamp(),
-  `date_echeance` timestamp NULL DEFAULT NULL,
-  `suivi_par` varchar(100) NOT NULL,
-  `priorite` enum('Faible','Moyenne','Élevée','Urgent') NOT NULL DEFAULT 'Moyenne',
-  `statut` enum('Non lu','En cours','Complétée','Annulée') NOT NULL DEFAULT 'Non lu',
-  `lien_action` varchar(512) DEFAULT NULL,
-  `document` varchar(512) DEFAULT NULL,
-  `date_lecture` timestamp NULL DEFAULT NULL,
-  `date_completion` timestamp NULL DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `is_archived` tinyint(1) NOT NULL DEFAULT 0,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id_notification`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Structure de la table `password_reset_tokens`
 --
 
@@ -678,7 +628,7 @@ CREATE TABLE IF NOT EXISTS `presences` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `presences_agent_id_foreign` (`agent_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=206 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=207 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `presences`
@@ -889,7 +839,8 @@ INSERT INTO `presences` (`id`, `agent_id`, `heure_arrivee`, `heure_depart`, `sta
 (202, 15, '2026-01-21 08:00:00', NULL, 'Absence Justifiée', 'Justifié: ', '2026-01-26 10:01:14', '2026-01-26 10:01:14'),
 (203, 15, '2026-01-22 08:00:00', NULL, 'Absence Justifiée', 'Justifié: ', '2026-01-26 10:01:14', '2026-01-26 10:01:14'),
 (204, 15, '2026-01-23 08:00:00', NULL, 'Absence Justifiée', 'Justifié: ', '2026-01-26 10:01:14', '2026-01-26 10:01:14'),
-(205, 1, '2026-01-27 07:25:00', '2026-01-27 17:05:00', 'Présent', 'Calculé pour Mardi (Limite: 465m, Arrivée: 445m). ', '2026-01-27 14:59:12', '2026-01-27 14:59:12');
+(205, 1, '2026-01-27 07:25:00', '2026-01-27 17:05:00', 'Présent', 'Calculé pour Mardi (Limite: 465m, Arrivée: 445m). ', '2026-01-27 14:59:12', '2026-01-27 14:59:12'),
+(206, 1, '2026-01-28 08:21:12', NULL, 'En Retard', 'Pointage automatique (Self-service)', '2026-01-28 08:21:12', '2026-01-28 08:21:12');
 
 -- --------------------------------------------------------
 
@@ -925,28 +876,6 @@ INSERT INTO `reponses` (`id`, `validation`, `document_final_signe`, `date_approb
 (2, 'en_attente', NULL, NULL, 5, 1, 'merci', '[\"1769093675_Projet de Note du DSESF au DG_S\\u00e9minaire Loi de r\\u00e8glement 18 20 d\\u00e9c 2024.pdf\"]', '2026-01-22 14:54:35', 100, '2026-01-22 14:54:35', '2026-01-22 14:54:35'),
 (3, 'acceptee', 'archives/final/1769103119_FINAL_Note de service_DEMANDE D\'INFORMATIONS COMITE COUT SDEEF.pdf', '2026-01-22 17:31:59', 6, 1, 'voici la reponse jointe', '[\"1769102744_Projet de Note du DSESF au DG_S\\u00e9minaire Loi de r\\u00e8glement 18 20 d\\u00e9c 2024.pdf\"]', '2026-01-22 17:25:44', 100, '2026-01-22 17:25:44', '2026-01-22 17:31:59'),
 (4, 'acceptee', 'archives/final/1769428292_FINAL_Projet de Note du DSESF au DG_Séminaire Loi de règlement 18 20 déc 2024.pdf', '2026-01-26 11:51:32', 11, 2, 'Travail accompli', '[\"1769428241__0040_du_2026-01-21.pdf\",\"1769428241_Document_2026-01-26_formation.pdf\"]', '2026-01-26 11:50:41', 100, '2026-01-26 11:50:41', '2026-01-26 11:51:32');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `reponse_notifications`
---
-
-DROP TABLE IF EXISTS `reponse_notifications`;
-CREATE TABLE IF NOT EXISTS `reponse_notifications` (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `approuvee` enum('en_attente','acceptee','rejetee') NOT NULL DEFAULT 'en_attente',
-  `appreciation_du_superieur` text DEFAULT NULL,
-  `id_notification` bigint(20) UNSIGNED NOT NULL,
-  `agent_id` bigint(20) UNSIGNED NOT NULL,
-  `message` text NOT NULL,
-  `Reponse_Piece_jointe` varchar(191) DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `reponse_notifications_id_notification_foreign` (`id_notification`),
-  KEY `reponse_notifications_agent_id_foreign` (`agent_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 

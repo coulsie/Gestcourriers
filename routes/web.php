@@ -56,7 +56,7 @@ Route::middleware(['auth'])->group(function () {
     // --- ADMINISTRATION & UTILISATEURS ---
     Route::middleware(['can:manage-users'])->group(function () {
         Route::post('/users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset_password');
-        
+
         Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
         Route::get('/roles/{id}/edit', [RoleController::class, 'edit'])->name('roles.edit');
         Route::put('/roles/{id}', [RoleController::class, 'update'])->name('roles.update');
@@ -142,8 +142,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/courriers/archives', [CourrierController::class, 'archives'])->name('courriers.archives');
         Route::resource('courriers', CourrierController::class);
 
-        Route::resource('affectations', AffectationController::class);
-        Route::put('/affectations/{affectation}/status', [AffectationController::class, 'updateStatus'])->name('affectations.updateStatus');
+
 
         // --- RESSOURCES HUMAINES (Présences & Absences) ---
         Route::prefix('presences')->name('presences.')->group(function () {
@@ -157,22 +156,12 @@ Route::middleware(['auth'])->group(function () {
 
         // Les routes pour l'interface Agent
 
-
-
-
-
         Route::resource('presences', PresenceController::class);
         Route::resource('absences', AbsenceController::class);
         Route::resource('typeabsences', TypeAbsenceController::class);
 
-        // --- NOTIFICATIONS, TACHES & ANNONCES ---
-        Route::prefix('notifications')->name('notifications.')->group(function () {
-            Route::get('/index1', [NotificationTacheController::class, 'index1'])->name('index1');
-            Route::get('/{id}/voir', [NotificationTacheController::class, 'showA'])->name('showA');
-            // Route mark as read supposée (en fonction de votre prefix)
-            Route::post('/{id_notification}/read', [NotificationTacheController::class, 'markAsRead'])->name('read');
-        });
-        Route::resource('notifications', NotificationTacheController::class);
+        // ---  TACHES & ANNONCES ---
+
         Route::resource('annonces', AnnonceController::class);
 
         // --- STATISTIQUES ---
