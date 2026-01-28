@@ -132,11 +132,25 @@ public function store(Request $request)
         $cheminFichierOriginal = $courrier->fichier_chemin;
 
         // 3. Détermination du Niveau Hiérarchique (Logique 2026)
-        $roleName = mb_strtolower((string)$user->role, 'UTF-8');
+        // 1. Récupération sécurisée du rôle (évite l'erreur sur null)
+        $statusAgent = $user->agent?->status ?? '';
+        $roleName = mb_strtolower((string)$statusAgent, 'UTF-8');
+
         $niveau = match(true) {
-            str_contains($roleName, 'directeur') && !str_contains($roleName, 'sous') => 'tertiaire',
-            str_contains($roleName, 'chef') || str_contains($roleName, 'sous-directeur') => 'secondaire',
-            default => 'primaire',
+            // Niveau Tertiaire : Uniquement Chef de Service
+            str_contains($roleName, 'chef de service') => 'tertiaire',
+
+            // Niveau Secondaire : Sous-directeur et Conseiller Technique
+            str_contains($roleName, 'sous-directeur') ||
+            str_contains($roleName, 'conseiller technique') => 'secondaire',
+
+            // Niveau Primaire : Directeur (doit contenir 'directeur' mais PAS 'sous')
+            str_contains($roleName, 'directeur') && !str_contains($roleName, 'sous') => 'primaire',
+
+            // Niveau Agent ou par défaut (Autres)
+            str_contains($roleName, 'agent') => 'operationnel',
+
+            default => 'autre',
         };
 
         // 4. Gestion du document annexe dans public/documents/imputations/annexes
