@@ -147,8 +147,7 @@ public function store(Request $request)
             // Niveau Primaire : Directeur (doit contenir 'directeur' mais PAS 'sous')
             str_contains($roleName, 'directeur') && !str_contains($roleName, 'sous') => 'primaire',
 
-            // Niveau Agent ou par défaut (Autres)
-            str_contains($roleName, 'agent') => 'operationnel',
+            
 
             default => 'autre',
         };
