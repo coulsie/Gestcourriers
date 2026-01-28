@@ -60,7 +60,7 @@
                                     <th>Référence</th>
                                     <th>Type</th>
                                     <th>Objet</th>
-                                    <th>Document</th>
+
                                     <th>Statut</th>
                                     <th class="text-center">Actions</th>
                                 </tr>
@@ -78,21 +78,13 @@
                                         </span>
                                     </td>
                                     <td class="small fw-bold text-dark text-truncate" style="max-width: 150px;">{{ $courrier->objet }}</td>
-                                    <td>
-                                        @if($courrier->fichier_chemin)
-                                            <a href="{{ asset('storage/' . $courrier->fichier_chemin) }}" target="_blank" class="btn btn-outline-info btn-sm shadow-sm">
-                                                <i class="fas fa-file-pdf"></i> Voir
-                                            </a>
-                                        @else
-                                            <span class="text-muted small italic">Aucun document</span>
-                                        @endif
-                                    </td>
+
                                     <td>
                                         {{-- MODIFICATION : Statut en blanc sur couleur --}}
                                         @php
                                             $statutColor = match($courrier->statut) {
-                                                'reçu' => 'bg-success',
-                                                'affecté' => 'bg-primary',
+                                                'reçu' => 'bg-primary',
+                                                'affecté' => 'bg-success',
                                                 'Archivé' => 'bg-dark',
                                                 'en_attente' => 'bg-warning text-dark',
                                                 default => 'bg-secondary'

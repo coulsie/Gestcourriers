@@ -85,7 +85,7 @@
                         </div>
                         <div class="text-end">
                             <h2 class="fw-bold mb-0 text-dark">{{ $stats['affectes'] }}</h2>
-                            <span class="text-muted fw-bold small text-uppercase">Dossiers Affectés</span>
+                            <span class="text-muted fw-bold small text-uppercase">Dossiers Imputés</span>
                         </div>
                     </div>
                 </div>
