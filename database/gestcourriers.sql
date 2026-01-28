@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3307
--- Généré le : mer. 28 jan. 2026 à 09:06
+-- Généré le : mer. 28 jan. 2026 à 16:39
 -- Version du serveur : 11.4.9-MariaDB
 -- Version de PHP : 8.3.28
 
@@ -134,7 +134,7 @@ CREATE TABLE IF NOT EXISTS `agent_imputation` (
   PRIMARY KEY (`id`),
   KEY `agent_imputation_imputation_id_foreign` (`imputation_id`),
   KEY `agent_imputation_agent_id_foreign` (`agent_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `agent_imputation`
@@ -150,7 +150,16 @@ INSERT INTO `agent_imputation` (`id`, `imputation_id`, `agent_id`, `created_at`,
 (12, 11, 1, NULL, NULL),
 (13, 11, 2, NULL, NULL),
 (14, 11, 4, NULL, NULL),
-(15, 12, 1, NULL, NULL);
+(20, 15, 1, NULL, NULL),
+(23, 18, 1, NULL, NULL),
+(22, 17, 1, NULL, NULL),
+(21, 16, 1, NULL, NULL),
+(24, 19, 1, NULL, NULL),
+(25, 19, 2, NULL, NULL),
+(26, 20, 1, NULL, NULL),
+(27, 21, 2, NULL, NULL),
+(28, 22, 2, NULL, NULL),
+(29, 23, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -197,7 +206,7 @@ CREATE TABLE IF NOT EXISTS `cache` (
 --
 
 INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
-('laravel-cache-spatie.permission.cache', 'a:3:{s:5:\"alias\";a:4:{s:1:\"a\";s:2:\"id\";s:1:\"b\";s:4:\"name\";s:1:\"c\";s:10:\"guard_name\";s:1:\"r\";s:5:\"roles\";}s:11:\"permissions\";a:8:{i:0;a:4:{s:1:\"a\";i:1;s:1:\"b\";s:14:\"creer-articles\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:3:{i:0;i:1;i:1;i:2;i:2;i:5;}}i:1;a:4:{s:1:\"a\";i:2;s:1:\"b\";s:18:\"supprimer-articles\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:2:{i:0;i:1;i:1;i:5;}}i:2;a:4:{s:1:\"a\";i:3;s:1:\"b\";s:17:\"voir-utilisateurs\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:4:{i:0;i:1;i:1;i:2;i:2;i:4;i:3;i:5;}}i:3;a:4:{s:1:\"a\";i:4;s:1:\"b\";s:12:\"manage-users\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:2:{i:0;i:1;i:1;i:5;}}i:4;a:4:{s:1:\"a\";i:5;s:1:\"b\";s:17:\"modifier articles\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:3:{i:0;i:1;i:1;i:3;i:2;i:5;}}i:5;a:4:{s:1:\"a\";i:6;s:1:\"b\";s:18:\"supprimer articles\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:2:{i:0;i:1;i:1;i:5;}}i:6;a:4:{s:1:\"a\";i:7;s:1:\"b\";s:11:\"gerer-roles\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:2:{i:0;i:1;i:1;i:5;}}i:7;a:4:{s:1:\"a\";i:8;s:1:\"b\";s:17:\"acceder-dashboard\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:4:{i:0;i:1;i:1;i:3;i:2;i:4;i:3;i:5;}}}s:5:\"roles\";a:5:{i:0;a:3:{s:1:\"a\";i:1;s:1:\"b\";s:5:\"admin\";s:1:\"c\";s:3:\"web\";}i:1;a:3:{s:1:\"a\";i:2;s:1:\"b\";s:11:\"utilisateur\";s:1:\"c\";s:3:\"web\";}i:2;a:3:{s:1:\"a\";i:5;s:1:\"b\";s:11:\"Superviseur\";s:1:\"c\";s:3:\"web\";}i:3;a:3:{s:1:\"a\";i:4;s:1:\"b\";s:2:\"rh\";s:1:\"c\";s:3:\"web\";}i:4;a:3:{s:1:\"a\";i:3;s:1:\"b\";s:7:\"editeur\";s:1:\"c\";s:3:\"web\";}}}', 1769598176);
+('laravel-cache-spatie.permission.cache', 'a:3:{s:5:\"alias\";a:4:{s:1:\"a\";s:2:\"id\";s:1:\"b\";s:4:\"name\";s:1:\"c\";s:10:\"guard_name\";s:1:\"r\";s:5:\"roles\";}s:11:\"permissions\";a:8:{i:0;a:4:{s:1:\"a\";i:1;s:1:\"b\";s:14:\"creer-articles\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:3:{i:0;i:1;i:1;i:2;i:2;i:5;}}i:1;a:4:{s:1:\"a\";i:2;s:1:\"b\";s:18:\"supprimer-articles\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:2:{i:0;i:1;i:1;i:5;}}i:2;a:4:{s:1:\"a\";i:3;s:1:\"b\";s:17:\"voir-utilisateurs\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:4:{i:0;i:1;i:1;i:2;i:2;i:4;i:3;i:5;}}i:3;a:4:{s:1:\"a\";i:4;s:1:\"b\";s:12:\"manage-users\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:2:{i:0;i:1;i:1;i:5;}}i:4;a:4:{s:1:\"a\";i:5;s:1:\"b\";s:17:\"modifier articles\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:3:{i:0;i:1;i:1;i:3;i:2;i:5;}}i:5;a:4:{s:1:\"a\";i:6;s:1:\"b\";s:18:\"supprimer articles\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:2:{i:0;i:1;i:1;i:5;}}i:6;a:4:{s:1:\"a\";i:7;s:1:\"b\";s:11:\"gerer-roles\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:2:{i:0;i:1;i:1;i:5;}}i:7;a:4:{s:1:\"a\";i:8;s:1:\"b\";s:17:\"acceder-dashboard\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:4:{i:0;i:1;i:1;i:3;i:2;i:4;i:3;i:5;}}}s:5:\"roles\";a:5:{i:0;a:3:{s:1:\"a\";i:1;s:1:\"b\";s:5:\"admin\";s:1:\"c\";s:3:\"web\";}i:1;a:3:{s:1:\"a\";i:2;s:1:\"b\";s:11:\"utilisateur\";s:1:\"c\";s:3:\"web\";}i:2;a:3:{s:1:\"a\";i:5;s:1:\"b\";s:11:\"Superviseur\";s:1:\"c\";s:3:\"web\";}i:3;a:3:{s:1:\"a\";i:4;s:1:\"b\";s:2:\"rh\";s:1:\"c\";s:3:\"web\";}i:4;a:3:{s:1:\"a\";i:3;s:1:\"b\";s:7:\"editeur\";s:1:\"c\";s:3:\"web\";}}}', 1769684595);
 
 -- --------------------------------------------------------
 
@@ -240,20 +249,21 @@ CREATE TABLE IF NOT EXISTS `courriers` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `courriers_num_enregistrement_unique` (`num_enregistrement`) USING HASH
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `courriers`
 --
 
 INSERT INTO `courriers` (`id`, `num_enregistrement`, `affecter`, `reference`, `type`, `objet`, `description`, `date_courrier`, `expediteur_nom`, `expediteur_contact`, `destinataire_nom`, `destinataire_contact`, `statut`, `assigne_a`, `chemin_fichier`, `created_at`, `updated_at`) VALUES
-(2, 'REG-2026-6971FEFAADDCF', 1, '000021', 'Outgoing', 'réponses de ls DSESF relative à une demande de stage et une demande de collecte de données sollicitées respectivement par Mlle DJAN Loukou Julienne et DOU Sopie Joëlle Priscae', NULL, '2026-01-21', 'DSESF', NULL, 'DFRC Direction de la Formation et du Renforcement de Capacité', NULL, 'Affecté', 'Non assigné', '1769081946_000021__du_21_01_2026.pdf', '2026-01-22 10:42:02', '2026-01-22 12:59:59'),
-(3, 'REG-2026-697203E79FCA1', 1, '0040', 'Incoming', 'Résultat de l\'examen de demande de rectification des Etats Financiers Compagnie ASKI Airline', NULL, '2026-01-21', 'DERAR', NULL, 'DSESF', NULL, 'Affecté', 'Non assigné', '1769081929__0040_du_2026-01-21.pdf', '2026-01-22 11:03:03', '2026-01-22 12:43:23'),
-(4, 'REG-2026-697209DAABA90', 1, '06391', 'Incoming', 'Demane de mise à disposition de M. BROU Konan Amani', NULL, '2026-01-21', 'CABINET DGI', NULL, 'Direction DSESFGénérale', NULL, 'Affecté', 'Non assigné', '1769081306_06391_2026-01-22_112741.pdf', '2026-01-22 11:28:26', '2026-01-22 17:37:17'),
-(5, 'REG-2026-697210C0D9ED1', 1, '06410', 'Incoming', 'Demande de rectification des états financiers par téléliasse', NULL, '2026-01-21', 'CABINET DGI', NULL, 'DSESF', NULL, 'archivé', 'Non assigné', '1769083072_06410_2026-01-22_115627.pdf', '2026-01-22 11:57:52', '2026-01-22 17:31:59'),
-(6, 'REG-2026-69721207AC2B6', 1, '0759232466', 'Incoming', 'Demande données statistiques pour mémoire de fin de cycle', NULL, '2026-01-21', 'KOSSONOU Affoué Ella Mireille Stagiaire de l\'ENA', NULL, 'DSESF', NULL, 'Affecté', 'Non assigné', '1769083399_0759232466_2026-01-22_120224.pdf', '2026-01-22 12:03:19', '2026-01-23 08:28:04'),
-(7, 'REG-2026-69774D5D847F5', 1, '03220', 'Incoming', 'Formation des Agents Non Fiscalistes', NULL, '2026-01-26', 'CABINET DGI', NULL, 'DSESF', NULL, 'Affecté', 'Non assigné', '1769426269_Document_2026-01-26_formation.pdf', '2026-01-26 11:17:49', '2026-01-26 11:25:47'),
-(8, 'REG-2026-697752B52AA6B', 1, '0784', 'Incoming', 'Proposition pour utilisation du nouveau serveur', NULL, '2026-01-26', 'DSESF', NULL, 'DSESF', NULL, 'archivé', 'Non assigné', '1769427637_Document_2026-01-26_Proposition_serveur.pdf', '2026-01-26 11:40:37', '2026-01-26 11:51:32'),
+(2, 'REG-2026-6971FEFAADDCF', 1, '000021', 'Outgoing', 'réponses de ls DSESF relative à une demande de stage et une demande de collecte de données sollicitées respectivement par Mlle DJAN Loukou Julienne et DOU Sopie Joëlle Priscae', NULL, '2026-01-21', 'DSESF', NULL, 'DFRC Direction de la Formation et du Renforcement de Capacité', NULL, 'affecté', 'Non assigné', '1769081946_000021__du_21_01_2026.pdf', '2026-01-22 10:42:02', '2026-01-28 09:42:44'),
+(3, 'REG-2026-697203E79FCA1', 1, '0040', 'Incoming', 'Résultat de l\'examen de demande de rectification des Etats Financiers Compagnie ASKI Airline', NULL, '2026-01-21', 'DERAR', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1769081929__0040_du_2026-01-21.pdf', '2026-01-22 11:03:03', '2026-01-28 11:12:17'),
+(4, 'REG-2026-697209DAABA90', 1, '06391', 'Incoming', 'Demane de mise à disposition de M. BROU Konan Amani', NULL, '2026-01-21', 'CABINET DGI', NULL, 'Direction DSESFGénérale', NULL, 'affecté', 'Non assigné', '1769081306_06391_2026-01-22_112741.pdf', '2026-01-22 11:28:26', '2026-01-28 09:42:31'),
+(5, 'REG-2026-697210C0D9ED1', 1, '06410', 'Incoming', 'Demande de rectification des états financiers par téléliasse', NULL, '2026-01-21', 'CABINET DGI', NULL, 'DSESF', NULL, 'Archivé', 'Non assigné', '1769083072_06410_2026-01-22_115627.pdf', '2026-01-22 11:57:52', '2026-01-28 09:42:17'),
+(6, 'REG-2026-69721207AC2B6', 1, '0759232466', 'Incoming', 'Demande données statistiques pour mémoire de fin de cycle', NULL, '2026-01-21', 'KOSSONOU Affoué Ella Mireille Stagiaire de l\'ENA', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1769083399_0759232466_2026-01-22_120224.pdf', '2026-01-22 12:03:19', '2026-01-28 09:42:08'),
+(10, 'REG-2026-6979ED4466FDE', 1, '01210', 'Incoming', 'Visite de MTN Côte d\'Ivoire', NULL, '2026-01-28', 'CABINET DGI', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1769598276_Projet_de_Note_du_DSESF_au_DG_Séminaire_Loi_de_règlement_18_20_déc_2024.pdf', '2026-01-28 11:04:36', '2026-01-28 11:05:50'),
+(7, 'REG-2026-69774D5D847F5', 1, '03220', 'Incoming', 'Formation des Agents Non Fiscalistes', NULL, '2026-01-26', 'CABINET DGI', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1769426269_Document_2026-01-26_formation.pdf', '2026-01-26 11:17:49', '2026-01-28 09:41:20'),
+(8, 'REG-2026-697752B52AA6B', 1, '0784', 'Incoming', 'Proposition pour utilisation du nouveau serveur', NULL, '2026-01-26', 'DSESF', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1769427637_Document_2026-01-26_Proposition_serveur.pdf', '2026-01-26 11:40:37', '2026-01-28 11:47:59'),
 (9, 'REG-2026-69775E4353DEF', 1, '02218', 'Incoming', 'Mission d\'explication des statistiques mensuelles des recettes', NULL, '2026-01-26', 'CABINET DGI', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1769430595_Statistiques_Mensuelles_Recette_2026-01-26_122728.pdf', '2026-01-26 12:29:55', '2026-01-26 12:30:52');
 
 -- --------------------------------------------------------
@@ -350,7 +360,7 @@ CREATE TABLE IF NOT EXISTS `imputations` (
   `courrier_id` bigint(20) UNSIGNED NOT NULL,
   `chemin_fichier` varchar(255) DEFAULT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `niveau` enum('primaire','secondaire','tertiaire') NOT NULL,
+  `niveau` enum('primaire','secondaire','tertiaire','autre') DEFAULT 'autre',
   `instructions` text DEFAULT NULL,
   `observations` text DEFAULT NULL,
   `documents_annexes` text DEFAULT NULL,
@@ -363,7 +373,7 @@ CREATE TABLE IF NOT EXISTS `imputations` (
   PRIMARY KEY (`id`),
   KEY `imputations_courrier_id_foreign` (`courrier_id`),
   KEY `imputations_user_id_foreign` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `imputations`
@@ -376,7 +386,15 @@ INSERT INTO `imputations` (`id`, `courrier_id`, `chemin_fichier`, `user_id`, `ni
 (9, 6, '1769083399_0759232466_2026-01-22_120224.pdf', 17, 'secondaire', 'Extraction de données Déclaration TEE & MICRO 2025', NULL, '\"[\\\"1769157764_Note_au_MFB__Objectif_de_recettes_TOFE_Aout_2025.pdf\\\"]\"', '2026-01-23', NULL, '2026-01-27', 'en_attente', '2026-01-23 08:42:44', '2026-01-23 08:42:44'),
 (10, 7, '1769426269_Document_2026-01-26_formation.pdf', 3, 'tertiaire', 'Informer les agents et tenir une liste d\'agents à former', NULL, '\"[]\"', '2026-01-26', NULL, '2026-01-28', 'en_attente', '2026-01-26 11:25:47', '2026-01-26 11:25:47'),
 (11, 8, '1769427637_Document_2026-01-26_Proposition_serveur.pdf', 3, 'tertiaire', 'Travail urgent pour rendre le serveur operationnel', NULL, '\"[]\"', '2026-01-26', NULL, '2026-01-28', 'termine', '2026-01-26 11:48:55', '2026-01-26 11:50:41'),
-(12, 9, NULL, 9, 'primaire', 'Vite fait et bien fait', NULL, '\"documents\\/imputations\\/annexes\\/1769430652_Projet_de_Note_du_DSESF_au_DG_S\\u00e9minaire_Loi_de_r\\u00e8glement_18_20_d\\u00e9c_2024.pdf\"', '2026-01-26', NULL, '2026-01-29', 'en_attente', '2026-01-26 12:30:52', '2026-01-26 12:30:52');
+(15, 3, NULL, 9, 'autre', 'info1', NULL, '\"documents\\/imputations\\/annexes\\/1769599564_Projet_de_Note_du_DSESF_au_DG_S\\u00e9minaire_Loi_de_r\\u00e8glement_18_20_d\\u00e9c_2024.pdf\"', '2026-01-26', NULL, '2026-01-29', 'en_attente', '2026-01-28 11:26:04', '2026-01-28 11:26:04'),
+(16, 10, NULL, 9, 'autre', 'info2', NULL, '\"documents\\/imputations\\/annexes\\/1769600467_Projet_de_Note_du_DSESF_au_DG_S\\u00e9minaire_Loi_de_r\\u00e8glement_18_20_d\\u00e9c_2024.pdf\"', '2026-01-26', NULL, '2026-01-29', 'en_attente', '2026-01-28 11:41:07', '2026-01-28 11:41:07'),
+(17, 9, NULL, 17, 'autre', 'INFO3', NULL, '\"documents\\/imputations\\/annexes\\/1769600597_Note_de_service_DEMANDE_D\'INFORMATIONS_COMITE_COUT_SDEEF.pdf\"', '2026-01-26', NULL, '2026-01-29', 'en_attente', '2026-01-28 11:43:17', '2026-01-28 11:43:17'),
+(18, 8, NULL, 17, 'secondaire', 'info4', NULL, '\"documents\\/imputations\\/annexes\\/1769600879_Note_au_MFB__Objectif_de_recettes_TOFE_Aout_2025.pdf\"', '2026-01-26', NULL, '2026-01-29', 'en_attente', '2026-01-28 11:47:59', '2026-01-28 11:47:59'),
+(19, 10, NULL, 6, 'tertiaire', 'info5', NULL, '\"documents\\/imputations\\/annexes\\/1769601018_Note_Service_Objectifs_de_recettes_r\\u00e9vis\\u00e9s_2025_N\'GUESSAN.pdf\"', '2026-01-26', NULL, '2026-01-29', 'en_attente', '2026-01-28 11:50:18', '2026-01-28 11:50:18'),
+(20, 10, NULL, 9, 'primaire', 'info6', NULL, '\"documents\\/imputations\\/annexes\\/1769601085_Note_Service_Objectifs_de_recettes_r\\u00e9vis\\u00e9s_2025_N\'GUESSAN.pdf\"', '2026-01-26', NULL, '2026-01-29', 'en_attente', '2026-01-28 11:51:25', '2026-01-28 11:51:25'),
+(21, 10, NULL, 3, 'autre', 'info7', NULL, '\"documents\\/imputations\\/annexes\\/1769601385_Note_au_MFB__Objectif_de_recettes_TOFE_Aout_2025.pdf\"', '2026-01-26', NULL, '2026-01-29', 'en_attente', '2026-01-28 11:56:25', '2026-01-28 11:56:25'),
+(22, 9, NULL, 3, 'autre', 'iiokjj', NULL, '\"documents\\/imputations\\/annexes\\/1769601446_Projet_de_Note_du_DSESF_au_DG_S\\u00e9minaire_Loi_de_r\\u00e8glement_18_20_d\\u00e9c_2024.pdf\"', '2026-01-26', NULL, '2026-01-30', 'en_attente', '2026-01-28 11:57:26', '2026-01-28 11:57:26'),
+(23, 10, NULL, 10, 'secondaire', 'GH', NULL, '\"documents\\/imputations\\/annexes\\/1769601632_Projet_de_Note_du_DSESF_au_DG_S\\u00e9minaire_Loi_de_r\\u00e8glement_18_20_d\\u00e9c_2024.pdf\"', '2026-01-26', NULL, '2026-01-29', 'en_attente', '2026-01-28 12:00:32', '2026-01-28 12:00:32');
 
 -- --------------------------------------------------------
 
@@ -1120,16 +1138,16 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `mu
 (3, 'Sié Yacouba COULIBALY', 'yacouba.coulibaly@dgi.gouv.ci', NULL, '$2y$12$3iz87sx3Zdu3pn6fiV.Jl..kCDacVLyLLqqOdlCJGmHH1j600Ro6K', 0, NULL, NULL, '2026-01-20 13:25:02', '2026-01-21 08:27:16', NULL, 'photos_agents/Km5CbkPx8Rry9FPxsIf9Tu3gi9JOqhDVlXxOtuBP.jpg'),
 (4, 'Nafata KONE', 'nafie410@dgi.gouv.ci', NULL, '$2y$12$CZuOSdUPUwPyvED6D09Q9.mnei8mj.LAjwu45oPexywZ3yc743jlC', 0, NULL, NULL, '2026-01-20 13:46:32', '2026-01-21 09:19:44', NULL, NULL),
 (5, 'Rosine Générosa Epse Dje OUSSOU', 'roussou@dgi.gouv.ci', NULL, '$2y$12$6levTuTb0vIp1M1nBq/oROhQkRMA0T.OpNdr8GOByOjJy.X9YpvMW', 1, NULL, NULL, '2026-01-20 13:48:59', '2026-01-22 12:31:18', NULL, NULL),
-(6, 'Arlette N\'DOUME', 'andoume@dgi.gouv.ci', NULL, '$2y$12$dpB3VU9Ywfby5Wyr/uxtdOI8LdIQy2af87Pm6jJIltnIAU/AuYqPy', 0, NULL, NULL, '2026-01-21 10:43:13', '2026-01-23 09:38:46', NULL, NULL),
+(6, 'Arlette N\'DOUME', 'andoume@dgi.gouv.ci', NULL, '$2y$12$UptzFnNTF5sgio1UqRK6Ne8.yG7QxbhjxLqmpy9hIoJRKQahDNwmS', 0, NULL, NULL, '2026-01-21 10:43:13', '2026-01-28 11:49:34', NULL, NULL),
 (9, 'Innocent ADICO', 'iadico@dgi.gouv.ci', NULL, '$2y$12$dCDgWWMz.kvecxIjncNv0eGBT2eXI55l21HCwN.X4Ih3KxbXyfBTG', 0, NULL, NULL, '2026-01-21 11:50:04', '2026-01-22 15:15:21', NULL, NULL),
-(10, 'Moctar Michel Djépa KEITA', 'michelkeita@dgi.gouv.ci', NULL, '$2y$12$EoybtZEfYxQi9.SZTiyfqOpsn/q..fJrmhXDQrZYS/ZUXGLI/k9IC', 1, NULL, NULL, '2026-01-21 11:56:29', '2026-01-21 11:56:29', NULL, NULL),
+(10, 'Moctar Michel Djépa KEITA', 'michelkeita@dgi.gouv.ci', NULL, '$2y$12$GVJZkuOfiwTdDE.A6946U.6coCnMxYZPHLh.MyfdwfSb3I7eYIBsq', 1, NULL, NULL, '2026-01-21 11:56:29', '2026-01-28 14:20:16', NULL, NULL),
 (11, 'Assi Roger OKPEKON', 'asokpekon@dgi.gouv.ci', NULL, '$2y$12$nx0LnF50zhs9E5goM9y76.slvDH99Qm1eoTuuCAAaNJGIiKE9Z..a', 1, NULL, NULL, '2026-01-21 11:59:18', '2026-01-21 11:59:18', NULL, NULL),
 (12, 'Née Brou Amenan M. KOUADIO', 'kbrou04@dgi.gouv.ci', NULL, '$2y$12$NRt7n8PnxT41./IvAD.GFetDLPqFXcBveV4WdaA10D4DnMtLI/DDm', 1, NULL, NULL, '2026-01-21 12:02:21', '2026-01-21 12:02:21', NULL, NULL),
 (13, 'Maïmouna BALLO', 'mballo@dgi.gouv.ci', NULL, '$2y$12$5pVS9RokI.yFE9sskgIEAe/F8Q3gKgMSitn.geE4Dw00M3epkVr6q', 1, NULL, NULL, '2026-01-21 12:37:32', '2026-01-21 12:37:32', NULL, NULL),
 (14, 'Akpa Leonard DJEDJEMEL', 'adjedjemel@dgi.gouv.ci', NULL, '$2y$12$FqeyBSfjG8plbvr45sVr/ubyh35lheTKUoTnOyd6L8OYLr4oBix42', 1, NULL, NULL, '2026-01-21 12:47:16', '2026-01-21 12:47:16', NULL, NULL),
 (15, 'Mamadou TRAORE', 'mtraore@dgi.gouv.ci', NULL, '$2y$12$pVJ6NdgPnmRntLHilLZLWO0xUKd.pLRjWt7Wyot1SBnpId5lk.9aK', 1, NULL, NULL, '2026-01-21 12:51:08', '2026-01-21 12:51:08', NULL, NULL),
 (16, 'Tiekoura HORO', 'thoro@dgi.gouv.ci', NULL, '$2y$12$rQi.ZoaRTZbTK5FEXZYGveMzs3NSe3hSVZTHZtUeV/yug.TSZ8QDW', 1, NULL, NULL, '2026-01-22 08:10:12', '2026-01-22 08:10:12', NULL, NULL),
-(17, 'Brou Tchoumou Serge N\'GUESSAN', 'bnguessan04@dgi.gouv.ci', NULL, '$2y$12$jAQdcsFgGZ4pyMBLv1rNMOCMR0JlUNtAZGbvugRNjW99Rv4nVfLmu', 0, NULL, NULL, '2026-01-22 08:27:00', '2026-01-23 08:26:16', NULL, NULL),
+(17, 'Brou Tchoumou Serge N\'GUESSAN', 'bnguessan04@dgi.gouv.ci', NULL, '$2y$12$9D9YWt7NlAZQf0btLeAXhOdcKWoeYhVhLkb8MPYWYjgVrWkBTQYP6', 0, NULL, NULL, '2026-01-22 08:27:00', '2026-01-28 11:42:15', NULL, NULL),
 (18, 'Mathurin BEZI', 'mbezi@dgi.gouv.ci', NULL, '$2y$12$BcDeMiB4WI51vVEVNPX/V.Vzjn6pMP2VoM/C96VfJynLvk91c19zO', 1, NULL, NULL, '2026-01-22 08:41:51', '2026-01-22 08:41:51', NULL, NULL),
 (19, 'Bi Suy Robert TOUBOUI', 'rtouboui@dgi.gouv.ci', NULL, '$2y$12$dVhNjgRnLUf95A8qOX1w9uF7c8DtE6VXGVBaEIaxXAf1ovSoQTVQu', 1, NULL, NULL, '2026-01-23 10:25:21', '2026-01-23 10:25:21', NULL, NULL),
 (20, 'Mamadou Lamine COULIBALY', 'mamadoulcoul@dgi.gouv.ci', NULL, '$2y$12$Lfz7QtoJfaRONcHbgo2Qg.3k3fJ2rlVTyFVr7bVCCBG.roawC3qDG', 1, NULL, NULL, '2026-01-23 10:29:57', '2026-01-23 10:29:57', NULL, NULL),
