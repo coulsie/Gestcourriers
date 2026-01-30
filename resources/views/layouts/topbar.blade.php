@@ -11,7 +11,7 @@
         <h5 class="mb-0 fw-bold" style="letter-spacing: 1px;">
             <span style="color: #4e73df;">Système de Gestion</span>
             <span class="badge badge-primary px-3 py-2" style="background: linear-gradient(45deg, #4e73df, #224abe); border-radius: 8px shadow: 2px 2px 5px rgba(0,0,0,0.1);">
-                Direction de la  Stratégie, des Etudes et Statistiques Fiscales
+                Direction de la  Stratégie, des Etudes et des Statistiques Fiscales
             </span>
         </h5>
     </div>
