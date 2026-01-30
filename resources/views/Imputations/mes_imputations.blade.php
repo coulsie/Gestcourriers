@@ -157,11 +157,24 @@
                             </td>
 
                             <!-- Action -->
-                            <td class="text-center pe-4">
-                                <a href="{{ route('imputations.show', $imputation->id) }}" class="btn btn-sm btn-primary shadow-sm">
-                                    <i class="fas fa-eye me-1"></i> TRAITER
-                                </a>
-                            </td>
+
+                                    <td class="text-center pe-4">
+                                        <!-- Reimputation -->
+                                           <a href="{{ route('imputations.create', [
+    'parent_id' => $imputation->id,
+    'courrier_id' => $imputation->courrier_id,
+    'echeancier' => \Carbon\Carbon::parse($imputation->echeancier)->format('Y-m-d'), // FORCE LE FORMAT ICI
+    'chemin_fichier' => $imputation->chemin_fichier,
+    'instructions' => $imputation->instructions
+]) }}" class="btn btn-sm btn-outline-primary shadow-sm">
+    <i class="fas fa-share-alt me-1"></i> Réimputer
+</a>
+
+                                        <!-- Traiter -->
+                                            <a href="{{ route('imputations.show', $imputation->id) }}" class="btn btn-sm btn-primary shadow-sm">
+                                                <i class="fas fa-eye me-1"></i> TRAITER
+                                            </a>
+                                    </td>
                         </tr>
                         @empty
                         <tr>

@@ -109,10 +109,10 @@
                                         @enderror
                                     </div>
 
-                                    <p class="text-muted mb-0" style="font-size: 0.75rem;">
-                                        <i class="fas fa-shield-alt me-1 text-primary"></i>
-                                        Formats autorisés : <strong>PDF, JPG, PNG</strong> (Max 10Mo)
-                                    </p>
+                                        <p class="text-muted mb-0" style="font-size: 0.75rem;">
+                                            <i class="fas fa-shield-alt me-1 text-primary"></i>
+                                            Formats autorisés : <strong>PDF, JPG, PNG, DOC, DOCX, XLS, XLSX, PPT, PPTX</strong> (Max 800Mo)
+                                        </p>
                                 </div>
                             </div>
                         </div>

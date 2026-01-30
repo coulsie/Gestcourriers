@@ -196,7 +196,7 @@
                                     <a href="{{ route('imputations.edit', $imputation->id) }}" class="btn btn-sm btn-warning text-white" title="Modifier l'imputation">
                                         <i class="fas fa-edit"></i>
                                     </a>
-
+                                    
                                     <!-- Bouton Supprimer avec Confirmation -->
                                     <form action="{{ route('imputations.destroy', $imputation->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette imputation ? Cette action est irréversible.');">
                                         @csrf

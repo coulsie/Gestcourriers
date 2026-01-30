@@ -87,7 +87,8 @@ public function valider(Request $request, $id)
 
     // 2. Validation du fichier
     $request->validate([
-        'document_final' => 'required|file|mimes:pdf|max:10240',
+        'document_final' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,png|max:819200',
+
     ]);
 
     if ($request->hasFile('document_final')) {

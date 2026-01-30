@@ -115,7 +115,7 @@ public function store(Request $request)
     $request->validate([
         'agent_ids'         => 'required|array',
         'instructions'      => 'required|string',
-        'documents_annexes' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:10240',
+        'documents_annexes' => 'nullable|file|mimes:pdf,jpg,png,doc,docx,xls,xlsx,ppt,pptx|max:819200',
         'echeancier'        => 'nullable|date',
         'observations'      => 'nullable|string',
         'statut'            => 'required|string',
@@ -147,7 +147,7 @@ public function store(Request $request)
             // Niveau Primaire : Directeur (doit contenir 'directeur' mais PAS 'sous')
             str_contains($roleName, 'directeur') && !str_contains($roleName, 'sous') => 'primaire',
 
-            
+
 
             default => 'autre',
         };
@@ -345,6 +345,29 @@ public function mesImputations()
     return view('Imputations.mes_imputations', compact('imputations'));
 }
 
+public function storeSecondary(Request $request, $id)
+{
+    // 1. Trouver l'imputation primaire parente
+    $imputationPrimaire = Imputation::findOrFail($id);
+
+    // 2. Dupliquer l'imputation (copie les champs sans l'ID ni les timestamps)
+    $nouvelleImputation = $imputationPrimaire->replicate();
+
+    // 3. Personnaliser pour le niveau secondaire
+    $nouvelleImputation->niveau = 'secondaire'; // Assurez-vous que 'secondaire' est dans votre ENUM
+    $nouvelleImputation->user_id = Auth::id();  // L'utilisateur qui crée la secondaire
+    $nouvelleImputation->instructions = $request->instructions; // Nouvelles instructions si nécessaire
+
+    // On conserve le courrier_id et le chemin_fichier de l'originale
+    $nouvelleImputation->save();
+
+    // 4. Lier aux nouveaux agents (Sous-directeurs / Conseillers)
+    if ($request->has('agent_ids')) {
+        $nouvelleImputation->agents()->sync($request->agent_ids);
+    }
+
+    return redirect()->back()->with('success', 'Imputation secondaire créée avec succès.');
+}
 
 
 }

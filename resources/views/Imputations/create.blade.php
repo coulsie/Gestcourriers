@@ -17,7 +17,8 @@
             <div class="card shadow-lg border-0 rounded-3">
                 <div class="card-header text-white py-3" style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);">
                     <h4 class="mb-0 font-weight-bold">
-                        <i class="fas fa-file-signature me-2"></i> FORMULAIRE D'IMPUTATION OFFICIELLE (2026)
+                        <i class="fas fa-file-signature me-2"></i>
+                        {{ request('parent_id') ? 'FORMULAIRE DE RÉIMPUTATION' : "FORMULAIRE D'IMPUTATION OFFICIELLE (2026)" }}
                     </h4>
                 </div>
 
@@ -27,7 +28,11 @@
 
                         <!-- CHAMPS TECHNIQUES -->
                         <input type="hidden" name="user_id" value="{{ auth()->id() }}">
-                        <input type="hidden" name="chemin_fichier" value="{{ $chemin_fichier ?? (isset($courrierSelectionne) ? $courrierSelectionne->fichier_chemin : '') }}">
+                        <input type="hidden" name="parent_id" value="{{ request('parent_id') }}">
+                        {{-- Cette ligne est CRUCIALE pour récupérer le fichier lors de la réimputation --}}
+                        <input type="hidden" name="chemin_fichier" value="{{ request('chemin_fichier', $courrierSelectionne->fichier_chemin ?? '') }}">
+
+
 
                         @php
                             $userRole = auth()->user()->role;
@@ -36,8 +41,13 @@
                                 'Chef de Service' => 'secondaire',
                                 default => 'primaire'
                             };
+
+                            // Détection forcée du fichier
+                            $fichierAffiche = request('chemin_fichier') ?: ($courrierSelectionne->fichier_chemin ?? null);
                         @endphp
+
                         <input type="hidden" name="niveau" value="{{ $niveauEnum }}">
+                        <input type="hidden" name="chemin_fichier" value="{{ $fichierAffiche }}">
 
                         <div class="row">
                             <!-- SECTION 1 : DOCUMENTS & DATES -->
@@ -47,16 +57,35 @@
                                         <i class="fas fa-folder-open me-2"></i> 1. Référence & Chronologie
                                     </h5>
 
-                                    @if(isset($courrierSelectionne))
+                                    @if(isset($courrierSelectionne) || request('courrier_id'))
+                                        @php
+                                            $cId = request('courrier_id', $courrierSelectionne->id ?? '');
+                                            $cRef = $courrierSelectionne->reference ?? 'Réimputation';
+                                        @endphp
                                         <div class="mb-3 p-0 rounded-3 overflow-hidden border border-dark shadow-sm">
                                             <div class="bg-dark text-white p-2 px-3 d-flex justify-content-between align-items-center text-uppercase small fw-bold">
                                                 <span><i class="fas fa-file-alt me-2"></i>Document</span>
-                                                <span class="badge bg-primary shadow-sm">Réf: {{ $courrierSelectionne->reference }}</span>
+                                                <span class="badge bg-primary shadow-sm">Réf: {{ $cRef }}</span>
                                             </div>
                                             <div class="p-3 text-white" style="background-color: #1e40af;">
                                                 <label class="small fw-bold opacity-75 text-uppercase">Objet</label>
-                                                <div class="fw-bold fs-6 text-truncate">{{ $courrierSelectionne->objet }}</div>
-                                                <input type="hidden" name="courrier_id" value="{{ $courrierSelectionne->id }}">
+                                                <div class="fw-bold fs-6 text-truncate">
+                                                    {{ $courrierSelectionne->objet ?? 'Chargement du document...' }}
+                                                </div>
+                                                <input type="hidden" name="courrier_id" value="{{ $cId }}">
+
+                                                {{-- Affichage du bouton de consultation --}}
+                                                @if($fichierAffiche)
+                                                    <div class="mt-2 pt-2 border-top border-white-50">
+                                                        <a href="{{ asset($fichierAffiche) }}" target="_blank" class="badge bg-danger text-decoration-none p-2 shadow-sm">
+                                                            <i class="fas fa-file-pdf me-1"></i> CONSULTER LE FICHIER PRINCIPAL
+                                                        </a>
+                                                    </div>
+                                                @else
+                                                    <div class="mt-2 small text-warning italic">
+                                                        <i class="fas fa-exclamation-circle"></i> Aucun fichier lié
+                                                    </div>
+                                                @endif
                                             </div>
                                         </div>
                                     @else
@@ -76,35 +105,60 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label fw-bold small text-muted text-uppercase">Date Imputation *</label>
-                                            {{-- CORRECTION : Ajout du name="date_imputation" --}}
-                                            <input type="date" name="date_imputation" class="form-control bg-light @error('date_imputation') is-invalid @enderror" value="{{ date('2026-01-26') }}" required>
+                                            <input type="date" name="date_imputation" class="form-control bg-light" value="{{ date('Y-m-d') }}" required>
                                         </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label fw-bold small text-muted text-uppercase text-danger">Échéancier *</label>
-                                            <input type="date" name="echeancier" class="form-control border-danger shadow-sm @error('echeancier') is-invalid @enderror" value="{{ old('echeancier') }}" required min="{{ date('2026-01-26') }}">
-                                        </div>
+  <div class="col-md-6 mb-3">
+    <label class="form-label fw-bold small text-muted text-uppercase text-danger">Échéancier *</label>
+
+    @php
+        // On récupère la date de l'URL
+        $dateParam = request('echeancier');
+        // On force le format YYYY-MM-DD indispensable pour l'input HTML5
+        $valueDate = $dateParam ? date('Y-m-d', strtotime($dateParam)) : old('echeancier');
+    @endphp
+
+    <input type="date"
+           name="echeancier"
+           class="form-control shadow-sm {{ request('parent_id') ? 'bg-light border-secondary' : 'border-danger' }}"
+           value="{{ $valueDate }}"
+           {{-- Verrouillage si c'est une réimputation --}}
+           @if(request('parent_id')) readonly style="pointer-events: none;" @endif
+           required>
+
+    @if(request('parent_id'))
+        <small class="text-danger fw-bold d-block mt-1" style="font-size: 0.65rem;">
+            <i class="fas fa-lock me-1"></i> ÉCHÉANCE VERROUILLÉE
+        </small>
+    @endif
+</div>
+
+
                                     </div>
 
                                     <div class="mb-0">
                                         <label class="form-label fw-bold small text-muted text-uppercase">Statut d'imputation *</label>
-                                        {{-- CORRECTION : Ajout du name="statut" --}}
-                                        <select name="statut" class="form-select bg-white border-primary shadow-sm @error('statut') is-invalid @enderror" required>
-                                            <option value="en_attente" {{ old('statut') == 'en_attente' ? 'selected' : '' }}>🟠 En attente (Par défaut)</option>
-                                            <option value="en_cours" {{ old('statut') == 'en_cours' ? 'selected' : '' }}>🔵 Démarrer immédiatement</option>
+                                        <select name="statut" class="form-select bg-white border-primary shadow-sm" required>
+                                            <option value="en_attente" {{ old('statut') == 'en_attente' ? 'selected' : '' }}>🟠 En attente</option>
+                                            <option value="en_cours" {{ request('parent_id') || old('statut') == 'en_cours' ? 'selected' : '' }}>🔵 En cours</option>
                                             <option value="termine" {{ old('statut') == 'termine' ? 'selected' : '' }}>🟢 Terminé</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- SECTION 2 : DESTINATAIRES (AGENTS) -->
+                            {{-- Reste du formulaire (Agents et Section 3 Instructions) --}}
+                            <!-- ... -->
+
+                                                      <!-- SECTION 2 : DESTINATAIRES (AGENTS) -->
                             <div class="col-md-7 mb-4">
                                 <div class="p-4 bg-white rounded-3 shadow-sm h-100 border-top border-4 border-warning">
                                     <h5 class="text-warning mb-4 border-bottom pb-2 fw-bold">
                                         <i class="fas fa-users me-2"></i> 2. Attribution aux Agents
                                     </h5>
 
-                                    <div class="row g-2 mb-3">
+                                    {{-- La suite de votre code pour les agents reste ici --}}
+
+                                     <div class="row g-2 mb-3">
                                         <div class="col-md-6">
                                             <label class="form-label fw-bold small text-muted text-uppercase">Direction</label>
                                             <select id="filter_direction" class="form-select shadow-sm border-warning">
@@ -146,6 +200,7 @@
                         </div>
 
                         <!-- SECTION 3 : TRAITEMENT -->
+                        <!-- SECTION 3 : TRAITEMENT -->
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="p-4 bg-white rounded-3 shadow-sm border-top border-4 border-success">
@@ -155,15 +210,39 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label class="form-label fw-bold small text-muted text-uppercase">Instructions</label>
-                                            <textarea name="instructions" class="form-control mb-3" rows="3" placeholder="Directives à suivre...">{{ old('instructions') }}</textarea>
+                                            {{-- On récupère les instructions de l'URL si elles existent --}}
+                                            <textarea name="instructions" class="form-control mb-3" rows="3" placeholder="Directives à suivre...">{{ request('instructions', old('instructions')) }}</textarea>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label fw-bold small text-muted text-uppercase">Observations</label>
                                             <textarea name="observations" class="form-control mb-3" rows="3" placeholder="Remarques éventuelles...">{{ old('observations') }}</textarea>
                                         </div>
+
                                         <div class="col-md-6">
                                             <label class="form-label fw-bold small text-muted text-uppercase">Documents Annexes</label>
                                             <input type="file" name="documents_annexes" class="form-control shadow-sm">
+
+                                            {{-- Affichage de l'annexe parente si elle existe --}}
+                                            @if(request('doc_annexe'))
+                                                <div class="mt-2 p-2 bg-light border rounded small">
+                                                    <i class="fas fa-paperclip text-primary me-1"></i>
+                                                    Annexe actuelle : <a href="{{ asset(request('doc_annexe')) }}" target="_blank" class="fw-bold">Consulter l'annexe</a>
+                                                    <input type="hidden" name="old_annexe" value="{{ request('doc_annexe') }}">
+                                                </div>
+                                            @endif
+                                        </div>
+
+                                        {{-- Rappel du fichier principal --}}
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold small text-muted text-uppercase">Fichier Principal</label>
+                                            <div class="p-2 bg-light border rounded small">
+                                                <i class="fas fa-file-pdf text-danger me-1"></i>
+                                                @if(request('chemin_fichier'))
+                                                    Fichier lié : <a href="{{ asset(request('chemin_fichier')) }}" target="_blank" class="fw-bold">Voir le document original</a>
+                                                @else
+                                                    <span class="text-muted">Aucun fichier principal détecté</span>
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -210,3 +289,5 @@
     serF.addEventListener('change', filter);
 </script>
 @endsection
+
+

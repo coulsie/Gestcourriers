@@ -214,8 +214,16 @@
                             <form action="{{ route('reponses.valider', $reponse->id) }}" method="POST" enctype="multipart/form-data" class="d-flex align-items-end gap-2 bg-white p-3 rounded-3 shadow-sm border">
                                 @csrf
                                 <div>
-                                    <label class="small fw-bold d-block mb-1 text-dark">Document final signé (PDF)</label>
-                                    <input type="file" name="document_final" class="form-control form-control-sm" accept=".pdf" required>
+                                    <label class="small fw-bold d-block mb-1 text-dark">Document final signé (PDF, Office, Images)</label>
+                                        <input type="file"
+                                            name="document_final"
+                                            class="form-control form-control-sm"
+                                            accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.png"
+                                            required>
+                                        <p class="text-muted mb-0" style="font-size: 0.7rem;">
+                                            <i class="fas fa-info-circle me-1"></i>
+                                            Max : <strong>800 Mo</strong> (PDF, Word, Excel, PowerPoint, JPG, PNG)
+                                        </p>
                                 </div>
                                 <button type="submit" class="btn btn-success fw-bold px-4 btn-sm shadow-sm">
                                     <i class="fas fa-check-double me-2"></i> ACCEPTER & ARCHIVER
@@ -320,11 +328,20 @@
                                 </select>
                             </div>
                             <div class="col-md-5 mb-3">
-                                <label class="form-label fw-bold small">Joindre des justificatifs (PDF/JPG)</label>
-                                <input type="file" name="fichiers[]" class="form-control shadow-sm" multiple>
+                                <label class="form-label fw-bold small">Joindre des justificatifs (PDF, Office, Images)</label>
+                                    <input type="file"
+                                        name="fichiers[]"
+                                        class="form-control shadow-sm"
+                                        accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png"
+                                        multiple>
+                                    <div class="form-text" style="font-size: 0.75rem;">
+                                        <i class="fas fa-file-upload me-1 text-primary"></i>
+                                        Sélection multiple autorisée : <strong>PDF, Word, Excel, PPT, JPG</strong> (Max 800Mo par fichier)
+                                    </div>
                             </div>
                             <div class="col-md-3 mb-3 d-grid">
                                 <button type="submit" class="btn btn-primary fw-bold shadow">
+
                                     <i class="fas fa-paper-plane me-2"></i>TRANSMETTRE
                                 </button>
                             </div>
