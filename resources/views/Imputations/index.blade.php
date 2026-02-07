@@ -188,14 +188,23 @@
                             <td class="text-center pe-4">
                                 <div class="btn-group shadow-sm">
                                     <!-- Bouton Voir/Traiter -->
-                                    <a href="{{ route('imputations.show', $imputation->id) }}" class="btn btn-sm btn-info text-white" title="Voir les détails">
+                                    <a href="{{ route('imputations.show', $imputation->id) }}" class="btn btn-sm btn-info text-white"
+                                         title="Voir les détails">
                                         <i class="fas fa-eye"></i>
                                     </a>
 
                                     <!-- Bouton Modifier -->
-                                    <a href="{{ route('imputations.edit', $imputation->id) }}" class="btn btn-sm btn-warning text-white" title="Modifier l'imputation">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
+                                    <!-- Bouton Modifier -->
+<span title="{{ $imputation->statut === 'termine' ? 'Modification impossible : imputation déjà traitée' : 'Modifier l\'imputation' }}" tabindex="0">
+    <a href="{{ $imputation->statut === 'termine' ? 'javascript:void(0)' : route('imputations.edit', $imputation->id) }}" 
+       class="btn btn-sm btn-warning text-white {{ $imputation->statut === 'termine' ? 'disabled' : '' }}" 
+       @if($imputation->statut === 'termine') 
+           style="opacity: 0.6; filter: grayscale(1); cursor: not-allowed;" 
+           aria-disabled="true"
+       @endif>
+        <i class="fas fa-edit"></i>
+    </a>
+</span>
                                     
                                     <!-- Bouton Supprimer avec Confirmation -->
                                     <form action="{{ route('imputations.destroy', $imputation->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette imputation ? Cette action est irréversible.');">

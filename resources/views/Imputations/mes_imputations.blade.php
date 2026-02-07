@@ -160,20 +160,27 @@
 
                                     <td class="text-center pe-4">
                                         <!-- Reimputation -->
-                                           <a href="{{ route('imputations.create', [
-    'parent_id' => $imputation->id,
-    'courrier_id' => $imputation->courrier_id,
-    'echeancier' => \Carbon\Carbon::parse($imputation->echeancier)->format('Y-m-d'), // FORCE LE FORMAT ICI
-    'chemin_fichier' => $imputation->chemin_fichier,
-    'instructions' => $imputation->instructions
-]) }}" class="btn btn-sm btn-outline-primary shadow-sm">
-    <i class="fas fa-share-alt me-1"></i> Réimputer
-</a>
+       <span title="{{ $imputation->statut === 'termine' ? 'Réimputation impossible : imputation déjà traitée' : 'Réimputer ce courrier' }}" data-bs-toggle="tooltip">
+    <a href="{{ $imputation->statut === 'termine' ? 'javascript:void(0)' : route('imputations.create', ['parent_id' => $imputation->id, 'courrier_id' => $imputation->courrier_id]) }}" 
+       class="btn btn-sm {{ $imputation->statut === 'termine' ? 'btn-outline-secondary disabled' : 'btn-outline-primary' }}"
+       @if($imputation->statut === 'termine') 
+           tabindex="-1" 
+           aria-disabled="true" 
+           style="pointer-events: none; opacity: 0.5;" 
+       @endif>
+        <i class="fas fa-redo me-1"></i> Réimputer
+    </a>
+</span>
 
-                                        <!-- Traiter -->
-                                            <a href="{{ route('imputations.show', $imputation->id) }}" class="btn btn-sm btn-primary shadow-sm">
-                                                <i class="fas fa-eye me-1"></i> TRAITER
-                                            </a>
+                                       <!-- Traiter / Résultat -->
+<a href="{{ route('imputations.show', $imputation->id) }}" 
+   class="btn btn-sm {{ $imputation->statut === 'termine' ? 'btn-success' : 'btn-primary' }} shadow-sm">
+    @if($imputation->statut === 'termine')
+        <i class="fas fa-file-alt me-1"></i> RÉSULTAT
+    @else
+        <i class="fas fa-eye me-1"></i> TRAITER
+    @endif
+</a>
                                     </td>
                         </tr>
                         @empty
