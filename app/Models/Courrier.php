@@ -41,6 +41,7 @@ class Courrier extends Model
         'num_enregistrement', // Ajoutez cette ligne
         'is_confidentiel', // <-- DOIT ÊTRE PRÉSENT
         'code_acces',      // <-- DOIT ÊTRE PRÉSENT
+        'date_document_original', // <-- DOIT ÊTRE PRÉSENT
     ];
 
     /**

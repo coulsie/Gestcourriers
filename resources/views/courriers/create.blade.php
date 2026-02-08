@@ -27,55 +27,83 @@
                     <form method="POST" action="{{ route('courriers.store') }}" enctype="multipart/form-data">
                         @csrf
 
-                        <!-- Section 1: Informations Générales -->
-                        <div class="p-3 mb-4 bg-white rounded-3 shadow-sm border-top border-4 border-primary">
-                            <h5 class="text-primary fw-bold mb-3 small text-uppercase">
-                                <i class="fas fa-info-circle me-2"></i>{{ __('Informations Générales') }}
-                            </h5>
-                            <div class="form-check mb-3">
-    <input class="form-check-input" type="checkbox" name="is_confidentiel" id="checkConfid" onclick="togglePassword(this)">
-    <label class="form-check-label" for="checkConfid">Courrier Confidentiel</label>
+                       <!-- Section 1: Informations Générales -->
+<div class="p-4 mb-4 bg-white rounded-3 shadow-sm border-top border-4 border-primary">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h5 class="text-primary fw-bold mb-0 small text-uppercase">
+            <i class="fas fa-info-circle me-2"></i>{{ __('Informations Générales') }}
+        </h5>
+        <!-- Zone Confidentialité isolée à droite -->
+        <div class="d-flex align-items-center bg-light p-2 rounded border">
+            <div class="form-check form-switch me-3">
+                <input class="form-check-input" type="checkbox" name="is_confidentiel" id="checkConfid" onclick="togglePassword(this)">
+                <label class="form-check-label fw-bold small text-danger" for="checkConfid">
+                    <i class="fas fa-user-shield me-1"></i>Confidentiel
+                </label>
+            </div>
+            <div id="passwordField" style="display:none;">
+                <input type="password" name="code_acces" class="form-control form-control-sm border-danger" 
+                       placeholder="Code (4-6 chiffres)" pattern="[0-9]*" inputmode="numeric" maxlength="6" style="width: 150px;">
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <!-- Ligne 1 : Identification et Type -->
+        <!-- Sens du Courrier -->
+<div class="col-md-3">
+    <label class="form-label fw-bold small text-muted">Direction</label>
+    <select id="directionSelect" class="form-select form-select-sm border-2 border-primary fw-bold">
+        <option value="Incoming">Entrant</option>
+        <option value="Outgoing">Sortant</option>
+    </select>
 </div>
 
-<div id="passwordField" style="display:none;">
-    <label>Définir le code numérique (4-6 chiffres)</label>
-    <input type="password" name="code_acces" class="form-control" 
-           pattern="[0-9]*" inputmode="numeric" maxlength="6">
+<!-- Type précis (celui-ci sera enregistré dans votre champ 'type') -->
+<div class="col-md-3">
+    <label class="form-label fw-bold small text-muted">Type de Courrier <span class="text-danger">*</span></label>
+    <select name="type" id="typeSelect" class="form-select form-select-sm border-2 border-primary fw-bold" required>
+        @foreach($categories as $direction => $subTypes)
+            @foreach($subTypes as $value => $label)
+                <option value="{{ $value }}" data-direction="{{ $direction }}">{{ $label }}</option>
+            @endforeach
+        @endforeach
+    </select>
 </div>
-                            <div class="row g-3">
-                                <div class="col-md-3">
-                                    <label class="form-label fw-bold small">{{ __('Référence') }}</label>
-                                    <input type="text" name="reference" class="form-control form-control-sm border-2 border-primary fw-bold bg-light" value="{{ old('reference') }}" placeholder="REF-2026-001">
-                                </div>
 
-                                <div class="col-md-3">
-                                    <label class="form-label fw-bold small">{{ __('Type') }} <span class="text-danger">*</span></label>
-                                    <select name="type" class="form-select form-select-sm border-2 border-primary fw-bold" required>
-                                        <option value="Incoming">📥 Entrant</option>
-                                        <option value="Outgoing">📤 Sortant</option>
-                                        <option value="Information">ℹ️ Information</option>
-                                    </select>
-                                </div>
+        <div class="col-md-3">
+            <label class="form-label fw-bold small text-muted">{{ __('Date de Réception') }}</label>
+            <input type="date" name="date_courrier" 
+                   class="form-control form-control-sm border-2 border-primary" 
+                   value="{{ old('date_courrier', date('Y-m-d')) }}">
+        </div>
 
-                                <div class="col-md-3">
-                                    <label class="form-label fw-bold small">{{ __('Date du Courrier') }}</label>
-                                    <input type="date" name="date_courrier" class="form-control form-control-sm border-2 border-primary" value="{{ old('date_courrier', date('Y-m-d')) }}">
-                                </div>
+        <div class="col-md-3">
+            <label class="form-label fw-bold small text-muted">{{ __('Statut Initial') }}</label>
+            <select name="statut" class="form-select form-select-sm border-2 border-primary fw-bold">
+                <option value="reçu">🟢 Reçu</option>
+                <option value="en_traitement">🟡 En traitement</option>
+            </select>
+        </div>
 
-                                <div class="col-md-3">
-                                    <label class="form-label fw-bold small">{{ __('Statut Initial') }}</label>
-                                    <select name="statut" class="form-select form-select-sm border-2 border-primary fw-bold">
-                                        <option value="reçu">🟢 Reçu</option>
-                                        <option value="en_traitement">🟡 En traitement</option>
-                                    </select>
-                                </div>
+        <!-- Ligne 2 : Date Originale et Objet -->
+        <div class="col-md-3">
+            <label class="form-label fw-bold small text-info">{{ __('Date du Document Original') }}</label>
+            <div class="input-group input-group-sm">
+                <span class="input-group-text bg-info text-white border-info"><i class="fas fa-calendar-check"></i></span>
+                <input type="date" name="date_document_original" 
+                       class="form-control border-2 border-info" 
+                       value="{{ old('date_document_original') }}">
+            </div>
+            <div class="form-text mt-1 small" style="font-size: 0.65rem;">Date inscrite sur le document physique.</div>
+        </div>
 
-                                <div class="col-md-12 mt-3">
-                                    <label class="form-label fw-bold small">{{ __('Objet du Courrier') }} <span class="text-danger">*</span></label>
-                                    <input type="text" name="objet" class="form-control border-2 fw-bold" placeholder="Sujet du courrier" value="{{ old('objet') }}" required style="background-color: #fff9e6; border-color: #ffc107 !important;">
-                                </div>
-                            </div>
-                        </div>
+        <div class="col-md-9">
+            <label class="form-label fw-bold small text-muted">{{ __('Objet du Courrier') }} <span class="text-danger">*</span></label>
+            <textarea name="objet" class="form-control border-2 fw-bold" rows="1" placeholder="Sujet du courrier" required style="background-color: #fff9e6; border-color: #ffc107 !important;">{{ old('objet') }}</textarea>
+        </div>
+    </div>
+</div>
 
                         <!-- Section 2: Acteurs (Expéditeur / Destinataire) -->
                         <div class="row g-3 mb-4">
@@ -146,8 +174,55 @@
     .form-control:focus { box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15); border-color: #0d6efd !important; }
 </style>
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // === 1. Gestion du Filtrage des Types de Courriers ===
+    const directionSelect = document.getElementById('directionSelect');
+    const typeSelect = document.getElementById('typeSelect');
+
+    function filterTypes() {
+        if (!directionSelect || !typeSelect) return;
+
+        const direction = directionSelect.value;
+        const options = typeSelect.querySelectorAll('option');
+        let firstMatch = null;
+
+        options.forEach(opt => {
+            if (opt.dataset.direction === direction) {
+                opt.style.display = 'block';
+                if (!firstMatch) firstMatch = opt.value;
+            } else {
+                opt.style.display = 'none';
+            }
+        });
+
+        // Sélectionne automatiquement le premier type correspondant
+        if (firstMatch) {
+            typeSelect.value = firstMatch;
+        }
+    }
+
+    // === 2. Initialisation des Événements ===
+    if (directionSelect) {
+        directionSelect.addEventListener('change', filterTypes);
+        // Exécuter immédiatement pour initialiser l'affichage au chargement
+        filterTypes();
+    }
+});
+
+// === 3. Gestion de la Confidentialité (Mise en dehors du DOMContentLoaded pour onclick) ===
 function togglePassword(checkbox) {
-    document.getElementById('passwordField').style.display = checkbox.checked ? 'block' : 'none';
+    const field = document.getElementById('passwordField');
+    if (!field) return;
+
+    if (checkbox.checked) {
+        field.style.display = 'block';
+        const input = field.querySelector('input');
+        if (input) input.focus(); // Met le curseur directement dans le champ code
+    } else {
+        field.style.display = 'none';
+        const input = field.querySelector('input');
+        if (input) input.value = ''; // Efface le code si on décoche
+    }
 }
 </script>
 @endsection

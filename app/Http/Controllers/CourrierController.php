@@ -52,13 +52,27 @@ class CourrierController extends Controller
     return view('courriers.index', compact('courriers'));
 }
 
-
-    
 public function create()
 {
-    return view('courriers.create');
-}
+    $categories = [
+        'Incoming' => [
+            'Facture' => '📥 Facture',
+            'Plainte' => '📥 Plainte / Réclamation',
+            'Note_Service' => '📥 Note de Service',
+            'Courrier_Admin' => '📥 Courrier Administratif',
+            'Autre' => '📥 Autre'
+        ],
+        'Outgoing' => [
+            'Reponse' => '📤 Réponse à un courrier',
+            'Devis' => '📤 Envoi Devis/Facture',
+            'Convocation' => '📤 Convocation',
+            'Notification' => '📤 Notification',
+            'Autre' => '📤 Autre'
+        ]
+    ];
 
+    return view('courriers.create', compact('categories'));
+}
 
 public function store(Request $request)
 {
@@ -75,10 +89,13 @@ public function store(Request $request)
         'destinataire_contact' => 'nullable|string|max:255',
         'assigne_a'            => 'nullable|string|max:255',
         'statut'               => 'required|string',
-        'chemin_fichier'       => 'nullable|file|mimes:pdf,jpg,png|max:10240',
+        'chemin_fichier' => 'nullable|file|mimes:pdf,jpg,png,doc,docx,xls,xlsx,ppt,pptx,odt,ods|max:20480',
+
         // Nouveaux champs
         'is_confidentiel'      => 'nullable',
         'code_acces'           => 'required_if:is_confidentiel,1|nullable|numeric|digits_between:4,6',
+        'date_document_original' => 'nullable|date|before_or_equal:date_courrier',
+
     ]);
 
     // Préparation des données additionnelles
@@ -149,6 +166,10 @@ public function update(Request $request, Courrier $courrier)
         'statut'               => 'required|string',
         'affecter'             => 'nullable',
         'chemin_fichier'       => 'nullable|file|mimes:pdf,jpg,png|max:10240',
+        // Nouveaux champs
+        'is_confidentiel'      => 'nullable',
+        'code_acces'           => 'required_if:is_confidentiel,1|nullable|numeric|digits_between:4,6',
+        'date_document_original' => 'nullable|date|before_or_equal:date_courrier',
     ]);
 
     // Force la valeur binaire pour affecter
