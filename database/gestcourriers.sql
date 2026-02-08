@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.3
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3307
--- Généré le : mer. 28 jan. 2026 à 16:39
--- Version du serveur : 11.4.9-MariaDB
--- Version de PHP : 8.3.28
+-- Généré le : dim. 08 fév. 2026 à 20:38
+-- Version du serveur : 11.5.2-MariaDB
+-- Version de PHP : 8.3.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS `agents` (
   UNIQUE KEY `agents_email_professionnel_unique` (`email_professionnel`),
   KEY `agents_service_id_foreign` (`service_id`),
   KEY `agents_user_id_foreign` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `agents`
@@ -116,7 +116,8 @@ INSERT INTO `agents` (`id`, `email_professionnel`, `matricule`, `first_name`, `l
 (20, 'mamadoulcoul@dgi.gouv.ci', '360244S', 'Mamadou lamine', 'COULIBALY', 'Agent', 'Male', NULL, NULL, NULL, 'mamadoulcoul@dgi.gouv.ci', NULL, NULL, 'Demographe', 'A4', NULL, NULL, NULL, 11, 20, '2026-01-23 10:29:57', '2026-01-23 10:30:27'),
 (21, 'akeita@dgi.gouv.ci', '305436Z', 'Née keita aramata anne elise', 'KEDI', 'Agent', 'Female', NULL, NULL, NULL, 'akeita@dgi.gouv.ci', NULL, NULL, 'Inspecteur des Impôts', 'A3', NULL, NULL, NULL, 10, 21, '2026-01-27 07:57:48', '2026-01-27 08:14:44'),
 (22, 'christiankonankoffi@dgi.gouv.ci', '804367G', 'Konan christian rené', 'KOFFI', 'Agent', 'Male', NULL, NULL, NULL, 'christiankonankoffi@dgi.gouv.ci', NULL, NULL, 'Secrétaire Administratif', 'B3', NULL, NULL, NULL, 11, 22, '2026-01-27 08:14:10', '2026-01-27 08:15:28'),
-(23, 'erasthene16ja17@dgi.gouv.ci', '435014F', 'M\'bo erasthène', 'ALEXANDRE', 'Agent', 'Male', '1991-12-20', 'Akoupe/Yaffo-Attié', '1769527329_IMG_M\'bo alexandre.jpg', 'erasthene16ja17@dgi.gouv.ci', '0707661901', NULL, 'Analyste Statisticien', 'B3', '2025-12-15', 'M\'bo Sylvain', '0758033663', 13, 23, '2026-01-27 14:44:26', '2026-01-27 15:22:09');
+(23, 'erasthene16ja17@dgi.gouv.ci', '435014F', 'M\'bo erasthène', 'ALEXANDRE', 'Agent', 'Male', '1991-12-20', 'Akoupe/Yaffo-Attié', '1769527329_IMG_M\'bo alexandre.jpg', 'erasthene16ja17@dgi.gouv.ci', '0707661901', NULL, 'Analyste Statisticien', 'B3', '2025-12-15', 'M\'bo Sylvain', '0758033663', 13, 23, '2026-01-27 14:44:26', '2026-01-27 15:22:09'),
+(24, 'unguessan@dgi.gouv.ci', '360340E', 'Yao ulrich', 'N\'GUESSAN', 'Chef de service', 'Male', NULL, NULL, NULL, 'unguessan@dgi.gouv.ci', NULL, NULL, 'Attaché des Finances', 'A3', NULL, NULL, NULL, 8, 24, '2026-01-29 09:39:36', '2026-01-29 09:41:05');
 
 -- --------------------------------------------------------
 
@@ -134,7 +135,7 @@ CREATE TABLE IF NOT EXISTS `agent_imputation` (
   PRIMARY KEY (`id`),
   KEY `agent_imputation_imputation_id_foreign` (`imputation_id`),
   KEY `agent_imputation_agent_id_foreign` (`agent_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `agent_imputation`
@@ -159,7 +160,10 @@ INSERT INTO `agent_imputation` (`id`, `imputation_id`, `agent_id`, `created_at`,
 (26, 20, 1, NULL, NULL),
 (27, 21, 2, NULL, NULL),
 (28, 22, 2, NULL, NULL),
-(29, 23, 1, NULL, NULL);
+(29, 23, 1, NULL, NULL),
+(30, 24, 1, NULL, NULL),
+(31, 25, 1, NULL, NULL),
+(32, 26, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -206,7 +210,7 @@ CREATE TABLE IF NOT EXISTS `cache` (
 --
 
 INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
-('laravel-cache-spatie.permission.cache', 'a:3:{s:5:\"alias\";a:4:{s:1:\"a\";s:2:\"id\";s:1:\"b\";s:4:\"name\";s:1:\"c\";s:10:\"guard_name\";s:1:\"r\";s:5:\"roles\";}s:11:\"permissions\";a:8:{i:0;a:4:{s:1:\"a\";i:1;s:1:\"b\";s:14:\"creer-articles\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:3:{i:0;i:1;i:1;i:2;i:2;i:5;}}i:1;a:4:{s:1:\"a\";i:2;s:1:\"b\";s:18:\"supprimer-articles\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:2:{i:0;i:1;i:1;i:5;}}i:2;a:4:{s:1:\"a\";i:3;s:1:\"b\";s:17:\"voir-utilisateurs\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:4:{i:0;i:1;i:1;i:2;i:2;i:4;i:3;i:5;}}i:3;a:4:{s:1:\"a\";i:4;s:1:\"b\";s:12:\"manage-users\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:2:{i:0;i:1;i:1;i:5;}}i:4;a:4:{s:1:\"a\";i:5;s:1:\"b\";s:17:\"modifier articles\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:3:{i:0;i:1;i:1;i:3;i:2;i:5;}}i:5;a:4:{s:1:\"a\";i:6;s:1:\"b\";s:18:\"supprimer articles\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:2:{i:0;i:1;i:1;i:5;}}i:6;a:4:{s:1:\"a\";i:7;s:1:\"b\";s:11:\"gerer-roles\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:2:{i:0;i:1;i:1;i:5;}}i:7;a:4:{s:1:\"a\";i:8;s:1:\"b\";s:17:\"acceder-dashboard\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:4:{i:0;i:1;i:1;i:3;i:2;i:4;i:3;i:5;}}}s:5:\"roles\";a:5:{i:0;a:3:{s:1:\"a\";i:1;s:1:\"b\";s:5:\"admin\";s:1:\"c\";s:3:\"web\";}i:1;a:3:{s:1:\"a\";i:2;s:1:\"b\";s:11:\"utilisateur\";s:1:\"c\";s:3:\"web\";}i:2;a:3:{s:1:\"a\";i:5;s:1:\"b\";s:11:\"Superviseur\";s:1:\"c\";s:3:\"web\";}i:3;a:3:{s:1:\"a\";i:4;s:1:\"b\";s:2:\"rh\";s:1:\"c\";s:3:\"web\";}i:4;a:3:{s:1:\"a\";i:3;s:1:\"b\";s:7:\"editeur\";s:1:\"c\";s:3:\"web\";}}}', 1769684595);
+('laravel-cache-spatie.permission.cache', 'a:3:{s:5:\"alias\";a:4:{s:1:\"a\";s:2:\"id\";s:1:\"b\";s:4:\"name\";s:1:\"c\";s:10:\"guard_name\";s:1:\"r\";s:5:\"roles\";}s:11:\"permissions\";a:8:{i:0;a:4:{s:1:\"a\";i:1;s:1:\"b\";s:14:\"creer-articles\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:3:{i:0;i:1;i:1;i:2;i:2;i:5;}}i:1;a:4:{s:1:\"a\";i:2;s:1:\"b\";s:18:\"supprimer-articles\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:2:{i:0;i:1;i:1;i:5;}}i:2;a:4:{s:1:\"a\";i:3;s:1:\"b\";s:17:\"voir-utilisateurs\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:4:{i:0;i:1;i:1;i:2;i:2;i:4;i:3;i:5;}}i:3;a:4:{s:1:\"a\";i:4;s:1:\"b\";s:12:\"manage-users\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:2:{i:0;i:1;i:1;i:5;}}i:4;a:4:{s:1:\"a\";i:5;s:1:\"b\";s:17:\"modifier articles\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:3:{i:0;i:1;i:1;i:3;i:2;i:5;}}i:5;a:4:{s:1:\"a\";i:6;s:1:\"b\";s:18:\"supprimer articles\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:2:{i:0;i:1;i:1;i:5;}}i:6;a:4:{s:1:\"a\";i:7;s:1:\"b\";s:11:\"gerer-roles\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:2:{i:0;i:1;i:1;i:5;}}i:7;a:4:{s:1:\"a\";i:8;s:1:\"b\";s:17:\"acceder-dashboard\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:4:{i:0;i:1;i:1;i:3;i:2;i:4;i:3;i:5;}}}s:5:\"roles\";a:5:{i:0;a:3:{s:1:\"a\";i:1;s:1:\"b\";s:5:\"admin\";s:1:\"c\";s:3:\"web\";}i:1;a:3:{s:1:\"a\";i:2;s:1:\"b\";s:11:\"utilisateur\";s:1:\"c\";s:3:\"web\";}i:2;a:3:{s:1:\"a\";i:5;s:1:\"b\";s:11:\"Superviseur\";s:1:\"c\";s:3:\"web\";}i:3;a:3:{s:1:\"a\";i:4;s:1:\"b\";s:2:\"rh\";s:1:\"c\";s:3:\"web\";}i:4;a:3:{s:1:\"a\";i:3;s:1:\"b\";s:7:\"editeur\";s:1:\"c\";s:3:\"web\";}}}', 1770633969);
 
 -- --------------------------------------------------------
 
@@ -221,6 +225,26 @@ CREATE TABLE IF NOT EXISTS `cache_locks` (
   `expiration` int(11) NOT NULL,
   PRIMARY KEY (`key`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `contacts`
+--
+
+DROP TABLE IF EXISTS `contacts`;
+CREATE TABLE IF NOT EXISTS `contacts` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `nom` varchar(255) NOT NULL,
+  `prenom` varchar(255) DEFAULT NULL,
+  `email` varchar(255) NOT NULL,
+  `telephone` varchar(255) DEFAULT NULL,
+  `message` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `contacts_email_unique` (`email`) USING HASH
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -247,24 +271,31 @@ CREATE TABLE IF NOT EXISTS `courriers` (
   `chemin_fichier` varchar(191) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `is_confidentiel` tinyint(1) NOT NULL DEFAULT 0,
+  `code_acces` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `courriers_num_enregistrement_unique` (`num_enregistrement`) USING HASH
-) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `courriers`
 --
 
-INSERT INTO `courriers` (`id`, `num_enregistrement`, `affecter`, `reference`, `type`, `objet`, `description`, `date_courrier`, `expediteur_nom`, `expediteur_contact`, `destinataire_nom`, `destinataire_contact`, `statut`, `assigne_a`, `chemin_fichier`, `created_at`, `updated_at`) VALUES
-(2, 'REG-2026-6971FEFAADDCF', 1, '000021', 'Outgoing', 'réponses de ls DSESF relative à une demande de stage et une demande de collecte de données sollicitées respectivement par Mlle DJAN Loukou Julienne et DOU Sopie Joëlle Priscae', NULL, '2026-01-21', 'DSESF', NULL, 'DFRC Direction de la Formation et du Renforcement de Capacité', NULL, 'affecté', 'Non assigné', '1769081946_000021__du_21_01_2026.pdf', '2026-01-22 10:42:02', '2026-01-28 09:42:44'),
-(3, 'REG-2026-697203E79FCA1', 1, '0040', 'Incoming', 'Résultat de l\'examen de demande de rectification des Etats Financiers Compagnie ASKI Airline', NULL, '2026-01-21', 'DERAR', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1769081929__0040_du_2026-01-21.pdf', '2026-01-22 11:03:03', '2026-01-28 11:12:17'),
-(4, 'REG-2026-697209DAABA90', 1, '06391', 'Incoming', 'Demane de mise à disposition de M. BROU Konan Amani', NULL, '2026-01-21', 'CABINET DGI', NULL, 'Direction DSESFGénérale', NULL, 'affecté', 'Non assigné', '1769081306_06391_2026-01-22_112741.pdf', '2026-01-22 11:28:26', '2026-01-28 09:42:31'),
-(5, 'REG-2026-697210C0D9ED1', 1, '06410', 'Incoming', 'Demande de rectification des états financiers par téléliasse', NULL, '2026-01-21', 'CABINET DGI', NULL, 'DSESF', NULL, 'Archivé', 'Non assigné', '1769083072_06410_2026-01-22_115627.pdf', '2026-01-22 11:57:52', '2026-01-28 09:42:17'),
-(6, 'REG-2026-69721207AC2B6', 1, '0759232466', 'Incoming', 'Demande données statistiques pour mémoire de fin de cycle', NULL, '2026-01-21', 'KOSSONOU Affoué Ella Mireille Stagiaire de l\'ENA', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1769083399_0759232466_2026-01-22_120224.pdf', '2026-01-22 12:03:19', '2026-01-28 09:42:08'),
-(10, 'REG-2026-6979ED4466FDE', 1, '01210', 'Incoming', 'Visite de MTN Côte d\'Ivoire', NULL, '2026-01-28', 'CABINET DGI', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1769598276_Projet_de_Note_du_DSESF_au_DG_Séminaire_Loi_de_règlement_18_20_déc_2024.pdf', '2026-01-28 11:04:36', '2026-01-28 11:05:50'),
-(7, 'REG-2026-69774D5D847F5', 1, '03220', 'Incoming', 'Formation des Agents Non Fiscalistes', NULL, '2026-01-26', 'CABINET DGI', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1769426269_Document_2026-01-26_formation.pdf', '2026-01-26 11:17:49', '2026-01-28 09:41:20'),
-(8, 'REG-2026-697752B52AA6B', 1, '0784', 'Incoming', 'Proposition pour utilisation du nouveau serveur', NULL, '2026-01-26', 'DSESF', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1769427637_Document_2026-01-26_Proposition_serveur.pdf', '2026-01-26 11:40:37', '2026-01-28 11:47:59'),
-(9, 'REG-2026-69775E4353DEF', 1, '02218', 'Incoming', 'Mission d\'explication des statistiques mensuelles des recettes', NULL, '2026-01-26', 'CABINET DGI', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1769430595_Statistiques_Mensuelles_Recette_2026-01-26_122728.pdf', '2026-01-26 12:29:55', '2026-01-26 12:30:52');
+INSERT INTO `courriers` (`id`, `num_enregistrement`, `affecter`, `reference`, `type`, `objet`, `description`, `date_courrier`, `expediteur_nom`, `expediteur_contact`, `destinataire_nom`, `destinataire_contact`, `statut`, `assigne_a`, `chemin_fichier`, `created_at`, `updated_at`, `is_confidentiel`, `code_acces`) VALUES
+(2, 'REG-2026-6971FEFAADDCF', 1, '000021', 'Outgoing', 'réponses de ls DSESF relative à une demande de stage et une demande de collecte de données sollicitées respectivement par Mlle DJAN Loukou Julienne et DOU Sopie Joëlle Priscae', NULL, '2026-01-21', 'DSESF', NULL, 'DFRC Direction de la Formation et du Renforcement de Capacité', NULL, 'affecté', 'Non assigné', '1769081946_000021__du_21_01_2026.pdf', '2026-01-22 10:42:02', '2026-01-28 09:42:44', 0, NULL),
+(3, 'REG-2026-697203E79FCA1', 1, '0040', 'Incoming', 'Résultat de l\'examen de demande de rectification des Etats Financiers Compagnie ASKI Airline', NULL, '2026-01-21', 'DERAR', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1769081929__0040_du_2026-01-21.pdf', '2026-01-22 11:03:03', '2026-01-28 11:12:17', 0, NULL),
+(4, 'REG-2026-697209DAABA90', 1, '06391', 'Incoming', 'Demane de mise à disposition de M. BROU Konan Amani', NULL, '2026-01-21', 'CABINET DGI', NULL, 'Direction DSESFGénérale', NULL, 'affecté', 'Non assigné', '1769081306_06391_2026-01-22_112741.pdf', '2026-01-22 11:28:26', '2026-01-28 09:42:31', 0, NULL),
+(5, 'REG-2026-697210C0D9ED1', 1, '06410', 'Incoming', 'Demande de rectification des états financiers par téléliasse', NULL, '2026-01-21', 'CABINET DGI', NULL, 'DSESF', NULL, 'Archivé', 'Non assigné', '1769083072_06410_2026-01-22_115627.pdf', '2026-01-22 11:57:52', '2026-01-28 09:42:17', 0, NULL),
+(6, 'REG-2026-69721207AC2B6', 1, '0759232466', 'Incoming', 'Demande données statistiques pour mémoire de fin de cycle', NULL, '2026-01-21', 'KOSSONOU Affoué Ella Mireille Stagiaire de l\'ENA', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1769083399_0759232466_2026-01-22_120224.pdf', '2026-01-22 12:03:19', '2026-01-28 09:42:08', 0, NULL),
+(10, 'REG-2026-6979ED4466FDE', 1, '01210', 'Incoming', 'Visite de MTN Côte d\'Ivoire', NULL, '2026-01-28', 'CABINET DGI', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1769598276_Projet_de_Note_du_DSESF_au_DG_Séminaire_Loi_de_règlement_18_20_déc_2024.pdf', '2026-01-28 11:04:36', '2026-01-28 11:05:50', 0, NULL),
+(7, 'REG-2026-69774D5D847F5', 1, '03220', 'Incoming', 'Formation des Agents Non Fiscalistes', NULL, '2026-01-26', 'CABINET DGI', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1769426269_Document_2026-01-26_formation.pdf', '2026-01-26 11:17:49', '2026-01-28 09:41:20', 0, NULL),
+(8, 'REG-2026-697752B52AA6B', 1, '0784', 'Incoming', 'Proposition pour utilisation du nouveau serveur', NULL, '2026-01-26', 'DSESF', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1769427637_Document_2026-01-26_Proposition_serveur.pdf', '2026-01-26 11:40:37', '2026-01-28 11:47:59', 0, NULL),
+(9, 'REG-2026-69775E4353DEF', 1, '02218', 'Incoming', 'Mission d\'explication des statistiques mensuelles des recettes', NULL, '2026-01-26', 'CABINET DGI', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1769430595_Statistiques_Mensuelles_Recette_2026-01-26_122728.pdf', '2026-01-26 12:29:55', '2026-01-26 12:30:52', 0, NULL),
+(11, 'REG-2026-697B3140CAE6F', 1, '444444', 'Incoming', 'juste un essai', NULL, '2026-01-29', 'Cabinet DGI', NULL, 'DSESF', NULL, 'archivé', 'Non assigné', '1769681216_COMMISSION_PARITAIRE_DE_SUIVI_DU_PROFIL_DE_CARRIERE.pdf', '2026-01-29 10:06:56', '2026-01-29 10:21:46', 0, NULL),
+(12, 'REG-2026-698879A786900', 0, '000222', 'Incoming', 'essai coffre fort', NULL, '2026-02-08', 'Cabinet DGI', NULL, 'DSESF', NULL, 'reçu', 'Non assigné', '1770551719_Note_Service_Objectifs_de_recettes_révisés_2025_N\'GUESSAN.doc.pdf', '2026-02-08 11:55:19', '2026-02-08 11:55:19', 0, NULL),
+(13, 'REG-2026-69887B3F86D8A', 0, '002221', 'Incoming', 'essai coffre fort1', NULL, '2026-02-08', 'Cabinet DGI', NULL, 'DSESF', NULL, 'reçu', 'Non assigné', '1770552127_Note_au_MFB__Objectif_de_recettes_TOFE_Aout_2025.pdf', '2026-02-08 12:02:07', '2026-02-08 12:02:07', 0, NULL),
+(14, 'REG-2026-69887CB125567', 1, '0022222', 'Incoming', 'essai coffre fort2', NULL, '2026-02-08', 'Cabinet DGI', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1770552497_Note_Service_Objectifs_de_recettes_révisés_2025_N\'GUESSAN.doc.pdf', '2026-02-08 12:08:17', '2026-02-08 12:29:47', 1, 'eyJpdiI6InNSK0RFSE1IZ2pELzFVb1d0aitUZGc9PSIsInZhbHVlIjoid1djN2xzRVJtVUJGYjgwbWFpUWY5UT09IiwibWFjIjoiNzY4NzJjZWZlYTZiYjE0NWU5MmQ2NjU2MWJiOWY1MzdlZWMzNDFhNDNhZWIwNmYyYzQ1NWI3MzJhYjU3YjE2MyIsInRhZyI6IiJ9'),
+(15, 'REG-2026-698882381615A', 1, '23333', 'Incoming', 'essai coffre fort3', NULL, '2026-02-08', 'Cabinet DGI', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1770553912_Note_de_service_DEMANDE_D\'INFORMATIONS_COMITE_COUT_SDEEF.pdf', '2026-02-08 12:31:52', '2026-02-08 12:32:44', 1, 'eyJpdiI6IldRcGw0blZUckRxUE10RXR6MnloVVE9PSIsInZhbHVlIjoieUdrMEc2bkxtWUs4Tm83MkRWTDBBdz09IiwibWFjIjoiYzYxYTM5MWI4NzVlYjEwNjY4MDg0YWZlNjIzZmY2NzE4ODNhNTU1Y2JkZWZmNGVhZDgzZjdjZTRiNzVlODNhMiIsInRhZyI6IiJ9');
 
 -- --------------------------------------------------------
 
@@ -296,6 +327,23 @@ INSERT INTO `directions` (`id`, `name`, `code`, `description`, `head_id`, `creat
 (3, 'Sous-Direction des Etudes et Evaluations Fiscales', 'SDEEF', NULL, NULL, '2026-01-20 12:50:03', '2026-01-20 12:50:03'),
 (4, 'Sous-Direction de la Planification et de la Stratégie', 'SDPlan&S', NULL, NULL, '2026-01-20 12:51:40', '2026-01-20 13:01:54'),
 (5, 'Sous-Direction du Guichet Unique de Dépôt des Etats Financiers', 'GUDEF', NULL, NULL, '2026-01-20 12:52:43', '2026-01-20 12:52:43');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `expediteurs`
+--
+
+DROP TABLE IF EXISTS `expediteurs`;
+CREATE TABLE IF NOT EXISTS `expediteurs` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `nom` varchar(255) NOT NULL,
+  `adresse` varchar(255) NOT NULL,
+  `telephone` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -373,7 +421,7 @@ CREATE TABLE IF NOT EXISTS `imputations` (
   PRIMARY KEY (`id`),
   KEY `imputations_courrier_id_foreign` (`courrier_id`),
   KEY `imputations_user_id_foreign` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `imputations`
@@ -394,7 +442,10 @@ INSERT INTO `imputations` (`id`, `courrier_id`, `chemin_fichier`, `user_id`, `ni
 (20, 10, NULL, 9, 'primaire', 'info6', NULL, '\"documents\\/imputations\\/annexes\\/1769601085_Note_Service_Objectifs_de_recettes_r\\u00e9vis\\u00e9s_2025_N\'GUESSAN.pdf\"', '2026-01-26', NULL, '2026-01-29', 'en_attente', '2026-01-28 11:51:25', '2026-01-28 11:51:25'),
 (21, 10, NULL, 3, 'autre', 'info7', NULL, '\"documents\\/imputations\\/annexes\\/1769601385_Note_au_MFB__Objectif_de_recettes_TOFE_Aout_2025.pdf\"', '2026-01-26', NULL, '2026-01-29', 'en_attente', '2026-01-28 11:56:25', '2026-01-28 11:56:25'),
 (22, 9, NULL, 3, 'autre', 'iiokjj', NULL, '\"documents\\/imputations\\/annexes\\/1769601446_Projet_de_Note_du_DSESF_au_DG_S\\u00e9minaire_Loi_de_r\\u00e8glement_18_20_d\\u00e9c_2024.pdf\"', '2026-01-26', NULL, '2026-01-30', 'en_attente', '2026-01-28 11:57:26', '2026-01-28 11:57:26'),
-(23, 10, NULL, 10, 'secondaire', 'GH', NULL, '\"documents\\/imputations\\/annexes\\/1769601632_Projet_de_Note_du_DSESF_au_DG_S\\u00e9minaire_Loi_de_r\\u00e8glement_18_20_d\\u00e9c_2024.pdf\"', '2026-01-26', NULL, '2026-01-29', 'en_attente', '2026-01-28 12:00:32', '2026-01-28 12:00:32');
+(23, 10, NULL, 10, 'secondaire', 'GH', NULL, '\"documents\\/imputations\\/annexes\\/1769601632_Projet_de_Note_du_DSESF_au_DG_S\\u00e9minaire_Loi_de_r\\u00e8glement_18_20_d\\u00e9c_2024.pdf\"', '2026-01-26', NULL, '2026-01-29', 'termine', '2026-01-28 12:00:32', '2026-01-29 10:18:33'),
+(24, 11, NULL, 24, 'tertiaire', 'intructions', NULL, '\"documents\\/imputations\\/annexes\\/1769681389_Tuto_PHP.pdf\"', '2026-01-26', NULL, '2026-02-02', 'termine', '2026-01-29 10:09:49', '2026-01-29 10:20:35'),
+(25, 14, NULL, 3, 'autre', 'taf', NULL, NULL, '2026-02-08', NULL, '2026-02-14', 'en_attente', '2026-02-08 12:29:47', '2026-02-08 12:29:47'),
+(26, 15, NULL, 3, 'autre', 'verif', NULL, NULL, '2026-02-08', NULL, '2026-02-15', 'en_attente', '2026-02-08 12:32:44', '2026-02-08 12:32:44');
 
 -- --------------------------------------------------------
 
@@ -448,7 +499,7 @@ CREATE TABLE IF NOT EXISTS `migrations` (
   `migration` varchar(191) NOT NULL,
   `batch` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=50 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `migrations`
@@ -502,7 +553,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (45, '2026_01_22_101853_make_assigne_a_nullable_in_courriers_table', 5),
 (46, '2026_01_22_102531_add_numero_enregistrement_to_courriers_table', 6),
 (47, '2026_01_22_140612_add_chemin_fichier_to_imputations_table', 7),
-(48, '2026_01_26_172154_create_role_user_table', 8);
+(48, '2026_01_26_172154_create_role_user_table', 8),
+(49, '2026_02_08_105025_add_is_confidentiel_to_courriers_table', 9);
 
 -- --------------------------------------------------------
 
@@ -646,7 +698,7 @@ CREATE TABLE IF NOT EXISTS `presences` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `presences_agent_id_foreign` (`agent_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=207 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=230 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `presences`
@@ -858,7 +910,30 @@ INSERT INTO `presences` (`id`, `agent_id`, `heure_arrivee`, `heure_depart`, `sta
 (203, 15, '2026-01-22 08:00:00', NULL, 'Absence Justifiée', 'Justifié: ', '2026-01-26 10:01:14', '2026-01-26 10:01:14'),
 (204, 15, '2026-01-23 08:00:00', NULL, 'Absence Justifiée', 'Justifié: ', '2026-01-26 10:01:14', '2026-01-26 10:01:14'),
 (205, 1, '2026-01-27 07:25:00', '2026-01-27 17:05:00', 'Présent', 'Calculé pour Mardi (Limite: 465m, Arrivée: 445m). ', '2026-01-27 14:59:12', '2026-01-27 14:59:12'),
-(206, 1, '2026-01-28 08:21:12', NULL, 'En Retard', 'Pointage automatique (Self-service)', '2026-01-28 08:21:12', '2026-01-28 08:21:12');
+(206, 1, '2026-01-28 08:21:12', '2026-01-28 16:44:09', 'En Retard', 'Pointage automatique (Self-service)', '2026-01-28 08:21:12', '2026-01-28 16:44:09'),
+(207, 1, '2026-01-29 09:44:09', NULL, 'En Retard', 'Pointage automatique (Self-service)', '2026-01-29 09:44:09', '2026-01-29 09:44:09'),
+(208, 24, '2026-01-29 09:50:54', NULL, 'En Retard', 'Pointage automatique (Self-service)', '2026-01-29 09:50:54', '2026-01-29 09:50:54'),
+(209, 21, '2026-01-19 08:00:00', NULL, 'Absent', 'Absence hebdomadaire.', '2026-01-29 09:55:00', '2026-01-29 09:55:00'),
+(210, 21, '2026-01-20 08:00:00', NULL, 'Absent', 'Absence hebdomadaire.', '2026-01-29 09:55:00', '2026-01-29 09:55:00'),
+(211, 21, '2026-01-21 08:00:00', NULL, 'Absent', 'Absence hebdomadaire.', '2026-01-29 09:55:00', '2026-01-29 09:55:00'),
+(212, 21, '2026-01-22 08:00:00', NULL, 'Absent', 'Absence hebdomadaire.', '2026-01-29 09:55:00', '2026-01-29 09:55:00'),
+(213, 21, '2026-01-23 08:00:00', NULL, 'Absent', 'Absence hebdomadaire.', '2026-01-29 09:55:00', '2026-01-29 09:55:00'),
+(214, 22, '2026-01-19 08:00:00', NULL, 'Absent', 'Absence hebdomadaire.', '2026-01-29 09:55:00', '2026-01-29 09:55:00'),
+(215, 22, '2026-01-20 08:00:00', NULL, 'Absent', 'Absence hebdomadaire.', '2026-01-29 09:55:00', '2026-01-29 09:55:00'),
+(216, 22, '2026-01-21 08:00:00', NULL, 'Absent', 'Absence hebdomadaire.', '2026-01-29 09:55:00', '2026-01-29 09:55:00'),
+(217, 22, '2026-01-22 08:00:00', NULL, 'Absent', 'Absence hebdomadaire.', '2026-01-29 09:55:00', '2026-01-29 09:55:00'),
+(218, 22, '2026-01-23 08:00:00', NULL, 'Absent', 'Absence hebdomadaire.', '2026-01-29 09:55:00', '2026-01-29 09:55:00'),
+(219, 23, '2026-01-19 08:00:00', NULL, 'Absent', 'Absence hebdomadaire.', '2026-01-29 09:55:00', '2026-01-29 09:55:00'),
+(220, 23, '2026-01-20 08:00:00', NULL, 'Absent', 'Absence hebdomadaire.', '2026-01-29 09:55:00', '2026-01-29 09:55:00'),
+(221, 23, '2026-01-21 08:00:00', NULL, 'Absent', 'Absence hebdomadaire.', '2026-01-29 09:55:00', '2026-01-29 09:55:00'),
+(222, 23, '2026-01-22 08:00:00', NULL, 'Absent', 'Absence hebdomadaire.', '2026-01-29 09:55:00', '2026-01-29 09:55:00'),
+(223, 23, '2026-01-23 08:00:00', NULL, 'Absent', 'Absence hebdomadaire.', '2026-01-29 09:55:00', '2026-01-29 09:55:00'),
+(224, 24, '2026-01-19 08:00:00', NULL, 'Absent', 'Absence hebdomadaire.', '2026-01-29 09:55:00', '2026-01-29 09:55:00'),
+(225, 24, '2026-01-20 08:00:00', NULL, 'Absent', 'Absence hebdomadaire.', '2026-01-29 09:55:00', '2026-01-29 09:55:00'),
+(226, 24, '2026-01-21 08:00:00', NULL, 'Absent', 'Absence hebdomadaire.', '2026-01-29 09:55:00', '2026-01-29 09:55:00'),
+(227, 24, '2026-01-22 08:00:00', NULL, 'Absent', 'Absence hebdomadaire.', '2026-01-29 09:55:00', '2026-01-29 09:55:00'),
+(228, 24, '2026-01-23 08:00:00', NULL, 'Absent', 'Absence hebdomadaire.', '2026-01-29 09:55:00', '2026-01-29 09:55:00'),
+(229, 7, '2026-01-29 11:09:02', NULL, 'En Retard', 'Pointage automatique (Self-service)', '2026-01-29 11:09:02', '2026-01-29 11:09:02');
 
 -- --------------------------------------------------------
 
@@ -883,7 +958,7 @@ CREATE TABLE IF NOT EXISTS `reponses` (
   PRIMARY KEY (`id`),
   KEY `reponses_imputation_id_foreign` (`imputation_id`),
   KEY `reponses_agent_id_foreign` (`agent_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `reponses`
@@ -893,7 +968,9 @@ INSERT INTO `reponses` (`id`, `validation`, `document_final_signe`, `date_approb
 (1, 'en_attente', NULL, NULL, 4, 5, 'TRAVAIL EFFECTUE', '[\"1769087083_Projet de Note du DSESF au DG_S\\u00e9minaire Loi de r\\u00e8glement 18 20 d\\u00e9c 2024.pdf\"]', '2026-01-22 13:04:43', 100, '2026-01-22 13:04:43', '2026-01-22 13:04:43'),
 (2, 'en_attente', NULL, NULL, 5, 1, 'merci', '[\"1769093675_Projet de Note du DSESF au DG_S\\u00e9minaire Loi de r\\u00e8glement 18 20 d\\u00e9c 2024.pdf\"]', '2026-01-22 14:54:35', 100, '2026-01-22 14:54:35', '2026-01-22 14:54:35'),
 (3, 'acceptee', 'archives/final/1769103119_FINAL_Note de service_DEMANDE D\'INFORMATIONS COMITE COUT SDEEF.pdf', '2026-01-22 17:31:59', 6, 1, 'voici la reponse jointe', '[\"1769102744_Projet de Note du DSESF au DG_S\\u00e9minaire Loi de r\\u00e8glement 18 20 d\\u00e9c 2024.pdf\"]', '2026-01-22 17:25:44', 100, '2026-01-22 17:25:44', '2026-01-22 17:31:59'),
-(4, 'acceptee', 'archives/final/1769428292_FINAL_Projet de Note du DSESF au DG_Séminaire Loi de règlement 18 20 déc 2024.pdf', '2026-01-26 11:51:32', 11, 2, 'Travail accompli', '[\"1769428241__0040_du_2026-01-21.pdf\",\"1769428241_Document_2026-01-26_formation.pdf\"]', '2026-01-26 11:50:41', 100, '2026-01-26 11:50:41', '2026-01-26 11:51:32');
+(4, 'acceptee', 'archives/final/1769428292_FINAL_Projet de Note du DSESF au DG_Séminaire Loi de règlement 18 20 déc 2024.pdf', '2026-01-26 11:51:32', 11, 2, 'Travail accompli', '[\"1769428241__0040_du_2026-01-21.pdf\",\"1769428241_Document_2026-01-26_formation.pdf\"]', '2026-01-26 11:50:41', 100, '2026-01-26 11:50:41', '2026-01-26 11:51:32'),
+(5, 'en_attente', NULL, NULL, 23, 1, 'REP', '[\"1769681913_COMMISSION PARITAIRE DE SUIVI DU PROFIL DE CARRIERE.pdf\"]', '2026-01-29 10:18:33', 100, '2026-01-29 10:18:33', '2026-01-29 10:18:33'),
+(6, 'acceptee', 'archives/final/1769682106_FINAL_Tuto PHP.pdf', '2026-01-29 10:21:46', 24, 1, 'REP', '[\"1769682035_Tuto PHP.pdf\"]', '2026-01-29 10:20:35', 100, '2026-01-29 10:20:35', '2026-01-29 10:21:46');
 
 -- --------------------------------------------------------
 
@@ -979,7 +1056,7 @@ CREATE TABLE IF NOT EXISTS `role_user` (
   PRIMARY KEY (`id`),
   KEY `role_user_user_id_foreign` (`user_id`),
   KEY `role_user_role_id_foreign` (`role_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `role_user`
@@ -1006,7 +1083,8 @@ INSERT INTO `role_user` (`id`, `user_id`, `role_id`) VALUES
 (18, 20, 2),
 (22, 19, 4),
 (20, 18, 2),
-(24, 23, 2);
+(24, 23, 2),
+(25, 24, 2);
 
 -- --------------------------------------------------------
 
@@ -1107,6 +1185,21 @@ INSERT INTO `type_absences` (`id`, `nom_type`, `code`, `description`, `est_paye`
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `type_courriers`
+--
+
+DROP TABLE IF EXISTS `type_courriers`;
+CREATE TABLE IF NOT EXISTS `type_courriers` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `nom` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `users`
 --
 
@@ -1126,7 +1219,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `profile_picture` varchar(191) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_email_unique` (`email`)
-) ENGINE=MyISAM AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `users`
@@ -1141,7 +1234,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `mu
 (6, 'Arlette N\'DOUME', 'andoume@dgi.gouv.ci', NULL, '$2y$12$UptzFnNTF5sgio1UqRK6Ne8.yG7QxbhjxLqmpy9hIoJRKQahDNwmS', 0, NULL, NULL, '2026-01-21 10:43:13', '2026-01-28 11:49:34', NULL, NULL),
 (9, 'Innocent ADICO', 'iadico@dgi.gouv.ci', NULL, '$2y$12$dCDgWWMz.kvecxIjncNv0eGBT2eXI55l21HCwN.X4Ih3KxbXyfBTG', 0, NULL, NULL, '2026-01-21 11:50:04', '2026-01-22 15:15:21', NULL, NULL),
 (10, 'Moctar Michel Djépa KEITA', 'michelkeita@dgi.gouv.ci', NULL, '$2y$12$GVJZkuOfiwTdDE.A6946U.6coCnMxYZPHLh.MyfdwfSb3I7eYIBsq', 1, NULL, NULL, '2026-01-21 11:56:29', '2026-01-28 14:20:16', NULL, NULL),
-(11, 'Assi Roger OKPEKON', 'asokpekon@dgi.gouv.ci', NULL, '$2y$12$nx0LnF50zhs9E5goM9y76.slvDH99Qm1eoTuuCAAaNJGIiKE9Z..a', 1, NULL, NULL, '2026-01-21 11:59:18', '2026-01-21 11:59:18', NULL, NULL),
+(11, 'Assi Roger OKPEKON', 'asokpekon@dgi.gouv.ci', NULL, '$2y$12$p4VhIUU7bg6ju1tusqWJneMBfeAbl/nTIKgM.hr832AVQhg7wwVw6', 0, NULL, NULL, '2026-01-21 11:59:18', '2026-01-29 11:08:51', NULL, NULL),
 (12, 'Née Brou Amenan M. KOUADIO', 'kbrou04@dgi.gouv.ci', NULL, '$2y$12$NRt7n8PnxT41./IvAD.GFetDLPqFXcBveV4WdaA10D4DnMtLI/DDm', 1, NULL, NULL, '2026-01-21 12:02:21', '2026-01-21 12:02:21', NULL, NULL),
 (13, 'Maïmouna BALLO', 'mballo@dgi.gouv.ci', NULL, '$2y$12$5pVS9RokI.yFE9sskgIEAe/F8Q3gKgMSitn.geE4Dw00M3epkVr6q', 1, NULL, NULL, '2026-01-21 12:37:32', '2026-01-21 12:37:32', NULL, NULL),
 (14, 'Akpa Leonard DJEDJEMEL', 'adjedjemel@dgi.gouv.ci', NULL, '$2y$12$FqeyBSfjG8plbvr45sVr/ubyh35lheTKUoTnOyd6L8OYLr4oBix42', 1, NULL, NULL, '2026-01-21 12:47:16', '2026-01-21 12:47:16', NULL, NULL),
@@ -1153,7 +1246,8 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `mu
 (20, 'Mamadou Lamine COULIBALY', 'mamadoulcoul@dgi.gouv.ci', NULL, '$2y$12$Lfz7QtoJfaRONcHbgo2Qg.3k3fJ2rlVTyFVr7bVCCBG.roawC3qDG', 1, NULL, NULL, '2026-01-23 10:29:57', '2026-01-23 10:29:57', NULL, NULL),
 (21, 'Née Keita Aramata Anne Elise KEDI', 'akeita@dgi.gouv.ci', NULL, '$2y$12$6vph6Z9CtWbD2RBrrtViFOccxOP4LxXoXpcxp4XkqOWH303Oisp4m', 1, NULL, NULL, '2026-01-27 07:57:48', '2026-01-27 07:57:48', NULL, NULL),
 (22, 'Konan Christian René KOFFI', 'christiankonankoffi@dgi.gouv.ci', NULL, '$2y$12$iklZZEklhAlFRdc1RcWRkelt6/2BOWWYuzezk4kFgTlmEnAEqUNcO', 1, NULL, NULL, '2026-01-27 08:14:10', '2026-01-27 08:14:10', NULL, NULL),
-(23, 'M\'bo Erasthène ALEXANDRE', 'erasthene16ja17@dgi.gouv.ci', NULL, '$2y$12$pyiztyHvVrjRiKOwbPCUhekN8qw1kx4sIHaS0pCk4svXJ341adPAe', 1, NULL, NULL, '2026-01-27 14:44:26', '2026-01-27 14:44:26', NULL, NULL);
+(23, 'M\'bo Erasthène ALEXANDRE', 'erasthene16ja17@dgi.gouv.ci', NULL, '$2y$12$pyiztyHvVrjRiKOwbPCUhekN8qw1kx4sIHaS0pCk4svXJ341adPAe', 1, NULL, NULL, '2026-01-27 14:44:26', '2026-01-27 14:44:26', NULL, NULL),
+(24, 'Yao Ulrich N\'GUESSAN', 'unguessan@dgi.gouv.ci', NULL, '$2y$12$lJSHTiuKgIu3qAgodGZxtuUEDaJg.XJDY4IEMfTb6S6YWS63hTney', 0, NULL, NULL, '2026-01-29 09:39:36', '2026-01-29 09:41:54', NULL, NULL);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

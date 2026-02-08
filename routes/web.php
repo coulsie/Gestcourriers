@@ -33,9 +33,18 @@ Route::get('/', function () {
     return view('welcome-login');
 })->middleware('guest'); // Redirige vers home si déjà connecté
 
+
+Route::middleware(['auth'])->group(function () {
+    
+    // Route spécifique au coffre-fort
+    Route::get('/admin/coffre-fort', [AdminController::class, 'coffreFort'])
+        ->name('admin.coffre-fort');
+        
+});
 Route::middleware(['auth'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 });
+Route::post('/courriers/{courrier}/unlock', [CourrierController::class, 'unlock'])->name('courriers.unlock');
 
 Auth::routes();
 

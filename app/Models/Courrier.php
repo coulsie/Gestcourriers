@@ -39,6 +39,8 @@ class Courrier extends Model
         'chemin_fichier',
         'affecter',
         'num_enregistrement', // Ajoutez cette ligne
+        'is_confidentiel', // <-- DOIT ÊTRE PRÉSENT
+        'code_acces',      // <-- DOIT ÊTRE PRÉSENT
     ];
 
     /**
@@ -76,14 +78,7 @@ class Courrier extends Model
      * Get the affectations for the courrier.
      */
 
-    public function affectations()
-    {
-        return $this->hasMany(Affectation::class);
-    }
-    public function currentAffectation()
-    {
-        return $this->hasOne(Affectation::class)->latestOfMany();
-    }
+    
 
     public function imputation() {
         return $this->belongsTo(Imputation::class);

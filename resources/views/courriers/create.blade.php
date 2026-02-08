@@ -32,6 +32,16 @@
                             <h5 class="text-primary fw-bold mb-3 small text-uppercase">
                                 <i class="fas fa-info-circle me-2"></i>{{ __('Informations Générales') }}
                             </h5>
+                            <div class="form-check mb-3">
+    <input class="form-check-input" type="checkbox" name="is_confidentiel" id="checkConfid" onclick="togglePassword(this)">
+    <label class="form-check-label" for="checkConfid">Courrier Confidentiel</label>
+</div>
+
+<div id="passwordField" style="display:none;">
+    <label>Définir le code numérique (4-6 chiffres)</label>
+    <input type="password" name="code_acces" class="form-control" 
+           pattern="[0-9]*" inputmode="numeric" maxlength="6">
+</div>
                             <div class="row g-3">
                                 <div class="col-md-3">
                                     <label class="form-label fw-bold small">{{ __('Référence') }}</label>
@@ -135,4 +145,9 @@
     .border-2 { border-width: 2px !important; }
     .form-control:focus { box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15); border-color: #0d6efd !important; }
 </style>
+<script>
+function togglePassword(checkbox) {
+    document.getElementById('passwordField').style.display = checkbox.checked ? 'block' : 'none';
+}
+</script>
 @endsection

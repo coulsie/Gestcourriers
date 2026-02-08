@@ -7,14 +7,12 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash; // À ajouter en haut du fichier
+use Illuminate\Support\Facades\Crypt; // À ajouter en haut du fichier
 
 class CourrierController extends Controller
 {
-    /**
-     * Afficher une liste des courriers.
-     *
-     * @return \Illuminate\Http\Response
-     */
+   
  public function index(Request $request)
 {
     $query = Courrier::query();
@@ -55,25 +53,16 @@ class CourrierController extends Controller
 }
 
 
-    /**
-     * Afficher le formulaire de création d'un nouveau courrier.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('courriers.create');
-    }
-
-    /**
-     * Stocker un nouveau courrier dans la base de données.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-   public function store(Request $request)
+    
+public function create()
 {
-    // 1. Validation des données
+    return view('courriers.create');
+}
+
+
+public function store(Request $request)
+{
+    // 1. Validation des données (ajout des champs de confidentialité)
     $validatedData = $request->validate([
         'reference'            => 'required|unique:courriers|max:255',
         'type'                 => 'required',
@@ -87,6 +76,9 @@ class CourrierController extends Controller
         'assigne_a'            => 'nullable|string|max:255',
         'statut'               => 'required|string',
         'chemin_fichier'       => 'nullable|file|mimes:pdf,jpg,png|max:10240',
+        // Nouveaux champs
+        'is_confidentiel'      => 'nullable',
+        'code_acces'           => 'required_if:is_confidentiel,1|nullable|numeric|digits_between:4,6',
     ]);
 
     // Préparation des données additionnelles
@@ -95,49 +87,43 @@ class CourrierController extends Controller
     $validatedData['affecter'] = 0;
     $validatedData['assigne_a'] = $request->input('assigne_a', 'Non assigné');
 
-    // 2. Gestion du fichier : Enregistrement dans public/Documents/courriers
+    // Gestion de la confidentialité et Hachage du code
+    $validatedData['is_confidentiel'] = $request->has('is_confidentiel');
+    
+
+    // Hachage ou Chiffrement du code
+    if ($request->filled('code_acces')) {
+        $validatedData['code_acces'] = \Illuminate\Support\Facades\Crypt::encryptString($request->code_acces);
+    }
+
+
+    // 2. Gestion du fichier
     if ($request->hasFile('chemin_fichier')) {
         $file = $request->file('chemin_fichier');
         $fileName = time() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
-
-        // MODIFICATION ICI : Ajout de /courriers au chemin
         $destinationPath = public_path('Documents/courriers');
-
-        // Déplacement du fichier
         $file->move($destinationPath, $fileName);
-
         $validatedData['chemin_fichier'] = $fileName;
     }
 
-    // 3. Sauvegarde en base de données (NE PAS OUBLIER CETTE LIGNE)
+    // 3. Sauvegarde
     \App\Models\Courrier::create($validatedData);
 
     return redirect()->route('courriers.index')->with('success', 'Courrier enregistré avec succès.');
 }
-
-
-    /**
-     * Afficher le courrier spécifié.
-     *
-     * @param  \App\Models\Courrier  $courrier
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Courrier $courrier)
-    {
-        return view('courriers.show', compact('courrier'));
-
+   
+public function show(Courrier $courrier) 
+{
+    if ($courrier->is_confidentiel && !session("access_granted_{$courrier->id}")) {
+        return view('courriers.verify_code', compact('courrier'));
     }
+    return view('courriers.show', compact('courrier'));
+}
 
-    /**
-     * Afficher le formulaire d'édition du courrier spécifié.
-     *
-     * @param  \App\Models\Courrier  $courrier
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Courrier $courrier)
-    {
-        return view('courriers.edit', compact('courrier'));
-    }
+ public function edit(Courrier $courrier)
+{
+    return view('courriers.edit', compact('courrier'));
+}
 
     /**
      * Mettre à jour le courrier spécifié dans la base de données.
@@ -300,6 +286,20 @@ public function update(Request $request, Courrier $courrier)
 
         return view('courriers.archives', compact('courriers'));
     }
+
+    public function unlock(Request $request, Courrier $courrier)
+{
+    $request->validate(['code_saisi' => 'required|numeric']);
+
+    // On décrypte le code stocké et on compare
+    if (Crypt::decryptString($courrier->code_acces) === $request->code_saisi) {
+        // On stocke l'autorisation en session (expire à la fermeture du navigateur)
+        session(["access_granted_{$courrier->id}" => true]);
+        return redirect()->route('courriers.show', $courrier->id);
+    }
+
+    return back()->with('error', 'Code incorrect. Accès refusé.');
+}
 
 
 }

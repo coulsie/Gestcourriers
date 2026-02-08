@@ -58,7 +58,7 @@
                         <h6 class="collapse-header">Utilisateurs & RH:</h6>
                         <a class="collapse-item font-weight-bold" href="{{ route('users.index') }}">Liste Utilisateurs</a>
                         <a class="collapse-item font-weight-bold" href="{{ route('roles.index') }}">Gestion des Rôles & Permissions</a>
-
+                        <a class="collapse-item font-weight-bold" href="{{ route('admin.coffre-fort') }}">Coffre Fort</a>
                         <a class="collapse-item" href="{{ route('agents.nouveau') }}">Nouveau Compte</a>
                         <a class="collapse-item" href="{{ route('agents.index') }}">Ressources Humaines</a>
                          <a class="collapse-item" href="{{ route('agents.par.service') }}">Agents par Service</a>

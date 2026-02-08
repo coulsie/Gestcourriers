@@ -56,17 +56,30 @@
                             </td>
 
                             <!-- Courrier & Fichier -->
-                            <td>
-                                <div class="text-primary fw-bold mb-1">{{ $imputation->courrier->reference }}</div>
-                                @if($imputation->courrier->chemin_fichier)
-                                    <a href="{{ asset('Documents/courriers/' . $imputation->courrier->chemin_fichier) }}"
-                                       target="_blank" class="btn btn-xs btn-danger fw-bold shadow-sm" style="font-size: 0.65rem; padding: 2px 8px;">
-                                       <i class="fas fa-file-pdf me-1"></i> VOIR LE DOCUMENT
-                                    </a>
-                                @else
-                                    <span class="text-muted small italic">Aucun fichier</span>
-                                @endif
-                            </td>
+                            <!-- Courrier & Fichier -->
+<td>
+    <div class="text-primary fw-bold mb-1">{{ $imputation->courrier->reference }}</div>
+    
+    @if($imputation->courrier->chemin_fichier)
+        @if($imputation->courrier->is_confidentiel && !session("access_granted_" . $imputation->courrier->id))
+            <!-- Affichage si confidentiel et non déverrouillé -->
+            <a href="{{ route('courriers.show', $imputation->courrier->id) }}" 
+               class="btn btn-xs btn-dark fw-bold shadow-sm" 
+               style="font-size: 0.65rem; padding: 2px 8px;">
+               <i class="fas fa-lock me-1"></i> CONFIDENTIEL (DÉVERROUILLER)
+            </a>
+        @else
+            <!-- Affichage normal si non confidentiel OU déjà déverrouillé -->
+            <a href="{{ asset('Documents/courriers/' . $imputation->courrier->chemin_fichier) }}"
+               target="_blank" class="btn btn-xs btn-danger fw-bold shadow-sm" 
+               style="font-size: 0.65rem; padding: 2px 8px;">
+               <i class="fas fa-file-pdf me-1"></i> VOIR LE DOCUMENT
+            </a>
+        @endif
+    @else
+        <span class="text-muted small italic">Aucun fichier</span>
+    @endif
+</td>
 
                             <!-- Instructions -->
                             <td>
