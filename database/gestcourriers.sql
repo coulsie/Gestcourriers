@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3307
--- Généré le : dim. 08 fév. 2026 à 20:38
+-- Généré le : lun. 09 fév. 2026 à 11:10
 -- Version du serveur : 11.5.2-MariaDB
 -- Version de PHP : 8.3.14
 
@@ -262,6 +262,7 @@ CREATE TABLE IF NOT EXISTS `courriers` (
   `objet` varchar(255) NOT NULL,
   `description` text DEFAULT NULL,
   `date_courrier` date NOT NULL,
+  `date_document_original` date DEFAULT NULL,
   `expediteur_nom` varchar(191) NOT NULL,
   `expediteur_contact` varchar(191) DEFAULT NULL,
   `destinataire_nom` varchar(191) NOT NULL,
@@ -275,27 +276,28 @@ CREATE TABLE IF NOT EXISTS `courriers` (
   `code_acces` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `courriers_num_enregistrement_unique` (`num_enregistrement`) USING HASH
-) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `courriers`
 --
 
-INSERT INTO `courriers` (`id`, `num_enregistrement`, `affecter`, `reference`, `type`, `objet`, `description`, `date_courrier`, `expediteur_nom`, `expediteur_contact`, `destinataire_nom`, `destinataire_contact`, `statut`, `assigne_a`, `chemin_fichier`, `created_at`, `updated_at`, `is_confidentiel`, `code_acces`) VALUES
-(2, 'REG-2026-6971FEFAADDCF', 1, '000021', 'Outgoing', 'réponses de ls DSESF relative à une demande de stage et une demande de collecte de données sollicitées respectivement par Mlle DJAN Loukou Julienne et DOU Sopie Joëlle Priscae', NULL, '2026-01-21', 'DSESF', NULL, 'DFRC Direction de la Formation et du Renforcement de Capacité', NULL, 'affecté', 'Non assigné', '1769081946_000021__du_21_01_2026.pdf', '2026-01-22 10:42:02', '2026-01-28 09:42:44', 0, NULL),
-(3, 'REG-2026-697203E79FCA1', 1, '0040', 'Incoming', 'Résultat de l\'examen de demande de rectification des Etats Financiers Compagnie ASKI Airline', NULL, '2026-01-21', 'DERAR', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1769081929__0040_du_2026-01-21.pdf', '2026-01-22 11:03:03', '2026-01-28 11:12:17', 0, NULL),
-(4, 'REG-2026-697209DAABA90', 1, '06391', 'Incoming', 'Demane de mise à disposition de M. BROU Konan Amani', NULL, '2026-01-21', 'CABINET DGI', NULL, 'Direction DSESFGénérale', NULL, 'affecté', 'Non assigné', '1769081306_06391_2026-01-22_112741.pdf', '2026-01-22 11:28:26', '2026-01-28 09:42:31', 0, NULL),
-(5, 'REG-2026-697210C0D9ED1', 1, '06410', 'Incoming', 'Demande de rectification des états financiers par téléliasse', NULL, '2026-01-21', 'CABINET DGI', NULL, 'DSESF', NULL, 'Archivé', 'Non assigné', '1769083072_06410_2026-01-22_115627.pdf', '2026-01-22 11:57:52', '2026-01-28 09:42:17', 0, NULL),
-(6, 'REG-2026-69721207AC2B6', 1, '0759232466', 'Incoming', 'Demande données statistiques pour mémoire de fin de cycle', NULL, '2026-01-21', 'KOSSONOU Affoué Ella Mireille Stagiaire de l\'ENA', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1769083399_0759232466_2026-01-22_120224.pdf', '2026-01-22 12:03:19', '2026-01-28 09:42:08', 0, NULL),
-(10, 'REG-2026-6979ED4466FDE', 1, '01210', 'Incoming', 'Visite de MTN Côte d\'Ivoire', NULL, '2026-01-28', 'CABINET DGI', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1769598276_Projet_de_Note_du_DSESF_au_DG_Séminaire_Loi_de_règlement_18_20_déc_2024.pdf', '2026-01-28 11:04:36', '2026-01-28 11:05:50', 0, NULL),
-(7, 'REG-2026-69774D5D847F5', 1, '03220', 'Incoming', 'Formation des Agents Non Fiscalistes', NULL, '2026-01-26', 'CABINET DGI', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1769426269_Document_2026-01-26_formation.pdf', '2026-01-26 11:17:49', '2026-01-28 09:41:20', 0, NULL),
-(8, 'REG-2026-697752B52AA6B', 1, '0784', 'Incoming', 'Proposition pour utilisation du nouveau serveur', NULL, '2026-01-26', 'DSESF', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1769427637_Document_2026-01-26_Proposition_serveur.pdf', '2026-01-26 11:40:37', '2026-01-28 11:47:59', 0, NULL),
-(9, 'REG-2026-69775E4353DEF', 1, '02218', 'Incoming', 'Mission d\'explication des statistiques mensuelles des recettes', NULL, '2026-01-26', 'CABINET DGI', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1769430595_Statistiques_Mensuelles_Recette_2026-01-26_122728.pdf', '2026-01-26 12:29:55', '2026-01-26 12:30:52', 0, NULL),
-(11, 'REG-2026-697B3140CAE6F', 1, '444444', 'Incoming', 'juste un essai', NULL, '2026-01-29', 'Cabinet DGI', NULL, 'DSESF', NULL, 'archivé', 'Non assigné', '1769681216_COMMISSION_PARITAIRE_DE_SUIVI_DU_PROFIL_DE_CARRIERE.pdf', '2026-01-29 10:06:56', '2026-01-29 10:21:46', 0, NULL),
-(12, 'REG-2026-698879A786900', 0, '000222', 'Incoming', 'essai coffre fort', NULL, '2026-02-08', 'Cabinet DGI', NULL, 'DSESF', NULL, 'reçu', 'Non assigné', '1770551719_Note_Service_Objectifs_de_recettes_révisés_2025_N\'GUESSAN.doc.pdf', '2026-02-08 11:55:19', '2026-02-08 11:55:19', 0, NULL),
-(13, 'REG-2026-69887B3F86D8A', 0, '002221', 'Incoming', 'essai coffre fort1', NULL, '2026-02-08', 'Cabinet DGI', NULL, 'DSESF', NULL, 'reçu', 'Non assigné', '1770552127_Note_au_MFB__Objectif_de_recettes_TOFE_Aout_2025.pdf', '2026-02-08 12:02:07', '2026-02-08 12:02:07', 0, NULL),
-(14, 'REG-2026-69887CB125567', 1, '0022222', 'Incoming', 'essai coffre fort2', NULL, '2026-02-08', 'Cabinet DGI', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1770552497_Note_Service_Objectifs_de_recettes_révisés_2025_N\'GUESSAN.doc.pdf', '2026-02-08 12:08:17', '2026-02-08 12:29:47', 1, 'eyJpdiI6InNSK0RFSE1IZ2pELzFVb1d0aitUZGc9PSIsInZhbHVlIjoid1djN2xzRVJtVUJGYjgwbWFpUWY5UT09IiwibWFjIjoiNzY4NzJjZWZlYTZiYjE0NWU5MmQ2NjU2MWJiOWY1MzdlZWMzNDFhNDNhZWIwNmYyYzQ1NWI3MzJhYjU3YjE2MyIsInRhZyI6IiJ9'),
-(15, 'REG-2026-698882381615A', 1, '23333', 'Incoming', 'essai coffre fort3', NULL, '2026-02-08', 'Cabinet DGI', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1770553912_Note_de_service_DEMANDE_D\'INFORMATIONS_COMITE_COUT_SDEEF.pdf', '2026-02-08 12:31:52', '2026-02-08 12:32:44', 1, 'eyJpdiI6IldRcGw0blZUckRxUE10RXR6MnloVVE9PSIsInZhbHVlIjoieUdrMEc2bkxtWUs4Tm83MkRWTDBBdz09IiwibWFjIjoiYzYxYTM5MWI4NzVlYjEwNjY4MDg0YWZlNjIzZmY2NzE4ODNhNTU1Y2JkZWZmNGVhZDgzZjdjZTRiNzVlODNhMiIsInRhZyI6IiJ9');
+INSERT INTO `courriers` (`id`, `num_enregistrement`, `affecter`, `reference`, `type`, `objet`, `description`, `date_courrier`, `date_document_original`, `expediteur_nom`, `expediteur_contact`, `destinataire_nom`, `destinataire_contact`, `statut`, `assigne_a`, `chemin_fichier`, `created_at`, `updated_at`, `is_confidentiel`, `code_acces`) VALUES
+(2, 'REG-2026-6971FEFAADDCF', 1, '000021', 'Outgoing', 'réponses de ls DSESF relative à une demande de stage et une demande de collecte de données sollicitées respectivement par Mlle DJAN Loukou Julienne et DOU Sopie Joëlle Priscae', NULL, '2026-01-21', NULL, 'DSESF', NULL, 'DFRC Direction de la Formation et du Renforcement de Capacité', NULL, 'affecté', 'Non assigné', '1769081946_000021__du_21_01_2026.pdf', '2026-01-22 10:42:02', '2026-01-28 09:42:44', 0, NULL),
+(3, 'REG-2026-697203E79FCA1', 1, '0040', 'Incoming', 'Résultat de l\'examen de demande de rectification des Etats Financiers Compagnie ASKI Airline', NULL, '2026-01-21', NULL, 'DERAR', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1769081929__0040_du_2026-01-21.pdf', '2026-01-22 11:03:03', '2026-01-28 11:12:17', 0, NULL),
+(4, 'REG-2026-697209DAABA90', 1, '06391', 'Incoming', 'Demane de mise à disposition de M. BROU Konan Amani', NULL, '2026-01-21', NULL, 'CABINET DGI', NULL, 'Direction DSESFGénérale', NULL, 'affecté', 'Non assigné', '1769081306_06391_2026-01-22_112741.pdf', '2026-01-22 11:28:26', '2026-01-28 09:42:31', 0, NULL),
+(5, 'REG-2026-697210C0D9ED1', 1, '06410', 'Incoming', 'Demande de rectification des états financiers par téléliasse', NULL, '2026-01-21', NULL, 'CABINET DGI', NULL, 'DSESF', NULL, 'Archivé', 'Non assigné', '1769083072_06410_2026-01-22_115627.pdf', '2026-01-22 11:57:52', '2026-01-28 09:42:17', 0, NULL),
+(6, 'REG-2026-69721207AC2B6', 1, '0759232466', 'Incoming', 'Demande données statistiques pour mémoire de fin de cycle', NULL, '2026-01-21', NULL, 'KOSSONOU Affoué Ella Mireille Stagiaire de l\'ENA', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1769083399_0759232466_2026-01-22_120224.pdf', '2026-01-22 12:03:19', '2026-01-28 09:42:08', 0, NULL),
+(10, 'REG-2026-6979ED4466FDE', 1, '01210', 'Incoming', 'Visite de MTN Côte d\'Ivoire', NULL, '2026-01-28', NULL, 'CABINET DGI', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1769598276_Projet_de_Note_du_DSESF_au_DG_Séminaire_Loi_de_règlement_18_20_déc_2024.pdf', '2026-01-28 11:04:36', '2026-01-28 11:05:50', 0, NULL),
+(7, 'REG-2026-69774D5D847F5', 1, '03220', 'Incoming', 'Formation des Agents Non Fiscalistes', NULL, '2026-01-26', NULL, 'CABINET DGI', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1769426269_Document_2026-01-26_formation.pdf', '2026-01-26 11:17:49', '2026-01-28 09:41:20', 0, NULL),
+(8, 'REG-2026-697752B52AA6B', 1, '0784', 'Incoming', 'Proposition pour utilisation du nouveau serveur', NULL, '2026-01-26', NULL, 'DSESF', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1769427637_Document_2026-01-26_Proposition_serveur.pdf', '2026-01-26 11:40:37', '2026-01-28 11:47:59', 0, NULL),
+(9, 'REG-2026-69775E4353DEF', 1, '02218', 'Incoming', 'Mission d\'explication des statistiques mensuelles des recettes', NULL, '2026-01-26', NULL, 'CABINET DGI', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1769430595_Statistiques_Mensuelles_Recette_2026-01-26_122728.pdf', '2026-01-26 12:29:55', '2026-01-26 12:30:52', 0, NULL),
+(11, 'REG-2026-697B3140CAE6F', 1, '444444', 'Incoming', 'juste un essai', NULL, '2026-01-29', NULL, 'Cabinet DGI', NULL, 'DSESF', NULL, 'archivé', 'Non assigné', '1769681216_COMMISSION_PARITAIRE_DE_SUIVI_DU_PROFIL_DE_CARRIERE.pdf', '2026-01-29 10:06:56', '2026-01-29 10:21:46', 0, NULL),
+(12, 'REG-2026-698879A786900', 0, '000222', 'Incoming', 'essai coffre fort', NULL, '2026-02-08', NULL, 'Cabinet DGI', NULL, 'DSESF', NULL, 'reçu', 'Non assigné', '1770551719_Note_Service_Objectifs_de_recettes_révisés_2025_N\'GUESSAN.doc.pdf', '2026-02-08 11:55:19', '2026-02-08 11:55:19', 0, NULL),
+(13, 'REG-2026-69887B3F86D8A', 0, '002221', 'Incoming', 'essai coffre fort1', NULL, '2026-02-08', NULL, 'Cabinet DGI', NULL, 'DSESF', NULL, 'reçu', 'Non assigné', '1770552127_Note_au_MFB__Objectif_de_recettes_TOFE_Aout_2025.pdf', '2026-02-08 12:02:07', '2026-02-08 12:02:07', 0, NULL),
+(14, 'REG-2026-69887CB125567', 1, '0022222', 'Incoming', 'essai coffre fort2', NULL, '2026-02-08', NULL, 'Cabinet DGI', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1770552497_Note_Service_Objectifs_de_recettes_révisés_2025_N\'GUESSAN.doc.pdf', '2026-02-08 12:08:17', '2026-02-08 12:29:47', 1, 'eyJpdiI6InNSK0RFSE1IZ2pELzFVb1d0aitUZGc9PSIsInZhbHVlIjoid1djN2xzRVJtVUJGYjgwbWFpUWY5UT09IiwibWFjIjoiNzY4NzJjZWZlYTZiYjE0NWU5MmQ2NjU2MWJiOWY1MzdlZWMzNDFhNDNhZWIwNmYyYzQ1NWI3MzJhYjU3YjE2MyIsInRhZyI6IiJ9'),
+(15, 'REG-2026-698882381615A', 1, '23333', 'Incoming', 'essai coffre fort3', NULL, '2026-02-08', NULL, 'Cabinet DGI', NULL, 'DSESF', NULL, 'affecté', 'Non assigné', '1770553912_Note_de_service_DEMANDE_D\'INFORMATIONS_COMITE_COUT_SDEEF.pdf', '2026-02-08 12:31:52', '2026-02-08 12:32:44', 1, 'eyJpdiI6IldRcGw0blZUckRxUE10RXR6MnloVVE9PSIsInZhbHVlIjoieUdrMEc2bkxtWUs4Tm83MkRWTDBBdz09IiwibWFjIjoiYzYxYTM5MWI4NzVlYjEwNjY4MDg0YWZlNjIzZmY2NzE4ODNhNTU1Y2JkZWZmNGVhZDgzZjdjZTRiNzVlODNhMiIsInRhZyI6IiJ9'),
+(16, 'REG-2026-6988FAE56E213', 0, '01102323', 'Incoming', 'essai courrier', NULL, '2026-02-08', '2025-12-01', 'non spécifié', NULL, 'Direction Générale', NULL, 'reçu', 'Non assigné', '1770584805_Note_Service_Objectifs_de_recettes_révisés_2025_N\'GUESSAN.doc', '2026-02-08 21:06:45', '2026-02-08 21:06:45', 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -499,7 +501,7 @@ CREATE TABLE IF NOT EXISTS `migrations` (
   `migration` varchar(191) NOT NULL,
   `batch` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=50 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `migrations`
@@ -554,7 +556,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (46, '2026_01_22_102531_add_numero_enregistrement_to_courriers_table', 6),
 (47, '2026_01_22_140612_add_chemin_fichier_to_imputations_table', 7),
 (48, '2026_01_26_172154_create_role_user_table', 8),
-(49, '2026_02_08_105025_add_is_confidentiel_to_courriers_table', 9);
+(49, '2026_02_08_105025_add_is_confidentiel_to_courriers_table', 9),
+(50, '2026_02_08_204555_add_date_document_original_to_courriers_table', 10);
 
 -- --------------------------------------------------------
 
