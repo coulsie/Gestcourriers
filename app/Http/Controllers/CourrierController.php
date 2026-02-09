@@ -52,25 +52,15 @@ class CourrierController extends Controller
     return view('courriers.index', compact('courriers'));
 }
 
-public function create()
-{
-    $categories = [
-        'Incoming' => [
-            'Interne' => '📥 Interne',
-            'Externe' => '📥 Externe',
-            'Mail' => '📥 Mail',
-            'Autre' => '📤 Autre'
-        ],
-        'Outgoing' => [
-            'Interne' => '📥 Interne',
-            'Externe' => '📥 Externe',
-            'Mail' => '📥 Mail',
-            'Autre' => '📤 Autre'
-        ]
-    ];
 
-    return view('courriers.create', compact('categories'));
+   public function create()
+{
+    // Suppression du tableau $categories car les options
+    // sont maintenant gérées en dur dans la vue Blade.
+
+    return view('courriers.create');
 }
+
 
 public function store(Request $request)
 {

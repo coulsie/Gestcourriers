@@ -50,9 +50,12 @@
                                 <div class="col-md-3">
                                     <label class="form-label fw-bold small text-dark">{{ __('Type de Courrier') }} <span class="text-danger">*</span></label>
                                     <select name="type" class="form-select border-2 border-primary fw-bold" required>
-                                        <option value="Incoming" {{ old('type', $courrier->type) == 'Incoming' ? 'selected' : '' }}>📩 Entrant</option>
-                                        <option value="Outgoing" {{ old('type', $courrier->type) == 'Outgoing' ? 'selected' : '' }}>📤 Sortant</option>
-                                        <option value="Information" {{ old('type', $courrier->type) == 'Information' ? 'selected' : '' }}>ℹ️ Information</option>
+                                        <option value="Incoming" {{ old('type', $courrier->type) == 'Incoming' ? 'selected' : '' }}>📩 Entrant interne</option>
+                                        <option value="Incoming Externe" {{ old('type', $courrier->type) == 'Incoming Externe' ? 'selected' : '' }}>📩 Entrant externe</option>
+                                        <option value="Incoming Mail" {{ old('type', $courrier->type) == 'Incoming Mail' ? 'selected' : '' }}>📩 Entrant mail</option>
+                                        <option value="Outgoing" {{ old('type', $courrier->type) == 'Outgoing' ? 'selected' : '' }}>📤 Sortant interne</option>
+                                        <option value="Outgoing Externe" {{ old('type', $courrier->type) == 'Outgoing Externe' ? 'selected' : '' }}>📤 Sortant externe</option>
+                                        <option value="Outgoing Mail" {{ old('type', $courrier->type) == 'Outgoing Mail' ? 'selected' : '' }}>📤 Sortant mail</option>
                                     </select>
                                 </div>
 

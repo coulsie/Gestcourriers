@@ -50,27 +50,49 @@
 
                             <div class="row g-4">
                                 <!-- SECTION 1 : CLASSIFICATION (Direction & Type) -->
-                                <div class="col-12">
-                                    <div class="row g-3 p-3 rounded-3" style="background-color: #f8f9fa; border: 1px solid #e9ecef;">
-                                        <div class="col-md-4">
-                                            <label class="form-label fw-bold small text-muted">Direction du Flux</label>
-                                            <select id="directionSelect" class="form-select border-2 border-primary fw-bold">
-                                                <option value="Incoming">📩 Entrant (Arrivée)</option>
-                                                <option value="Outgoing">📤 Sortant (Départ)</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <label class="form-label fw-bold small text-muted">Type / Nature du Courrier <span class="text-danger">*</span></label>
-                                            <select name="type" id="typeSelect" class="form-select border-2 border-primary fw-bold" required>
-                                                @foreach($categories as $direction => $subTypes)
-                                                    @foreach($subTypes as $value => $label)
-                                                        <option value="{{ $value }}" data-direction="{{ $direction }}">{{ $label }}</option>
-                                                    @endforeach
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
+                               <div class="col-12">
+    <div class="row g-3 p-3 rounded-3 shadow-sm" id="directionContainer" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-left: 5px solid #0d6efd;">
+        <div class="col-md-12">
+            <label class="form-label fw-bold small text-muted text-uppercase">
+                <i class="fas fa-exchange-alt me-1"></i> Direction et Type de Flux
+            </label>
+            <select name="type" id="directionSelect" class="form-select form-select-lg border-2 border-primary fw-bold text-primary">
+                <!-- Groupe Entrant (Bleu) -->
+                <optgroup label="📩 COURRIERS ENTRANTS">
+                    <option value="Incoming" {{ old('type') == 'Incoming' ? 'selected' : '' }}>📩 Entrant interne</option>
+                    <option value="Incoming Externe" {{ old('type') == 'Incoming Externe' ? 'selected' : '' }}>📩 Entrant externe</option>
+                    <option value="Incoming Mail" {{ old('type') == 'Incoming Mail' ? 'selected' : '' }}>📩 Entrant mail</option>
+                </optgroup>
+
+                <!-- Groupe Sortant (Vert) -->
+                <optgroup label="📤 COURRIERS SORTANTS">
+                    <option value="Outgoing" {{ old('type') == 'Outgoing' ? 'selected' : '' }}>📤 Sortant interne</option>
+                    <option value="Outgoing Externe" {{ old('type') == 'Outgoing Externe' ? 'selected' : '' }}>📤 Sortant externe</option>
+                    <option value="Outgoing Mail" {{ old('type') == 'Outgoing Mail' ? 'selected' : '' }}>📤 Sortant mail</option>
+                </optgroup>
+            </select>
+            <div class="form-text mt-2 small">Sélectionnez la provenance ou la destination précise du courrier.</div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('directionSelect').addEventListener('change', function() {
+    const container = document.getElementById('directionContainer');
+    const val = this.value;
+
+    if (val.startsWith('Incoming')) {
+        this.classList.replace('border-success', 'border-primary');
+        this.classList.replace('text-success', 'text-primary');
+        container.style.borderLeftColor = "#0d6efd"; // Bleu
+    } else {
+        this.classList.replace('border-primary', 'border-success');
+        this.classList.replace('text-primary', 'text-success');
+        container.style.borderLeftColor = "#198754"; // Vert
+    }
+});
+</script>
+
 
                                 <!-- SECTION 2 : IDENTIFICATION (Référence & Objet) -->
                                 <div class="col-md-12">
@@ -232,5 +254,21 @@ function togglePassword(checkbox) {
         if (input) input.value = ''; // Efface le code si on décoche
     }
 }
+</script>
+<script>
+document.getElementById('directionSelect').addEventListener('change', function() {
+    const container = document.getElementById('directionContainer');
+    const val = this.value;
+
+    if (val.startsWith('Incoming')) {
+        this.classList.replace('border-success', 'border-primary');
+        this.classList.replace('text-success', 'text-primary');
+        container.style.borderLeftColor = "#0d6efd"; // Bleu
+    } else {
+        this.classList.replace('border-primary', 'border-success');
+        this.classList.replace('text-primary', 'text-success');
+        container.style.borderLeftColor = "#198754"; // Vert
+    }
+});
 </script>
 @endsection

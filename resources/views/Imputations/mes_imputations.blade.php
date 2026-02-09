@@ -57,29 +57,29 @@
 
                             <!-- Courrier & Fichier -->
                             <!-- Courrier & Fichier -->
-<td>
-    <div class="text-primary fw-bold mb-1">{{ $imputation->courrier->reference }}</div>
-    
-    @if($imputation->courrier->chemin_fichier)
-        @if($imputation->courrier->is_confidentiel && !session("access_granted_" . $imputation->courrier->id))
-            <!-- Affichage si confidentiel et non déverrouillé -->
-            <a href="{{ route('courriers.show', $imputation->courrier->id) }}" 
-               class="btn btn-xs btn-dark fw-bold shadow-sm" 
-               style="font-size: 0.65rem; padding: 2px 8px;">
-               <i class="fas fa-lock me-1"></i> CONFIDENTIEL (DÉVERROUILLER)
-            </a>
-        @else
-            <!-- Affichage normal si non confidentiel OU déjà déverrouillé -->
-            <a href="{{ asset('Documents/courriers/' . $imputation->courrier->chemin_fichier) }}"
-               target="_blank" class="btn btn-xs btn-danger fw-bold shadow-sm" 
-               style="font-size: 0.65rem; padding: 2px 8px;">
-               <i class="fas fa-file-pdf me-1"></i> VOIR LE DOCUMENT
-            </a>
-        @endif
-    @else
-        <span class="text-muted small italic">Aucun fichier</span>
-    @endif
-</td>
+                            <td>
+                                <div class="text-primary fw-bold mb-1">{{ $imputation->courrier->reference }}</div>
+
+                                @if($imputation->courrier->chemin_fichier)
+                                    @if($imputation->courrier->is_confidentiel && !session("access_granted_" . $imputation->courrier->id))
+                                        <!-- Affichage si confidentiel et non déverrouillé -->
+                                        <a href="{{ route('courriers.show', $imputation->courrier->id) }}"
+                                        class="btn btn-xs btn-dark fw-bold shadow-sm"
+                                        style="font-size: 0.65rem; padding: 2px 8px;">
+                                        <i class="fas fa-lock me-1"></i> CONFIDENTIEL (DÉVERROUILLER)
+                                        </a>
+                                    @else
+                                        <!-- Affichage normal si non confidentiel OU déjà déverrouillé -->
+                                        <a href="{{ asset('Documents/courriers/' . $imputation->courrier->chemin_fichier) }}"
+                                        target="_blank" class="btn btn-xs btn-danger fw-bold shadow-sm"
+                                        style="font-size: 0.65rem; padding: 2px 8px;">
+                                        <i class="fas fa-file-pdf me-1"></i> VOIR LE DOCUMENT
+                                        </a>
+                                    @endif
+                                @else
+                                    <span class="text-muted small italic">Aucun fichier</span>
+                                @endif
+                            </td>
 
                             <!-- Instructions -->
                             <td>
@@ -173,27 +173,27 @@
 
                                     <td class="text-center pe-4">
                                         <!-- Reimputation -->
-       <span title="{{ $imputation->statut === 'termine' ? 'Réimputation impossible : imputation déjà traitée' : 'Réimputer ce courrier' }}" data-bs-toggle="tooltip">
-    <a href="{{ $imputation->statut === 'termine' ? 'javascript:void(0)' : route('imputations.create', ['parent_id' => $imputation->id, 'courrier_id' => $imputation->courrier_id]) }}" 
-       class="btn btn-sm {{ $imputation->statut === 'termine' ? 'btn-outline-secondary disabled' : 'btn-outline-primary' }}"
-       @if($imputation->statut === 'termine') 
-           tabindex="-1" 
-           aria-disabled="true" 
-           style="pointer-events: none; opacity: 0.5;" 
-       @endif>
-        <i class="fas fa-redo me-1"></i> Réimputer
-    </a>
-</span>
+                                            <span title="{{ $imputation->statut === 'termine' ? 'Réimputation impossible : imputation déjà traitée' : 'Réimputer ce courrier' }}" data-bs-toggle="tooltip">
+                                            <a href="{{ $imputation->statut === 'termine' ? 'javascript:void(0)' : route('imputations.create', ['parent_id' => $imputation->id, 'courrier_id' => $imputation->courrier_id]) }}"
+                                            class="btn btn-sm {{ $imputation->statut === 'termine' ? 'btn-outline-secondary disabled' : 'btn-outline-primary' }}"
+                                            @if($imputation->statut === 'termine')
+                                                tabindex="-1"
+                                                aria-disabled="true"
+                                                style="pointer-events: none; opacity: 0.5;"
+                                            @endif>
+                                                <i class="fas fa-redo me-1"></i> Réimputer
+                                            </a>
+                                        </span>
 
-                                       <!-- Traiter / Résultat -->
-<a href="{{ route('imputations.show', $imputation->id) }}" 
-   class="btn btn-sm {{ $imputation->statut === 'termine' ? 'btn-success' : 'btn-primary' }} shadow-sm">
-    @if($imputation->statut === 'termine')
-        <i class="fas fa-file-alt me-1"></i> RÉSULTAT
-    @else
-        <i class="fas fa-eye me-1"></i> TRAITER
-    @endif
-</a>
+                                                                            <!-- Traiter / Résultat -->
+                                        <a href="{{ route('imputations.show', $imputation->id) }}"
+                                        class="btn btn-sm {{ $imputation->statut === 'termine' ? 'btn-success' : 'btn-primary' }} shadow-sm">
+                                            @if($imputation->statut === 'termine')
+                                                <i class="fas fa-file-alt me-1"></i> RÉSULTAT
+                                            @else
+                                                <i class="fas fa-eye me-1"></i> TRAITER
+                                            @endif
+                                        </a>
                                     </td>
                         </tr>
                         @empty

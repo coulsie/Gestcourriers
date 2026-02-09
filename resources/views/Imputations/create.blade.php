@@ -107,30 +107,45 @@
                                             <label class="form-label fw-bold small text-muted text-uppercase">Date Imputation *</label>
                                             <input type="date" name="date_imputation" class="form-control bg-light" value="{{ date('Y-m-d') }}" required>
                                         </div>
+
   <div class="col-md-6 mb-3">
     <label class="form-label fw-bold small text-muted text-uppercase text-danger">Échéancier *</label>
 
     @php
-        // On récupère la date de l'URL
-        $dateParam = request('echeancier');
-        // On force le format YYYY-MM-DD indispensable pour l'input HTML5
-        $valueDate = $dateParam ? date('Y-m-d', strtotime($dateParam)) : old('echeancier');
+        // 1. Chercher d'abord si on a une imputation parente (réimputation)
+        // On suppose que $imputationParente est passée à la vue si request('parent_id') existe
+        $dateHeritee = null;
+        if(request('parent_id')) {
+            $parente = \App\Models\Imputation::find(request('parent_id'));
+            $dateHeritee = $parente ? $parente->echeancier : null;
+        }
+
+        // 2. Sinon, on prend l'échéance du courrier sélectionné
+        if (!$dateHeritee && isset($courrierSelectionne)) {
+            $dateHeritee = $courrierSelectionne->echeancier;
+        }
+
+        // 3. Définition de la valeur finale (Priorité : Session Old > Héritage > URL > Aujourd'hui)
+        $finalDate = old('echeancier', $dateHeritee ?? request('echeancier', date('Y-m-d')));
+
+        // Formatage pour l'input HTML
+        $valueFormatted = \Carbon\Carbon::parse($finalDate)->format('Y-m-d');
     @endphp
 
     <input type="date"
            name="echeancier"
-           class="form-control shadow-sm {{ request('parent_id') ? 'bg-light border-secondary' : 'border-danger' }}"
-           value="{{ $valueDate }}"
-           {{-- Verrouillage si c'est une réimputation --}}
-           @if(request('parent_id')) readonly style="pointer-events: none;" @endif
+           class="form-control shadow-sm {{ request('parent_id') ? 'bg-light border-secondary text-muted fw-bold' : 'border-danger' }}"
+           value="{{ $valueFormatted }}"
+           @if(request('parent_id')) readonly @endif
            required>
 
     @if(request('parent_id'))
-        <small class="text-danger fw-bold d-block mt-1" style="font-size: 0.65rem;">
-            <i class="fas fa-lock me-1"></i> ÉCHÉANCE VERROUILLÉE
+        <small class="text-danger fw-bold d-block mt-1" style="font-size: 0.7rem;">
+            <i class="fas fa-lock me-1"></i> ÉCHÉANCE HÉRITÉE DE L'IMPUTATION PRÉCÉDENTE
         </small>
     @endif
 </div>
+
 
 
                                     </div>

@@ -27,8 +27,12 @@
                             <label class="small fw-bold text-muted text-uppercase">Type</label>
                             <select name="type" class="form-select form-select-sm border-primary shadow-sm">
                                 <option value="">Tous les types</option>
-                                <option value="Incoming" {{ request('type') == 'Incoming' ? 'selected' : '' }}>📩 Entrant</option>
-                                <option value="Outgoing" {{ request('type') == 'Outgoing' ? 'selected' : '' }}>📤 Sortant</option>
+                                <option value="Incoming" {{ request('type') == 'Incoming' ? 'selected' : '' }}>📩 Entrant interne</option>
+                                <option value="Incoming Externe" {{ request('type') == 'Incoming Externe' ? 'selected' : '' }}>📩 Entrant externe</option>
+                                <option value="Incoming Mail" {{ request('type') == 'Incoming Mail' ? 'selected' : '' }}>📩 Entrant mail</option>
+                                <option value="Outgoing" {{ request('type') == 'Outgoing' ? 'selected' : '' }}>📤 Sortant interne</option>
+                                <option value="Outgoing Externe" {{ request('type') == 'Outgoing Externe' ? 'selected' : '' }}>📤 Sortant externe</option>
+                                <option value="Outgoing Mail" {{ request('type') == 'Outgoing Mail' ? 'selected' : '' }}>📤 Sortant mail</option>
                             </select>
                         </div>
                         <div class="col-md-2">
@@ -73,10 +77,37 @@
                                     <td class="fw-bold text-primary small">{{ $courrier->num_enregistrement ?? '---' }}</td>
                                     <td><span class="badge py-2 border border-2 border-success text-success bg-white">{{ $courrier->reference }}</span></td>
                                     <td>
-                                        <span class="badge py-2 text-white {{ $courrier->type == 'Incoming' ? 'bg-primary' : 'bg-warning' }}">
-                                            {{ $courrier->type == 'Incoming' ? 'ENTRANT' : 'SORTANT' }}
-                                        </span>
-                                    </td>
+    @php
+        // Mapping des couleurs basé sur les EXACTES "values" de votre SELECT
+        $badgeStyle = match($courrier->type) {
+            'Incoming'          => 'bg-primary',  // BLEU (Entrant interne)
+            'Incoming Externe'  => 'bg-info',     // BLEU CLAIR
+            'Incoming Mail'     => 'bg-warning',  // JAUNE
+            'Outgoing'          => 'bg-success',  // VERT (Sortant interne)
+            'Outgoing Externe'  => 'bg-danger',   // ROUGE
+            'Outgoing Mail'     => 'bg-dark',     // NOIR
+            default             => 'bg-secondary' // GRIS
+        };
+    @endphp
+
+    <span class="badge py-2 px-3 shadow-sm {{ $badgeStyle }} text-white fw-bold">
+        {{-- Icône dynamique : Entrant vs Sortant --}}
+        <i class="fas {{ str_contains($courrier->type, 'Incoming') ? 'fa-file-import' : 'fa-file-export' }} me-1"></i>
+
+        {{-- Traduction visuelle pour l'utilisateur --}}
+        @php
+            $labels = [
+                'Incoming' => 'ENTRANT INTERNE',
+                'Incoming Externe' => 'ENTRANT EXTERNE',
+                'Incoming Mail' => 'ENTRANT MAIL',
+                'Outgoing' => 'SORTANT INTERNE',
+                'Outgoing Externe' => 'SORTANT EXTERNE',
+                'Outgoing Mail' => 'SORTANT MAIL',
+            ];
+            echo $labels[$courrier->type] ?? strtoupper($courrier->type);
+        @endphp
+    </span>
+</td>
                                     <td class="small fw-bold text-dark text-truncate" style="max-width: 150px;">{{ $courrier->objet }}</td>
 
                                     <td>
