@@ -28,82 +28,90 @@
                         @csrf
 
                        <!-- Section 1: Informations Générales -->
-<div class="p-4 mb-4 bg-white rounded-3 shadow-sm border-top border-4 border-primary">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h5 class="text-primary fw-bold mb-0 small text-uppercase">
-            <i class="fas fa-info-circle me-2"></i>{{ __('Informations Générales') }}
-        </h5>
-        <!-- Zone Confidentialité isolée à droite -->
-        <div class="d-flex align-items-center bg-light p-2 rounded border">
-            <div class="form-check form-switch me-3">
-                <input class="form-check-input" type="checkbox" name="is_confidentiel" id="checkConfid" onclick="togglePassword(this)">
-                <label class="form-check-label fw-bold small text-danger" for="checkConfid">
-                    <i class="fas fa-user-shield me-1"></i>Confidentiel
-                </label>
-            </div>
-            <div id="passwordField" style="display:none;">
-                <input type="password" name="code_acces" class="form-control form-control-sm border-danger" 
-                       placeholder="Code (4-6 chiffres)" pattern="[0-9]*" inputmode="numeric" maxlength="6" style="width: 150px;">
-            </div>
-        </div>
-    </div>
+                        <div class="p-4 mb-4 bg-white rounded-3 shadow-sm border-top border-4 border-primary">
+                            <!-- En-tête : Titre & Confidentialité -->
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h5 class="text-primary fw-bold mb-0 small text-uppercase">
+                                    <i class="fas fa-info-circle me-2"></i>{{ __('Informations Générales') }}
+                                </h5>
+                                <div class="d-flex align-items-center bg-light p-2 rounded border shadow-sm">
+                                    <div class="form-check form-switch me-3">
+                                        <input class="form-check-input" type="checkbox" name="is_confidentiel" id="checkConfid" onclick="togglePassword(this)">
+                                        <label class="form-check-label fw-bold small text-danger" for="checkConfid">
+                                            <i class="fas fa-user-shield me-1"></i>Confidentiel
+                                        </label>
+                                    </div>
+                                    <div id="passwordField" style="display:none;">
+                                        <input type="password" name="code_acces" class="form-control form-control-sm border-danger"
+                                            placeholder="Code" style="width: 100px;">
+                                    </div>
+                                </div>
+                            </div>
 
-    <div class="row g-3">
-        <!-- Ligne 1 : Identification et Type -->
-        <!-- Sens du Courrier -->
-<div class="col-md-3">
-    <label class="form-label fw-bold small text-muted">Direction</label>
-    <select id="directionSelect" class="form-select form-select-sm border-2 border-primary fw-bold">
-        <option value="Incoming">Entrant</option>
-        <option value="Outgoing">Sortant</option>
-    </select>
-</div>
+                            <div class="row g-4">
+                                <!-- SECTION 1 : CLASSIFICATION (Direction & Type) -->
+                                <div class="col-12">
+                                    <div class="row g-3 p-3 rounded-3" style="background-color: #f8f9fa; border: 1px solid #e9ecef;">
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold small text-muted">Direction du Flux</label>
+                                            <select id="directionSelect" class="form-select border-2 border-primary fw-bold">
+                                                <option value="Incoming">📩 Entrant (Arrivée)</option>
+                                                <option value="Outgoing">📤 Sortant (Départ)</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <label class="form-label fw-bold small text-muted">Type / Nature du Courrier <span class="text-danger">*</span></label>
+                                            <select name="type" id="typeSelect" class="form-select border-2 border-primary fw-bold" required>
+                                                @foreach($categories as $direction => $subTypes)
+                                                    @foreach($subTypes as $value => $label)
+                                                        <option value="{{ $value }}" data-direction="{{ $direction }}">{{ $label }}</option>
+                                                    @endforeach
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
 
-<!-- Type précis (celui-ci sera enregistré dans votre champ 'type') -->
-<div class="col-md-3">
-    <label class="form-label fw-bold small text-muted">Type de Courrier <span class="text-danger">*</span></label>
-    <select name="type" id="typeSelect" class="form-select form-select-sm border-2 border-primary fw-bold" required>
-        @foreach($categories as $direction => $subTypes)
-            @foreach($subTypes as $value => $label)
-                <option value="{{ $value }}" data-direction="{{ $direction }}">{{ $label }}</option>
-            @endforeach
-        @endforeach
-    </select>
-</div>
+                                <!-- SECTION 2 : IDENTIFICATION (Référence & Objet) -->
+                                <div class="col-md-12">
+                                    <div class="row g-3">
+                                        <div class="col-md-12">
+                                            <label class="form-label fw-bold small text-muted">Référence du Courrier <span class="text-danger">*</span></label>
+                                            <input type="text" name="reference" class="form-control border-2 fw-bold"
+                                                style="font-size: 1.1rem; background-color: #f0f7ff;"
+                                                placeholder="Saisissez la référence complète..." required>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <label class="form-label fw-bold small text-muted">Objet du Courrier <span class="text-danger">*</span></label>
+                                            <textarea name="objet" class="form-control border-2 fw-bold" rows="2"
+                                                    style="background-color: #fff9e6; border-color: #ffc107 !important;" required></textarea>
+                                        </div>
+                                    </div>
+                                </div>
 
-        <div class="col-md-3">
-            <label class="form-label fw-bold small text-muted">{{ __('Date de Réception') }}</label>
-            <input type="date" name="date_courrier" 
-                   class="form-control form-control-sm border-2 border-primary" 
-                   value="{{ old('date_courrier', date('Y-m-d')) }}">
-        </div>
+                                <!-- SECTION 3 : TRAÇABILITÉ (Dates & Statut) -->
+                                <div class="col-12">
+                                    <div class="row g-3 border-top pt-3">
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold small text-info">Date du Document Original</label>
+                                            <input type="date" name="date_document_original" class="form-control border-2 border-info fw-bold">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold small text-muted">Date d'Enregistrement</label>
+                                            <input type="date" name="date_courrier" class="form-control border-2 border-primary fw-bold" value="{{ date('Y-m-d') }}">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold small text-muted">Statut Initial</label>
+                                            <select name="statut" class="form-select border-2 border-primary fw-bold">
+                                                <option value="reçu">🟢 Reçu</option>
+                                                <option value="en_traitement">🟡 En traitement</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-        <div class="col-md-3">
-            <label class="form-label fw-bold small text-muted">{{ __('Statut Initial') }}</label>
-            <select name="statut" class="form-select form-select-sm border-2 border-primary fw-bold">
-                <option value="reçu">🟢 Reçu</option>
-                <option value="en_traitement">🟡 En traitement</option>
-            </select>
-        </div>
-
-        <!-- Ligne 2 : Date Originale et Objet -->
-        <div class="col-md-3">
-            <label class="form-label fw-bold small text-info">{{ __('Date du Document Original') }}</label>
-            <div class="input-group input-group-sm">
-                <span class="input-group-text bg-info text-white border-info"><i class="fas fa-calendar-check"></i></span>
-                <input type="date" name="date_document_original" 
-                       class="form-control border-2 border-info" 
-                       value="{{ old('date_document_original') }}">
-            </div>
-            <div class="form-text mt-1 small" style="font-size: 0.65rem;">Date inscrite sur le document physique.</div>
-        </div>
-
-        <div class="col-md-9">
-            <label class="form-label fw-bold small text-muted">{{ __('Objet du Courrier') }} <span class="text-danger">*</span></label>
-            <textarea name="objet" class="form-control border-2 fw-bold" rows="1" placeholder="Sujet du courrier" required style="background-color: #fff9e6; border-color: #ffc107 !important;">{{ old('objet') }}</textarea>
-        </div>
-    </div>
-</div>
 
                         <!-- Section 2: Acteurs (Expéditeur / Destinataire) -->
                         <div class="row g-3 mb-4">
@@ -111,7 +119,7 @@
                                 <div class="card border-0 shadow-sm h-100 border-start border-4 border-info">
                                     <div class="card-header py-2 bg-info text-dark fw-bold small"><i class="fas fa-paper-plane me-2"></i>EXPÉDITEUR</div>
                                     <div class="card-body p-3">
-                                        <input type="text" name="expediteur_nom" class="form-control form-control-sm border-2 mb-2" placeholder="Nom complet" value="{{ old('expediteur_nom', 'non spécifié') }}" required>
+                                        <input type="text" name="expediteur_nom" class="form-control form-control-sm border-2 mb-2" placeholder="Nom de l'expéditeur" value="{{ old('expediteur_nom', '') }}" required>
                                         <input type="text" name="expediteur_contact" class="form-control form-control-sm border-2" placeholder="Contact / Email" value="{{ old('expediteur_contact') }}">
                                     </div>
                                 </div>
@@ -120,7 +128,7 @@
                                 <div class="card border-0 shadow-sm h-100 border-start border-4 border-success">
                                     <div class="card-header py-2 bg-success text-white fw-bold small"><i class="fas fa-user-tie me-2"></i>DESTINATAIRE</div>
                                     <div class="card-body p-3">
-                                        <input type="text" name="destinataire_nom" class="form-control form-control-sm border-2" placeholder="Nom ou Service" value="{{ old('destinataire_nom', 'Direction Générale') }}" required>
+                                        <input type="text" name="destinataire_nom" class="form-control form-control-sm border-2" placeholder="Nom ou Service destinataire" value="{{ old('destinataire_nom', '') }}" required>
                                         <div class="mt-2 small text-muted font-italic"><i class="fas fa-info-circle me-1 text-success"></i>Assignation automatique.</div>
                                     </div>
                                 </div>

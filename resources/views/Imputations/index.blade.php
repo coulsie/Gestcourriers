@@ -60,15 +60,97 @@
         </div>
     </div>
 
+<!-- SECTION STATISTIQUES - CARTES DE SCORE -->
+<div class="row g-4 mb-4">
+    <!-- Total Imputations -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm rounded-4 h-100" style="border-left: 5px solid #4338ca !important;">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="bg-indigo-subtle p-3 rounded-3">
+                        <i class="fas fa-file-invoice fa-2x text-indigo" style="color: #4338ca;"></i>
+                    </div>
+                    <span class="badge bg-indigo-subtle text-indigo rounded-pill px-3 py-2 fw-bold fs-6">TOTAL</span>
+                </div>
+                <h2 class="display-5 fw-black text-dark mb-0">{{ $imputations->total() }}</h2>
+                <p class="text-muted fw-bold mb-0 mt-2">Dossiers imputés</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- En Cours -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm rounded-4 h-100" style="border-left: 5px solid #f59e0b !important;">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="bg-warning-subtle p-3 rounded-3">
+                        <i class="fas fa-spinner fa-2x text-warning"></i>
+                    </div>
+                    <span class="badge bg-warning-subtle text-warning rounded-pill px-3 py-2 fw-bold fs-6">EN COURS</span>
+                </div>
+                <h2 class="display-5 fw-black text-dark mb-0">
+                    {{ $imputations->where('statut', 'en_cours')->count() }}
+                </h2>
+                <p class="text-muted fw-bold mb-0 mt-2">Actions actives</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terminées -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm rounded-4 h-100" style="border-left: 5px solid #10b981 !important;">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="bg-success-subtle p-3 rounded-3">
+                        <i class="fas fa-check-double fa-2x text-success"></i>
+                    </div>
+                    <span class="badge bg-success-subtle text-success rounded-pill px-3 py-2 fw-bold fs-6">TERMINÉES</span>
+                </div>
+                <h2 class="display-5 fw-black text-dark mb-0">
+                    {{ $imputations->where('statut', 'termine')->count() }}
+                </h2>
+                <p class="text-muted fw-bold mb-0 mt-2">Dossiers bouclés</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Retards (Alertes) -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm rounded-4 h-100" style="border-left: 5px solid #ef4444 !important;">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="bg-danger-subtle p-3 rounded-3">
+                        <i class="fas fa-exclamation-triangle fa-2x text-danger"></i>
+                    </div>
+                    <span class="badge bg-danger-subtle text-danger rounded-pill px-3 py-2 fw-bold fs-6">HORS DÉLAI</span>
+                </div>
+                <h2 class="display-5 fw-black text-danger mb-0">
+                    {{ $imputations->filter(fn($i) => \Carbon\Carbon::parse($i->echeancier)->isPast() && $i->statut != 'termine')->count() }}
+                </h2>
+                <p class="text-muted fw-bold mb-0 mt-2">Dossiers en retard</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
     <!-- TABLEAU DES IMPUTATIONS - TEXTES AGRANDIS -->
     <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
         <div class="card-header bg-dark py-4 d-flex justify-content-between align-items-center border-bottom">
             <h4 class="mb-0 text-white fw-bold">
                 <i class="fas fa-tasks me-2 text-warning"></i> Suivi des Imputations (Janvier 2026)
             </h4>
-            <a href="{{ route('imputations.create') }}" class="btn btn-warning btn-lg fw-bold shadow-sm px-4">
-                <i class="fas fa-plus-circle me-1"></i> NOUVELLE IMPUTATION
-            </a>
+            <div class="d-flex gap-2">
+                <button onclick="window.print()" class="btn btn-outline-light btn-lg fw-bold shadow-sm px-4">
+                    <i class="fas fa-print me-1"></i> IMPRIMER
+                </button>
+                <a href="{{ route('imputations.create') }}" class="btn btn-warning btn-lg fw-bold shadow-sm px-4">
+                    <i class="fas fa-plus-circle me-1"></i> NOUVELLE IMPUTATION
+                </a>
+            </div>
         </div>
 
         <div class="card-body p-0">
@@ -195,17 +277,17 @@
 
                                     <!-- Bouton Modifier -->
                                     <!-- Bouton Modifier -->
-<span title="{{ $imputation->statut === 'termine' ? 'Modification impossible : imputation déjà traitée' : 'Modifier l\'imputation' }}" tabindex="0">
-    <a href="{{ $imputation->statut === 'termine' ? 'javascript:void(0)' : route('imputations.edit', $imputation->id) }}" 
-       class="btn btn-sm btn-warning text-white {{ $imputation->statut === 'termine' ? 'disabled' : '' }}" 
-       @if($imputation->statut === 'termine') 
-           style="opacity: 0.6; filter: grayscale(1); cursor: not-allowed;" 
-           aria-disabled="true"
-       @endif>
-        <i class="fas fa-edit"></i>
-    </a>
-</span>
-                                    
+                                    <span title="{{ $imputation->statut === 'termine' ? 'Modification impossible : imputation déjà traitée' : 'Modifier l\'imputation' }}" tabindex="0">
+                                        <a href="{{ $imputation->statut === 'termine' ? 'javascript:void(0)' : route('imputations.edit', $imputation->id) }}"
+                                        class="btn btn-sm btn-warning text-white {{ $imputation->statut === 'termine' ? 'disabled' : '' }}"
+                                        @if($imputation->statut === 'termine')
+                                            style="opacity: 0.6; filter: grayscale(1); cursor: not-allowed;"
+                                            aria-disabled="true"
+                                        @endif>
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </span>
+
                                     <!-- Bouton Supprimer avec Confirmation -->
                                     <form action="{{ route('imputations.destroy', $imputation->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette imputation ? Cette action est irréversible.');">
                                         @csrf
@@ -233,9 +315,76 @@
             <div class="d-flex justify-content-center py-4 bg-light border-top">
                 {{ $imputations->appends(request()->query())->links() }}
             </div>
+    </div>
+<!-- PAGINATION PERSONNALISÉE -->
+<div class="card-footer bg-white py-3 border-top">
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="text-muted small fw-bold">
+            Affichage de {{ $imputations->firstItem() }} à {{ $imputations->lastItem() }} sur {{ $imputations->total() }} résultats
         </div>
+
+        <nav>
+            <ul class="pagination pagination-lg mb-0 shadow-sm">
+                {{-- Bouton Précédent --}}
+                @if ($imputations->onFirstPage())
+                    <li class="page-item disabled"><span class="page-link border-2"><i class="fas fa-chevron-left me-1"></i> Précédent</span></li>
+                @else
+                    <li class="page-item"><a class="page-link border-2 fw-bold" href="{{ $imputations->previousPageUrl() }}" rel="prev"><i class="fas fa-chevron-left me-1"></i> Précédent</a></li>
+                @endif
+
+                {{-- Numéros de pages (Optionnel, vous pouvez les retirer pour ne garder que Précédent/Suivant) --}}
+                @foreach ($imputations->getUrlRange(max(1, $imputations->currentPage() - 1), min($imputations->lastPage(), $imputations->currentPage() + 1)) as $page => $url)
+                    <li class="page-item {{ ($page == $imputations->currentPage()) ? 'active' : '' }}">
+                        <a class="page-link border-2 fw-bold" href="{{ $url }}">{{ $page }}</a>
+                    </li>
+                @endforeach
+
+                {{-- Bouton Suivant --}}
+                @if ($imputations->hasMorePages())
+                    <li class="page-item"><a class="page-link border-2 fw-bold" href="{{ $imputations->nextPageUrl() }}" rel="next">Suivant <i class="fas fa-chevron-right ms-1"></i></a></li>
+                @else
+                    <li class="page-item disabled"><span class="page-link border-2">Suivant <i class="fas fa-chevron-right ms-1"></i></span></li>
+                @endif
+            </ul>
+        </nav>
     </div>
 </div>
+
+    </div>
+</div>
+<style>
+@media print {
+    /* Cacher les éléments inutiles à l'impression */
+    .navbar, .btn, .card-header .btn, .card-footer, form, .sidebar {
+        display: none !important;
+    }
+
+    /* Élargir le tableau sur toute la page */
+    .container-fluid, .card {
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    body {
+        background: white !important;
+    }
+
+    /* Afficher le titre de la page proprement */
+    .card-header h4 {
+        color: black !important;
+        text-align: center;
+        width: 100%;
+    }
+
+    /* Ajuster la taille de la police pour l'impression */
+    table {
+        font-size: 12px !important;
+    }
+}
+</style>
+
 
 <style>
     /* Tailles de polices et styles personnalisés 2026 */

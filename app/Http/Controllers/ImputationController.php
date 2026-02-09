@@ -18,12 +18,12 @@ use Illuminate\Support\Facades\File;  // <--- INDISPENSABLE pour File::exists
 
 class ImputationController extends Controller
 {
-     public function index(Request $request)
+ public function index(Request $request)
 {
-    // 1. Initialisation de la requête avec toutes les relations nécessaires
+    // 1. Initialisation de la requête
     $query = Imputation::with(['courrier', 'agents.service', 'auteur']);
 
-    // 2. Filtre par recherche (Référence ou Objet du courrier)
+    // 2. Application des filtres (Recherche, Niveau, Statut, Agent)
     if ($request->filled('search')) {
         $query->whereHas('courrier', function($q) use ($request) {
             $q->where('reference', 'like', "%{$request->search}%")
@@ -31,32 +31,42 @@ class ImputationController extends Controller
         });
     }
 
-    // 3. Filtre par Niveau (primaire, secondaire, tertiaire)
     if ($request->filled('niveau')) {
         $query->where('niveau', $request->niveau);
     }
 
-    // 4. Filtre par Statut (en_attente, en_cours, termine)
     if ($request->filled('statut')) {
         $query->where('statut', $request->statut);
     }
 
-    // 5. Filtre par Agent assigné
     if ($request->filled('agent_id')) {
         $query->whereHas('agents', function($q) use ($request) {
             $q->where('agents.id', $request->agent_id);
         });
     }
 
-    // 6. Tri par date de création décroissante et pagination
-    // appends(request()->query()) permet de garder les filtres actifs lors du changement de page
-    $imputations = $query->latest()->paginate(15)->appends($request->query());
+    // --- NOUVEAU : CALCUL DES STATISTIQUES (Basé sur la requête filtrée) ---
+    // On clone la requête pour ne pas interférer avec la pagination
+    $statsQuery = clone $query;
 
-    // 7. Récupérer la liste de tous les agents pour remplir le menu déroulant du filtre
+    $stats = [
+        'total'      => $statsQuery->count(),
+        'en_cours'   => (clone $statsQuery)->where('statut', 'en_cours')->count(),
+        'termine'    => (clone $statsQuery)->where('statut', 'termine')->count(),
+        'en_retard'  => (clone $statsQuery)->where('statut', '!=', 'termine')
+                                           ->whereDate('echeancier', '<', now())
+                                           ->count(),
+    ];
+    // -----------------------------------------------------------------------
+
+    // 3. Finalisation : Tri et Pagination
+    $imputations = $query->latest()->paginate(25)->appends($request->query());
+
+    // 4. Données pour les menus déroulants
     $allAgents = Agent::orderBy('last_name')->get();
 
-    // 8. Retour à la vue avec les deux variables
-    return view('Imputations.index', compact('imputations', 'allAgents'));
+    // 5. Retour à la vue avec la variable $stats en plus
+    return view('Imputations.index', compact('imputations', 'allAgents', 'stats'));
 }
 
 
@@ -340,7 +350,7 @@ public function mesImputations()
             $query->orWhere('user_id', $user->id);
         })
         ->latest() // Équivalent à orderBy('created_at', 'desc')
-        ->paginate(15);
+        ->paginate(25);
 
     return view('Imputations.mes_imputations', compact('imputations'));
 }

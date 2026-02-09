@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Crypt; // À ajouter en haut du fichier
 
 class CourrierController extends Controller
 {
-   
+
  public function index(Request $request)
 {
     $query = Courrier::query();
@@ -56,17 +56,15 @@ public function create()
 {
     $categories = [
         'Incoming' => [
-            'Facture' => '📥 Facture',
-            'Plainte' => '📥 Plainte / Réclamation',
-            'Note_Service' => '📥 Note de Service',
-            'Courrier_Admin' => '📥 Courrier Administratif',
-            'Autre' => '📥 Autre'
+            'Interne' => '📥 Interne',
+            'Externe' => '📥 Externe',
+            'Mail' => '📥 Mail',
+            'Autre' => '📤 Autre'
         ],
         'Outgoing' => [
-            'Reponse' => '📤 Réponse à un courrier',
-            'Devis' => '📤 Envoi Devis/Facture',
-            'Convocation' => '📤 Convocation',
-            'Notification' => '📤 Notification',
+            'Interne' => '📥 Interne',
+            'Externe' => '📥 Externe',
+            'Mail' => '📥 Mail',
             'Autre' => '📤 Autre'
         ]
     ];
@@ -106,7 +104,7 @@ public function store(Request $request)
 
     // Gestion de la confidentialité et Hachage du code
     $validatedData['is_confidentiel'] = $request->has('is_confidentiel');
-    
+
 
     // Hachage ou Chiffrement du code
     if ($request->filled('code_acces')) {
@@ -128,8 +126,8 @@ public function store(Request $request)
 
     return redirect()->route('courriers.index')->with('success', 'Courrier enregistré avec succès.');
 }
-   
-public function show(Courrier $courrier) 
+
+public function show(Courrier $courrier)
 {
     if ($courrier->is_confidentiel && !session("access_granted_{$courrier->id}")) {
         return view('courriers.verify_code', compact('courrier'));
@@ -280,7 +278,7 @@ public function update(Request $request, Courrier $courrier)
     }
 
 
-    
+
     public function archives(Request $request)
     {
         $query = Courrier::where('statut', 'archivé');
