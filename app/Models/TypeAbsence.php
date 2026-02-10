@@ -29,6 +29,8 @@ class TypeAbsence extends Model
         'est_paye',
     ];
 
+
+    protected $primaryKey = 'id'; // Assurez-vous que c'est bien 'id' en base de données
     /**
      * The attributes that should be cast to native types.
      *

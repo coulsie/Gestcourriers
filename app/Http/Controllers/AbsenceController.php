@@ -8,6 +8,7 @@ use Illuminate\View\View;
 use App\Models\Agent;
 use App\Models\TypeAbsence;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 
 class AbsenceController extends Controller
@@ -152,5 +153,96 @@ public function update(Request $request, Absence $absence): RedirectResponse
 
         return view('Absences.edit', compact('absence', 'type_absences', 'agents'));
     }
+
+
+
+
+public function monautorisation()
+{
+    // 1. Récupérer les types d'absences pour le formulaire
+    $typeAbsences = \App\Models\TypeAbsence::all();
+
+    // Gestion du cas vide pour les types
+    if ($typeAbsences->isEmpty()) {
+        $typeAbsences = collect([(object)['id' => 0, 'nom_type' => 'Aucun motif trouvé']]);
+    }
+
+    // 2. Récupérer l'agent connecté
+    $agent = auth::user()->agent;
+
+    // 3. Récupérer l'historique des absences de cet agent (indispensable pour la ligne 111 de votre vue)
+    $absences = \App\Models\Absence::with('type')
+                ->where('agent_id', $agent->id)
+                ->latest()
+                ->paginate(5); // On en affiche 5 par page sous le formulaire
+
+    return view('Absences.monautorisation', compact('typeAbsences', 'absences'));
+}
+
+
+public function validationListe()
+{
+    // On charge les absences avec leurs relations
+    $absences = \App\Models\Absence::with(['type', 'agent'])
+                ->where('approuvee', 0)
+                ->latest()
+                ->paginate(15); // paginate() exécute déjà la requête, ne pas ajouter get()
+
+    return view('Absences.validation', compact('absences'));
+}
+
+
+
+
+public function approuver(Request $request, $id)
+{
+    $absence = \App\Models\Absence::findOrFail($id);
+    // 1 pour Approuvé, 2 pour Rejeté (selon votre logique)
+    $absence->update(['approuvee' => $request->status]);
+
+    return redirect()->back()->with('success', 'Statut mis à jour avec succès.');
+}
+
+
+public function monstore(Request $request)
+{
+    // 1. Validation identique à votre fonction store qui marche
+    $validatedData = $request->validate([
+        'type_absence_id' => 'required|exists:type_absences,id',
+        'date_debut' => 'required|date',
+        'date_fin' => 'required|date|after_or_equal:date_debut',
+        'document_justificatif' => 'nullable|file|mimes:pdf,jpg,png|max:8192', // Augmenté à 8Mo comme demandé
+    ]);
+
+    // 2. Récupération de l'agent lié à l'utilisateur connecté
+    $agent = auth::user()->agent;
+    if (!$agent) {
+        return redirect()->back()->with('error', 'Profil agent introuvable.');
+    }
+
+    // 3. On prépare les données pour la création
+    $validatedData['agent_id'] = $agent->id;
+    $validatedData['approuvee'] = 0; // Toujours 0 pour une demande d'agent
+
+    // 4. Gestion du fichier (Logique identique à votre fonction store)
+    if ($request->hasFile('document_justificatif')) {
+        $file = $request->file('document_justificatif');
+
+        // Générer un nom unique
+        $fileName = time() . '_' . $file->getClientOriginalName();
+
+        // Déplacer le fichier dans public/JustificatifAbsences (crée le dossier s'il n'existe pas)
+        $file->move(public_path('JustificatifAbsences'), $fileName);
+
+        // Enregistrer le nom du fichier
+        $validatedData['document_justificatif'] = $fileName;
+    }
+
+    // 5. Création
+    \App\Models\Absence::create($validatedData);
+
+    return redirect()->back()->with('success', 'Votre demande d\'absence a été enregistrée avec succès !');
+}
+
 
 }

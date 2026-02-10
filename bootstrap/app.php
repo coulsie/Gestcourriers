@@ -12,24 +12,29 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
 
-        // 1. Définir les redirections automatiques (CORRIGE VOTRE PROBLÈME)
+        // 1. Définir les redirections automatiques
         $middleware->redirectTo(
-            guests: '/login', // Redirige les non-connectés ici
-            users: '/home'    // Redirige les connectés ici après le login
+            guests: '/login',
+            users: '/home'
         );
 
-        // 2. Désactivation du CSRF sur le login (déjà présent dans votre code)
+        // 2. Désactivation du CSRF sur le login
         $middleware->validateCsrfTokens(except: [
             'login',
             'logout'
         ]);
 
-        // 3. Enregistrement de l'alias de votre middleware (déjà présent)
+        // 3. Enregistrement des alias (MODIFIÉ ICI)
         $middleware->alias([
             'force.password' => \App\Http\Middleware\ForcePasswordChange::class,
+            // AJOUT DES ALIAS SPATIE CI-DESSOUS
+            'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+            'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })
     ->create();
+

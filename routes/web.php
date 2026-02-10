@@ -35,11 +35,11 @@ Route::get('/', function () {
 
 
 Route::middleware(['auth'])->group(function () {
-    
+
     // Route spécifique au coffre-fort
     Route::get('/admin/coffre-fort', [AdminController::class, 'coffreFort'])
         ->name('admin.coffre-fort');
-        
+
 });
 Route::middleware(['auth'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -100,6 +100,18 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/presences/liste-filtree', [PresenceController::class, 'listeFiltree'])
          ->name('presences.listeFiltree');
 
+    Route::middleware(['auth'])->group(function () {
+        // Route pour afficher le formulaire "monautorisation"
+        Route::get('/mon-autorisation-absence', [AbsenceController::class, 'monautorisation'])->name('absences.monautorisation');
+
+        // Route pour enregistrer la demande (votre fonction monstore)
+        Route::post('/absences/monstore', [AbsenceController::class, 'monstore'])->name('absences.monstore');
+    });
+    Route::middleware(['auth', 'role:admin|rh'])->group(function () {
+    Route::get('/absences/validations', [AbsenceController::class, 'validationListe'])->name('absences.validation_liste');
+    Route::post('/absences/approuver/{id}', [AbsenceController::class, 'approuver'])->name('absences.approuver');
+    });
+
     /*
     |--------------------------------------------------------------------------
     | 3. ESPACE MÉTIER (Authentification + Changement de mot de passe forcé)
@@ -144,9 +156,7 @@ Route::middleware(['auth'])->group(function () {
 
             Route::get('/visualiser/{id}', [CourrierController::class, 'visualiserDocument'])->name('visualiser');
             Route::get('/recherche', [CourrierController::class, 'RechercheAffichage'])->name('RechercheAffichage');
-            Route::get('/{id}/affecter', [CourrierAffectationController::class, 'create'])->name('affectation.create');
-            Route::post('/{id}/affecter', [CourrierAffectationController::class, 'store'])->name('affectation.store');
-            Route::get('/{courrier}/affectation', [CourrierAffectationController::class, 'show'])->name('affectation.show');
+            Route::get('/recherche/resultats', [CourrierController::class, 'Recherche'])->name('Recherche');
         });
         Route::get('/courriers/archives', [CourrierController::class, 'archives'])->name('courriers.archives');
         Route::resource('courriers', CourrierController::class);

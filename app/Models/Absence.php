@@ -23,10 +23,10 @@ class Absence extends Model
         'date_debut',
         'date_fin',
         'approuvee', // <-- DOIT ÊTRE ÉCRIT EXACTEMENT COMME ÇA
-        'document_justificatif', 
+        'document_justificatif',
         'notes'
     ];
- 
+
     // Conversion automatique des types de données
     protected $casts = [
         'date_debut' => 'date',
@@ -44,22 +44,25 @@ class Absence extends Model
         // Assurez-vous d'avoir un modèle App\Models\Agent existant
         return $this->belongsTo(Agent::class, 'agent_id');
     }
-    
+
 
     /**
      * Définit la relation : Une absence a un type.
      */
-    public function type(): BelongsTo
-    {
-        // Assurez-vous d'avoir un modèle App\Models\TypeAbsence existant
-        return $this->belongsTo(TypeAbsence::class, 'type_absence_id', 'type_absence_id');
-    }
-    public function typeAbsence()
+   public function type(): BelongsTo
+{
+    // 'type_absence_id' est la colonne dans votre table 'absences'
+    // 'id' est la colonne de la clé primaire dans votre table 'type_absences'
+    return $this->belongsTo(TypeAbsence::class, 'type_absence_id', 'id');
+}
+
+public function typeAbsence()
     {
         // Remplacez 'App\Models\TypeAbsence' par le nom correct de votre modèle lié,
         // et ajustez les clés étrangères si nécessaire.
         return $this->belongsTo(TypeAbsence::class, 'type_absence_id');
         // ou return $this->hasOne(TypeAbsence::class, 'absence_id');
     }
+
 
 }
