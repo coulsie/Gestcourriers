@@ -33,19 +33,34 @@ class AnnonceController extends Controller
      * Enregistre une nouvelle annonce
      */
         public function store(Request $request)
-        {
-            $validated = $request->validate([
-                'titre'   => 'required|string|max:255',
-                'contenu' => 'required|string',
-                'type'    => 'required|in:urgent,information,evenement,avertissement,general',
-                'is_active' => 'boolean'
-            ]);
+{
+    // 1. Validation : On retire 'boolean' pour 'is_active' car la checkbox envoie "on"
+    $validated = $request->validate([
+        'titre'      => 'required|string|max:255',
+        'contenu'    => 'required|string',
+        'type'       => 'required|in:urgent,information,evenement,avertissement,general',
+        'is_active'  => 'nullable',
+        'expires_at' => 'nullable|date'
+    ]);
 
-            Annonce::create($validated);
+    // 2. Traitement manuel des données
+    // Conversion de la checkbox en vrai booléen
+    $validated['is_active'] = $request->has('is_active');
 
-            return redirect()->route('annonces.index')
-                            ->with('success', 'Annonce publiée avec succès !');
-        }
+    // Formatage de la date pour TIMESTAMP (SQL standard)
+    if ($request->filled('expires_at')) {
+        $validated['expires_at'] = \Carbon\Carbon::parse($request->expires_at)->toDateTimeString();
+    } else {
+        $validated['expires_at'] = null;
+    }
+
+    // 3. Création
+    \App\Models\Annonce::create($validated);
+
+    return redirect()->route('annonces.index')
+                    ->with('success', 'Annonce publiée avec succès !');
+}
+
 
     /**
      * Supprime une annonce
@@ -75,38 +90,41 @@ class AnnonceController extends Controller
     /**
      * Update the specified resource in storage.
             */
-            public function update(Request $request, $id)
-        {
-            // 1. Validation rigoureuse des données
-            $request->validate([
-                'titre' => 'required|string|max:191',
-                'contenu' => 'required|string',
-                'type' => 'required|in:urgent,information,evenement,avertissement',
-                'is_active' => 'nullable|boolean',
-                'expires_at' => 'nullable|date',
-            ]);
+       public function update(Request $request, $id)
+{
+    // 1. Validation rigoureuse des données
+    // Note : on enlève 'boolean' pour 'is_active' car la checkbox envoie "on" ou rien
+    $validatedData = $request->validate([
+        'titre'      => 'required|string|max:191',
+        'contenu'    => 'required|string',
+        'type'       => 'required|in:urgent,information,evenement,avertissement',
+        'is_active'  => 'nullable', 
+        'expires_at' => 'nullable|date',
+    ]);
 
-            // 2. Recherche de l'annonce
-            $annonce = Annonce::findOrFail($id);
+    // 2. Recherche de l'annonce
+    $annonce = Annonce::findOrFail($id);
 
-            // 3. Préparation des données
-            $data = $request->all();
+    // 3. Traitement des données avant mise à jour
+    
+    // Gestion du statut actif (booléen propre)
+    $validatedData['is_active'] = $request->has('is_active');
 
-            // Gestion du statut actif (si la checkbox n'est pas cochée, on force à 0)
-            $data['is_active'] = $request->has('is_active') ? 1 : 0;
+    // Nettoyage et formatage de la date d'expiration pour TIMESTAMP
+    if (!empty($validatedData['expires_at'])) {
+        // On s'assure que le format est compatible SQL (YYYY-MM-DD HH:MM:SS)
+        $validatedData['expires_at'] = \Carbon\Carbon::parse($validatedData['expires_at'])->startOfDay();
+    } else {
+        $validatedData['expires_at'] = null;
+    }
 
-            // Nettoyage de la date d'expiration si vide
-            if (empty($data['expires_at'])) {
-                $data['expires_at'] = null;
-            }
+    // 4. Mise à jour (uniquement avec les données validées)
+    $annonce->update($validatedData);
 
-            // 4. Mise à jour
-            $annonce->update($data);
-
-            // 5. Redirection vers l'index avec un message flash
-            return redirect()->route('annonces.index')
-                ->with('success', "L'annonce « {$annonce->titre} » a été modifiée avec succès le " . Carbon::now()->format('d/m/Y à H:i'));
-        }
+    // 5. Redirection avec un message flash propre
+    return redirect()->route('annonces.index')
+        ->with('success', "L'annonce « {$annonce->titre} » a été modifiée avec succès le " . now()->format('d/m/Y à H:i'));
+}
 
     /**
      * Remove the specified resource from storage.

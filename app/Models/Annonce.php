@@ -17,6 +17,8 @@ class Annonce extends Model
         'contenu',
         'type',
         'is_active',
+        'expires_at'
+        
     ];
 
     /**
