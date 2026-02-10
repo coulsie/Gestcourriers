@@ -107,7 +107,7 @@ Route::middleware(['auth'])->group(function () {
         // Route pour enregistrer la demande (votre fonction monstore)
         Route::post('/absences/monstore', [AbsenceController::class, 'monstore'])->name('absences.monstore');
     });
-    Route::middleware(['auth', 'role:admin|rh'])->group(function () {
+    Route::middleware(['auth', 'role:admin|rh|Superviseur'])->group(function () {
     Route::get('/absences/validations', [AbsenceController::class, 'validationListe'])->name('absences.validation_liste');
     Route::post('/absences/approuver/{id}', [AbsenceController::class, 'approuver'])->name('absences.approuver');
     });
