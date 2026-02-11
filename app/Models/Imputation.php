@@ -19,8 +19,14 @@ class Imputation extends Model
    protected $fillable = [
    'instructions', 'echeancier', 'observations', 'statut',
     'courrier_id', 'date_imputation', 'niveau',
-    'documents_annexes', 'user_id', 'date_traitement'
+    'documents_annexes', 'user_id', 'date_traitement', 'suivi_par',
 ];
+
+// Relation pour récupérer l'utilisateur qui suit le dossier
+public function superviseur()
+{
+    return $this->belongsTo(User::class, 'suivi_par');
+}
 
 // Relation indispensable pour la table agent_imputation
  public function agents(): BelongsToMany

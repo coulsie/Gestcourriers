@@ -107,44 +107,61 @@
                                             <label class="form-label fw-bold small text-muted text-uppercase">Date Imputation *</label>
                                             <input type="date" name="date_imputation" class="form-control bg-light" value="{{ date('Y-m-d') }}" required>
                                         </div>
+                                        <!-- Champ Suivi Par -->
+                                        <div class="mb-3">
+                                        <label class="form-label fw-bold small text-muted text-uppercase">
+                                            <i class="fas fa-user-shield me-1 text-primary"></i> Supervisé / Suivi par
+                                        </label>
+                                        <select name="suivi_par" class="form-select border-primary shadow-sm @error('suivi_par') is-invalid @enderror">
+                                            <option value="">-- Sélectionner un superviseur (Optionnel) --</option>
+                                            @foreach($users as $user)
+                                                <option value="{{ $user->id }}" {{ old('suivi_par') == $user->id ? 'selected' : '' }}>
+                                                    {{ $user->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('suivi_par')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
 
-  <div class="col-md-6 mb-3">
-    <label class="form-label fw-bold small text-muted text-uppercase text-danger">Échéancier *</label>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold small text-muted text-uppercase text-danger">Échéancier *</label>
 
-    @php
-        // 1. Chercher d'abord si on a une imputation parente (réimputation)
-        // On suppose que $imputationParente est passée à la vue si request('parent_id') existe
-        $dateHeritee = null;
-        if(request('parent_id')) {
-            $parente = \App\Models\Imputation::find(request('parent_id'));
-            $dateHeritee = $parente ? $parente->echeancier : null;
-        }
+                                        @php
+                                            // 1. Chercher d'abord si on a une imputation parente (réimputation)
+                                            // On suppose que $imputationParente est passée à la vue si request('parent_id') existe
+                                            $dateHeritee = null;
+                                            if(request('parent_id')) {
+                                                $parente = \App\Models\Imputation::find(request('parent_id'));
+                                                $dateHeritee = $parente ? $parente->echeancier : null;
+                                            }
 
-        // 2. Sinon, on prend l'échéance du courrier sélectionné
-        if (!$dateHeritee && isset($courrierSelectionne)) {
-            $dateHeritee = $courrierSelectionne->echeancier;
-        }
+                                            // 2. Sinon, on prend l'échéance du courrier sélectionné
+                                            if (!$dateHeritee && isset($courrierSelectionne)) {
+                                                $dateHeritee = $courrierSelectionne->echeancier;
+                                            }
 
-        // 3. Définition de la valeur finale (Priorité : Session Old > Héritage > URL > Aujourd'hui)
-        $finalDate = old('echeancier', $dateHeritee ?? request('echeancier', date('Y-m-d')));
+                                            // 3. Définition de la valeur finale (Priorité : Session Old > Héritage > URL > Aujourd'hui)
+                                            $finalDate = old('echeancier', $dateHeritee ?? request('echeancier', date('Y-m-d')));
 
-        // Formatage pour l'input HTML
-        $valueFormatted = \Carbon\Carbon::parse($finalDate)->format('Y-m-d');
-    @endphp
+                                            // Formatage pour l'input HTML
+                                            $valueFormatted = \Carbon\Carbon::parse($finalDate)->format('Y-m-d');
+                                        @endphp
 
-    <input type="date"
-           name="echeancier"
-           class="form-control shadow-sm {{ request('parent_id') ? 'bg-light border-secondary text-muted fw-bold' : 'border-danger' }}"
-           value="{{ $valueFormatted }}"
-           @if(request('parent_id')) readonly @endif
-           required>
+                                        <input type="date"
+                                            name="echeancier"
+                                            class="form-control shadow-sm {{ request('parent_id') ? 'bg-light border-secondary text-muted fw-bold' : 'border-danger' }}"
+                                            value="{{ $valueFormatted }}"
+                                            @if(request('parent_id')) readonly @endif
+                                            required>
 
-    @if(request('parent_id'))
-        <small class="text-danger fw-bold d-block mt-1" style="font-size: 0.7rem;">
-            <i class="fas fa-lock me-1"></i> ÉCHÉANCE HÉRITÉE DE L'IMPUTATION PRÉCÉDENTE
-        </small>
-    @endif
-</div>
+                                        @if(request('parent_id'))
+                                            <small class="text-danger fw-bold d-block mt-1" style="font-size: 0.7rem;">
+                                                <i class="fas fa-lock me-1"></i> ÉCHÉANCE HÉRITÉE DE L'IMPUTATION PRÉCÉDENTE
+                                            </small>
+                                        @endif
+                                    </div>
 
 
 

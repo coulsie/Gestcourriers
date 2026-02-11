@@ -78,13 +78,15 @@ class ImputationController extends Controller
 
 public function create(Request $request)
 {
-    // 1. Récupération de TOUTES les listes nécessaires pour les filtres
-    $directions = Direction::orderBy('name', 'asc')->get(); // <--- AJOUTER CETTE LIGNE
+    $directions = Direction::orderBy('name', 'asc')->get();
     $services   = Service::orderBy('name', 'asc')->get();
     $agents     = Agent::with('service')->orderBy('last_name', 'asc')->get();
     $courriers  = Courrier::latest()->get();
+    
+    // AJOUT : Récupérer les utilisateurs pour le champ "Suivi par"
+    // On peut filtrer par rôle si nécessaire (ex: uniquement les chefs)
+    $users = \App\Models\User::orderBy('name', 'asc')->get(); 
 
-    // 2. Gestion du courrier sélectionné (si clic depuis l'index)
     $courrierSelectionne = null;
     $chemin_fichier = null;
 
@@ -93,14 +95,14 @@ public function create(Request $request)
         $chemin_fichier = $request->input('chemin_fichier', $courrierSelectionne->fichier_chemin);
     }
 
-    // 3. Transmission à la vue (Assurez-vous d'ajouter 'directions')
     return view('Imputations.create', compact(
-        'directions', // <--- NE PAS OUBLIER ICI
+        'directions',
         'services',
         'agents',
         'courriers',
         'courrierSelectionne',
-        'chemin_fichier'
+        'chemin_fichier',
+        'users' // <--- AJOUTER ICI
     ));
 }
 
@@ -131,6 +133,10 @@ public function store(Request $request)
         'statut'            => 'required|string',
         'courrier_id'       => 'required|exists:courriers,id',
         'date_imputation'   => 'required|date',
+        'niveau'            => 'required|string',
+        'suivi_par'        => 'nullable|exists:users,id',
+        'user_id'          => 'required|exists:users,id',
+
     ]);
 
     try {
@@ -239,6 +245,7 @@ public function store(Request $request)
         'courrier_id' => 'required|exists:courriers,id',
         'niveau' => 'required|string',
         'user_id' => 'required|exists:users,id',
+        'suivi_par' => 'nullable|exists:users,id',
     ]);
 
     try {

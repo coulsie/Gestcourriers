@@ -59,88 +59,145 @@
                         <i class="bi bi-search me-1"></i> Rechercher
                     </button>
                     <a href="{{ route('courriers.archives') }}" class="btn btn-sm btn-link text-muted py-0">Réinitialiser</a>
+                    
+                    
+                    <button type="button" onclick="imprimerTableau()" class="btn btn-warning d-print-none shadow-sm fw-bold border-dark">
+    <i class="fas fa-print me-2"></i> IMPRIMER
+</button>
+
+                    
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Tableau avec En-tête de couleur -->
-    <div class="card border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white;">
-                    <tr>
-                        <th class="ps-4 py-3 border-0">DATE</th>
-                        <th class="border-0">RÉFÉRENCE</th>
-                        <th class="border-0">FLUX (EXPÉDITEUR / DESTINATAIRE)</th>
-                        <th class="border-0">OBJET DU DOSSIER</th>
-                        <th class="text-center border-0">DOCUMENT</th>
-                        <th class="text-center border-0 ps-4">ACTION</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white">
-                    @forelse($courriers as $courrier)
-                    <tr class="border-bottom border-light">
-                        <td class="ps-4">
-                            <span class="fw-bold text-dark small">{{ \Carbon\Carbon::parse($courrier->date_courrier)->format('d/m/Y') }}</span>
-                        </td>
-                        <td>
-                            <span class="badge bg-light text-primary border border-primary border-opacity-25 px-2 py-1 shadow-sm">
-                                {{ $courrier->reference }}
-                            </span>
-                        </td>
-                        <td>
-                            <div class="mb-1">
-                                <span class="text-danger fw-bold text-uppercase small" style="letter-spacing: 0.5px;">
-                                    <i class="bi bi-send-fill me-1"></i>{{ $courrier->expediteur_nom }}
-                                </span>
-                            </div>
-                            <div>
-                                <span class="text-primary fw-bold text-uppercase small" style="letter-spacing: 0.5px;">
-                                    <i class="bi bi-envelope-check-fill me-1"></i>{{ $courrier->destinataire_nom }}
-                                </span>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="fw-bold text-dark small" style="max-width: 300px;">{{ $courrier->objet }}</div>
-                        </td>
-                        <td class="text-center">
-                            @if($courrier->chemin_fichier)
-                                <a href="{{ asset('documents/courriers/'.$courrier->chemin_fichier) }}" target="_blank" 
-                                   class="btn btn-danger btn-sm shadow-sm fw-bold px-3">
-                                    <i class="bi bi-file-pdf-fill"></i> PDF
-                                </a>
-                            @else
-                                <span class="text-muted small italic">Aucun</span>
-                            @endif
-                        </td>
-                        <td class="text-center">
-                            <a href="{{ route('courriers.show', $courrier->id) }}" class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-bold">
-                                <i class="bi bi-eye-fill"></i> Consulter
-                            </a>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="6" class="text-center py-5 text-muted fw-bold italic">
-                            <i class="bi bi-inbox display-4 d-block mb-2 opacity-50"></i>
-                            Aucun document trouvé dans les archives
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-        <div class="card-footer bg-light border-0 py-3">
-            <div class="d-flex justify-content-center">
-                {{ $courriers->appends(request()->query())->links() }}
-            </div>
-        </div>
-    </div>
+    <!-- Bouton d'impression global (Placé au-dessus du tableau) -->
+<div class="d-flex justify-content-end mb-3">
+    <button onclick="imprimerTableau()" class="btn btn-dark shadow-sm fw-bold">
+        <i class="fas fa-print me-2"></i> IMPRIMER TOUTE LA LISTE
+    </button>
 </div>
 
-<style>
-    .fw-extrabold { font-weight: 800; }
-    .table-hover tbody tr:hover { background-color: #f0f7ff !important; transition: 0.3s; }
-</style>
+<!-- Tableau avec En-tête de couleur -->
+<div class="card border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
+    <div class="table-responsive shadow-sm rounded-3" id="sectionAImprimer">
+        <table class="table table-hover align-middle mb-0 bg-white">
+            <thead style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white;">
+                <tr>
+                    <th class="ps-4 py-3 border-0 text-uppercase small" style="width: 10%">Date</th>
+                    <th class="border-0 text-uppercase small" style="width: 15%">Référence</th>
+                    <th class="border-0 text-uppercase small" style="width: 25%">Flux (Exp. / Dest.)</th>
+                    <th class="border-0 text-uppercase small" style="width: 30%">Objet du Dossier</th>
+                    <th class="text-center border-0 text-uppercase small" style="width: 10%">Document</th>
+                    <th class="text-center border-0 text-uppercase small no-print" style="width: 10%">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($courriers as $courrier)
+                <tr class="border-bottom border-light">
+                    <td class="ps-4">
+                        <span class="fw-bold text-dark small">{{ \Carbon\Carbon::parse($courrier->date_courrier)->format('d/m/Y') }}</span>
+                    </td>
+                    <td>
+                        <span class="badge bg-light text-primary border border-primary border-opacity-25 px-2 py-1">
+                            {{ $courrier->reference }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="small fw-bold text-danger mb-1"><i class="fas fa-arrow-right me-1"></i>{{ $courrier->expediteur_nom }}</div>
+                        <div class="small fw-bold text-primary"><i class="fas fa-arrow-left me-1"></i>{{ $courrier->destinataire_nom }}</div>
+                    </td>
+                    <td>
+                        <div class="small fw-semibold text-dark" style="max-width: 350px;">{{ $courrier->objet }}</div>
+                    </td>
+                    <td class="text-center">
+                        @if($courrier->chemin_fichier)
+                            <span class="badge bg-danger text-white fw-bold shadow-sm px-3 py-2" style="background-color: #dc3545 !important; color: white !important; border: none;">
+                                <i class="fas fa-file-pdf me-1"></i> PDF
+                            </span>
+                        @else
+                            <span class="text-muted small"><i>N/A</i></span>
+                        @endif
+                    </td>
+                    <td class="text-center no-print">
+                        <a href="{{ route('courriers.show', $courrier->id) }}" class="btn btn-sm btn-outline-primary rounded-pill px-3 shadow-sm">
+                            <i class="fas fa-eye"></i> Consulter
+                        </a>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="6" class="text-center py-5 text-muted fw-bold">Aucune archive disponible.</td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div> <!-- Fin table-responsive -->
+    
+    <div class="card-footer bg-light border-0 py-3">
+        <div class="d-flex justify-content-center">
+            {{ $courriers->appends(request()->query())->links() }}
+        </div>
+    </div>
+</div> <!-- Fin card -->
+
+   </div> <!-- Fin container -->
+</div> <!-- Fin content -->
+
+<script>
+    // Fonction d'impression isolée
+    window.imprimerTableau = function() {
+        const zone = document.getElementById('sectionAImprimer');
+        if (!zone) return alert("Erreur : Tableau introuvable");
+
+        const win = window.open('', '_blank', 'width=1100,height=800');
+        
+        // Construction du document sans concaténation fragile
+        const html = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Impression Archives</title>
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net">
+                <style>
+                    body { padding: 40px; font-family: Arial, sans-serif; background: #fff !important; }
+                    .no-print, .btn, .pagination { display: none !important; }
+                    table { width: 100% !important; border-collapse: collapse; margin-top: 20px; }
+                    th, td { border: 1px solid #000 !important; padding: 10px !important; font-size: 11px; }
+                    thead { background: #1e3a8a !important; color: #fff !important; -webkit-print-color-adjust: exact; }
+                    .bg-danger { background-color: #dc3545 !important; color: #fff !important; padding: 4px 8px; border-radius: 4px; -webkit-print-color-adjust: exact; }
+                    .text-danger { color: #dc3545 !important; font-weight: bold; }
+                    .text-primary { color: #0d6efd !important; font-weight: bold; }
+                </style>
+            </head>
+            <body>
+                <div style="text-align:center; margin-bottom:30px;">
+                    <h2 style="text-decoration:underline;">RÉPERTOIRE DES ARCHIVES NUMÉRIQUES</h2>
+                    <p>Généré le : <strong>{{ date('d/m/Y à H:i') }}</strong></p>
+                </div>
+                ${zone.innerHTML}
+            </body>
+            </html>`;
+
+        win.document.open();
+        win.document.write(html);
+        win.document.close();
+
+        win.onload = function() {
+            setTimeout(() => {
+                win.print();
+                win.close();
+            }, 700);
+        };
+    };
+    </script>
+
+    <style>
+        .fw-extrabold { font-weight: 800; }
+        .table-hover tbody tr:hover { background-color: #f0f7ff !important; cursor: pointer; }
+        @media print {
+            .no-print, .btn, .card-footer, form, .navbar { display: none !important; }
+        }
+    </style>
+
 @endsection
