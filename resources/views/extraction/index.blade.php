@@ -48,37 +48,79 @@
                     </div>
 
                     <!-- FORMULAIRE DE CONNEXION ORACLE (MASQUÉ PAR DÉFAUT) -->
-                    <div id="oracle_fields" class="col-12" style="{{ (old('connection_type') == 'oracle_custom' || (isset($type) && $type == 'oracle_custom')) ? '' : 'display:none;' }}">
-                        <div class="row g-2 p-3 bg-white rounded border border-warning">
-                            <div class="col-md-12 mb-2">
-                                <span class="badge bg-warning text-dark"><i class="fas fa-key me-1"></i> Paramètres de connexion Oracle</span>
-                            </div>
-                            <div class="col-md-3">
-                                <label class="small fw-bold">Hôte (IP/Host)</label>
-                                <input type="text" name="ora_host" class="form-control form-control-sm" placeholder="192.168.1.10" value="{{ old('ora_host') }}">
-                            </div>
-                            <div class="col-md-3">
-                                <label class="small fw-bold">Nom Base (SID/Service)</label>
-                                <input type="text" name="ora_db" class="form-control form-control-sm" placeholder="XE" value="{{ old('ora_db') }}">
-                            </div>
-                            <div class="col-md-3">
-                                <label class="small fw-bold">Utilisateur</label>
-                                <input type="text" name="ora_user" class="form-control form-control-sm" placeholder="SYSTEM" value="{{ old('ora_user') }}">
-                            </div>
-                            <div class="col-md-3">
-                                <label class="small fw-bold">Mot de passe</label>
-                                <input type="password" name="ora_pass" class="form-control form-control-sm" placeholder="*******">
-                            </div>
-                        </div>
-                    </div>
+                    <!-- FORMULAIRE DE CONNEXION ORACLE (MISE À JOUR) -->
+                <<div id="oracle_fields" class="col-12" style="{{ (old('connection_type') == 'oracle_custom' || (isset($type) && $type == 'oracle_custom')) ? '' : 'display:none;' }}">
+    <div class="card border-warning shadow-sm mb-3">
+        <div class="card-body p-3 bg-white rounded">
+            <!-- En-tête de la zone -->
+            <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                <span class="badge bg-warning text-dark fw-bold">
+                    <i class="fas fa-key me-1"></i> AUTHENTIFICATION ORACLE LOGON
+                </span>
+                <small class="text-muted italic"><i class="fas fa-info-circle me-1"></i>Paramètres de session active</small>
+            </div>
 
-                    <!-- ÉDITEUR SQL -->
-                    <div class="col-md-12">
-                        <label class="form-label fw-bold text-muted small text-uppercase">Script SQL / PL-SQL</label>
-                        <textarea name="query" rows="8" class="form-control font-monospace shadow-sm border-2" 
-                                  placeholder="SELECT * FROM table ..." 
-                                  style="background: #1e1e1e; color: #dcdcdc; font-size: 14px; border-color: #333;">{{ old('query', $query ?? '') }}</textarea>
+            <!-- Grille des champs alignés -->
+            <div class="row g-2">
+                <div class="col-md-3">
+                    <label class="small fw-bold text-muted mb-1">HÔTE (IP/HOST)</label>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-light border-warning"><i class="fas fa-server"></i></span>
+                        <input type="text" name="ora_host" class="form-control border-warning" placeholder="192.168.1.10" value="{{ old('ora_host') }}">
                     </div>
+                </div>
+
+                <div class="col-md-2">
+                    <label class="small fw-bold text-muted mb-1">BASE (SID)</label>
+                    <input type="text" name="ora_db" class="form-control form-control-sm border-warning fw-bold" placeholder="orcl" value="{{ old('ora_db') }}">
+                </div>
+
+                <div class="col-md-2">
+                    <label class="small fw-bold text-muted mb-1">USERNAME</label>
+                    <input type="text" name="ora_user" class="form-control form-control-sm border-warning" placeholder="SYSTEM" value="{{ old('ora_user') }}">
+                </div>
+
+                <div class="col-md-3">
+                    <label class="small fw-bold text-muted mb-1">PASSWORD</label>
+                    <input type="password" name="ora_pass" class="form-control form-control-sm border-warning" placeholder="*******">
+                </div>
+
+                <div class="col-md-2">
+                    <label class="small fw-bold text-muted mb-1">CONNECT AS</label>
+                    <select name="ora_as" class="form-select form-select-sm border-warning fw-bold text-primary">
+                        <option value="NORMAL" {{ old('ora_as') == 'NORMAL' ? 'selected' : '' }}>NORMAL</option>
+                        <option value="SYSDBA" {{ old('ora_as') == 'SYSDBA' ? 'selected' : '' }}>SYSDBA</option>
+                        <option value="SYSOPER" {{ old('ora_as') == 'SYSOPER' ? 'selected' : '' }}>SYSOPER</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+                    <!-- ÉDITEUR SQL -->
+                    <!-- ÉDITEUR SQL AGRANDI -->
+                <div class="col-md-12">
+                    <label class="form-label fw-bold text-muted small text-uppercase">
+                        <i class="fas fa-code me-1 text-primary"></i> Console de Rédaction SQL / PL-SQL
+                    </label>
+                    <textarea name="query" 
+                            class="form-control font-monospace shadow-lg border-2" 
+                            placeholder="SELECT * FROM table ..." 
+                            style="background: #1e1e1e; 
+                                    color: #00ff00; 
+                                    font-size: 16px; 
+                                    line-height: 1.6; 
+                                    border-color: #333; 
+                                    height: 50vh; /* Utilise 50% de la hauteur de l'écran */
+                                    min-height: 400px; 
+                                    resize: vertical; 
+                                    padding: 20px;
+                                    border-radius: 10px;">{{ old('query', $query ?? '') }}</textarea>
+                    <div class="form-text text-end small italic text-muted">
+                        <i class="fas fa-info-circle"></i> Astuce : Étirez le coin inférieur droit pour agrandir davantage.
+                    </div>
+                </div>
+
 
                     
                 </div>

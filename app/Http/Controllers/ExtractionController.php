@@ -32,6 +32,14 @@ public function execute(Request $request)
 
     // 2. Configuration dynamique si Oracle Externe
     if ($type === 'oracle_custom') {
+        // Mapping du privilège Oracle (Connect AS)
+        $privilege = null;
+        if ($request->input('ora_as') === 'SYSDBA') {
+            $privilege = OCI_SYSDBA;
+        } elseif ($request->input('ora_as') === 'SYSOPER') {
+            $privilege = OCI_SYSOPER;
+        }
+
         \Illuminate\Support\Facades\Config::set('database.connections.oracle_runtime', [
             'driver'   => 'oracle',
             'host'     => $request->input('ora_host'),
@@ -41,6 +49,10 @@ public function execute(Request $request)
             'password' => $request->input('ora_pass'),
             'charset'  => 'AL32UTF8',
             'prefix'   => '',
+            'options'  => [
+                // Cette option injecte le mode SYSDBA ou SYSOPER dans le driver OCI8
+                'privilege' => $privilege,
+            ],
         ]);
         $connection = 'oracle_runtime';
     } else {
@@ -51,7 +63,7 @@ public function execute(Request $request)
         // === ACTION : TEST DE CONNEXION UNIQUEMENT ===
         if ($request->input('action') === 'test_connection') {
             \Illuminate\Support\Facades\DB::connection($connection)->getPdo();
-            return back()->with('success', "✅ Connexion réussie à la base de données !")
+            return back()->with('success', "✅ Connexion réussie à la base Oracle (" . $request->input('ora_as') . ") !")
                          ->withInput();
         }
 
@@ -68,21 +80,20 @@ public function execute(Request $request)
         $data = collect($results)->map(fn($x) => (array) $x);
         $headers = $data->isEmpty() ? [] : array_keys($data->first());
 
-        // On renvoie la vue avec 'type' renommé en 'connection' pour votre Blade
         return view('extraction.index', [
             'data' => $data,
             'headers' => $headers,
             'query' => $query,
-            'connection' => $type, // Pour le select option 'selected'
-            'type' => $type        // Pour le label de source
+            'connection' => $type,
+            'type' => $type
         ])->with('success', 'Requête exécutée avec succès.');
 
     } catch (\Exception $e) {
-        // En cas d'erreur (Mauvais login, Driver manquant ou erreur SQL)
         return back()->withErrors(['sql_error' => "Erreur : " . $e->getMessage()])
                      ->withInput();
     }
 }
+
 
 
 
