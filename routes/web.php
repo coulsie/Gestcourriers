@@ -8,10 +8,12 @@ use App\Http\Controllers\{
     PresenceController, AbsenceController, TypeAbsenceController,
     EtatAgentsController, NotificationTacheController, AnnonceController,
     ReponseNotificationController, AgentServiceController, ImputationController,
-    StatistiqueController, ReponseController, PostController, RoleController
+    StatistiqueController, ReponseController, PostController, RoleController,ExtractionController
 };
 use App\Http\Controllers\Auth\PasswordSetupController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +35,26 @@ Route::post('forgot-password', [ForgotPasswordController::class, 'sendResetLinkE
 | 2. ESPACE SÉCURISÉ (Authentification requise)
 |--------------------------------------------------------------------------
 */
+Route::middleware(['auth'])->group(function () {
+    
+    // 1. Affichage de l'interface de saisie
+    Route::get('/extraction', [ExtractionController::class, 'index'])
+        ->name('extraction.index');
+
+    // 2. Traitement du script SQL/Oracle (POST)
+    Route::post('/extraction/execute', [ExtractionController::class, 'execute'])
+        ->name('extraction.execute');
+
+    // 3. Exportation des résultats vers Excel (POST)
+    Route::post('/extraction/export', [ExtractionController::class, 'export'])
+        ->name('extraction.export');
+
+});
+Route::get('/extraction/execute', function() {
+    return redirect()->route('extraction.index');
+});
+
+
 Route::middleware(['auth'])->group(function () {
 
     // --- CONFIGURATION INITIALE (HORS FORCE.PASSWORD) ---

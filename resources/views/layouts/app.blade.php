@@ -65,6 +65,9 @@
                                 <a class="collapse-item font-weight-bold" href="{{ route('admin.coffre-fort') }}">Coffre Fort</a>
                                 <a class="collapse-item" href="{{ route('agents.nouveau') }}">Nouveau Compte</a>
                                 <a class="collapse-item" href="{{ route('agents.index') }}">Ressources Humaines</a>
+                                <a class="collapse-item" href="{{ route('extraction.index') }}">Extraction de données</a>
+
+
                             @endhasanyrole
 
                             {{-- BLOC ACCESSIBLE AUSSI À L'UTILISATEUR --}}
@@ -222,5 +225,8 @@
     <script src="{{ asset('template/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('template/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
     <script src="{{ asset('template/js/sb-admin-2.min.js') }}"></script>
+   
+    
+
 </body>
 </html>

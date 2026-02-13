@@ -59,13 +59,7 @@
                         <i class="bi bi-search me-1"></i> Rechercher
                     </button>
                     <a href="{{ route('courriers.archives') }}" class="btn btn-sm btn-link text-muted py-0">Réinitialiser</a>
-                    
-                    
-                    <button type="button" onclick="imprimerTableau()" class="btn btn-warning d-print-none shadow-sm fw-bold border-dark">
-    <i class="fas fa-print me-2"></i> IMPRIMER
-</button>
-
-                    
+                             
                 </div>
             </form>
         </div>
@@ -73,10 +67,11 @@
 
     <!-- Bouton d'impression global (Placé au-dessus du tableau) -->
 <div class="d-flex justify-content-end mb-3">
-    <button onclick="imprimerTableau()" class="btn btn-dark shadow-sm fw-bold">
+    <button type="button" onclick="imprimerTableau()" class="btn btn-warning d-print-none shadow-sm fw-bold border-dark">
         <i class="fas fa-print me-2"></i> IMPRIMER TOUTE LA LISTE
     </button>
 </div>
+
 
 <!-- Tableau avec En-tête de couleur -->
 <div class="card border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
@@ -136,68 +131,81 @@
     
     <div class="card-footer bg-light border-0 py-3">
         <div class="d-flex justify-content-center">
-            {{ $courriers->appends(request()->query())->links() }}
+                    {{ $courriers->appends(request()->query())->links() }}
         </div>
     </div>
 </div> <!-- Fin card -->
 
-   </div> <!-- Fin container -->
-</div> <!-- Fin content -->
+</div> <!-- Fin container-fluid -->
 
+
+@push('scripts')
 <script>
-    // Fonction d'impression isolée
-    window.imprimerTableau = function() {
-        const zone = document.getElementById('sectionAImprimer');
-        if (!zone) return alert("Erreur : Tableau introuvable");
+function imprimerTableau() {
+    const zone = document.getElementById('sectionAImprimer');
+    if (!zone) {
+        alert("Erreur : Le tableau est introuvable.");
+        return;
+    }
 
-        const win = window.open('', '_blank', 'width=1100,height=800');
-        
-        // Construction du document sans concaténation fragile
-        const html = `
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <title>Impression Archives</title>
-                <link rel="stylesheet" href="https://cdn.jsdelivr.net">
-                <style>
-                    body { padding: 40px; font-family: Arial, sans-serif; background: #fff !important; }
-                    .no-print, .btn, .pagination { display: none !important; }
-                    table { width: 100% !important; border-collapse: collapse; margin-top: 20px; }
-                    th, td { border: 1px solid #000 !important; padding: 10px !important; font-size: 11px; }
-                    thead { background: #1e3a8a !important; color: #fff !important; -webkit-print-color-adjust: exact; }
-                    .bg-danger { background-color: #dc3545 !important; color: #fff !important; padding: 4px 8px; border-radius: 4px; -webkit-print-color-adjust: exact; }
-                    .text-danger { color: #dc3545 !important; font-weight: bold; }
-                    .text-primary { color: #0d6efd !important; font-weight: bold; }
-                </style>
-            </head>
-            <body>
-                <div style="text-align:center; margin-bottom:30px;">
-                    <h2 style="text-decoration:underline;">RÉPERTOIRE DES ARCHIVES NUMÉRIQUES</h2>
-                    <p>Généré le : <strong>{{ date('d/m/Y à H:i') }}</strong></p>
-                </div>
-                ${zone.innerHTML}
-            </body>
-            </html>`;
+    const win = window.open('', '_blank', 'height=850,width=1200');
+    
+    // Construction du document d'impression
+    const html = `
+        <html>
+        <head>
+            <title>Impression Archives</title>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net">
+            <style>
+                body { padding: 40px; font-family: sans-serif; background: #fff !important; }
+                .no-print, .btn, .pagination { display: none !important; }
+                table { width: 100% !important; border-collapse: collapse; margin-top: 20px; }
+                th, td { border: 1px solid #333 !important; padding: 10px !important; font-size: 11px; }
+                thead { background: #1e3a8a !important; color: #fff !important; -webkit-print-color-adjust: exact; }
+                .bg-danger { 
+                    background-color: #dc3545 !important; 
+                    color: white !important; 
+                    padding: 4px 8px; 
+                    border-radius: 4px; 
+                    -webkit-print-color-adjust: exact; 
+                }
+                .text-danger { color: #dc3545 !important; }
+                .text-primary { color: #0d6efd !important; }
+            </style>
+        </head>
+        <body>
+            <div style="text-align:center; margin-bottom:30px;">
+                <h2 style="text-decoration:underline;">RÉPERTOIRE DES ARCHIVES NUMÉRIQUES</h2>
+                <p>Extrait généré le : <strong>{{ date('d/m/Y à H:i') }}</strong></p>
+            </div>
+            ${zone.innerHTML}
+        </body>
+        </html>`;
 
-        win.document.open();
-        win.document.write(html);
-        win.document.close();
+    win.document.write(html);
+    win.document.close();
 
-        win.onload = function() {
-            setTimeout(() => {
-                win.print();
-                win.close();
-            }, 700);
-        };
+    win.onload = function() {
+        setTimeout(() => {
+            win.print();
+            win.close();
+        }, 600);
     };
-    </script>
+}
+</script>
+@endpush
 
-    <style>
-        .fw-extrabold { font-weight: 800; }
-        .table-hover tbody tr:hover { background-color: #f0f7ff !important; cursor: pointer; }
-        @media print {
-            .no-print, .btn, .card-footer, form, .navbar { display: none !important; }
-        }
-    </style>
-
+@push('styles')
+<style>
+    .fw-extrabold { font-weight: 800; }
+    .table-hover tbody tr:hover { 
+        background-color: #f0f7ff !important; 
+        transition: 0.3s; 
+        cursor: pointer; 
+    }
+    @media print {
+        .no-print, .btn, .card-footer, form, .navbar { display: none !important; }
+    }
+</style>
+@endpush
 @endsection
