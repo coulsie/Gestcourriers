@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3307
--- Généré le : mar. 10 fév. 2026 à 21:19
+-- Généré le : lun. 16 fév. 2026 à 08:39
 -- Version du serveur : 11.5.2-MariaDB
 -- Version de PHP : 8.3.14
 
@@ -137,7 +137,7 @@ CREATE TABLE IF NOT EXISTS `agent_imputation` (
   PRIMARY KEY (`id`),
   KEY `agent_imputation_imputation_id_foreign` (`imputation_id`),
   KEY `agent_imputation_agent_id_foreign` (`agent_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `agent_imputation`
@@ -165,7 +165,8 @@ INSERT INTO `agent_imputation` (`id`, `imputation_id`, `agent_id`, `created_at`,
 (29, 23, 1, NULL, NULL),
 (30, 24, 1, NULL, NULL),
 (31, 25, 1, NULL, NULL),
-(32, 26, 1, NULL, NULL);
+(32, 26, 1, NULL, NULL),
+(33, 27, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -208,13 +209,6 @@ CREATE TABLE IF NOT EXISTS `cache` (
   `expiration` int(11) NOT NULL,
   PRIMARY KEY (`key`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Déchargement des données de la table `cache`
---
-
-INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
-('laravel-cache-spatie.permission.cache', 'a:3:{s:5:\"alias\";a:4:{s:1:\"a\";s:2:\"id\";s:1:\"b\";s:4:\"name\";s:1:\"c\";s:10:\"guard_name\";s:1:\"r\";s:5:\"roles\";}s:11:\"permissions\";a:8:{i:0;a:4:{s:1:\"a\";i:1;s:1:\"b\";s:14:\"creer-articles\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:3:{i:0;i:1;i:1;i:2;i:2;i:5;}}i:1;a:4:{s:1:\"a\";i:2;s:1:\"b\";s:18:\"supprimer-articles\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:2:{i:0;i:1;i:1;i:5;}}i:2;a:4:{s:1:\"a\";i:3;s:1:\"b\";s:17:\"voir-utilisateurs\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:4:{i:0;i:1;i:1;i:2;i:2;i:4;i:3;i:5;}}i:3;a:4:{s:1:\"a\";i:4;s:1:\"b\";s:12:\"manage-users\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:2:{i:0;i:1;i:1;i:5;}}i:4;a:4:{s:1:\"a\";i:5;s:1:\"b\";s:17:\"modifier articles\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:3:{i:0;i:1;i:1;i:3;i:2;i:5;}}i:5;a:4:{s:1:\"a\";i:6;s:1:\"b\";s:18:\"supprimer articles\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:2:{i:0;i:1;i:1;i:5;}}i:6;a:4:{s:1:\"a\";i:7;s:1:\"b\";s:11:\"gerer-roles\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:2:{i:0;i:1;i:1;i:5;}}i:7;a:4:{s:1:\"a\";i:8;s:1:\"b\";s:17:\"acceder-dashboard\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:4:{i:0;i:1;i:1;i:3;i:2;i:4;i:3;i:5;}}}s:5:\"roles\";a:5:{i:0;a:3:{s:1:\"a\";i:1;s:1:\"b\";s:5:\"admin\";s:1:\"c\";s:3:\"web\";}i:1;a:3:{s:1:\"a\";i:2;s:1:\"b\";s:11:\"utilisateur\";s:1:\"c\";s:3:\"web\";}i:2;a:3:{s:1:\"a\";i:5;s:1:\"b\";s:11:\"Superviseur\";s:1:\"c\";s:3:\"web\";}i:3;a:3:{s:1:\"a\";i:4;s:1:\"b\";s:2:\"rh\";s:1:\"c\";s:3:\"web\";}i:4;a:3:{s:1:\"a\";i:3;s:1:\"b\";s:7:\"editeur\";s:1:\"c\";s:3:\"web\";}}}', 1770843644);
 
 -- --------------------------------------------------------
 
@@ -280,7 +274,7 @@ CREATE TABLE IF NOT EXISTS `courriers` (
   `code_acces` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `courriers_num_enregistrement_unique` (`num_enregistrement`) USING HASH
-) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `courriers`
@@ -305,7 +299,8 @@ INSERT INTO `courriers` (`id`, `num_enregistrement`, `affecter`, `reference`, `t
 (17, 'REG-2026-6989D00F21E31', 1, '100', 'Incoming Externe', 'Ordre de mission', NULL, '2026-02-09', '2026-02-06', 'CABINET DGI', NULL, 'DSESF', NULL, 'reçu', 'Non assigné', '1770639375_1769688440_Présentation.docx', '2026-02-09 12:16:15', '2026-02-09 14:44:02', 1, 'eyJpdiI6IkNUcGZKU2N1UDJKL2g4bW1uamFDNmc9PSIsInZhbHVlIjoiNmVHZXZSMDMzbEN2ZS81Y1RGeU5yQT09IiwibWFjIjoiZTE1ZGVlMzVmN2RkNmI3ZDY0ZWFmOGU5ZGUxYjI4YWUxODI2MmM1MzFlODc1NjRhZDE3ZGQyY2M3ZWE5OGZjMCIsInRhZyI6IiJ9'),
 (18, 'REG-2026-6989D3054FF88', 1, '101020', 'Incoming Mail', 'Seminaire bilan 2025', NULL, '2026-02-09', '2026-02-06', 'SAPH', '0707584396', 'S/D GUDEF', NULL, 'reçu', 'Non assigné', '1770640133_1769702353_FINAL_243_ADJAME_DALLAS_25_juin_2025_VERSION_1.docx', '2026-02-09 12:28:53', '2026-02-09 14:44:19', 1, 'eyJpdiI6Ik9neUk2Q3dTUkZuUFRzMzZ2U2l4R2c9PSIsInZhbHVlIjoiZHdyVmtTWEdOS0t1bm14U1llN2ZRdz09IiwibWFjIjoiN2Y1ZjBmMjIxMTU2YzdlN2ZkMjMzODdiNGM0MDQ2Y2U2NWE5YzYyMjMwOGMwYTRlNWEzZWRmNjhhYmFjYjYxZCIsInRhZyI6IiJ9'),
 (19, 'REG-2026-6989ED1CA7C6B', 1, '000021A', 'Outgoing Mail', 'essai de type courrier', NULL, '2026-02-09', '2026-02-05', 'SAPH', NULL, 'S/D GUDEF', NULL, 'reçu', 'Non assigné', '1770646812_1769688440_Code_LARAVEL.docx', '2026-02-09 14:20:12', '2026-02-09 14:44:29', 0, NULL),
-(20, 'REG-2026-6989F1B28F517', 0, '000021D', 'Incoming Externe', 'essai courrier', NULL, '2026-02-09', '2026-02-02', 'DERAR', NULL, 'DSESF', NULL, 'reçu', 'Non assigné', '1770647986_1769688440_Code_LARAVEL.docx', '2026-02-09 14:39:46', '2026-02-09 14:39:46', 1, 'eyJpdiI6ImVvNVJiR1A1WUdweUZKTWFIa2JqWWc9PSIsInZhbHVlIjoiSDZtL3hPR0VLVUVQaHZVZzUzSXZyUT09IiwibWFjIjoiNjdiYzczNDc2MWIwNThhM2UyNTQ3NWRkNDZlNjVjMTVjM2VhZTU2OWFlNGFmODc5YThjYTU2OGRkNjhhMzlmYSIsInRhZyI6IiJ9');
+(20, 'REG-2026-6989F1B28F517', 0, '000021D', 'Incoming Externe', 'essai courrier', NULL, '2026-02-09', '2026-02-02', 'DERAR', NULL, 'DSESF', NULL, 'reçu', 'Non assigné', '1770647986_1769688440_Code_LARAVEL.docx', '2026-02-09 14:39:46', '2026-02-09 14:39:46', 1, 'eyJpdiI6ImVvNVJiR1A1WUdweUZKTWFIa2JqWWc9PSIsInZhbHVlIjoiSDZtL3hPR0VLVUVQaHZVZzUzSXZyUT09IiwibWFjIjoiNjdiYzczNDc2MWIwNThhM2UyNTQ3NWRkNDZlNjVjMTVjM2VhZTU2OWFlNGFmODc5YThjYTU2OGRkNjhhMzlmYSIsInRhZyI6IiJ9'),
+(21, 'REG-2026-698C6BD67BE5B', 1, '223344', 'Outgoing', 'essai imputation', NULL, '2026-02-10', '2026-02-10', 'dsesf', NULL, 'cabinet dgi', NULL, 'affecté', 'Non assigné', '1770810326_1769688440_Code_LARAVEL.docx', '2026-02-11 11:45:26', '2026-02-11 11:46:58', 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -418,6 +413,7 @@ CREATE TABLE IF NOT EXISTS `imputations` (
   `courrier_id` bigint(20) UNSIGNED NOT NULL,
   `chemin_fichier` varchar(255) DEFAULT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
+  `suivi_par` bigint(20) UNSIGNED DEFAULT NULL,
   `niveau` enum('primaire','secondaire','tertiaire','autre') DEFAULT 'autre',
   `instructions` text DEFAULT NULL,
   `observations` text DEFAULT NULL,
@@ -430,32 +426,34 @@ CREATE TABLE IF NOT EXISTS `imputations` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `imputations_courrier_id_foreign` (`courrier_id`),
-  KEY `imputations_user_id_foreign` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  KEY `imputations_user_id_foreign` (`user_id`),
+  KEY `imputations_suivi_par_foreign` (`suivi_par`)
+) ENGINE=MyISAM AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `imputations`
 --
 
-INSERT INTO `imputations` (`id`, `courrier_id`, `chemin_fichier`, `user_id`, `niveau`, `instructions`, `observations`, `documents_annexes`, `date_imputation`, `date_traitement`, `echeancier`, `statut`, `created_at`, `updated_at`) VALUES
-(7, 4, '1769081306_06391_2026-01-22_112741.pdf', 3, 'tertiaire', 'Bilan trimestrielle 4T 2025', NULL, '\"[\\\"1769103437_Note_de_service_DEMANDE_D\'INFORMATIONS_COMITE_COUT_SDEEF.pdf\\\"]\"', '2026-01-22', NULL, '2026-01-26', 'en_attente', '2026-01-22 17:37:17', '2026-01-22 17:37:17'),
-(6, 5, '1769083072_06410_2026-01-22_115627.pdf', 9, 'primaire', 'rapidement', NULL, '\"[\\\"1769094964_Note_au_MFB__Objectif_de_recettes_TOFE_Aout_2025.pdf\\\"]\"', '2026-01-22', NULL, '2026-01-23', 'termine', '2026-01-22 15:16:04', '2026-01-22 17:25:44'),
-(5, 2, '1769081946_000021__du_21_01_2026.pdf', 3, 'tertiaire', 'urgent', NULL, '\"[\\\"1769091173_0759232466_2026-01-22_120224.pdf\\\"]\"', '2026-01-22', NULL, '2026-01-23', 'termine', '2026-01-22 14:12:53', '2026-01-22 14:54:35'),
-(9, 6, '1769083399_0759232466_2026-01-22_120224.pdf', 17, 'secondaire', 'Extraction de données Déclaration TEE & MICRO 2025', NULL, '\"[\\\"1769157764_Note_au_MFB__Objectif_de_recettes_TOFE_Aout_2025.pdf\\\"]\"', '2026-01-23', NULL, '2026-01-27', 'en_attente', '2026-01-23 08:42:44', '2026-01-23 08:42:44'),
-(10, 7, '1769426269_Document_2026-01-26_formation.pdf', 3, 'tertiaire', 'Informer les agents et tenir une liste d\'agents à former', NULL, '\"[]\"', '2026-01-26', NULL, '2026-01-28', 'en_attente', '2026-01-26 11:25:47', '2026-01-26 11:25:47'),
-(11, 8, '1769427637_Document_2026-01-26_Proposition_serveur.pdf', 3, 'tertiaire', 'Travail urgent pour rendre le serveur operationnel', NULL, '\"[]\"', '2026-01-26', NULL, '2026-01-28', 'termine', '2026-01-26 11:48:55', '2026-01-26 11:50:41'),
-(15, 3, NULL, 9, 'autre', 'info1', NULL, '\"documents\\/imputations\\/annexes\\/1769599564_Projet_de_Note_du_DSESF_au_DG_S\\u00e9minaire_Loi_de_r\\u00e8glement_18_20_d\\u00e9c_2024.pdf\"', '2026-01-26', NULL, '2026-01-29', 'en_attente', '2026-01-28 11:26:04', '2026-01-28 11:26:04'),
-(16, 10, NULL, 9, 'autre', 'info2', NULL, '\"documents\\/imputations\\/annexes\\/1769600467_Projet_de_Note_du_DSESF_au_DG_S\\u00e9minaire_Loi_de_r\\u00e8glement_18_20_d\\u00e9c_2024.pdf\"', '2026-01-26', NULL, '2026-01-29', 'en_attente', '2026-01-28 11:41:07', '2026-01-28 11:41:07'),
-(17, 9, NULL, 17, 'autre', 'INFO3', NULL, '\"documents\\/imputations\\/annexes\\/1769600597_Note_de_service_DEMANDE_D\'INFORMATIONS_COMITE_COUT_SDEEF.pdf\"', '2026-01-26', NULL, '2026-01-29', 'en_attente', '2026-01-28 11:43:17', '2026-01-28 11:43:17'),
-(18, 8, NULL, 17, 'secondaire', 'info4', NULL, '\"documents\\/imputations\\/annexes\\/1769600879_Note_au_MFB__Objectif_de_recettes_TOFE_Aout_2025.pdf\"', '2026-01-26', NULL, '2026-01-29', 'en_attente', '2026-01-28 11:47:59', '2026-01-28 11:47:59'),
-(19, 10, NULL, 6, 'tertiaire', 'info5', NULL, '\"documents\\/imputations\\/annexes\\/1769601018_Note_Service_Objectifs_de_recettes_r\\u00e9vis\\u00e9s_2025_N\'GUESSAN.pdf\"', '2026-01-26', NULL, '2026-01-29', 'en_attente', '2026-01-28 11:50:18', '2026-01-28 11:50:18'),
-(20, 10, NULL, 9, 'primaire', 'info6', NULL, '\"documents\\/imputations\\/annexes\\/1769601085_Note_Service_Objectifs_de_recettes_r\\u00e9vis\\u00e9s_2025_N\'GUESSAN.pdf\"', '2026-01-26', NULL, '2026-01-29', 'en_attente', '2026-01-28 11:51:25', '2026-01-28 11:51:25'),
-(21, 10, NULL, 3, 'autre', 'info7', NULL, '\"documents\\/imputations\\/annexes\\/1769601385_Note_au_MFB__Objectif_de_recettes_TOFE_Aout_2025.pdf\"', '2026-01-26', NULL, '2026-01-29', 'en_attente', '2026-01-28 11:56:25', '2026-01-28 11:56:25'),
-(22, 9, NULL, 3, 'autre', 'iiokjj', NULL, '\"documents\\/imputations\\/annexes\\/1769601446_Projet_de_Note_du_DSESF_au_DG_S\\u00e9minaire_Loi_de_r\\u00e8glement_18_20_d\\u00e9c_2024.pdf\"', '2026-01-26', NULL, '2026-01-30', 'en_attente', '2026-01-28 11:57:26', '2026-01-28 11:57:26'),
-(23, 10, NULL, 10, 'secondaire', 'GH', NULL, '\"documents\\/imputations\\/annexes\\/1769601632_Projet_de_Note_du_DSESF_au_DG_S\\u00e9minaire_Loi_de_r\\u00e8glement_18_20_d\\u00e9c_2024.pdf\"', '2026-01-26', NULL, '2026-01-29', 'termine', '2026-01-28 12:00:32', '2026-01-29 10:18:33'),
-(24, 11, NULL, 24, 'tertiaire', 'intructions', NULL, '\"documents\\/imputations\\/annexes\\/1769681389_Tuto_PHP.pdf\"', '2026-01-26', NULL, '2026-02-02', 'termine', '2026-01-29 10:09:49', '2026-01-29 10:20:35'),
-(25, 14, NULL, 3, 'autre', 'taf', NULL, NULL, '2026-02-08', NULL, '2026-02-14', 'en_attente', '2026-02-08 12:29:47', '2026-02-08 12:29:47'),
-(26, 15, NULL, 3, 'autre', 'verif', NULL, NULL, '2026-02-08', NULL, '2026-02-15', 'en_attente', '2026-02-08 12:32:44', '2026-02-08 12:32:44');
+INSERT INTO `imputations` (`id`, `courrier_id`, `chemin_fichier`, `user_id`, `suivi_par`, `niveau`, `instructions`, `observations`, `documents_annexes`, `date_imputation`, `date_traitement`, `echeancier`, `statut`, `created_at`, `updated_at`) VALUES
+(7, 4, '1769081306_06391_2026-01-22_112741.pdf', 3, NULL, 'tertiaire', 'Bilan trimestrielle 4T 2025', NULL, '\"[\\\"1769103437_Note_de_service_DEMANDE_D\'INFORMATIONS_COMITE_COUT_SDEEF.pdf\\\"]\"', '2026-01-22', NULL, '2026-01-26', 'en_attente', '2026-01-22 17:37:17', '2026-01-22 17:37:17'),
+(6, 5, '1769083072_06410_2026-01-22_115627.pdf', 9, NULL, 'primaire', 'rapidement', NULL, '\"[\\\"1769094964_Note_au_MFB__Objectif_de_recettes_TOFE_Aout_2025.pdf\\\"]\"', '2026-01-22', NULL, '2026-01-23', 'termine', '2026-01-22 15:16:04', '2026-01-22 17:25:44'),
+(5, 2, '1769081946_000021__du_21_01_2026.pdf', 3, NULL, 'tertiaire', 'urgent', NULL, '\"[\\\"1769091173_0759232466_2026-01-22_120224.pdf\\\"]\"', '2026-01-22', NULL, '2026-01-23', 'termine', '2026-01-22 14:12:53', '2026-01-22 14:54:35'),
+(9, 6, '1769083399_0759232466_2026-01-22_120224.pdf', 17, NULL, 'secondaire', 'Extraction de données Déclaration TEE & MICRO 2025', NULL, '\"[\\\"1769157764_Note_au_MFB__Objectif_de_recettes_TOFE_Aout_2025.pdf\\\"]\"', '2026-01-23', NULL, '2026-01-27', 'en_attente', '2026-01-23 08:42:44', '2026-01-23 08:42:44'),
+(10, 7, '1769426269_Document_2026-01-26_formation.pdf', 3, NULL, 'tertiaire', 'Informer les agents et tenir une liste d\'agents à former', NULL, '\"[]\"', '2026-01-26', NULL, '2026-01-28', 'en_attente', '2026-01-26 11:25:47', '2026-01-26 11:25:47'),
+(11, 8, '1769427637_Document_2026-01-26_Proposition_serveur.pdf', 3, NULL, 'tertiaire', 'Travail urgent pour rendre le serveur operationnel', NULL, '\"[]\"', '2026-01-26', NULL, '2026-01-28', 'termine', '2026-01-26 11:48:55', '2026-01-26 11:50:41'),
+(15, 3, NULL, 9, NULL, 'autre', 'info1', NULL, '\"documents\\/imputations\\/annexes\\/1769599564_Projet_de_Note_du_DSESF_au_DG_S\\u00e9minaire_Loi_de_r\\u00e8glement_18_20_d\\u00e9c_2024.pdf\"', '2026-01-26', NULL, '2026-01-29', 'en_attente', '2026-01-28 11:26:04', '2026-01-28 11:26:04'),
+(16, 10, NULL, 9, NULL, 'autre', 'info2', NULL, '\"documents\\/imputations\\/annexes\\/1769600467_Projet_de_Note_du_DSESF_au_DG_S\\u00e9minaire_Loi_de_r\\u00e8glement_18_20_d\\u00e9c_2024.pdf\"', '2026-01-26', NULL, '2026-01-29', 'en_attente', '2026-01-28 11:41:07', '2026-01-28 11:41:07'),
+(17, 9, NULL, 17, NULL, 'autre', 'INFO3', NULL, '\"documents\\/imputations\\/annexes\\/1769600597_Note_de_service_DEMANDE_D\'INFORMATIONS_COMITE_COUT_SDEEF.pdf\"', '2026-01-26', NULL, '2026-01-29', 'en_attente', '2026-01-28 11:43:17', '2026-01-28 11:43:17'),
+(18, 8, NULL, 17, NULL, 'secondaire', 'info4', NULL, '\"documents\\/imputations\\/annexes\\/1769600879_Note_au_MFB__Objectif_de_recettes_TOFE_Aout_2025.pdf\"', '2026-01-26', NULL, '2026-01-29', 'en_attente', '2026-01-28 11:47:59', '2026-01-28 11:47:59'),
+(19, 10, NULL, 6, NULL, 'tertiaire', 'info5', NULL, '\"documents\\/imputations\\/annexes\\/1769601018_Note_Service_Objectifs_de_recettes_r\\u00e9vis\\u00e9s_2025_N\'GUESSAN.pdf\"', '2026-01-26', NULL, '2026-01-29', 'en_attente', '2026-01-28 11:50:18', '2026-01-28 11:50:18'),
+(20, 10, NULL, 9, NULL, 'primaire', 'info6', NULL, '\"documents\\/imputations\\/annexes\\/1769601085_Note_Service_Objectifs_de_recettes_r\\u00e9vis\\u00e9s_2025_N\'GUESSAN.pdf\"', '2026-01-26', NULL, '2026-01-29', 'en_attente', '2026-01-28 11:51:25', '2026-01-28 11:51:25'),
+(21, 10, NULL, 3, NULL, 'autre', 'info7', NULL, '\"documents\\/imputations\\/annexes\\/1769601385_Note_au_MFB__Objectif_de_recettes_TOFE_Aout_2025.pdf\"', '2026-01-26', NULL, '2026-01-29', 'en_attente', '2026-01-28 11:56:25', '2026-01-28 11:56:25'),
+(22, 9, NULL, 3, NULL, 'autre', 'iiokjj', NULL, '\"documents\\/imputations\\/annexes\\/1769601446_Projet_de_Note_du_DSESF_au_DG_S\\u00e9minaire_Loi_de_r\\u00e8glement_18_20_d\\u00e9c_2024.pdf\"', '2026-01-26', NULL, '2026-01-30', 'en_attente', '2026-01-28 11:57:26', '2026-01-28 11:57:26'),
+(23, 10, NULL, 10, NULL, 'secondaire', 'GH', NULL, '\"documents\\/imputations\\/annexes\\/1769601632_Projet_de_Note_du_DSESF_au_DG_S\\u00e9minaire_Loi_de_r\\u00e8glement_18_20_d\\u00e9c_2024.pdf\"', '2026-01-26', NULL, '2026-01-29', 'termine', '2026-01-28 12:00:32', '2026-01-29 10:18:33'),
+(24, 11, NULL, 24, NULL, 'tertiaire', 'intructions', NULL, '\"documents\\/imputations\\/annexes\\/1769681389_Tuto_PHP.pdf\"', '2026-01-26', NULL, '2026-02-02', 'termine', '2026-01-29 10:09:49', '2026-01-29 10:20:35'),
+(25, 14, NULL, 3, NULL, 'autre', 'taf', NULL, NULL, '2026-02-08', NULL, '2026-02-14', 'en_attente', '2026-02-08 12:29:47', '2026-02-08 12:29:47'),
+(26, 15, NULL, 3, NULL, 'autre', 'verif', NULL, NULL, '2026-02-08', NULL, '2026-02-15', 'en_attente', '2026-02-08 12:32:44', '2026-02-08 12:32:44'),
+(27, 21, NULL, 3, NULL, 'autre', 'travail à rendre au plus tard le 15 fevrier2026', NULL, '\"documents\\/imputations\\/annexes\\/1770810418_1769688440_Code_LARAVEL.docx\"', '2026-02-11', NULL, '2026-02-15', 'en_attente', '2026-02-11 11:46:58', '2026-02-11 11:46:58');
 
 -- --------------------------------------------------------
 
@@ -509,7 +507,7 @@ CREATE TABLE IF NOT EXISTS `migrations` (
   `migration` varchar(191) NOT NULL,
   `batch` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `migrations`
@@ -565,7 +563,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (47, '2026_01_22_140612_add_chemin_fichier_to_imputations_table', 7),
 (48, '2026_01_26_172154_create_role_user_table', 8),
 (49, '2026_02_08_105025_add_is_confidentiel_to_courriers_table', 9),
-(50, '2026_02_08_204555_add_date_document_original_to_courriers_table', 10);
+(50, '2026_02_08_204555_add_date_document_original_to_courriers_table', 10),
+(51, '2026_02_11_104137_add_suivi_par_to_imputations_table', 11),
+(52, '2026_02_15_114903_create_scripts_extraction_table', 12);
 
 -- --------------------------------------------------------
 
@@ -709,7 +709,7 @@ CREATE TABLE IF NOT EXISTS `presences` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `presences_agent_id_foreign` (`agent_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=351 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=352 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `presences`
@@ -1065,7 +1065,8 @@ INSERT INTO `presences` (`id`, `agent_id`, `heure_arrivee`, `heure_depart`, `sta
 (347, 15, '2026-02-04 08:00:00', NULL, 'Absence Justifiée', 'Justifié: ', '2026-02-09 12:32:43', '2026-02-09 12:32:43'),
 (348, 15, '2026-02-05 08:00:00', NULL, 'Absence Justifiée', 'Justifié: ', '2026-02-09 12:32:43', '2026-02-09 12:32:43'),
 (349, 15, '2026-02-06 08:00:00', NULL, 'Absence Justifiée', 'Justifié: ', '2026-02-09 12:32:43', '2026-02-09 12:32:43'),
-(350, 1, '2026-02-09 16:09:04', NULL, 'En Retard', 'Pointage automatique (Self-service)', '2026-02-09 16:09:04', '2026-02-09 16:09:04');
+(350, 1, '2026-02-09 16:09:04', NULL, 'En Retard', 'Pointage automatique (Self-service)', '2026-02-09 16:09:04', '2026-02-09 16:09:04'),
+(351, 1, '2026-02-10 21:30:39', '2026-02-10 21:30:45', 'En Retard', 'Pointage automatique (Self-service)', '2026-02-10 21:30:39', '2026-02-10 21:30:45');
 
 -- --------------------------------------------------------
 
@@ -1217,6 +1218,35 @@ INSERT INTO `role_user` (`id`, `user_id`, `role_id`) VALUES
 (20, 18, 2),
 (24, 23, 2),
 (25, 24, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `scripts_extraction`
+--
+
+DROP TABLE IF EXISTS `scripts_extraction`;
+CREATE TABLE IF NOT EXISTS `scripts_extraction` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `nom` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `type_entreprise` varchar(255) DEFAULT NULL,
+  `type_impot` varchar(255) DEFAULT NULL,
+  `type_contribuable` varchar(255) DEFAULT NULL,
+  `date_debut` date DEFAULT NULL,
+  `date_fin` date DEFAULT NULL,
+  `parametres` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`parametres`)),
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `scripts_extraction`
+--
+
+INSERT INTO `scripts_extraction` (`id`, `nom`, `description`, `type_entreprise`, `type_impot`, `type_contribuable`, `date_debut`, `date_fin`, `parametres`, `created_at`, `updated_at`) VALUES
+(2, 'liste des imputations', NULL, NULL, NULL, NULL, '2026-01-01', '2026-02-10', '{\"query\":{},\"connection_type\":\"mariadb\",\"ora_host\":null,\"ora_db\":null,\"ora_user\":null,\"ora_as\":\"NORMAL\"}', '2026-02-15 12:43:10', '2026-02-15 12:43:10');
 
 -- --------------------------------------------------------
 
