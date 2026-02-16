@@ -7,109 +7,139 @@ use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\DynamicQueryExport;
 use Illuminate\Support\Facades\Config;
-
+use App\Models\ScriptExtraction;
 
 class ExtractionController extends Controller
 {
-    // Affichage de l'écran de saisie
-    public function index()
+    // Affichage de l'écran avec la liste des scripts
+    public function index(Request $request)
     {
-        return view('extraction.index');
+        $scripts = ScriptExtraction::orderBy('nom')->get();
+        $data = null;
+        $type = $request->input('connection_type', 'mariadb');
+        $query = $request->input('query', '');
+
+        return view('extraction.index', compact('scripts', 'data', 'type', 'query'));
     }
 
-    // Exécution du script SQL ou Oracle
+       // Exécution ou Enregistrement
+    public function execute(Request $request)
+    {
+        // --- ACTION : ENREGISTRER / MODIFIER ---
+        if ($request->input('action') === 'save_script') {
+            $request->validate([
+                'nom_script' => 'required|string|max:255',
+                'query' => 'required'
+            ]);
 
-public function execute(Request $request)
-{
-    // 1. Validation de base
-    $request->validate([
-        'connection_type' => 'required|in:mariadb,oracle_custom',
-        'query' => 'required_unless:action,test_connection',
-    ]);
-
-    $query = $request->input('query');
-    $type = $request->input('connection_type');
-
-    // 2. Configuration dynamique si Oracle Externe
-    if ($type === 'oracle_custom') {
-        // Mapping du privilège Oracle (Connect AS)
-        $privilege = null;
-        if ($request->input('ora_as') === 'SYSDBA') {
-            $privilege = OCI_SYSDBA;
-        } elseif ($request->input('ora_as') === 'SYSOPER') {
-            $privilege = OCI_SYSOPER;
+            \App\Models\ScriptExtraction::updateOrCreate(
+                ['nom' => $request->nom_script], 
+                [
+                    'type_entreprise'   => $request->type_entreprise,
+                    'type_impot'        => $request->type_impot,
+                    'type_contribuable' => $request->type_contribuable,
+                    'date_debut'        => $request->date_debut,
+                    'date_fin'          => $request->date_fin,
+                    'parametres'        => [
+                        'query'           => $request->query,
+                        'connection_type' => $request->connection_type,
+                        'ora_host'        => $request->ora_host,
+                        'ora_db'          => $request->ora_db,
+                        'ora_user'        => $request->ora_user,
+                        'ora_as'          => $request->ora_as,
+                    ]
+                ]
+            );
+            return back()->with('success', "Script '" . $request->nom_script . "' enregistré avec succès !");
         }
 
-        \Illuminate\Support\Facades\Config::set('database.connections.oracle_runtime', [
-            'driver'   => 'oracle',
-            'host'     => $request->input('ora_host'),
-            'port'     => $request->input('ora_port', '1521'),
-            'database' => $request->input('ora_db'),
-            'username' => $request->input('ora_user'),
-            'password' => $request->input('ora_pass'),
-            'charset'  => 'AL32UTF8',
-            'prefix'   => '',
-            'options'  => [
-                // Cette option injecte le mode SYSDBA ou SYSOPER dans le driver OCI8
-                'privilege' => $privilege,
-            ],
+        // --- ACTION : EXÉCUTER OU TESTER ---
+        $request->validate([
+            'connection_type' => 'required|in:mariadb,oracle_custom',
+            'query' => 'required_unless:action,test_connection',
         ]);
-        $connection = 'oracle_runtime';
-    } else {
-        $connection = 'mariadb';
-    }
 
-    try {
-        // === ACTION : TEST DE CONNEXION UNIQUEMENT ===
-        if ($request->input('action') === 'test_connection') {
-            \Illuminate\Support\Facades\DB::connection($connection)->getPdo();
-            return back()->with('success', "✅ Connexion réussie à la base Oracle (" . $request->input('ora_as') . ") !")
-                         ->withInput();
+        $query = $request->input('query');
+        $type = $request->input('connection_type');
+
+        // Config Oracle dynamique
+        if ($type === 'oracle_custom') {
+            $privilege = null;
+            if ($request->input('ora_as') === 'SYSDBA') $privilege = OCI_SYSDBA;
+            elseif ($request->input('ora_as') === 'SYSOPER') $privilege = OCI_SYSOPER;
+
+            \Illuminate\Support\Facades\Config::set('database.connections.oracle_runtime', [
+                'driver'   => 'oracle',
+                'host'     => $request->input('ora_host'),
+                'port'     => $request->input('ora_port', '1521'),
+                'database' => $request->input('ora_db'),
+                'username' => $request->input('ora_user'),
+                'password' => $request->input('ora_pass'),
+                'charset'  => 'AL32UTF8',
+                'prefix'   => '',
+                'options'  => ['privilege' => $privilege],
+            ]);
+            $connection = 'oracle_runtime';
+        } else {
+            $connection = 'mariadb';
         }
 
-        // === ACTION : EXÉCUTION DU SCRIPT ===
-        
-        // Sécurité : Vérifier que c'est bien un SELECT
-        if (!str_starts_with(strtolower(trim($query)), 'select')) {
-            throw new \Exception("Seules les requêtes de lecture (SELECT) sont autorisées par sécurité.");
+        try {
+            // Test de connexion
+            if ($request->input('action') === 'test_connection') {
+                \Illuminate\Support\Facades\DB::connection($connection)->getPdo();
+                return back()->with('success', "✅ Connexion réussie à $type !")->withInput();
+            }
+
+            // Exécution SQL
+            if (!str_starts_with(strtolower(trim($query)), 'select')) {
+                throw new \Exception("Sécurité : Seuls les SELECT sont autorisés.");
+            }
+
+            $results = \Illuminate\Support\Facades\DB::connection($connection)->select($query);
+            $data = collect($results)->map(fn($x) => (array) $x);
+            $lineCount = $data->count();
+            $headers = $data->isEmpty() ? [] : array_keys($data->first());
+            $scripts = \App\Models\ScriptExtraction::orderBy('nom')->get();
+
+            // FORCER LE MESSAGE DANS LA SESSION AVANT LE VIEW()
+            $msg = "✅ Extraction réussie ($lineCount lignes trouvées).";
+            session()->flash('success', $msg);
+
+            return view('extraction.index', [
+                'scripts' => $scripts,
+                'data' => $data,
+                'headers' => $headers,
+                'query' => $query,
+                'type' => $type,
+                'connection' => $connection,
+                'lineCount' => $lineCount
+            ]);
+            
+
+        } catch (\Exception $e) {
+            return back()->withErrors(['sql_error' => $e->getMessage()])->withInput();
         }
-
-        // Exécution de la requête brute
-        $results = \Illuminate\Support\Facades\DB::connection($connection)->select($query);
-        
-        $data = collect($results)->map(fn($x) => (array) $x);
-        $headers = $data->isEmpty() ? [] : array_keys($data->first());
-
-        return view('extraction.index', [
-            'data' => $data,
-            'headers' => $headers,
-            'query' => $query,
-            'connection' => $type,
-            'type' => $type
-        ])->with('success', 'Requête exécutée avec succès.');
-
-    } catch (\Exception $e) {
-        return back()->withErrors(['sql_error' => "Erreur : " . $e->getMessage()])
-                     ->withInput();
     }
-}
 
 
 
+    // --- NOUVELLE MÉTHODE : SUPPRIMER ---
+    public function destroy($id)
+    {
+        $script = ScriptExtraction::findOrFail($id);
+        $script->delete();
+        return back()->with('success', "Script supprimé.");
+    }
 
-
-    // Exportation vers Excel
+    // Export Excel
     public function export(Request $request)
     {
         $query = $request->input('query');
         $connection = $request->input('connection');
-
         $results = DB::connection($connection)->select($query);
-        $data = collect($results)->map(function($x) { return (array) $x; });
+        $data = collect($results)->map(fn($x) => (array) $x);
 
         return Excel::download(new DynamicQueryExport($data), 'extraction_' . date('Ymd_His') . '.xlsx');
     }
-
-
-
 }

@@ -12,6 +12,8 @@ use App\Http\Controllers\{
 };
 use App\Http\Controllers\Auth\PasswordSetupController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Models\ScriptExtraction;
+
 
 
 
@@ -53,6 +55,17 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/extraction/execute', function() {
     return redirect()->route('extraction.index');
 });
+
+// Route pour charger les données d'un script en JSON au clic
+Route::get('/extraction/scripts/{id}', function($id) {
+    return \App\Models\ScriptExtraction::findOrFail($id);
+})->name('scripts.json');
+
+// Cette route permet au JS de récupérer les données du script
+Route::get('/extraction/scripts/{id}', function($id) {
+    return ScriptExtraction::findOrFail($id);
+});
+Route::delete('/extraction/scripts/{id}', [ExtractionController::class, 'destroy'])->name('scripts.destroy');
 
 
 Route::middleware(['auth'])->group(function () {
